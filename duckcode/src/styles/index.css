@@ -1,0 +1,22 @@
+/* global reset or common styles */
+@font-face {
+    font-family: 'HYWenHei';
+    src: url('../assets/fonts/zhcn.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PF Din Text Pro';
+    src: url("../assets/fonts/PFDinTextPro-Regular.ttf");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PF Din Text Pro';
+    src: url("../assets/fonts/PFDinTextPro-Bold.ttf");
+    font-weight: 700;
+    font-style: normal;
+}
+

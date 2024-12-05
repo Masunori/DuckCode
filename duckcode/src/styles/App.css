@@ -1,0 +1,32 @@
+/* styles for the App component */
+/* global style */
+@media (max-width: 1000px) {
+    body *:not(#unsupported-screen-notification):not(#unsupported-screen-notification *) {
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    #unsupported-screen-notification {
+        visibility: visible;
+    }
+}
+
+@media (min-width: 1001px) {
+    #unsupported-screen-notification {
+        visibility: hidden;
+    }
+}
+
+body {
+    background-color: var(--background-colour);
+    width: 100%;
+    margin: 0;
+}
+
+#unsupported-screen-notification {
+    position: fixed;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    text-align: center;
+}

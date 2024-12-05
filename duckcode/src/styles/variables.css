@@ -1,0 +1,18 @@
+/* CSS for variable colours */
+:root {
+    --normal-text-font: 'PF Din Text Pro', 'sans-serif';
+    
+    --background-colour: #121212;
+    --selected-first-layer-background-color: #242424;
+    --first-layer-background-color: #484848;
+    --second-layer-background-color: #606060;
+    --terminal-like-background-color: #1e1e1e;
+    
+    --blue-button-color: #007fff;
+    --blue-button-hover-color: #0560bc;
+    --dark-button-color: #363636;
+    --dark-button-hover-color: #484848;
+
+    --code-fragment-font: monospace;
+    --font-colour: #ccc;
+}
