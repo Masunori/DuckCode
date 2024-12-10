@@ -1,6 +1,6 @@
 /* styles for the App component */
 /* global style */
-@media (max-width: 1000px) {
+@media (max-width: 768px) or (max-height: 500px) {
     body *:not(#unsupported-screen-notification):not(#unsupported-screen-notification *) {
         visibility: hidden;
         pointer-events: none;
@@ -11,16 +11,38 @@
     }
 }
 
-@media (min-width: 1001px) {
+@media (min-width: 769px) and (min-height: 501px) {
     #unsupported-screen-notification {
         visibility: hidden;
     }
 }
 
+@media (min-width: 2000px) {
+    body {
+        font-size: 1.2em;
+    }
+}
+
+html {
+    height: 100vh;
+    width: 100vw;
+}
+
 body {
     background-color: var(--background-colour);
     width: 100%;
+    height: 100%;
     margin: 0;
+}
+
+#root {
+    width: 100%;
+    height: 100%;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
 }
 
 #unsupported-screen-notification {

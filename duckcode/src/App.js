@@ -1,7 +1,7 @@
 import './styles/App.css';
 import Gameplay from './pages/Gameplay/Gameplay';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import UnsupportedScreenNotification from './components/UnsupportedScreenNotification';
+import UnsupportedScreenNotification from './globalcomponents/UnsupportedScreenNotification';
 
 // window.MonacoEnvironment = {
 //   getWorkerUrl: function(moduleId, label) {
@@ -53,7 +53,7 @@ import UnsupportedScreenNotification from './components/UnsupportedScreenNotific
 
 function App() {
   return (
-    <div>
+    <div id='app'>
       <Router>
         <Routes>
           <Route path='/gameplay' element={<Gameplay />}></Route>

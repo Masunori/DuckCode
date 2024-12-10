@@ -1,4 +1,4 @@
-import CountdownTimer from "../../components/CountdownTimer";
+import CountdownTimer from "../../globalcomponents/CountdownTimer";
 
 export default function GameplayNavbar() {
     return (
