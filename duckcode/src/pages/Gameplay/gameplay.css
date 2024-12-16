@@ -20,7 +20,7 @@ button:hover {
 
 #gameplay-navbar {
     position: fixed;
-    z-index: 1000;
+    z-index: var(--navbar-z-index);
     top: 0;
     left: 0;
     width: 100vw;
@@ -150,7 +150,7 @@ button:hover {
     min-width: 0;
     height: calc(var(--gameplay-screen-padding) * 5 / 7);
     position: inherit;
-    z-index: 2;
+    z-index: var(--qn-editor-z-index);
 }
 
 #code-executor {
@@ -169,12 +169,12 @@ button:hover {
     grid-template-columns: 2fr 2fr 2fr 2fr 1fr;
     grid-area: buttons;
     position: inherit;
-    z-index: 2;
+    z-index: var(--qn-editor-z-index);
 }
 
 #code-executor #code-output, #test-case-panel {
     position: inherit;
-    z-index: 1;
+    z-index: var(--output-tcpanel-z-index);
 }
 
 #code-executor button {
@@ -318,4 +318,5 @@ button:hover {
     padding: 1%;
     box-sizing: border-box;
     font-family: var(--code-fragment-font) !important;
+    overflow: auto;
 }

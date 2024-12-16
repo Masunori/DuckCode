@@ -18,4 +18,14 @@
 
     --screen-padding: 20px;
     --navbar-padding: 50px;
+
+    --settings-tab-color: #121212;
+    --settings-option-bg-color: #363636;
+    --settings-option-bg-selected-color: #484848;
+    --settings-option-border-color: #848484;
+
+    --navbar-z-index: 15;
+    --settings-z-index: 20;
+    --qn-editor-z-index: 2;
+    --output-tcpanel-z-index: 1;
 }

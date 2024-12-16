@@ -45,6 +45,7 @@ body {
     height: 100%;
 }
 
+/* Unsupported screen notification styling */
 #unsupported-screen-notification {
     position: fixed;
     transform: translate(-50%, -50%);
@@ -52,3 +53,163 @@ body {
     left: 50%;
     text-align: center;
 }
+
+/*
+    Radio button stylized
+*/
+.radio-button-label {
+    margin: 0.5em;
+}
+
+.radio-input-indicator {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border-radius: 1em;
+    border: 2px solid var(--second-layer-background-color);
+    background-color: var(--first-layer-background-color);
+    transition-duration: 0.25s;    
+}
+
+input[type="radio"]:checked + .radio-input-indicator {
+    background-color: var(--terminal-like-background-color);
+}
+
+/* ____________________ */
+/* Settings tab styling */
+/* ____________________ */
+#settings-fullscreen-cover {
+    position: fixed;
+    width: calc(100vw);
+    height: calc(100vh);
+    background-color: var(--settings-tab-color);
+    z-index: var(--settings-z-index);
+}
+
+#settings {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-areas: "options display";
+}
+
+#settings-option {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    grid-area: options;
+}
+
+#settings-option::-webkit-scrollbar {
+    width: 5px;
+}
+
+#settings-option::-webkit-scrollbar-thumb {
+    background-color: #484848;
+    border-radius: 10px;
+}
+
+#settings-option li {
+    padding: 10px;
+    border-bottom: 1px solid var(--settings-option-border-color);
+    margin: 0;
+    transition-duration: 0.25s;
+    background-color: var(--settings-option-bg-color);
+}
+
+#settings-option li:hover {
+    background-color: var(--settings-option-bg-selected-color);
+}
+
+#settings-display {
+    grid-area: display;
+}
+
+#settings-display #code-editor-settings {
+    background-color: var(--settings-option-bg-selected-color);
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: 1fr 13fr 1fr;
+}
+
+#code-editor-settings-form {
+    /* border: 1px solid var(--second-layer-background-color); */
+    grid-column: 2;
+    grid-row: 2;
+    min-width: 500px;
+}
+
+#code-editor-settings label {
+    display: block;
+}
+
+#code-editor-settings input[type="radio"]:checked ~ .radio-input {
+    background-color: var(--terminal-like-background-color);
+}
+
+#code-editor-settings input {
+    background-color: var(--first-layer-background-color);
+    border: 1px solid var(--second-layer-background-color);
+    padding: 3px;
+    border-radius: 3px;
+    margin-left: 10px;
+}
+
+#code-editor-settings input[type='text'] {
+    font-family: var(--code-fragment-font);
+}
+
+.one-settings-option-block {
+    padding: 10px;
+    border-bottom: 1px solid var(--second-layer-background-color);
+    transition-duration: 0.2s;
+}
+
+.one-settings-option-block:hover {
+    background-color: var(--second-layer-background-color);
+}
+
+#custom-theme-panel {
+    overflow-y: auto;
+    transition-duration: 0.5s;
+}
+
+#custom-theme-panel::-webkit-scrollbar {
+    width: 0;
+}
+
+#custom-theme-panel .demo-syntax {
+    display: inline;
+    font-family: var(--code-fragment-font);
+    background-color: var(--terminal-like-background-color);
+    padding: 3px;
+}
+
+#custom-theme-panel table, #custom-theme-panel td, #custom-theme-panel th, #custom-theme-panel tr {
+    border: 1px solid var(--second-layer-background-color);
+}
+
+#custom-theme-panel td.token-cell {
+    padding-left: 10px;
+}
+
+#custom-theme-panel td.option-cell input {
+    margin: 0;
+}
+
+#custom-theme-panel input[type='color'] {
+    padding: 0;
+} 
+
+#syntax-highlight {
+    table-layout: fixed;
+    width: 100%;
+}
+
+#syntax-highlight colgroup col:nth-child(1) { width: 25%; }
+#syntax-highlight colgroup col:nth-child(2) { width: 25%; }
+#syntax-highlight colgroup col:nth-child(3) { width: 50%; }
