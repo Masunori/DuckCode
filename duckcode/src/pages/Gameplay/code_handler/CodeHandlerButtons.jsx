@@ -4,7 +4,7 @@ function toggleOutputAndTestCases() {
     const toggleButton = document.getElementById('toggle-output-testcases');
     const outputAndTestCasesDiv = document.getElementById('output-and-test-cases');
     const test = document.getElementById('test-case-panel');
-    const runThisButton = document.getElementById('run-this-test-case');
+    const runThisButton = document.getElementById('run-all-test-cases-button');
 
     if (isTestCasesMode) {
         toggleButton.innerText = "Switch to Test Case Panel";
@@ -14,7 +14,7 @@ function toggleOutputAndTestCases() {
         test.style.opacity = 0;
     } else {
         toggleButton.innerText = "Switch to Output Mode";
-        runThisButton.innerText = "Run this Test Case";
+        runThisButton.innerText = "Run all Test Cases";
         outputAndTestCasesDiv.style.transform = "translate(0, 0)";
         isTestCasesMode = true;
         test.style.opacity = 1
@@ -34,8 +34,7 @@ export default function CodeHandlerButtons({ executeCode }) {
         <div id="test-case-buttons">
             <button id="toggle-output-testcases" onClick={toggleOutputAndTestCases}>Switch to Output Mode</button>
             <button>Add a Custom Test Case</button>
-            <button id='run-this-test-case' onClick={() => isTestCasesMode ? null : runCodeInOutputMode()}>Run this Test Case</button>
-            <button>Run all Test Cases</button>
+            <button id="run-all-test-cases-button" onClick={() => isTestCasesMode ? null : runCodeInOutputMode()}>Run all Test Cases</button>
             <button id="submit">Submit</button>
         </div>
     )

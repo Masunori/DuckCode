@@ -304,6 +304,9 @@ const dCol = {
 const decToHex = percent => Math.round((percent / 100) * 255).toString(16).padStart(2, '0').toUpperCase();
 const toRGBA = (rgbHex, alphaDec) => `${rgbHex}${decToHex(alphaDec)}`;
 
+/**
+ * Experimental colour scheme from the Dracula theme, is not 100% correct or legal to use here...
+ */
 const dracula = {
 	base: 'vs-dark',
 	inherit: false,
@@ -398,10 +401,16 @@ const dracula = {
 
 		'minimap.background': dCol.bg,
 		'minimap.foregroundOpacity': '0x000f',
-		'scrollbarSlider.background': dCol.red,
+		// 'scrollbarSlider.background': dCol.red,
 	}
 };
 
+/**
+ * A list of objects for syntax highlighting.
+ * - name: the name users will see
+ * - token: the token name actually used in the theme object
+ * - demo: the example of what the name means (comment name will have example of '// this is comment')
+ */
 export const customThemeSyntaxHighlight = [
 	{ name: "Comments", token: 'comment', demo: "// Welcome to DuckCode" },
 	{ name: "String", token: 'string', demo: "'Welcome to DuckCode!'" },
@@ -415,16 +424,255 @@ export const customThemeSyntaxHighlight = [
 	{ name: "Type Parameters", token: 'typeParameter', demo: "class HashMap<K, V> {...} // Java" },
 	{ name: "Function Names", token: 'function', demo: "greet() { ... }" },
 	{ name: "Method Names", token: 'method', demo: "myObject.doSomething();" },
-	{ name: "Macros/Preprocessors", token: "macro", demo: "#include<stdio.h> // C" },
+	{ name: "Macros", token: "macro", demo: "#include<stdio.h> // C" },
 	{ name: "Interface", token: "interface", demo: "interface Greetable { ... }" },
 	{ name: "Class property", token: "property", demo: "myObject.myProperty" },
 	{ name: "Decorators (JS-specific)", token: "decorator", demo: "@readonly" }
 ]
 
-export const presetThemes = [
-	{ name: "Visual Studio - Light", theme: vs, value: "vs" },
-	{ name: "Visual Studio - Dark", theme: vsDark, value: "vs-dark" },
-	{ name: "High Contrast - Black", theme: hcBlack, value: "hc-black" },
-	{ name: "High Contrast - White", theme: hcWhite, value: "hc-white" },
-	{ name: "Dracula (experimental)", theme: dracula, value: "dracula" }
-];
+/**
+ * A list of objects for editor component colors.
+ * - name: The nameof the component the user will see.
+ * - token: The name actually used in the theme object
+ */
+export const customComponentColorScheme = [
+	{ name: "Editor - Background", token: "editor.background" },
+	{ name: "Editor - Foreground", token: "editor.foreground" },
+	{ name: "Editor Line Number - Foreground", token: "editorLineNumber.foreground" },
+	{ name: "Editor Selection - Background", token: "editor.selectionBackground" },
+	{ name: "Editor Selection - Highlight Background", token: "editor.selectionHighlightBackground" },
+	{ name: "Editor Fold - Background", token: "editor.foldBackground" },
+	{ name: "Editor Word - Highlight Background", token: "editor.wordHighlightBackground" },
+	{ name: "Editor Word - Highlight Strong Background", token: "editor.wordHighlightStrongBackground" },
+	{ name: "Editor Find Match - Background", token: "editor.findMatchBackground" },
+	{ name: "Editor Find Match - Highlight Background", token: "editor.findMatchHighlightStrongBackground" },
+	{ name: "Editor Find Range - Highlight Background", token: "editor.findRangeHighlightStrongBackground" },
+	{ name: "Editor Hover - Highlight Background", token: "editor.hoverHighlightBackground" },
+	{ name: "Editor Line - Highlight Border", token: "editor.lineHighlightBorder" },
+	{ name: "Editor Link - Active Foreground", token: "editorLink.activeForeground" },
+	{ name: "Editor Range - Highlight Background", token: "editor.rangeHighlightBackground" },
+	{ name: "Editor Snippet Tabstop - Highlight Background", token: "editor.snippetTabstopHighlightBackground" },
+	{ name: "Editor Snippet Tabstop - Highlight Border", token: "editor.snippetTabstopHighlightBorder" },
+	{ name: "Editor Snippet Final Tabstop - Highlight Background", token: "editor.snippetFinalTabstopHighlightBackground" },
+	{ name: "Editor Snippet Final Tabstop - Highlight Border", token: "editor.snippetFinalTabstopHighlightBorder" },
+	{ name: "Editor Whitespace - Foreground", token: "editorWhitespace.foreground" },
+	{ name: "Editor Indent Guide - Background", token: "editorIndentGuide.background" },
+	{ name: "Editor Indent Guide - Active Background", token: "editorIndentGuide.activeBackground" },
+	{ name: "Editor Ruler Foreground", token: "editorRuler.foreground" },
+	{ name: "Editor Codelens Foreground", token: "editorCodelens.foreground" },
+	{ name: "Editor Bracket - Highlight Foreground 1", token: "editorBracketHighlight.foreground1" },
+	{ name: "Editor Bracket - Highlight Foreground 2", token: "editorBracketHighlight.foreground2" },
+	{ name: "Editor Bracket - Highlight Foreground 3", token: "editorBracketHighlight.foreground3" },
+	{ name: "Editor Bracket - Highlight Foreground 4", token: "editorBracketHighlight.foreground4" },
+	{ name: "Editor Bracket - Highlight Foreground 5", token: "editorBracketHighlight.foreground5" },
+	{ name: "Editor Bracket - Highlight Foreground 6", token: "editorBracketHighlight.foreground6" },
+	{ name: "Editor Unexpected Bracket - Highlight Foreground", token: "editorBracketHighlight.unexpectedBracket.foreground" },
+	{ name: "Editor Overview Ruler - Border", token: "editorOverviewRuler.border" },
+	{ name: "Editor Overview Ruler - Selection Highlight Foreground", token: "editorOverviewRuler.selectionHighlightForeground" },
+	{ name: "Editor Overview Ruler - Word Highlight Foreground", token: "editorOverviewRuler.wordHighlightForeground" },
+	{ name: "Editor Overview Ruler - Word Highlight Strong Foreground", token: "editorOverviewRuler.wordHighlightStrongForeground" },
+	{ name: "Editor Overview Ruler - Modified Foreground", token: "editorOverviewRuler.modifiedForeground" },
+	{ name: "Editor Overview Ruler - Added Foreground", token: "editorOverviewRuler.addedForeground" },
+	{ name: "Editor Overview Ruler - Deleted Foreground", token: "editorOverviewRuler.deletedForeground" },
+	{ name: "Editor Overview Ruler - Error Foreground", token: "editorOverviewRuler.errorForeground" },
+	{ name: "Editor Overview Ruler - Warning Foreground", token: "editorOverviewRuler.warningForeground" },
+	{ name: "Editor Error - Foreground", token: "editorError.foreground" },
+	{ name: "Editor Warning - Foreground", token: "editorWarning.foreground" },
+	{ name: "Editor Gutter - Modified Background", token: "editorGutter.modifiedBackground" },
+	{ name: "Editor Gutter - Added Background", token: "editorGutter.addedBackground" },
+	{ name: "Editor Gutter - Deleted Background", token: "editorGutter.deletedBackground" },
+	{ name: "Side Bar - Background", token: "sideBar.background" },
+	{ name: "Side Bar Title - Foreground", token: "sideBarTitle.foreground" },
+	{ name: "Side Bar Section Header - Background", token: "sideBarSectionHeader.background" },
+	{ name: "Side Bar Section Header - Foreground", token: "sideBarSectionHeader.foreground" },
+	{ name: "Minimap - Background", token: "minimap.background" },
+	{ name: "Minimap - Foreground Opacity", token: "minimap.foregroundOpacity" },
+	{ name: "Scrollbar Slider - Background", token: "scrollbarSlider.background" },
+	
+	// 	'sideBar.background': dCol["bg-dark"],
+	// 	'sideBarTitle.foreground': dCol.fg,
+	// 	'sideBarSectionHeader.background': dCol.bg,
+	// 	'sideBarSectionHeader.border': dCol["bg-darker"],
+
+	// 	'minimap.background': dCol.bg,
+	// 	'minimap.foregroundOpacity': '0x000f',
+	// 	'scrollbarSlider.background': dCol.red,
+]
+
+/**
+ * An object literal where
+ * - key (string): The name of the theme passed to Monaco Editor's defineTheme method.
+ * - value (object): An object with two attributes:
+ *  - name (string): The name of the theme that will be displayed to the user.
+ * 	- theme (object): The theme object that implements the IStandaloneThemeData interface of VSCode.
+ */
+export const presetThemes = {
+	"vs": { name: "Visual Studio - Light", theme: vs },
+	"vs-dark": { name: "Visual Studio - Dark", theme: vsDark },
+	"hc-black": { name: "High Contrast - Black", theme: hcBlack },
+	"hc-white": { name: "High Contrast - White", theme: hcWhite },
+	"dracula": { name: "Dracula (experimental)", theme: dracula },
+}
+
+/**
+ * The TheneObject class stores the custom theme the user chooses when he/she uses custom theme option.
+ * This contains an object which implements the IStandaloneThemeData interface of VSCode, accessible using the 'theme' attribute.
+ */
+export class ThemeObject {
+	/**
+	 * A theme following the IStandaloneThemeData interface, which can be passed to
+	 * Monaco Editor's defineTheme method.
+	 */
+	theme;
+	rulesDict;
+	/**
+	 * The name of the theme that will be passed into Monaco Editor's defineTheme method.. 
+	 */
+	monacoEditorName;
+
+	/**
+	 * The TheneObject class stores the custom theme the user chooses when he/she uses custom theme option.
+ 	 * This contains an object which implements the IStandaloneThemeData interface of VSCode, accessible using the 'theme' attribute.
+	 * 
+	 * @param {string} defaultTheme - If the defaultTheme attribute is one of the values in the presetTheme list, use that theme.
+	 * Otherwise, use an empty template for the theme. 
+	 */
+	constructor(defaultTheme=null) {
+		const matchedTheme = presetThemes[defaultTheme];
+		if (matchedTheme) {
+			this.theme = matchedTheme.theme;
+			this.monacoEditorName = defaultTheme;
+		} else {
+			this.theme = {
+				base: "vs-dark",
+				inherit: "false",
+				rules: [
+					{ token: 'comment', foreground: '', background: '', fontStyle: '' },
+					{ token: 'string', foreground: '', background: '', fontStyle: '' },
+					{ token: 'keyword', foreground: '', background: '', fontStyle: '' },
+					{ token: 'invalid', foreground: '', background: '', fontStyle: '' },
+					{ token: 'number', foreground: '', background: '', fontStyle: '' },
+					{ token: 'number.hex', foreground: '', background: '', fontStyle: '' },
+					{ token: 'regexp', foreground: '', background: '', fontStyle: '' },
+					{ token: 'annotation', foreground: '', background: '', fontStyle: '' },
+					{ token: 'type', foreground: '', background: '', fontStyle: '' },
+					{ token: 'typeParameter', foreground: '', background: '', fontStyle: '' },
+					{ token: 'function', foreground: '', background: '', fontStyle: '' },
+					{ token: 'method', foreground: '', background: '', fontStyle: '' },
+					{ token: 'macro', foreground: '', background: '', fontStyle: '' },
+					{ token: 'interface', foreground: '', background: '', fontStyle: '' },
+					{ token: 'property', foreground: '', background: '', fontStyle: '' },
+					{ token: 'decorator', foreground: '', background: '', fontStyle: '' },
+				],
+				color: {
+					'editor.background': '',
+					'editor.foreground': '',
+					'editorLineNumber.foreground': '',
+
+					'editor.selectionBackground': '',
+					'editor.selectionHighlightBackground': '',
+					'editor.foldBackground': '',
+
+					'editor.wordHighlightBackground': '',
+					'editor.wordHighlightStrongBackground': '',
+
+					'editor.findMatchBackground': '',
+					'editor.findMatchHighlightBackground': '',
+					'editor.findRangeHighlightBackground': '',
+
+					'editor.hoverHighlightBackground': '',
+
+					'editor.lineHighlightBorder': '',
+					'editorLink.activeForeground': '',
+					'editor.rangeHighlightBackground': '',
+					'editor.snippetTabstopHighlightBackground': '',
+					'editor.snippetTabstopHighlightBorder': '',
+					'editor.snippetFinalTabstopHighlightBackground': '',
+					'editor.snippetFinalTabstopHighlightBorder': '',
+					'editorWhitespace.foreground': '',
+					'editorIndentGuide.background': '',
+					'editorIndentGuide.activeBackground': '',
+					'editorRuler.foreground': '',
+
+					'editorCodeLens.foreground': '',
+
+					'editorBracketHighlight.foreground1': '',
+					'editorBracketHighlight.foreground2': '',
+					'editorBracketHighlight.foreground3': '',
+					'editorBracketHighlight.foreground4': '',
+					'editorBracketHighlight.foreground5': '',
+					'editorBracketHighlight.foreground6': '',
+					'editorBracketHighlight.unexpectedBracket.foreground': '',
+
+					'editorOverviewRuler.border': '',
+					'editorOverviewRuler.selectionHighlightForeground': '',
+					'editorOverviewRuler.wordHighlightForeground': '',
+					'editorOverviewRuler.wordHighlightStrongForeground': '',
+					'editorOverviewRuler.modifiedForeground': '',
+					'editorOverviewRuler.addedForeground':    '',
+					'editorOverviewRuler.deletedForeground':  '',
+					'editorOverviewRuler.errorForeground':    '',
+					'editorOverviewRuler.warningForeground':  '',
+					'editorOverviewRuler.infoForeground':     '',
+
+					'editorError.foreground': '',
+					'editorWarning.foreground': '',
+
+					'editorGutter.modifiedBackground': '',
+					'editorGutter.addedBackground':    '',
+					'editorGutter.deletedBackground':  '',
+
+					'sideBar.background': '',
+					'sideBarTitle.foreground': '',
+					'sideBarSectionHeader.background': '',
+					'sideBarSectionHeader.border': '',
+
+					'minimap.background': '',
+					'minimap.foregroundOpacity': '',
+					'scrollbarSlider.background': ''
+				}
+			}
+
+			this.rulesDict = this.theme.rules.reduce((acc, value, index) => {
+				acc[value.token] = index;
+				return acc;
+			}, {});
+
+			this.monacoEditorName = 'custom';
+		}
+	}
+
+	/**
+	 * Add (or modify if existed) syntax highlight to the theme
+	 * 
+	 * @param {string} token The token 
+	 * @param {string} attribute The attribute to add/modify. Either 'foreground' or 'fontStyle' 
+	 * @param {string|string[]} value If foreground, the hexcolor string (with #). If fontStyle, the list of font styles.
+	 */
+	addSyntaxHighlight(token, attribute, value) {
+		const tokenIndex = this.rulesDict[token];
+
+		if (attribute === 'foreground' && value !== null) {
+			this.theme.rules[tokenIndex][attribute] = value;
+		} else if (attribute === 'fontStyle' && value.length > 0) {
+			this.theme.rules[token][attribute] = value.join(' ');
+		}
+	}
+
+	/**
+	 * Add (of modify if exists) code editor component colour
+	 * 
+	 * @param {string} attribute The code editor component to add/modify colour 
+	 * @param {string} color The colour
+	 */
+	addEditorComponentColor(attribute, color) {
+		if (color !== null) {
+			this.theme.color[attribute] = color;
+		}
+	}
+}
+
+export const THEME_MODES = Object.freeze({
+	DEFAULT: 'default',
+	CUSTOM: 'custom'
+});

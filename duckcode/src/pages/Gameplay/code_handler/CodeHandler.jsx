@@ -1,16 +1,20 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useContext } from "react";
 import CodeEditor from "./CodeEditor";
 import CodeExecutor from "./CodeExecutor";
+import { SettingsContext } from "../../../App";
+import { presetThemes } from "../../../globalcomponents/color_schemes/themes";
+
 /**
  * CodeHandler contains two parts: the CodeEditor component and the CodeExecutor component
  * 
  * @param {string[][]} testCases - An array of input-expected output pairs, passed into the CodeExecutor component 
  * @returns 
  */
-export default function CodeHandler({ testCases, editorTheme }) {
+export default function CodeHandler({ testCases }) {
     // because this controls both the editor and the output, the Monaco Editor logic is handled here
     const editorRef = useRef(null);
-    const monacoRef = useRef(null);
+
+    const settings = useContext(SettingsContext);            
 
     const testCode = [
         "const re = /ab+c/; // regexp, const",
@@ -43,15 +47,12 @@ export default function CodeHandler({ testCases, editorTheme }) {
 
     function handleEditorDidMount(editor, monaco) {
         editorRef.current = editor;
-        monacoRef.current = monaco;
+        settings.monacoRef.current = monaco;
 
-        monaco.editor.defineTheme(editorTheme.value, editorTheme.theme);
-        monaco.editor.setTheme(editorTheme.value);
+        Object.entries(presetThemes).forEach(theme => {
+            monaco.editor.defineTheme(theme[0], theme[1].theme);
+        });
     }
-
-    // function showValue() {
-    //     alert(editorRef.current.getValue());
-    // }
 
     function handleEditorChange(value, event) {
         setValue(value);
@@ -84,7 +85,10 @@ export default function CodeHandler({ testCases, editorTheme }) {
             body: JSON.stringify({ code: value, language: 'javascript', version: '15.10.0' }),
             signal: signal
         })
-            .then(response => response.json())
+            .then(response => {
+                console.log(response);
+                return response.json();
+            })
             .then(data => setCodeOutput(data.run.output))
             .catch(error => console.error('Error executing code: ', error));
     }, [value])

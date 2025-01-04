@@ -52,11 +52,14 @@ body {
     top: 50%;
     left: 50%;
     text-align: center;
+    z-index: var(--unsupported-z-index);
 }
 
 /*
-    Radio button stylized
+    Input style
 */
+
+/* radio */
 .radio-button-label {
     margin: 0.5em;
 }
@@ -73,6 +76,149 @@ body {
 
 input[type="radio"]:checked + .radio-input-indicator {
     background-color: var(--terminal-like-background-color);
+}
+
+/* color */
+.color-input-wrapper {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: 
+        "content input"
+        "content color";
+    padding: 5px 15px;
+    font-family: var(--code-fragment-font) !important;
+    align-items: center;
+}
+
+.color-input-content {
+    grid-area: content;
+}
+
+.color-input-input {
+    grid-area: input;
+    justify-self: center;
+}
+
+.color-input-color {
+    grid-area: color;
+    margin: 0;
+    justify-self: center;
+    font-family: var(--code-fragment-font) !important; 
+}
+
+/* checkbox */
+.checkbox-input-label {
+    margin: 0.5em;
+}
+
+.checkbox-input-indicator {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 2px solid var(--second-layer-background-color);
+    background-color: var(--first-layer-background-color);
+    transition-duration: 0.25s;    
+}
+
+input[type="checkbox"]:checked + .checkbox-input-indicator {
+    background-color: var(--terminal-like-background-color);
+}
+
+/*
+    Tooltip style
+*/
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.tooltip-text {
+    display: none;
+    position: absolute;
+    bottom: 125%;
+    background-color: var(--terminal-like-background-color);
+    font-family: var(--code-fragment-font) !important;
+    white-space: nowrap;
+    padding: 0.25em;
+    z-index: var(--hoverable-z-index);
+}
+
+.tooltip:hover .tooltip-text {
+    display: block;
+}
+
+/*
+    Confirmation pop-up styling
+*/
+#confirmation-popup-overlay {
+    position: fixed;
+    z-index: var(--confirmation-popup-z-index);
+    background-color: rgba(0, 0, 0, 0.3);
+    width: calc(100vw);
+    height: calc(100vh);
+    visibility: hidden;
+}
+
+#confirm {
+    border: 1px solid var(--second-layer-background-color);
+    border-top: 0;
+    width: fit-content;
+    padding: 1em 3em;
+    background-color: var(--confirmation-popup-background-color);
+    margin: auto;
+    transition-duration: 0.35s;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: 
+        "message message"
+        "cancel proceed";
+    border-radius: 0 0 1em 1em;
+    transform: translateY(-20vh);
+}
+
+#confirmation-message {
+    display: block;
+    grid-area: message;
+    font-weight: 600;
+}
+
+#confirm-tab-cancel-button {
+    grid-area: cancel;
+    width: fit-content;
+    height: fit-content;
+    font-size: 1em;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    border: 1px solid var(--second-layer-background-color);
+    background-color: var(--dark-button-color);
+    justify-self: center;
+    align-self: center;
+    transition-duration: 0.25s;
+}
+
+#confirm-tab-proceed-button {
+    grid-area: proceed;
+    width: fit-content;
+    height: fit-content;
+    font-size: 1em;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    border: 1px solid var(--second-layer-background-color);
+    background-color: var(--blue-button-color);
+    justify-self: center;
+    align-self: center;
+    transition-duration: 0.25s;
+}
+
+#confirm-tab-cancel-button:hover {
+    background-color: var(--dark-button-hover-color);
+}
+
+#confirm-tab-proceed-button:hover {
+    background-color: var(--blue-button-hover-color);
 }
 
 /* ____________________ */
@@ -92,6 +238,10 @@ input[type="radio"]:checked + .radio-input-indicator {
     display: grid;
     grid-template-columns: 1fr 4fr;
     grid-template-areas: "options display";
+}
+
+#settings h2 {
+    margin: 0;
 }
 
 #settings-option {
@@ -127,17 +277,37 @@ input[type="radio"]:checked + .radio-input-indicator {
     grid-area: display;
 }
 
-#settings-display #code-editor-settings {
+#code-editor-settings, #general-settings, #keyboard-config-settings {
     background-color: var(--settings-option-bg-selected-color);
-    width: 100%;
-    height: 100%;
+    height: calc(100vh);
+    overflow-y: auto;
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
     grid-template-rows: 1fr 13fr 1fr;
 }
 
-#code-editor-settings-form {
-    /* border: 1px solid var(--second-layer-background-color); */
+#general-settings {
+    display: grid;
+}
+
+#code-editor-settings, #keyboard-config-settings {
+    display: none;
+}
+
+/* 
+    Code editor settings section
+*/
+
+#code-editor-settings::-webkit-scrollbar {
+    width: 5px;
+}
+
+#code-editor-settings::-webkit-scrollbar-thumb {
+    background-color: var(--second-layer-background-color);
+}
+
+#code-editor-settings-form, #general-settings-form, #keyboard-config-settings-form {
+    height: calc(86.66vh);
     grid-column: 2;
     grid-row: 2;
     min-width: 500px;
@@ -165,12 +335,13 @@ input[type="radio"]:checked + .radio-input-indicator {
 
 .one-settings-option-block {
     padding: 10px;
+    margin: 0;
     border-bottom: 1px solid var(--second-layer-background-color);
     transition-duration: 0.2s;
 }
 
 .one-settings-option-block:hover {
-    background-color: var(--second-layer-background-color);
+    background-color: var(--one-half-layer-bakground-color);
 }
 
 #custom-theme-panel {
@@ -210,6 +381,165 @@ input[type="radio"]:checked + .radio-input-indicator {
     width: 100%;
 }
 
-#syntax-highlight colgroup col:nth-child(1) { width: 25%; }
-#syntax-highlight colgroup col:nth-child(2) { width: 25%; }
-#syntax-highlight colgroup col:nth-child(3) { width: 50%; }
+#syntax-highlight colgroup col:nth-child(1) { width: 35%; }
+#syntax-highlight colgroup col:nth-child(2) { width: 65%; }
+
+#prog-lang-dropdown-container {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#prog-lang-input {
+    border: 1px solid var(--second-layer-background-color);
+    width: 200px;
+    font-size: 16px;
+    padding: 8px;
+    height: 2em;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+#prog-lang-label, #code-font-label {
+    position: relative;
+}
+
+.prog-lang-option, .code-font-option {
+    background-color: var(--terminal-like-background-color);
+    padding: 0.5em;
+    transition-duration: 0.25s;
+    margin: 0;
+    margin-left: 10px;
+    box-sizing: content-box;
+    display: flex;
+    justify-content: space-between;
+}
+
+.prog-lang-option:hover, .code-font-option:hover {
+    background-color: var(--first-layer-background-color);
+    border: 1px solid var(--terminal-like-background-color);
+}
+
+#prog-lang-options-dropdown {
+    position: absolute;
+    width: 200px;
+    overflow-y: auto;
+    transition: 0.4s;
+    z-index: var(--prog-lang-dropdown-z-index);
+}
+
+#code-font-options-dropdown {
+    position: absolute;
+    width: 200px;
+    overflow-y: auto;
+    transition: 0.4s;
+    z-index: var(--code-editor-font-z-index);
+}
+
+#prog-lang-options-dropdown::-webkit-scrollbar {
+    display: none;
+}
+
+#code-font-options-dropdown::-webkit-scrollbar {
+    display: none;
+}
+
+#code-font-input {
+    border: 1px solid var(--second-layer-background-color);
+    width: 200px;
+    font-size: 16px;
+    padding: 8px;
+    height: 2em;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* 
+    Keyboard configuration settings option
+*/
+#key-binding-overlay {
+    position: fixed;
+    width: calc(100vw);
+    height: calc(100vh);
+    background: rgba(0, 0, 0, 0.5);
+    left: 0%;
+    z-index: var(--key-binding-overlay-z-index);
+}
+
+#key-binding-register {
+    z-index: calc(var(--key-binding-overlay-z-index) + 1);
+    transform: translateY(calc(50vh - 50%));    
+}
+
+#key-binding-register h1 {
+    text-align: center;
+}
+
+.keyboard-config-options {
+    display: flex; 
+    justify-content: space-between;
+    margin: 10px 0;
+    transition-duration: 0.25s;
+    padding: 5px 15px;
+    border-radius: 5px ;
+}
+
+.keyboard-config-options:hover {
+    background-color: var(--second-layer-background-color);
+}
+
+.keyboard-config-options:hover .key-binding-input {
+    border: 2px solid var(--second-layer-background-color);
+}
+
+.key-binding-input {
+    background-color: var(--first-layer-background-color);
+    border: 1px solid var(--second-layer-background-color);
+    padding: 0.5em;
+    border-radius: 0.5em;
+    text-align: center;
+    transition-duration: 0.25s;
+}
+
+#settings-save-button {
+    position: fixed;
+    z-index: var(--settings-button-z-index);
+    background-color: var(--blue-button-color);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    border: 1px solid var(--second-layer-background-color);
+    bottom: 50px;
+    right: 50px;
+    transform: translate(-0%, 50%);
+    transition-duration: 0.25s;
+}
+
+#settings-save-button:hover {
+    background-color: var(--blue-button-hover-color);
+    border: 2px solid var(--second-layer-background-color);
+    padding: calc(0.5em + 2px) calc(1em + 2px);
+}
+
+#settings-revert-button {
+    position: fixed;
+    z-index: var(--settings-button-z-index);
+    background-color: var(--dark-button-color);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    border: 1px solid var(--second-layer-background-color);
+    bottom: 50px;
+    right: 175px;
+    transform: translate(50%, 50%);
+    transition-duration: 0.25s;
+}
+
+#settings-revert-button:hover {
+    background-color: var(--dark-button-hover-color);
+    border: 2px solid var(--second-layer-background-color);
+    padding: calc(0.5em + 2px) calc(1em + 2px);
+}

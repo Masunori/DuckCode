@@ -5,8 +5,11 @@
     --background-colour: #121212;
     --selected-first-layer-background-color: #242424;
     --first-layer-background-color: #484848;
+    --one-half-layer-bakground-color: #525252;
     --second-layer-background-color: #606060;
     --terminal-like-background-color: #1e1e1e;
+
+    --confirmation-popup-background-color: #242424;
     
     --blue-button-color: #007fff;
     --blue-button-hover-color: #0560bc;
@@ -24,8 +27,16 @@
     --settings-option-bg-selected-color: #484848;
     --settings-option-border-color: #848484;
 
-    --navbar-z-index: 15;
-    --settings-z-index: 20;
+    
     --qn-editor-z-index: 2;
     --output-tcpanel-z-index: 1;
+    --navbar-z-index: 15;
+    --settings-z-index: 20;
+    --prog-lang-dropdown-z-index: 22;
+    --code-editor-font-z-index: 21;
+    --hoverable-z-index: 25;
+    --settings-button-z-index: 28;
+    --key-binding-overlay-z-index: 30;
+    --confirmation-popup-z-index: 30;
+    --unsupported-z-index: 1000;
 }

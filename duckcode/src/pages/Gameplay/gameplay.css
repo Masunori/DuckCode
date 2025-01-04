@@ -1,4 +1,4 @@
-* :not(code):not(#code-editor *) {
+* :not(code) {
     color: var(--font-colour);
     font-family: var(--normal-text-font);
 }
@@ -10,6 +10,10 @@ code {
     font-weight: 400;
     word-wrap: break-word;
     overflow-wrap: break-word;
+}
+
+#code-editor * {
+    font-family: monospace;
 }
 
 button:hover {
@@ -166,7 +170,7 @@ button:hover {
 #code-executor #test-case-buttons {
     display: grid;
     height: 50px;
-    grid-template-columns: 2fr 2fr 2fr 2fr 1fr;
+    grid-template-columns: 2fr 2fr 2fr 1fr;
     grid-area: buttons;
     position: inherit;
     z-index: var(--qn-editor-z-index);
