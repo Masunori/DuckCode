@@ -9,7 +9,7 @@ function ProgLangOptions() {
     const [dropDownHeight, setDropDownHeight] = useState('0');
     const [currProgLang, setCurrProgLang] = useState('javascript');
 
-    const settings = useContext(SettingsContext);
+    const {modifySettings} = useContext(SettingsContext);
 
     // function handleChooseProgLang(event) {
     //     setCurrProgLang(event.target.value);
@@ -37,7 +37,8 @@ function ProgLangOptions() {
 
         function handleProgLangOptionClick(event) {
             setCurrProgLang(event.target.dataset.key);
-            settings.temp.progLang = PROGRAMMING_LANGUAGES[event.target.dataset.value];
+            modifySettings('progLang', PROGRAMMING_LANGUAGES[event.target.dataset.value]);
+            // settings.temp.progLang = PROGRAMMING_LANGUAGES[event.target.dataset.value];
             // console.table(settings.temp.progLang.monaco_editor_alias)
             closeDropDown(event);
         }
@@ -55,7 +56,7 @@ function ProgLangOptions() {
                 option.removeEventListener('click', handleProgLangOptionClick)
             });
         })
-    }, [setDropDownHeight, settings, setCurrProgLang])
+    }, [setDropDownHeight, setCurrProgLang, modifySettings])
 
     return (
         <div id="prog-lang-dropdown-container">
@@ -78,6 +79,8 @@ function ProgLangOptions() {
 function CodeFontOptions() {
     const [currFont, setCurrFont] = useState('monospace');
     const [dropDownHeight, setDropDownHeight] = useState('0');
+
+    const {modifySettings} = useContext(SettingsContext);
 
     useEffect(() => {
         function openDropDown(event) {
@@ -105,6 +108,7 @@ function CodeFontOptions() {
 
     function handleChooseFont(event) {
         setCurrFont(event.target.value);
+        modifySettings('codeEditorFont', event.target.value);
     }
 
     return (
@@ -131,7 +135,7 @@ function CodeFontOptions() {
 }
 
 export default function CodeEditorSettings({ setEditorTheme, settingsObject }) {
-    const settings = useContext(SettingsContext);
+    const {modifySettings} = useContext(SettingsContext);
     const [selectedTheme, setSelectedTheme] = useState('vs-dark');
 
     // const [panelStyle, setPanelStyle] = useState({
@@ -145,10 +149,13 @@ export default function CodeEditorSettings({ setEditorTheme, settingsObject }) {
 
         // modify the settings object
         if (event.target.value !== 'custom') {
-            settings.temp.themeMode = THEME_MODES.DEFAULT;
-            settings.temp.defaultTheme = event.target.value;
+            // settings.temp.themeMode = THEME_MODES.DEFAULT;
+            modifySettings('themeMode', THEME_MODES.DEFAULT);
+            modifySettings('defaultTheme', event.target.value);
+            // settings.temp.defaultTheme = event.target.value;
         } else {
-            settings.temp.themeMode = THEME_MODES.CUSTOM;
+            // settings.temp.themeMode = THEME_MODES.CUSTOM;
+            modifySettings('themeMode', THEME_MODES.CUSTOM);
         }
 
         // open the custom theme panel 

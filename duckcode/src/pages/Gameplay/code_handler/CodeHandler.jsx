@@ -14,7 +14,7 @@ export default function CodeHandler({ testCases }) {
     // because this controls both the editor and the output, the Monaco Editor logic is handled here
     const editorRef = useRef(null);
 
-    const settings = useContext(SettingsContext);            
+    const assignMonacoInstance = useContext(SettingsContext).assignMonacoInstance;            
 
     const testCode = [
         "const re = /ab+c/; // regexp, const",
@@ -47,7 +47,7 @@ export default function CodeHandler({ testCases }) {
 
     function handleEditorDidMount(editor, monaco) {
         editorRef.current = editor;
-        settings.monacoRef.current = monaco;
+        assignMonacoInstance(monaco);
 
         Object.entries(presetThemes).forEach(theme => {
             monaco.editor.defineTheme(theme[0], theme[1].theme);

@@ -8,92 +8,120 @@ import { PROGRAMMING_LANGUAGES } from './globalcomponents/constants';
 
 export const SettingsContext = createContext(null);
 
-/**
- * A custom React hook that 
- * 
- * @returns 
- */
-const useSettings = () => {
+export default function App() {
+    // /**
+    //  * The settingsRef object contains the following keys:
+    //  * - history (object): the previous settings object
+    //  * - current (object): the current settings object
+    //  * - temp (object): the temporary settings object
+    //  * - isSettingsFrozen (boolean): whether the settings are frozen
+    //  * - setIsSettingsFrozen (function): set the isSettingsFrozen state
+    //  * - currTheme (ThemeObject): the current theme object
+    //  * - setCurrTheme (function): set the currTheme state
+    //  * Freeze settings make sure that key bindings specific to settings will not be triggered outside settings.
+    //  */
+    // // const settings = {
+    // //     history: null,
+    // //     current: {
+    // //         themeMode: THEME_MODES.DEFAULT,
+    // //         defaultTheme: 'vs-dark',
+    // //         theme: new ThemeObject(),
+    // //         progLang: PROGRAMMING_LANGUAGES['javascript'],
+    // //         codeEditorFont: 'monospace',    
+    // //     },
+    // //     temp: {
+    // //         themeMode: THEME_MODES.DEFAULT,
+    // //         defaultTheme: 'vs-dark',
+    // //         theme: new ThemeObject(),
+    // //         progLang: PROGRAMMING_LANGUAGES['javascript'],
+    // //         codeEditorFont: 'monospace',
+    // //     },
+    // //     frozen,
+    // //     setFrozen,
+    // //     monacoRef
+    // // };
     const [frozen, setFrozen] = useState(true);
     const monacoRef = useRef(null);
 
     const [settings, setSettings] = useState({
         history: null,
         current: {
-            // themeMode: THEME_MODES.DEFAULT,
+            themeMode: THEME_MODES.DEFAULT,
             defaultTheme: 'vs-dark',
-            // theme: new ThemeObject(),
+            theme: new ThemeObject(),
             progLang: PROGRAMMING_LANGUAGES['javascript'],
             codeEditorFont: 'monospace',    
         },
         temp: {
-            // themeMode: THEME_MODES.DEFAULT,
+            themeMode: THEME_MODES.DEFAULT,
             defaultTheme: 'vs-dark',
-            // theme: new ThemeObject(),
+            theme: new ThemeObject(),
             progLang: PROGRAMMING_LANGUAGES['javascript'],
             codeEditorFont: 'monospace',
         },
-        frozen,
-        setFrozen,
-        monacoRef
+        monaco: monacoRef.current
     });
 
     function modifySettings(key, value) {
-        if (!(key in Object.keys(settings.current))) {
+        console.log(Object.keys(settings.current));
+        console.log(key);
+        if (!(key in settings.current)) {
+            // console.log('Key not found!');
             return;
         }
 
         setSettings(prev => ({
             ...prev,
-            current: {
-                ...prev.current,
+            temp: {
+                ...prev.temp,
                 [key]: value
             }
         }));
+
+        console.log(settings);
     }
 
-    return [settings, modifySettings];
-}
+    function assignMonacoInstance(monacoInstance) {
+        setSettings(prev => ({
+            ...prev,
+            monaco: monacoInstance
+        }));
+    }
 
-export default function App() {
-    const [frozen, setFrozen] = useState(true);
+    function saveSettings() {
+        setSettings(prev => ({
+            ...prev,
+            history: structuredClone(prev.current),
+            current: structuredClone(prev.temp)
+        }));
 
-    const monacoRef = useRef(null);
+        const themeAlias = settings.current.defaultTheme;
+        const editor = settings.monaco.editor;
+        editor.setTheme(themeAlias);
+    }
 
-    /**
-     * The settingsRef object contains the following keys:
-     * - history (object): the previous settings object
-     * - current (object): the current settings object
-     * - temp (object): the temporary settings object
-     * - isSettingsFrozen (boolean): whether the settings are frozen
-     * - setIsSettingsFrozen (function): set the isSettingsFrozen state
-     * - currTheme (ThemeObject): the current theme object
-     * - setCurrTheme (function): set the currTheme state
-     * Freeze settings make sure that key bindings specific to settings will not be triggered outside settings.
-     */
-    const settings = {
-        history: null,
-        current: {
-            themeMode: THEME_MODES.DEFAULT,
-            defaultTheme: 'vs-dark',
-            theme: new ThemeObject(),
-            progLang: PROGRAMMING_LANGUAGES['javascript'],
-            codeEditorFont: 'monospace',    
-        },
-        temp: {
-            themeMode: THEME_MODES.DEFAULT,
-            defaultTheme: 'vs-dark',
-            theme: new ThemeObject(),
-            progLang: PROGRAMMING_LANGUAGES['javascript'],
-            codeEditorFont: 'monospace',
-        },
-        frozen,
-        setFrozen,
-        monacoRef
-    };
+    function revertSettings() {
+        setSettings(prev => ({
+            ...prev,
+            current: structuredClone(prev.history)
+        }));
+
+        const themeAlias = settings.current.defaultTheme;
+        settings.monaco.editor.setTheme(themeAlias);
+    }
+
+    const settingsContextObject = {
+        'settings': settings,
+        'modifySettings': modifySettings,
+        'assignMonacoInstance': assignMonacoInstance,
+        'saveSettings': saveSettings,
+        'revertSettings': revertSettings,
+        'frozen': frozen,
+        'setFrozen': setFrozen
+    }
 
     return (
-        <SettingsContext.Provider value={settings} id='app'>
+        <SettingsContext.Provider value={settingsContextObject} id='app'>
             <Router>
                 <Routes>
                     <Route path='/gameplay' element={<Gameplay />}></Route>

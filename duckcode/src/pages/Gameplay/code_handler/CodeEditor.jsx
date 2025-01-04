@@ -5,7 +5,9 @@ import { SettingsContext } from '../../../App';
 
 
 export default function CodeEditor({ value, handleEditorDidMount, handleEditorChange }) {
-    const settings = useContext(SettingsContext);
+    const {settings} = useContext(SettingsContext);
+
+    // console.log(settings.current.progLang.monaco_editor_alias);
 
     return (
         <div id='code-editor' className='code'>

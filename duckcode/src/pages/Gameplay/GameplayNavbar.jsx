@@ -3,14 +3,14 @@ import CountdownTimer from "../../globalcomponents/CountdownTimer";
 import { SettingsContext } from "../../App";
 
 export default function GameplayNavbar() {
-    const settings = useContext(SettingsContext);
+    const {setFrozen} = useContext(SettingsContext);
 
     return (
         <div id="gameplay-navbar">
             <div id="gameplay-settings">
                 <button 
                     onClick={() => {
-                        settings.setFrozen(false);
+                        setFrozen(false);
                     }}
                 >Settings</button>
             </div>

@@ -14,7 +14,7 @@ import GeneralSettings from "./settings_components/GeneralSettings";
  * @returns the Settings component.
  */
 export default function Settings() {
-    const settings = useContext(SettingsContext);
+    const {saveSettings, revertSettings, frozen, setFrozen} = useContext(SettingsContext);
     const [settingsStatus, setSettingsStatus] = useState(SETTINGS_STATUS.CANNOT_SAVE.CANNOT_REVERT);
     
     const settingsOptionsRef = useRef([]);
@@ -24,20 +24,20 @@ export default function Settings() {
      * Save the current settings.
      * @param {Event} event 
      */
-    function saveSetting(event) {
+    function saveSettingsWrapper(event) {
         // const theme = settings.current.themeMode === THEME_MODES.DEFAULT
         //                 ? settings.current.defaultTheme.theme
         //                 : settings.current.theme.theme;
 
-        settings.history = settings.current;
-        settings.current = structuredClone(settings.temp);
-        setSettingsStatus(SETTINGS_STATUS.CANNOT_SAVE.CAN_REVERT);
+        // settings.history = settings.current;
+        // settings.current = structuredClone(settings.temp);
 
-        const themeAlias = settings.current.defaultTheme;
-        const editor = settings.monacoRef.current.editor;
-        // alert(themeAlias);
-        editor.setTheme(themeAlias);
-        alert(settings.current.progLang.monaco_editor_alias);
+        saveSettings();
+        setSettingsStatus(SETTINGS_STATUS.CANNOT_SAVE.CAN_REVERT);;
+        // const themeAlias = settings.current.defaultTheme;
+        // const editor = settings.monacoRef.current.editor;
+        // editor.setTheme(themeAlias);
+        // alert(settings.current.progLang.monaco_editor_alias);
         // editor.setModelLanguage(
         //     settings.current.progLang.code_snippet,
         //     settings.current.progLang.monaco_editor_alias
@@ -49,15 +49,16 @@ export default function Settings() {
      * 
      * @param {Event} event 
      */
-    function revertSettings(event) {
-        settings.current = structuredClone(settings.history);
+    function revertSettingsWrapper(event) {
+        // settings.current = structuredClone(settings.history);
+        revertSettings();
         setSettingsStatus(SETTINGS_STATUS.CAN_SAVE.CANNOT_REVERT);
 
-        const themeAlias = settings.current.defaultTheme;
-        settings.monacoRef.current.editor.setTheme(themeAlias);
+        // const themeAlias = settings.current.defaultTheme;
+        // settings.monacoRef.current.editor.setTheme(themeAlias);
     }
 
-    const cachedRevertSettings = useCallback(revertSettings, [settings]);
+    const cachedRevertSettings = useCallback(revertSettingsWrapper, [revertSettings]);
 
     /*
         These two functions handle the mouse hover effect on the settings options.
@@ -109,8 +110,8 @@ export default function Settings() {
             Press 'ESC' to exit settings.
         */
         const escapeFromSettings = (event) => {
-            if (!settings.frozen && event.key === "Escape") {
-                settings.setFrozen(true);
+            if (!frozen && event.key === "Escape") {
+                setFrozen(true);
             }
         }
         
@@ -133,7 +134,7 @@ export default function Settings() {
             Press 'CTRL' + 'Z' to revert the settings.
         */
         const handleRevert = (event) => {
-            if (!settings.frozen && event.ctrlKey && (event.key === 'z' || event.key === 'Z')) {
+            if (!frozen && event.ctrlKey && (event.key === 'z' || event.key === 'Z')) {
                 event.preventDefault();
                 cachedRevertSettings();
             }
@@ -145,15 +146,15 @@ export default function Settings() {
             inputElements.forEach(input => input.removeEventListener('input', enableSave));
             window.removeEventListener('keyup', handleRevert);
         }
-    }, [setSettingsStatus, settingsStatus, settings, cachedRevertSettings]);
+    }, [setSettingsStatus, settingsStatus, cachedRevertSettings, frozen, setFrozen]);
 
     return (
-        <div id="settings-fullscreen-cover" style={{ display: settings.frozen ? "none" : "block" }}>
+        <div id="settings-fullscreen-cover" style={{ display: frozen ? "none" : "block" }}>
             <Confirm 
                 message="Save the current settings? You can still revert until you exit this tab."
                 cancelMessage="Cancel"
                 proceedMessage="Save"
-                onProceed={saveSetting}
+                onProceed={saveSettingsWrapper}
             />
             <div id="settings">
                 <ul id="settings-option">
@@ -182,7 +183,7 @@ export default function Settings() {
                             "Cancel",
                             "Save",
                             () => {return;},
-                            saveSetting
+                            saveSettingsWrapper
                         )}
                     >Save</button>
                     <button 
@@ -191,7 +192,7 @@ export default function Settings() {
                             opacity: [SETTINGS_STATUS.CAN_SAVE.CAN_REVERT, SETTINGS_STATUS.CANNOT_SAVE.CAN_REVERT].includes(settingsStatus) ? '1' : '0.5',
                             pointerEvents: [SETTINGS_STATUS.CAN_SAVE.CAN_REVERT, SETTINGS_STATUS.CANNOT_SAVE.CAN_REVERT].includes(settingsStatus) ? 'auto' : 'none'
                         }} 
-                        onClick={revertSettings}
+                        onClick={revertSettingsWrapper}
                     >Revert</button>
                 </div>
             </div>
