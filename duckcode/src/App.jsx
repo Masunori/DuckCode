@@ -2,123 +2,103 @@ import './styles/App.css';
 import Gameplay from './pages/Gameplay/Gameplay';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import UnsupportedScreenNotification from './globalcomponents/UnsupportedScreenNotification';
-import { createContext, useRef, useState } from 'react';
-import { THEME_MODES, ThemeObject } from './globalcomponents/color_schemes/themes';
+import { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { THEME_MODES, EditorThemeObject, OverallThemeObject } from './globalcomponents/color_schemes/themes';
 import { PROGRAMMING_LANGUAGES } from './globalcomponents/constants';
 
 export const SettingsContext = createContext(null);
 
 export default function App() {
-    // /**
-    //  * The settingsRef object contains the following keys:
-    //  * - history (object): the previous settings object
-    //  * - current (object): the current settings object
-    //  * - temp (object): the temporary settings object
-    //  * - isSettingsFrozen (boolean): whether the settings are frozen
-    //  * - setIsSettingsFrozen (function): set the isSettingsFrozen state
-    //  * - currTheme (ThemeObject): the current theme object
-    //  * - setCurrTheme (function): set the currTheme state
-    //  * Freeze settings make sure that key bindings specific to settings will not be triggered outside settings.
-    //  */
-    // // const settings = {
-    // //     history: null,
-    // //     current: {
-    // //         themeMode: THEME_MODES.DEFAULT,
-    // //         defaultTheme: 'vs-dark',
-    // //         theme: new ThemeObject(),
-    // //         progLang: PROGRAMMING_LANGUAGES['javascript'],
-    // //         codeEditorFont: 'monospace',    
-    // //     },
-    // //     temp: {
-    // //         themeMode: THEME_MODES.DEFAULT,
-    // //         defaultTheme: 'vs-dark',
-    // //         theme: new ThemeObject(),
-    // //         progLang: PROGRAMMING_LANGUAGES['javascript'],
-    // //         codeEditorFont: 'monospace',
-    // //     },
-    // //     frozen,
-    // //     setFrozen,
-    // //     monacoRef
-    // // };
     const [frozen, setFrozen] = useState(true);
     const monacoRef = useRef(null);
 
-    const [settings, setSettings] = useState({
-        history: null,
-        current: {
-            themeMode: THEME_MODES.DEFAULT,
-            defaultTheme: 'vs-dark',
-            theme: new ThemeObject(),
-            progLang: PROGRAMMING_LANGUAGES['javascript'],
-            codeEditorFont: 'monospace',    
-        },
-        temp: {
-            themeMode: THEME_MODES.DEFAULT,
-            defaultTheme: 'vs-dark',
-            theme: new ThemeObject(),
-            progLang: PROGRAMMING_LANGUAGES['javascript'],
-            codeEditorFont: 'monospace',
-        },
-        monaco: monacoRef.current
+    const history = useRef(null);
+
+    const temp = useRef({
+        themeMode: THEME_MODES.DEFAULT,
+        defaultTheme: 'vs-dark',
+        theme: new EditorThemeObject(),
+        progLang: PROGRAMMING_LANGUAGES['javascript'],
+        codeEditorFont: 'monospace',
+        overallTheme: new OverallThemeObject(),
+    })
+
+    const [current, setCurrent] = useState({
+        themeMode: THEME_MODES.DEFAULT,
+        defaultTheme: 'vs-dark',
+        theme: new EditorThemeObject(),
+        progLang: PROGRAMMING_LANGUAGES['javascript'],
+        codeEditorFont: 'monospace',
+        overallTheme: new OverallThemeObject(),   
     });
 
+    const pristine = useRef({
+        themeMode: THEME_MODES.DEFAULT,
+        defaultTheme: 'vs-dark',
+        theme: new EditorThemeObject(),
+        progLang: PROGRAMMING_LANGUAGES['javascript'],
+        codeEditorFont: 'monospace',
+        overallTheme: new OverallThemeObject(),
+    })
+
     function modifySettings(key, value) {
-        console.log(Object.keys(settings.current));
-        console.log(key);
-        if (!(key in settings.current)) {
-            // console.log('Key not found!');
+        if (!(key in temp.current)) {
             return;
         }
 
-        setSettings(prev => ({
-            ...prev,
-            temp: {
-                ...prev.temp,
-                [key]: value
-            }
-        }));
-
-        console.log(settings);
+        temp.current[key] = value;
     }
 
     function assignMonacoInstance(monacoInstance) {
-        setSettings(prev => ({
-            ...prev,
-            monaco: monacoInstance
-        }));
+        monacoRef.current = monacoInstance;
     }
 
-    function saveSettings() {
-        setSettings(prev => ({
-            ...prev,
-            history: structuredClone(prev.current),
-            current: structuredClone(prev.temp)
-        }));
-
-        const themeAlias = settings.current.defaultTheme;
-        const editor = settings.monaco.editor;
-        editor.setTheme(themeAlias);
-    }
+    const saveSettings = useCallback(() => {
+        history.current = structuredClone(current);
+        setCurrent(structuredClone(temp.current));
+    }, [current]);
 
     function revertSettings() {
-        setSettings(prev => ({
-            ...prev,
-            current: structuredClone(prev.history)
-        }));
-
-        const themeAlias = settings.current.defaultTheme;
-        settings.monaco.editor.setTheme(themeAlias);
+        setCurrent(structuredClone(history.current));
     }
 
-    const settingsContextObject = {
-        'settings': settings,
+    function resetSettings() {
+        setCurrent(structuredClone(pristine.current));
+        temp.current = structuredClone(pristine.current);
+    }
+
+    const settingsContextObject = useMemo(() => ({
+        'history': history,
+        'settings': current,
+        'temp': temp,
         'modifySettings': modifySettings,
         'assignMonacoInstance': assignMonacoInstance,
         'saveSettings': saveSettings,
         'revertSettings': revertSettings,
+        'resetSettings': resetSettings,
         'frozen': frozen,
         'setFrozen': setFrozen
-    }
+    }), [current, frozen, saveSettings]);
+
+    useEffect(()=> {
+        const themeAlias = current.defaultTheme;
+        monacoRef?.current?.editor?.setTheme(themeAlias); 
+
+        document.documentElement.style.setProperty('--background-color', current.overallTheme.theme.background.value);
+        document.documentElement.style.setProperty('--first-layer-background-color', current.overallTheme.theme.firstLayerBackground.value);
+        document.documentElement.style.setProperty('--second-layer-background-color', current.overallTheme.theme.secondLayerBackground.value);
+        document.documentElement.style.setProperty('--third-layer-background-color', current.overallTheme.theme.thirdLayerBackground.value);
+        document.documentElement.style.setProperty('--fourth-layer-background-color', current.overallTheme.theme.fourthLayerBackground.value);
+        document.documentElement.style.setProperty('--significant-button-color', current.overallTheme.theme.significantChoiceButton.value);
+        document.documentElement.style.setProperty('--significant-button-hover-color', current.overallTheme.theme.significantChoiceButtonSelected.value);
+        document.documentElement.style.setProperty('--insignificant-button-color', current.overallTheme.theme.insignificantChoiceButton.value);
+        document.documentElement.style.setProperty('--insignificant-button-hover-color', current.overallTheme.theme.insignificantChoiceButtonSelected.value);
+        document.documentElement.style.setProperty('--settings-option-bg-color', current.overallTheme.theme.settingsOptionBackground.value);
+        document.documentElement.style.setProperty('--settings-bg-color', current.overallTheme.theme.settingsBackground.value);
+        document.documentElement.style.setProperty('--settings-option-border-color', current.overallTheme.theme.settingsOptionBorder.value);
+
+        document.documentElement.style.setProperty('--normal-text-font', current.overallTheme.theme.overallFont.value);
+    }, [current]);
 
     return (
         <SettingsContext.Provider value={settingsContextObject} id='app'>

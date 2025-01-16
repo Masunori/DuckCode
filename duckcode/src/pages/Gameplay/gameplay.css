@@ -90,11 +90,11 @@ button:hover {
 
 /* Question component styling */
 #question {
-    background-color: var(--first-layer-background-color);
+    background-color: var(--second-layer-background-color);
     height: var(--gameplay-screen-padding);
     overflow: scroll;
     padding: 20px;
-    border-right: 1px solid var(--second-layer-background-color);
+    border-right: 1px solid var(--fourth-layer-background-color);
 
 }
 
@@ -108,7 +108,7 @@ button:hover {
 }
 
 #question .example {
-    background-color: var(--second-layer-background-color);
+    background-color: var(--fourth-layer-background-color);
     margin: 1px;
     padding: 1px 15px;
     margin: 10px 0;
@@ -182,7 +182,7 @@ button:hover {
 }
 
 #code-executor button {
-    background-color: var(--dark-button-color);
+    background-color: var(--insignificant-button-color);
     height: 100%;
     border: none;
     transition-duration: 0.25s;
@@ -191,17 +191,17 @@ button:hover {
 }
 
 #code-executor button#submit {
-    background-color: var(--blue-button-color);
+    background-color: var(--significant-button-color);
     font-size: 1.1rem;
     color: white;
 }
 
 #code-executor button:hover {
-    background-color: var(--dark-button-hover-color);
+    background-color: var(--insignificant-button-hover-color);
 }
 
 #code-executor button#submit:hover {
-    background-color: var(--blue-button-hover-color);
+    background-color: var(--significant-button-hover-color);
 }
 
 #code-executor #output-and-test-cases {
@@ -215,7 +215,7 @@ button:hover {
     height: var(--test-case-panel-height);
     grid-template-columns: 2fr 7fr;
     grid-template-areas: "selector results";
-    border-bottom: 1px solid var(--second-layer-background-color);
+    border-bottom: 1px solid var(--fourth-layer-background-color);
     transition-duration: 0.5s;
 }
 
@@ -233,26 +233,26 @@ button:hover {
 }
 
 #test-case-selector::-webkit-scrollbar-thumb {
-    background-color: var(--second-layer-background-color);
+    background-color: var(--fourth-layer-background-color);
 }
 
 #test-case-selector li {
-    background-color: var(--first-layer-background-color);
+    background-color: var(--second-layer-background-color);
     padding: 10px;
     transition-duration: 0.25s;
     cursor: pointer;
 }
 
 #test-case-selector li:hover {
-    background-color: var(--selected-first-layer-background-color);
+    background-color: var(--first-layer-background-color);
 }
 
 #test-case-selector li.active {
-    background-color: var(--selected-first-layer-background-color);
+    background-color: var(--first-layer-background-color);
 }
 
 #test-case-results {
-    background-color: #242424;
+    background-color: var(--first-layer-background-color);
     grid-area: results;
     height: var(--test-case-panel-height);
     overflow: auto;
@@ -264,7 +264,7 @@ button:hover {
 }
 
 #test-case-results::-webkit-scrollbar-thumb {
-    background-color: var(--first-layer-background-color);
+    background-color: var(--second-layer-background-color);
 }
 
 #test-case-results tbody {
@@ -301,7 +301,7 @@ button:hover {
 #test-case-results td {
     padding: 2px 0 2px 5px;
     background-color: var(--terminal-like-background-color);
-    border: 1px solid var(--first-layer-background-color);
+    border: 1px solid var(--second-layer-background-color);
     border-radius: 3px;
     box-sizing: border-box;
     overflow: auto;
@@ -312,7 +312,7 @@ button:hover {
 }
 
 #test-case-results td::-webkit-scrollbar-thumb {
-    background-color: var(--first-layer-background-color);
+    background-color: var(--second-layer-background-color);
 }
 
 /* Output styling */

@@ -10,40 +10,40 @@ import { presetThemes } from "../../../globalcomponents/color_schemes/themes";
  * @param {string[][]} testCases - An array of input-expected output pairs, passed into the CodeExecutor component 
  * @returns 
  */
-export default function CodeHandler({ testCases }) {
+export default function CodeHandler({ testCases, value, setValue }) {
     // because this controls both the editor and the output, the Monaco Editor logic is handled here
     const editorRef = useRef(null);
 
-    const assignMonacoInstance = useContext(SettingsContext).assignMonacoInstance;            
+    const {assignMonacoInstance} = useContext(SettingsContext);            
 
-    const testCode = [
-        "const re = /ab+c/; // regexp, const",
-        "const hex = 0xFF; // hex",
-        "",
-        "// Comment: Log 'Hello, world!' to console",
-        "function greet(a, b) { // function",
-        "    console.log('Hello, world!'); // string",
-        "    for (let x = 0; x < 10; x++) {",
-        "        break;",
-        "    }",
-        "}",
-        "",
-        "// class",
-        "class Dummy {",
-        "    name;",
-        "    constructor(name) {",
-        "        this.name = name;",
-        "    }",
-        "    greet() {",
-        "        console.log('Hello, ' + this.name);",
-        "    }",
-        "}",
-        "",
-        "const dummy = new Dummy('DuckCode');",
-        "let x = (1 + 1) * (3 / 4) / (5 - 2); // operator"
-    ].join('\n');
+    // const testCode = [
+    //     "const re = /ab+c/; // regexp, const",
+    //     "const hex = 0xFF; // hex",
+    //     "",
+    //     "// Comment: Log 'Hello, world!' to console",
+    //     "function greet(a, b) { // function",
+    //     "    console.log('Hello, world!'); // string",
+    //     "    for (let x = 0; x < 10; x++) {",
+    //     "        break;",
+    //     "    }",
+    //     "}",
+    //     "",
+    //     "// class",
+    //     "class Dummy {",
+    //     "    name;",
+    //     "    constructor(name) {",
+    //     "        this.name = name;",
+    //     "    }",
+    //     "    greet() {",
+    //     "        console.log('Hello, ' + this.name);",
+    //     "    }",
+    //     "}",
+    //     "",
+    //     "const dummy = new Dummy('DuckCode');",
+    //     "let x = (1 + 1) * (3 / 4) / (5 - 2); // operator"
+    // ].join('\n');
 
-    const [value, setValue] = useState(testCode);
+    // const [value, setValue] = useState(settings.progLang.code_snippet);
 
     function handleEditorDidMount(editor, monaco) {
         editorRef.current = editor;
@@ -54,8 +54,8 @@ export default function CodeHandler({ testCases }) {
         });
     }
 
-    function handleEditorChange(value, event) {
-        setValue(value);
+    function handleEditorChange(val, event) {
+        setValue(val);
     }
 
     const [codeOutput, setCodeOutput] = useState(">> Your results will be displayed here...");

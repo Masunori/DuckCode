@@ -1,136 +1,36 @@
-import { useState, useEffect, useContext } from "react";
-import { /* CheckboxInput, ColorInput, */ RadioInput } from "../Input";
+import { useState, useContext, useCallback } from "react";
+import { /* CheckboxInput, ColorInput, */ DropdownInput, RadioInput } from "../Input";
 // import HoverableContent from "../HoverableContent";
 import { /* FONT_STYLES, */ PROGRAMMING_LANGUAGES, FONT_FAMILIES } from "../constants";
-import { presetThemes, /* customThemeSyntaxHighlight, customComponentColorScheme, */THEME_MODES, /* ThemeObject */ } from "../color_schemes/themes";
+import { presetThemes, /* customThemeSyntaxHighlight, customComponentColorScheme, */THEME_MODES, /* EditorThemeObject */ } from "../color_schemes/themes";
 import { SettingsContext } from "../../App";
 
 function ProgLangOptions() {
-    const [dropDownHeight, setDropDownHeight] = useState('0');
-    const [currProgLang, setCurrProgLang] = useState('javascript');
-
-    const {modifySettings} = useContext(SettingsContext);
-
-    // function handleChooseProgLang(event) {
-    //     setCurrProgLang(event.target.value);
-    //     settings.temp.progLang = PROGRAMMING_LANGUAGES[event.target.value];
-    // }
-
-    useEffect(() => {
-        function openDropDown(event) {
-            setDropDownHeight('200px');
-            event.stopPropagation();
-        }
-
-        const langInput = document.getElementById('prog-lang-input');
-        const fontInput = document.getElementById('code-font-input');
-        
-        function closeDropDown(event) {
-            setDropDownHeight('0');
-        }
-
-        // when the user clicks on the programming language input, open the prog-lang dropdown and close the font dropdown
-        // when the user clicks on the window, close the prog-lang dropdown
-        langInput.addEventListener('click', openDropDown);
-        window.addEventListener('click', closeDropDown);
-        fontInput.addEventListener('click', closeDropDown);
-
-        function handleProgLangOptionClick(event) {
-            setCurrProgLang(event.target.dataset.key);
-            modifySettings('progLang', PROGRAMMING_LANGUAGES[event.target.dataset.value]);
-            // settings.temp.progLang = PROGRAMMING_LANGUAGES[event.target.dataset.value];
-            // console.table(settings.temp.progLang.monaco_editor_alias)
-            closeDropDown(event);
-        }
-
-        const progLangOptions = document.querySelectorAll('.prog-lang-option');
-        progLangOptions.forEach(option => {
-            option.addEventListener('click', handleProgLangOptionClick);
-        });
-
-        return (() => {
-            langInput.removeEventListener('click', openDropDown);
-            window.removeEventListener('click', closeDropDown);
-            fontInput.removeEventListener('click', closeDropDown);
-            progLangOptions.forEach(option => {
-                option.removeEventListener('click', handleProgLangOptionClick)
-            });
-        })
-    }, [setDropDownHeight, setCurrProgLang, modifySettings])
-
+    const {settings, modifySettings} = useContext(SettingsContext);
     return (
-        <div id="prog-lang-dropdown-container">
-            <p>Programming Languages</p>
-            <label htmlFor="prog-lang-input" id="prog-lang-label">
-                <input id="prog-lang-input" value={currProgLang} readOnly />
-                <div id="prog-lang-options-dropdown" style={{ height: dropDownHeight }}>
-                    {Object.entries(PROGRAMMING_LANGUAGES).map(([key, value]) => (
-                        <div key={key} className="prog-lang-option" data-key={key} data-value={value.monaco_editor_alias}>
-                            <span>{key}</span>
-                            <span style={{ opacity: 0.25 }}>({value.version})</span>
-                        </div>
-                    ))}
-                </div>
-            </label>
-        </div>
+        <DropdownInput 
+            optionsMap={PROGRAMMING_LANGUAGES}
+            title="Programming Languages"
+            defaultValue={settings.progLang.formal_name}
+            getKey={([key, value]) => value.formal_name}
+            getValue={([key, value]) => key}
+            getAuxiliaryInfo={([key, value]) => value.version}
+            onSelectDropDownItem={val => modifySettings('progLang', PROGRAMMING_LANGUAGES[val])}
+        />
     )
 }
 
 function CodeFontOptions() {
-    const [currFont, setCurrFont] = useState('monospace');
-    const [dropDownHeight, setDropDownHeight] = useState('0');
-
     const {modifySettings} = useContext(SettingsContext);
-
-    useEffect(() => {
-        function openDropDown(event) {
-            setDropDownHeight('200px');
-            event.stopPropagation();
-        }
-
-        const langInput = document.getElementById('prog-lang-input');
-        const fontInput = document.getElementById('code-font-input');
-        
-        function closeDropDown(event) {
-            setDropDownHeight('0');
-        }
-
-        fontInput.addEventListener('click', openDropDown);
-        window.addEventListener('click', closeDropDown);
-        langInput.addEventListener('click', closeDropDown);
-
-        return (() => {
-            fontInput.removeEventListener('click', openDropDown);
-            window.removeEventListener('click', closeDropDown);
-            langInput.removeEventListener('click', closeDropDown);
-        })
-    }, [setDropDownHeight])
-
-    function handleChooseFont(event) {
-        setCurrFont(event.target.value);
-        modifySettings('codeEditorFont', event.target.value);
-    }
-
     return (
-        <div id="prog-lang-dropdown-container">
-            <p>Code Editor Font</p>
-            <label htmlFor="code-font-input" id="code-font-label">
-                <input id="code-font-input" value={currFont} style={{ fontFamily: currFont }} readOnly />
-                <div id="code-font-options-dropdown" style={{ height: dropDownHeight }}>
-                    {FONT_FAMILIES.map((font, idx) => (
-                        <option 
-                            className="code-font-option"
-                            key={idx} 
-                            onClick={handleChooseFont}
-                            style={{
-                                fontFamily: font
-                            }}
-                        >{font}
-                        </option>
-                    ))}
-                </div>
-            </label>
-        </div>
+        <DropdownInput
+            optionsMap={FONT_FAMILIES}
+            getKey={([key, value]) => value.formal_name}
+            getValue={([key, value]) => key}
+            title="Code Editor Font"
+            defaultValue="Monospace"
+            onSelectDropDownItem={val => modifySettings('codeEditorFont', val)}
+        />
     )
 }
 
@@ -144,17 +44,15 @@ export default function CodeEditorSettings({ setEditorTheme, settingsObject }) {
     //     pointerEvents: "none"
     // })
 
-    const handleCustomThemeSelection = (event) => {
+    const handleCustomThemeSelection = useCallback((event) => {
+        // console.log(event.target.value);
         setSelectedTheme(event.target.value);
 
         // modify the settings object
         if (event.target.value !== 'custom') {
-            // settings.temp.themeMode = THEME_MODES.DEFAULT;
             modifySettings('themeMode', THEME_MODES.DEFAULT);
             modifySettings('defaultTheme', event.target.value);
-            // settings.temp.defaultTheme = event.target.value;
         } else {
-            // settings.temp.themeMode = THEME_MODES.CUSTOM;
             modifySettings('themeMode', THEME_MODES.CUSTOM);
         }
 
@@ -172,7 +70,7 @@ export default function CodeEditorSettings({ setEditorTheme, settingsObject }) {
         //         pointerEvents: "none"
         //     })
         // }
-    }
+    }, [modifySettings]);
 
     // /**
     //  * Fires when the user selects a checkbox for font styles in the syntax highlight section.
@@ -214,10 +112,10 @@ export default function CodeEditorSettings({ setEditorTheme, settingsObject }) {
                 <h1 className="one-settings-option-block" style={{ pointerEvents: "none" }}>Customise how your code editor looks and behaves.</h1>
                 <div id="code-editor-theme" className="one-settings-option-block">
                     <h2>Theme</h2>
-                    {Object.entries(presetThemes).map((theme, idx) => (
+                    {Object.entries(presetThemes).map((theme) => (
                         <RadioInput 
                             name="theme"
-                            key={idx}
+                            key={theme[0]}
                             value={theme[0]}
                             onChange={handleCustomThemeSelection}
                             checked={theme[0] === selectedTheme}

@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { SETTINGS_OPTIONS, SETTINGS_STATUS } from "./constants";
+import { PROGRAMMING_LANGUAGES, SETTINGS_OPTIONS, SETTINGS_STATUS } from "./constants";
 import CodeEditorSettings from "./settings_components/CodeEditorSettings";
 import KeyboardShortcutSettings from "./settings_components/KeyboardShortcutSettings";
 import { SettingsContext } from "../App";
@@ -10,11 +10,11 @@ import GeneralSettings from "./settings_components/GeneralSettings";
  * Returns a Settings component that can be open or closed (almost) anywhere in the game.
  * 
  * @param {object} param0 The object literal containing the following pairs
- * - setEditorTheme (function): The function to set the editor theme.
+ * - setValue (function): set the content of the code editor.
  * @returns the Settings component.
  */
-export default function Settings() {
-    const {saveSettings, revertSettings, frozen, setFrozen} = useContext(SettingsContext);
+export default function Settings({ setValue }) {
+    const {history, temp, saveSettings, revertSettings, resetSettings, frozen, setFrozen} = useContext(SettingsContext);
     const [settingsStatus, setSettingsStatus] = useState(SETTINGS_STATUS.CANNOT_SAVE.CANNOT_REVERT);
     
     const settingsOptionsRef = useRef([]);
@@ -25,23 +25,9 @@ export default function Settings() {
      * @param {Event} event 
      */
     function saveSettingsWrapper(event) {
-        // const theme = settings.current.themeMode === THEME_MODES.DEFAULT
-        //                 ? settings.current.defaultTheme.theme
-        //                 : settings.current.theme.theme;
-
-        // settings.history = settings.current;
-        // settings.current = structuredClone(settings.temp);
-
         saveSettings();
-        setSettingsStatus(SETTINGS_STATUS.CANNOT_SAVE.CAN_REVERT);;
-        // const themeAlias = settings.current.defaultTheme;
-        // const editor = settings.monacoRef.current.editor;
-        // editor.setTheme(themeAlias);
-        // alert(settings.current.progLang.monaco_editor_alias);
-        // editor.setModelLanguage(
-        //     settings.current.progLang.code_snippet,
-        //     settings.current.progLang.monaco_editor_alias
-        // );
+        setValue(temp.current.progLang.code_snippet);
+        setSettingsStatus(SETTINGS_STATUS.CANNOT_SAVE.CAN_REVERT);
     }
 
     /**
@@ -50,15 +36,23 @@ export default function Settings() {
      * @param {Event} event 
      */
     function revertSettingsWrapper(event) {
-        // settings.current = structuredClone(settings.history);
         revertSettings();
+        setValue(history.current.progLang.code_snippet);
         setSettingsStatus(SETTINGS_STATUS.CAN_SAVE.CANNOT_REVERT);
-
-        // const themeAlias = settings.current.defaultTheme;
-        // settings.monacoRef.current.editor.setTheme(themeAlias);
     }
 
-    const cachedRevertSettings = useCallback(revertSettingsWrapper, [revertSettings]);
+    /**
+     * Reset to the default settings.
+     * 
+     * @param {Event} event 
+     */
+    function resetSettingsWrapper(event) {
+        resetSettings();
+        setValue(PROGRAMMING_LANGUAGES['javascript'].code_snippet);
+        setSettingsStatus(SETTINGS_STATUS.CAN_SAVE.CAN_REVERT);
+    }
+
+    const cachedRevertSettings = useCallback(revertSettingsWrapper, [revertSettings, setValue, history]);
 
     /*
         These two functions handle the mouse hover effect on the settings options.
@@ -66,15 +60,15 @@ export default function Settings() {
 
     /**
      * Handle when the mouse is over the settings option.
-     * @param {*} idx 
+     * @param {number} idx The index of the option
      */
     const handleMouseEnter = (idx) => {
-        settingsOptionsRef.current[idx].style.backgroundColor = "var(--settings-option-bg-selected-color)";
+        settingsOptionsRef.current[idx].style.backgroundColor = "var(--settings-bg-color)";
     }
 
     /**
      * Handle when the mouse leaves the settings option.
-     * @param {number} idx 
+     * @param {number} idx The index of the option
      */
     const handleMouseLeave = (idx) => {
         if (settingsOptionsRef.current[idx].innerText !== option) {
@@ -102,23 +96,43 @@ export default function Settings() {
     }
 
     const bgCol = (item) => item === option
-                            ? 'var(--settings-option-bg-selected-color)'
+                            ? 'var(--settings-bg-color)'
                             : 'var(--settings-option-bg-color)';
 
     useEffect(() => {
-        /*
-            Press 'ESC' to exit settings.
-        */
         const escapeFromSettings = (event) => {
-            if (!frozen && event.key === "Escape") {
-                setFrozen(true);
+            const isEsc = event.type === 'keydown' && event.key === 'Escape';
+            const isExitClick = event.type === 'click';
+
+            if (!frozen && (isEsc || isExitClick)) {
+                if (Object.values(SETTINGS_STATUS.CANNOT_SAVE).includes(settingsStatus)) {
+                    setFrozen(true);
+                    setSettingsStatus(SETTINGS_STATUS.CANNOT_SAVE.CANNOT_REVERT);
+                    history.current = null;
+                } else {
+                    openConfirmWithMessage(
+                        "Do you want to exit without saving your settings?",
+                        "Back to Settings",
+                        "Exit",
+                        () => null,
+                        () => {
+                            setFrozen(true);
+                            setSettingsStatus(SETTINGS_STATUS.CANNOT_SAVE.CANNOT_REVERT);
+                            history.current = null;
+                        }
+                    );
+                }
             }
         }
-        
+
+        // Press 'ESC' to exit settings.
         window.addEventListener('keydown', escapeFromSettings);
-        /*
-            When the user types in the input fields, the save function is enabled
-        */
+
+        // or click the exit button.
+        const exitButton = document.getElementById('settings-exit-button');
+        exitButton.addEventListener('click', escapeFromSettings);
+
+        // When the user types in the input fields, the save function is enabled
         const enableSave = (event) => {
             if (settingsStatus === SETTINGS_STATUS.CANNOT_SAVE.CANNOT_REVERT) {
                 setSettingsStatus(SETTINGS_STATUS.CAN_SAVE.CANNOT_REVERT);
@@ -127,12 +141,11 @@ export default function Settings() {
             }
         }
 
-        const inputElements = document.querySelectorAll('[class$="-label"], [id$="-label"]');
-        inputElements.forEach(input => input.addEventListener('click', enableSave));
+        // const inputElements = document.getElementById('settings').querySelectorAll('[class$="-label"]');
+        const inputElements = document.getElementById('settings').querySelectorAll('input');
+        inputElements.forEach(input => input.addEventListener('input', enableSave));
 
-        /*
-            Press 'CTRL' + 'Z' to revert the settings.
-        */
+        // Press 'CTRL' + 'Z' to revert the settings.
         const handleRevert = (event) => {
             if (!frozen && event.ctrlKey && (event.key === 'z' || event.key === 'Z')) {
                 event.preventDefault();
@@ -145,17 +158,13 @@ export default function Settings() {
             window.removeEventListener('keydown', escapeFromSettings);
             inputElements.forEach(input => input.removeEventListener('input', enableSave));
             window.removeEventListener('keyup', handleRevert);
+            exitButton.removeEventListener('click', escapeFromSettings);
         }
-    }, [setSettingsStatus, settingsStatus, cachedRevertSettings, frozen, setFrozen]);
+    }, [setSettingsStatus, settingsStatus, cachedRevertSettings, frozen, setFrozen, history]);
 
     return (
         <div id="settings-fullscreen-cover" style={{ display: frozen ? "none" : "block" }}>
-            <Confirm 
-                message="Save the current settings? You can still revert until you exit this tab."
-                cancelMessage="Cancel"
-                proceedMessage="Save"
-                onProceed={saveSettingsWrapper}
-            />
+            <Confirm />
             <div id="settings">
                 <ul id="settings-option">
                     {Object.entries(SETTINGS_OPTIONS).map(([key, value], idx) => (
@@ -194,6 +203,17 @@ export default function Settings() {
                         }} 
                         onClick={revertSettingsWrapper}
                     >Revert</button>
+                    <button id="settings-exit-button">Exit</button>
+                    <button 
+                        id="settings-reset-button" 
+                        onClick={() => openConfirmWithMessage(
+                            "Reset to the default settings?",
+                            "Cancel",
+                            "Reset",
+                            () => {return;},
+                            resetSettingsWrapper
+                        )}
+                    >Reset</button>
                 </div>
             </div>
         </div>

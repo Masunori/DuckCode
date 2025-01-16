@@ -6,7 +6,7 @@ export default function GameplayNavbar() {
     const {setFrozen} = useContext(SettingsContext);
 
     return (
-        <div id="gameplay-navbar">
+        <nav id="gameplay-navbar">
             <div id="gameplay-settings">
                 <button 
                     onClick={() => {
@@ -15,6 +15,6 @@ export default function GameplayNavbar() {
                 >Settings</button>
             </div>
             <CountdownTimer initialTime={900} asSpan={false} />
-        </div>
+        </nav>
     )
 }

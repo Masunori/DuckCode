@@ -1,3 +1,7 @@
+/*
+	Monaco Editor theme
+*/
+
 const vs = {
 	base: 'vs',
 	inherit: false,
@@ -515,10 +519,10 @@ export const presetThemes = {
 }
 
 /**
- * The TheneObject class stores the custom theme the user chooses when he/she uses custom theme option.
+ * The EditorThemeObject class stores the custom theme the user chooses when he/she uses custom theme option.
  * This contains an object which implements the IStandaloneThemeData interface of VSCode, accessible using the 'theme' attribute.
  */
-export class ThemeObject {
+export class EditorThemeObject {
 	/**
 	 * A theme following the IStandaloneThemeData interface, which can be passed to
 	 * Monaco Editor's defineTheme method.
@@ -676,3 +680,178 @@ export const THEME_MODES = Object.freeze({
 	DEFAULT: 'default',
 	CUSTOM: 'custom'
 });
+
+/*
+	Gameplay theme
+*/
+
+function calculateOptimalHoverColor(hexColor) {
+    // Remove '#' if present
+    hexColor = hexColor.replace('#', '');
+
+    // Parse R, G, B components
+    let r = parseInt(hexColor.slice(0, 2), 16) / 255;
+    let g = parseInt(hexColor.slice(2, 4), 16) / 255;
+    let b = parseInt(hexColor.slice(4, 6), 16) / 255;
+
+    // Calculate luminance (relative luminance formula)
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+    // Adjust color based on luminance
+    const adjustAmount = luminance > 0.5 ? -30 : 30; // Darken if light, lighten if dark
+
+    // Convert back to RGB and apply adjustment
+    r = Math.min(255, Math.max(0, Math.round(r * 255 + adjustAmount)));
+    g = Math.min(255, Math.max(0, Math.round(g * 255 + adjustAmount)));
+    b = Math.min(255, Math.max(0, Math.round(b * 255 + adjustAmount)));
+
+    // Convert adjusted values back to hex
+    const newColor =
+        '#' +
+        r.toString(16).padStart(2, '0') +
+        g.toString(16).padStart(2, '0') +
+        b.toString(16).padStart(2, '0');
+
+    return newColor;
+}
+
+/**
+ * The OverallThemeObject estores the options and colour scheme the user chooses for most (if not all)
+ * interfaces of DuckCode.
+ */
+export class OverallThemeObject {
+	/**
+	 * The OverallThemeObject exposes the 'theme' attribute, which is an object literal.
+	 * For each key-value pair, the key is the component that will be coloured/styled, and
+	 * the value will be the style that will be applied.
+	 */
+	theme;
+	
+	constructor(theme=structuredClone(OVERALL_THEMES.default)) {
+		this.theme = theme;
+	}
+
+	/**
+	 * Update one component of the theme object.
+	 * Note that if the component does not exist of the style is null, this will silently do nothing.
+	 * @param {string} token The component to update the theme. 
+	 * @param {string} style The new style of the component. It is your responsibility to match the component with the style.
+	 */
+	updateTheme(token, style) {
+		if ((token in this.theme) && style) {
+			this.theme[token].value = style;
+		}
+	}
+
+	/**
+	 * Automatically fills the hovered colour values when the user selects automatic calculation of hovered colour for hoverable elements.
+	 */
+	autofillThemeForHoverable() {
+		this.theme.significantChoiceButtonSelected = calculateOptimalHoverColor(this.theme.significantChoiceButton);
+		this.theme.insignificantChoiceButtonSelected = calculateOptimalHoverColor(this.theme.insignificantChoiceButton);
+	}
+}
+
+export const OVERALL_THEMES = {
+    default: {
+        background: {
+			type: 'color',
+			value: '#121212',
+		},
+        firstLayerBackground: {
+			type: 'color',
+			value: '#242424',
+		},
+        secondLayerBackground: {
+			type: 'color',
+			value: '#484848',
+		},
+		thirdLayerBackground: {
+			type: 'color',
+			value: '#525252',
+		},
+		fourthLayerBackground: {
+			type: 'color',
+			value: '#606060',
+		},
+		significantChoiceButton: {
+			type: 'color',
+			value: '#0077ff',
+		},
+		significantChoiceButtonSelected: {
+			type: 'color',
+			value: '#0560bc',
+		},
+		insignificantChoiceButton: {
+			type: 'color',
+			value: '#363636',
+		},
+		insignificantChoiceButtonSelected: {
+			type: 'color',
+			value: '#484848',
+		},
+		settingsBackground: {
+			type: 'color',
+			value: '#484848',
+		},
+		settingsOptionBackground: {
+			type: 'color',
+			value: '#363636',
+		},
+		settingsOptionBorder: {
+			type: 'color',
+			value: '#848484',
+		},
+		overallFont: {
+			type: 'dropdown',
+			value: "'PF Din Text Pro', 'sans-serif'",
+			available: {
+				'Honkai: Star Rail': "'PF Din Text Pro', 'sans-serif'",
+				'Genshin Impact': "'HYWenHei', 'sans-serif'",
+				'Arial': "'Arial', 'sans-serif'",
+				'Helvetica': "'Helvetica', 'sans-serif'",
+				'Verdana': "'Verdana', 'sans-serif'",
+				'Tahoma': "'Tahoma', 'sans-serif'",
+				'Roboto': "'Roboto', 'sans-serif'",
+				'Lato': "'Lato', 'sans-serif'",
+			}
+		}
+    }
+}
+
+// export const OVERALL_THEMES = {
+//     default: {
+//         background: '#121212',
+//         firstLayerBackground: '#242424',
+//         secondLayerBackground: '#484848',
+//         thirdLayerBackground: '#525252',
+//         fourthLayerBackground: '#606060',
+
+//         significantChoiceButton: '#0077ff',
+//         significantChoiceButtonSelected: '#0560bc',
+//         insignificantChoiceButton: '#363636',
+//         insignificantChoiceButtonSelected: '#484848',
+
+//         settingsBackground: '#484848',
+//         settingsOptionBackground: '#363636',
+//         settingsOptionBorder: '#848484',
+//     }
+// }
+
+export const OVERALL_THEME_DESCRIPTOR = {
+	background: "Main Background Colour",
+	firstLayerBackground: "Background Colour for the First Component Layer",
+	secondLayerBackground: "Background Colour for the Second Component Layer",
+	thirdLayerBackground: "Background Colour for the Third Component Layer",
+	fourthLayerBackground: "Background Colour for the Fourth Component Layer",
+	significantChoiceButton: "Background Colour for Significant Buttons",
+	significantChoiceButtonSelected: "Background Colour for Significant Buttons when Hovered",
+	insignificantChoiceButton: "Background Colour for Insignificant Buttons",
+	insignificantChoiceButtonSelected: "Background Colour for Insignificant Buttons when Hovered",
+	settingsBackground: 'Background Colour for Settings',
+	settingsOptionBackground: 'Background Colour for Left Bar Settings Options',
+	settingsOptionBorder: 'Border Colour within Settings',
+	overallFont: 'Font (Fallback fonts (second option onwards) are used if the primary font (leftmost) is unavailable)',
+}
+
+

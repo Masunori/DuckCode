@@ -3,14 +3,14 @@
  * [keyBindingFunctionality]: [Functionality]
  */
 export const LIST_OF_KEY_BINDINGS = {
-    "Save the current settings": "'CTRL' + 'S'",
+    // "Save the current settings": "'CTRL' + 'S'",
     "Revert to the last save.": "'CTRL' + 'Z'",
     "Escape from settings": "'ESC'",
     "Automatically runs the code in output mode.": "'CTRL' + 'Enter'", 
 };
 
 const PRISTINE_LIST_OF_KEY_BINDINGS = {
-    "Save the current settings": "'CTRL' + 'S'",
+    // "Save the current settings": "'CTRL' + 'S'",
     "Revert to the last save.": "'CTRL' + 'Z'",
     "Escape from settings": "'ESC'",
     "Automatically runs the code in output mode.": "'CTRL' + 'Enter'", 
@@ -59,6 +59,7 @@ export const FONT_STYLES = [
  */
 export const PROGRAMMING_LANGUAGES = {
     'c': {
+        'formal_name': 'C',
         'aliases': ['gcc'], 
         'runtime': 'gcc', 
         'version': '10.2.0', 
@@ -66,48 +67,56 @@ export const PROGRAMMING_LANGUAGES = {
         'code_snippet': '// C code\n'
     },
     'c++': {
+        'formal_name': 'C++',
         'aliases': ['cpp', 'g++'], 
         'runtime': 'gcc', 
         'version': '10.2.0', 
         'monaco_editor_alias': 'cpp',
         'code_snippet': '// C++ code\n'
     },
-    'csharp': {'aliases': ['mono',
-                        'mono-csharp',
-                        'mono-c#',
-                        'mono-cs',
-                        'c#',
-                        'cs'],
-            'runtime': 'mono',
-            'version': '6.12.0',
-            'monaco_editor_alias': 'csharp',
-            'code_snippet': '// C# code\n'
+    'csharp': {
+        'formal_name': 'C#',
+        'aliases': ['mono',
+                    'mono-csharp',
+                    'mono-c#',
+                    'mono-cs',
+                    'c#',
+                    'cs'],
+        'runtime': 'mono',
+        'version': '6.12.0',
+        'monaco_editor_alias': 'csharp',
+        'code_snippet': '// C# code\n'
     },
     'dart': {
+        'formal_name': 'Dart',
         'aliases': [], 
         'version': '2.19.6', 
         'monaco_editor_alias': 'dart',
         'code_snippet': '// Dart code\n'
     },
     'elixir': {
+        'formal_name': 'Elixir',
         'aliases': ['elixir', 'exs'], 
         'version': '1.11.3', 
         'monaco_editor_alias': 'elixir',
         'code_snippet': '# Elixir code\n'
     },
     'go': {
+        'formal_name': 'Go',
         'aliases': ['go', 'golang'], 
         'version': '1.16.2', 
         'monaco_editor_alias': 'go',
         'code_snippet': '// Go code\n'
     },
     'java': {
+        'formal_name': 'Java',
         'aliases': [], 
         'version': '15.0.2', 
         'monaco_editor_alias': 'java',
         'code_snippet': '// Java code\n'
     },
     'javascript': {
+        'formal_name': 'JavaScript',
         'aliases': ['node-javascript', 'node-js', 'javascript', 'js'],
         'runtime': 'node',
         'version': '18.15.0',
@@ -115,48 +124,56 @@ export const PROGRAMMING_LANGUAGES = {
         'code_snippet': '// JavaScript code\n'
     },
     'kotlin': {
+        'formal_name': 'Kotlin',
         'aliases': ['kt'], 
         'version': '1.8.20', 
         'monaco_editor_alias': 'kotlin',
         'code_snippet': '// Kotlin code\n'
     },
     'php': {
+        'formal_name': 'PHP',
         'aliases': [], 
         'version': '8.2.3', 
         'monaco_editor_alias': 'php',
         'code_snippet': '// PHP code\n'
     },
     'python': {
+        'formal_name': 'Python',
         'aliases': ['py', 'py3', 'python3', 'python3.10'],
         'version': '3.10.0',
         'monaco_editor_alias': 'python',
         'code_snippet': '# Python code\n'
     },
     'ruby': {
+        'formal_name': 'Ruby',
         'aliases': ['ruby3', 'rb'], 
         'version': '3.0.1', 
         'monaco_editor_alias': 'ruby',
         'code_snippet': '# Ruby code\n'
     },
     'rust': {
+        'formal_name': 'Rust',
         'aliases': ['rs'], 
         'version': '1.68.2', 
         'monaco_editor_alias': 'rust',
         'code_snippet': '// Rust code\n'
     },
     'scala': {
+        'formal_name': 'Scala',
         'aliases': ['sc'], 
         'version': '3.2.2', 
         'monaco_editor_alias': 'scala',
         'code_snippet': '// Scala code\n'
     },
     'swift': {
+        'formal_name': 'Swift',
         'aliases': ['swift'], 
         'version': '5.3.3', 
         'monaco_editor_alias': 'swift',
         'code_snippet': '// Swift code\n'
     },
     'typescript': {
+        'formal_name': 'TypeScript',
         'aliases': ['ts', 'node-ts', 'tsc', 'typescript5', 'ts5'],
         'version': '5.0.3', 
         'monaco_editor_alias': 'typescript',
@@ -167,9 +184,15 @@ export const PROGRAMMING_LANGUAGES = {
 /**
  * List of available font families.
  */
-export const FONT_FAMILIES = [
-    'monospace'
-];
+// export const FONT_FAMILIES = [
+//     'monospace'
+// ];
+
+export const FONT_FAMILIES = {
+    'monospace': {
+        'formal_name': 'Monospace'
+    }
+}
 
 /**
  * An enum of the different phases of the settings component.

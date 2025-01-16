@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef } from "react"
 import { LIST_OF_KEY_BINDINGS } from "../constants"
 
 // function KeyBindingRegister({ display, setDisplay, target, bindingRef }) {

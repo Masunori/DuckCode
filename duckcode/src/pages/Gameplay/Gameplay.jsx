@@ -3,6 +3,8 @@ import CodeHandler from './code_handler/CodeHandler';
 import GameplayNavbar from './GameplayNavbar';
 import Question, { QuestionTemplate } from './Question';
 import Settings from '../../globalcomponents/Settings';
+import { useContext, useState } from 'react';
+import { SettingsContext } from '../../App';
 
 const title = 'Two Sum';
 const difficulty = 1000;
@@ -59,6 +61,15 @@ const dummyQTemplate = new QuestionTemplate(
 );
 
 export default function Gameplay() {
+    const {settings} = useContext(SettingsContext);
+
+    // useEffect(() => {
+    //     console.log(settings)
+    //     console.log(settings.progLang);
+    // }, [settings]);
+
+    const [value, setValue] = useState(settings.progLang.code_snippet);
+
     return (
         <div id='entire-gameplay-screen'>
             <GameplayNavbar />
@@ -66,9 +77,11 @@ export default function Gameplay() {
                 <Question questionTemplate={ dummyQTemplate } />
                 <CodeHandler 
                     testCases={testCases}
+                    value={value}
+                    setValue={setValue}
                 />
             </div>
-            <Settings />
+            <Settings setValue={setValue} />
         </div>
     )
 }
