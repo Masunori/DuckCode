@@ -3,8 +3,8 @@ import CodeHandler from './code_handler/CodeHandler';
 import GameplayNavbar from './GameplayNavbar';
 import Question, { QuestionTemplate } from './Question';
 import Settings from '../../globalcomponents/Settings';
-import { useState } from 'react';
-import { presetThemes } from '../../globalcomponents/color_schemes/themes';
+import { useContext, useState } from 'react';
+import { SettingsContext } from '../../App';
 
 const title = 'Two Sum';
 const difficulty = 1000;
@@ -61,23 +61,27 @@ const dummyQTemplate = new QuestionTemplate(
 );
 
 export default function Gameplay() {
-    const [settingsDisplayMode, setSettingsDisplayMode] = useState("none");
-    const [editorTheme, setEditorTheme] = useState(presetThemes[4])
+    const {settings} = useContext(SettingsContext);
+
+    // useEffect(() => {
+    //     console.log(settings)
+    //     console.log(settings.progLang);
+    // }, [settings]);
+
+    const [value, setValue] = useState(settings.progLang.code_snippet);
 
     return (
         <div id='entire-gameplay-screen'>
-            <GameplayNavbar setSettiings={setSettingsDisplayMode} />
+            <GameplayNavbar />
             <div id="gameplay">
                 <Question questionTemplate={ dummyQTemplate } />
                 <CodeHandler 
                     testCases={testCases}
-                    editorTheme={editorTheme}
+                    value={value}
+                    setValue={setValue}
                 />
             </div>
-            <Settings 
-                displayMode={settingsDisplayMode} 
-                setDisplayMode={setSettingsDisplayMode}
-                setEditorTheme={setEditorTheme} />
+            <Settings setValue={setValue} />
         </div>
     )
 }
