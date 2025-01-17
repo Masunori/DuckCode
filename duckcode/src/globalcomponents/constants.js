@@ -50,11 +50,17 @@ export const FONT_STYLES = [
  * Object literal of programming languages that DuckCode supports, from PistonAPI
  * Each key-value pair is [progLang]: 
  * {
- *     aliases (string[]): ___, 
- *     runtime (string, optional): ___, 
- *     version (string): ___,
- *     monaco_editor_alias (string, optional): ___
- *     code_snippet (string, optional): ___
+ *     formal_name (string): The name of the programming language the user will see
+ * 
+ *     aliases (string[]): The aliases of the language as in Piston API, 
+ * 
+ *     runtime (string, optional): The runtime of the language as in Piston API, 
+ * 
+ *     version (string): The version of the language as in Piston API,
+ * 
+ *     monaco_editor_alias (string, optional): The name to pass into Monaco Editor to set its language.
+ * 
+ *     code_snippet (string, optional): The initial code snippet that will be shown in the editor when the language is changed.
  * }
  */
 export const PROGRAMMING_LANGUAGES = {
@@ -212,3 +218,42 @@ export const SETTINGS_STATUS = Object.freeze({
     })
 });
 
+/**
+ * An object literal of password conditions used in Signup page. 
+ * 
+ * Each key-value pair is in the form 
+ * 
+ * [condition] {
+ * 
+ *     name (str): The condition description the user will see.
+ * 
+ *     checkFn (function): The function to verify if this condition is achieved.
+ * 
+ * }
+ */
+export const PASSWORD_CONDITIONS = {
+    hasTenCharOrMore: {
+        name: 'At least 10 characters',
+        checkFn: str => str.length >= 10
+    },
+    hasUppercase: {
+        name: 'At least 1 uppercase letter',
+        checkFn: str => /[A-Z]/.test(str)
+    },
+    hasLowercase: {
+        name: 'At least 1 lowercase letter',
+        checkFn: str => /[a-z]/.test(str)
+    },
+    hasDigit: {
+        name: 'At least 1 numerical digit',
+        checkFn: str => /\d/.test(str)
+    },
+    hasSpecialChar: {
+        name: 'At least 1 special character: !, @, #, $, %, ^, &, *, ?',
+        checkFn: str => /[!@#$%^&*?]/.test(str)
+    },
+    hasNoSpaces: {
+        name: 'No space.',
+        checkFn: str => !/\s/.test(str)
+    }
+}

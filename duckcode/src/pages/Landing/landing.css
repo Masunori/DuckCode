@@ -1,0 +1,245 @@
+#landing-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 3fr 100px 100px 50px 50px 2fr;
+    width: calc(100vw);
+    height: calc(100vh);
+    z-index: var(--landing-z-index);
+}
+
+#landing-container h1 {
+    text-align: center;
+    grid-row: 2;
+    grid-column: 2;
+}
+
+#landing-container p {
+    text-align: center;
+    grid-row: 3;
+    grid-column: 2;
+}
+
+#landing-login-button {
+    background-color: var(--significant-button-color);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    border: 1px solid var(--fourth-layer-background-color);
+    bottom: 50px;
+    transition-duration: 0.25s;
+    margin: auto;
+    grid-row: 4;
+    grid-column: 2;
+    width: 10em;
+}
+
+#landing-login-button:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+#landing-signup-button {
+    background-color: var(--insignificant-button-color);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    border: 1px solid var(--fourth-layer-background-color);
+    bottom: 50px;
+    transition-duration: 0.25s;
+    margin: auto;
+    grid-row: 5;
+    grid-column: 2;
+    width: 10em;
+}
+
+#landing-signup-button:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+/*
+    Login, sign up pop-up styling
+*/
+
+.login-signup-fullscreen {
+    z-index: --login-signup-fs-z-index;
+    background-color: var(--background-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100vw);
+    height: calc(100vh);
+    opacity: 0.7;
+}
+
+@keyframes illuminating-border {
+    to {
+      --border-angle: 360deg;
+    }
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0deg;
+}
+
+.login-signup-container-border {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(min(max(30vw, 400px), 600px));
+    height: fit-content;
+    padding: 1px;
+    z-index: var(--login-signup-z-index);
+    --border-angle: 0deg;
+    color: var(--foreground);
+    border: 1px solid var(--third-layer-background-color);
+    padding: 2px;
+    display: flex;
+    border-radius: 0.75em;
+    background-color: transparent;
+    background-image: conic-gradient(from var(--border-angle) at 50% 50%, 
+                                    transparent, 
+                                    var(--significant-button-color) 10%, 
+                                    transparent 30%, 
+                                    transparent);
+    animation: illuminating-border 4s linear infinite;
+    transition-duration: 0.25s;
+}
+
+.login-signup-container {
+    position: relative;
+    width: 100%;
+    background-color: var(--first-layer-background-color);
+    padding: 1em;
+    border-radius: 0.60em;
+}
+
+.login-signup-container h2, .login-signup-container h4 {
+    text-align: center;
+}
+
+.login-signup-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-signup-container input {
+    width: 100%;
+    margin: 1em 0;
+    padding: 0.25em;
+    background-color: var(--second-layer-background-color);
+    border: 2px solid var(--fourth-layer-background-color);
+    border-radius: 3px;
+    font-family: var(--code-fragment-font);
+    transition: 0.25s;
+}
+
+.login-signup-container input:focus {
+    outline: none;
+}
+
+.login-signup-container a {
+    text-align: right;
+    margin: 1em 0;
+}
+
+.login-signup-container a:hover {
+    color: var(--font-colour-hover);
+}
+
+#login-password-label, #signup-password-label, #signup-confirm-password-label {
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+    column-gap: 1em;
+}
+
+#login-password-label button, #signup-password-label button, #signup-confirm-password-label button {
+    font-family: var(--code-fragment-font);
+    background-color: var(--insignificant-button-color);
+    border-radius: 0.5em;
+    height: 1.5em;
+    border: 1px solid var(--fourth-layer-background-color);
+    transition-duration: 0.25s;
+    align-self: center;
+}
+
+#login-password-label button:hover, #signup-password-label button:hover, #signup-confirm-password-label button:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+#login-button {
+    background-color: var(--significant-button-color);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    border: 1px solid var(--fourth-layer-background-color);
+    bottom: 50px;
+    transition-duration: 0.25s;
+    margin: 0.5em 0;
+}
+
+#login-button:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+#sign-up-button {
+    background-color: var(--significant-button-color);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    border: 1px solid var(--fourth-layer-background-color);
+    bottom: 50px;
+    transition-duration: 0.25s;
+    margin: 0.5em 0;
+}
+
+#sign-up-button:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+#login-alternative-options {
+    display: flex;
+    justify-content: space-around;
+}
+
+.login-signup-options-separator {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+.login-signup-options-separator span {
+    height: 2px;
+    background-color: var(--fourth-layer-background-color);
+    align-self: center;
+}
+
+.login-signup-alternative-options {
+    display: flex;
+    justify-content: space-around;
+}
+
+.login-signup-alternative-options button {
+    background-color: var(--insignificant-button-color);
+    padding: 1em;
+    border-radius: 0.5em;
+    border: 1px solid var(--fourth-layer-background-color);
+    transition-duration: 0.25s;
+}
+
+.login-signup-alternative-options button:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+#login-close-button, #signup-close-button {
+    border: none;
+    background-color: transparent;
+    font-size: 2em;
+    position: absolute;
+    top: 7px;
+    right: 7px;
+}
