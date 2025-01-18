@@ -18,6 +18,7 @@
 
     --code-fragment-font: monospace;
     --font-colour: #ccc;
+    --font-colour-hover: #aaa;
 
     --screen-padding: 20px;
     --navbar-padding: 50px;
@@ -26,8 +27,12 @@
     --settings-bg-color: #484848;
     --settings-option-border-color: #848484;
 
-    --qn-editor-z-index: 2;
-    --output-tcpanel-z-index: 1;
+    --styled-background-z-index: 0;
+    --output-tcpanel-z-index: 3;
+    --qn-editor-z-index: 5;
+    --landing-z-index: 9;
+    --login-signup-fs-z-index: 10;
+    --login-signup-z-index: 11;
     --navbar-z-index: 15;
     --settings-z-index: 20;
     --prog-lang-dropdown-z-index: 22;
