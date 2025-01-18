@@ -120,13 +120,16 @@ export function Signup({ isSignup, setIsSignup }) {
                     <h4>Your journey starts here!</h4>
                     <form action='#' method='POST'>
                         <label htmlFor="signup-username">
+                            <p style={{ textAlign: 'left', margin: '0 0 0 0.5em' }}>Email</p>
                             <input style={usernameInputStyle} id="signup-username" type="text" name="username" value={email} onChange={handleUsernameChange} placeholder="Enter your email" required />
                         </label>
                         <label htmlFor="signup-password" id='signup-password-label'>
+                            <p>Password</p>
                             <input style={passwordInputStyle} id="signup-password" type={isPasswordVisible ? "text" : "password"} name="password" value={password} onChange={handlePasswordChange} placeholder="Password" required />
                             <button type='button' onClick={() => setIsPasswordVisible(!isPasswordVisible)}>{isPasswordVisible ? "Hide" : "Show"}</button>
                         </label>
                         <label htmlFor="signup-confirm-password" id='signup-confirm-password-label'>
+                            <p>Confirm Password</p>
                             <input style={confirmPasswordInputStyle} id="signup-confirm-password" type={isPasswordVisible ? "text" : "password"} name="password" value={confirmPassword} onChange={handleConfirmPasswordChange} placeholder="Confirm Password" required />
                             <button type='button' onClick={() => setIsPasswordVisible(!isPasswordVisible)}>{isPasswordVisible ? "Hide" : "Show"}</button>
                         </label>

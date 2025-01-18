@@ -13,9 +13,11 @@ export function Login({ isLogin, setIsLogin }) {
                     <h4>Please login to continue</h4>
                     <form action='#' method='POST'>
                         <label htmlFor="login-username">
-                            <input id="login-username" type="text" name="username" placeholder="Enter your email" required />
+                            <p style={{ textAlign: 'left', margin: '0 0 0 0.5em' }}>Email</p>
+                            <input id="login-username" type="text" name="username" placeholder="you@domain.com" required />
                         </label>
                         <label htmlFor="login-password" id='login-password-label'>
+                            <p>Password</p>
                             <input id="login-password" type={isPasswordVisible ? "text" : "password"} name="password" placeholder="Password" required />
                             <button type='button' onClick={() => setIsPasswordVisible(!isPasswordVisible)}>{isPasswordVisible ? "Hide" : "Show"}</button>
                         </label>
