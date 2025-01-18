@@ -153,7 +153,21 @@
 #login-password-label, #signup-password-label, #signup-confirm-password-label {
     display: grid;
     grid-template-columns: 9fr 1fr;
+    grid-template-rows: 1.5em 1fr;
     column-gap: 1em;
+}
+
+#login-password-label p, #signup-password-label p, #signup-confirm-password-label p {
+    grid-row: 1;
+    grid-column: 1;
+    text-align: left;
+    align-self: center;
+    margin-left: 0.5em;
+}
+
+#login-password-label input, #signup-password-label input, #signup-confirm-password-label input {
+    grid-row: 2;
+    grid-column: 1;
 }
 
 #login-password-label button, #signup-password-label button, #signup-confirm-password-label button {
@@ -164,6 +178,8 @@
     border: 1px solid var(--fourth-layer-background-color);
     transition-duration: 0.25s;
     align-self: center;
+    grid-column: 2;
+    grid-row: 2;
 }
 
 #login-password-label button:hover, #signup-password-label button:hover, #signup-confirm-password-label button:hover {
