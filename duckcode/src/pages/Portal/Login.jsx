@@ -9,7 +9,8 @@ export function Login({ isLogin, setIsLogin }) {
             <div className='login-signup-container-border'>
                 <div className="login-signup-container">
                     <button id="login-close-button" onClick={() => setIsLogin(false)}>×</button>
-                    <h2>Welcome back to DuckCode!<br /> Please login to continue.</h2>
+                    <h2>Welcome back to DuckCode!</h2>
+                    <h4>Please login to continue</h4>
                     <form action='#' method='POST'>
                         <label htmlFor="login-username">
                             <input id="login-username" type="text" name="username" placeholder="Enter your email" required />
@@ -18,7 +19,7 @@ export function Login({ isLogin, setIsLogin }) {
                             <input id="login-password" type={isPasswordVisible ? "text" : "password"} name="password" placeholder="Password" required />
                             <button type='button' onClick={() => setIsPasswordVisible(!isPasswordVisible)}>{isPasswordVisible ? "Hide" : "Show"}</button>
                         </label>
-                        <a href="./gameplay">Forget your password?</a>
+                        <a href="./gameplay">Forgot your password?</a>
 
                         <button id="login-button" type="submit">Login</button>
 

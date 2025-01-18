@@ -13,7 +13,7 @@ export default function StarryBackground({ child=<div></div> }) {
 
     useEffect(() => {
         const starsContainer = starsRef.current;
-        const totalStars = 150;
+        const totalStars = 250;
 
         for (let i = 0; i < totalStars; i++) {
             const star = document.createElement('div');

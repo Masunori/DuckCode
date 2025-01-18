@@ -253,7 +253,7 @@ export const PASSWORD_CONDITIONS = {
         checkFn: str => /[!@#$%^&*?]/.test(str)
     },
     hasNoSpaces: {
-        name: 'No space.',
+        name: 'No space',
         checkFn: str => !/\s/.test(str)
     }
 }

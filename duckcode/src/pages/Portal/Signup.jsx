@@ -2,14 +2,18 @@ import { useState, useRef, useEffect } from 'react';
 import { PASSWORD_CONDITIONS } from '../../globalcomponents/constants';
 
 export function Signup({ isSignup, setIsSignup }) {
-    const EMPTY_STRING = 'var(--fourth-layer-background-color)';
-    const INVALID_STRING = '#DC143C';
-    const VALID_STRING = '#00DD00';
+    const EMPTY_STRING_BORDER_COLOR = 'var(--fourth-layer-background-color)';
+    const INVALID_STRING_BORDER_COLOR = '#DC143C';
+    const VALID_STRING_BORDER_COLOR = '#00DD00';
+
+    const EMPTY_STRING_BG_COLOR = 'var(--second-layer-background-color)';
+    const INVALID_STRING_BG_COLOR = '#640A1E';
+    const VALID_STRING_BG_COLOR = '#006600';
 
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [usernameColor, setUsernameColor] = useState(EMPTY_STRING);
-    const [passwordColor, setPasswordColor] = useState(EMPTY_STRING);
-    const [confirmPasswordColor, setConfirmPasswordColor] = useState(EMPTY_STRING);
+    const [usernameInputStyle, setUsernameInputStyle] = useState({ borderColor: EMPTY_STRING_BORDER_COLOR, backgroundColor: EMPTY_STRING_BG_COLOR });
+    const [passwordInputStyle, setPasswordInputStyle] = useState({ borderColor: EMPTY_STRING_BORDER_COLOR, backgroundColor: EMPTY_STRING_BG_COLOR });
+    const [confirmPasswordInputStyle, setConfirmPasswordInputStyle] = useState({ borderColor: EMPTY_STRING_BORDER_COLOR, backgroundColor: EMPTY_STRING_BG_COLOR });
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -34,11 +38,20 @@ export function Signup({ isSignup, setIsSignup }) {
         setEmail(newUsername);
 
         if (newUsername === "") {
-            setUsernameColor(EMPTY_STRING);
+            setUsernameInputStyle({
+                borderColor: EMPTY_STRING_BORDER_COLOR,
+                backgroundColor: EMPTY_STRING_BG_COLOR
+            });
         } else if (!emailRegex.test(newUsername)) {
-            setUsernameColor(INVALID_STRING);
+            setUsernameInputStyle({
+                borderColor: INVALID_STRING_BORDER_COLOR,
+                backgroundColor: INVALID_STRING_BG_COLOR
+            });
         } else {
-            setUsernameColor(VALID_STRING);
+            setUsernameInputStyle({
+                borderColor: VALID_STRING_BORDER_COLOR,
+                backgroundColor: VALID_STRING_BG_COLOR
+            });
         }
     }
 
@@ -56,22 +69,22 @@ export function Signup({ isSignup, setIsSignup }) {
         conditionsRef.current.forEach(el => {
             if (newPassword === "") {
                 el.innerText = `  ${el.innerText.replace(/^[✔✖]\s*/, '')}`;
-                el.style.color = EMPTY_STRING;
+                el.style.color = EMPTY_STRING_BORDER_COLOR;
             } else if (!PASSWORD_CONDITIONS[el.dataset.key].checkFn(newPassword)) {
                 isPasswordValid = false;
                 el.innerText = `✖ ${el.innerText.replace(/^[✔✖]\s*/, '')}`;
-                el.style.color = INVALID_STRING;
+                el.style.color = INVALID_STRING_BORDER_COLOR;
             } else {
                 el.innerText = `✔ ${el.innerText.replace(/^[✔✖]\s*/, '')}`;
-                el.style.color = VALID_STRING;
+                el.style.color = VALID_STRING_BORDER_COLOR;
             }
         });
 
-        setPasswordColor(newPassword === ""
-            ? EMPTY_STRING
+        setPasswordInputStyle(newPassword === ""
+            ? { borderColor: EMPTY_STRING_BORDER_COLOR, backgroundColor: EMPTY_STRING_BG_COLOR }
             : isPasswordValid
-            ? VALID_STRING
-            : INVALID_STRING
+            ? { borderColor: VALID_STRING_BORDER_COLOR, backgroundColor: VALID_STRING_BG_COLOR }
+            : { borderColor: INVALID_STRING_BORDER_COLOR, backgroundColor: INVALID_STRING_BG_COLOR }
         )
     }
 
@@ -80,11 +93,20 @@ export function Signup({ isSignup, setIsSignup }) {
         setConfirmPassword(newCfmPassword);
 
         if (newCfmPassword === "") {
-            setConfirmPasswordColor(EMPTY_STRING);
+            setConfirmPasswordInputStyle({
+                borderColor: EMPTY_STRING_BORDER_COLOR,
+                backgroundColor: EMPTY_STRING_BG_COLOR
+            })
         } else if (newCfmPassword === password) {
-            setConfirmPasswordColor(VALID_STRING);
+            setConfirmPasswordInputStyle({
+                borderColor: VALID_STRING_BORDER_COLOR,
+                backgroundColor: VALID_STRING_BG_COLOR
+            })
         } else {
-            setConfirmPasswordColor(INVALID_STRING);
+            setConfirmPasswordInputStyle({
+                borderColor: INVALID_STRING_BORDER_COLOR,
+                backgroundColor: INVALID_STRING_BG_COLOR
+            })
         }
     }
 
@@ -94,17 +116,18 @@ export function Signup({ isSignup, setIsSignup }) {
             <div className='login-signup-container-border'>
                 <div className="login-signup-container">
                     <button id="signup-close-button" onClick={() => setIsSignup(false)}>×</button>
-                    <h2>Welcome to DuckCode!<br />Your journey starts here!</h2>
+                    <h2>Welcome to DuckCode!</h2>
+                    <h4>Your journey starts here!</h4>
                     <form action='#' method='POST'>
                         <label htmlFor="signup-username">
-                            <input style={{ borderColor: usernameColor }} id="signup-username" type="text" name="username" value={email} onChange={handleUsernameChange} placeholder="Enter your email" required />
+                            <input style={usernameInputStyle} id="signup-username" type="text" name="username" value={email} onChange={handleUsernameChange} placeholder="Enter your email" required />
                         </label>
                         <label htmlFor="signup-password" id='signup-password-label'>
-                            <input style={{ borderColor: passwordColor }} id="signup-password" type={isPasswordVisible ? "text" : "password"} name="password" value={password} onChange={handlePasswordChange} placeholder="Password" required />
+                            <input style={passwordInputStyle} id="signup-password" type={isPasswordVisible ? "text" : "password"} name="password" value={password} onChange={handlePasswordChange} placeholder="Password" required />
                             <button type='button' onClick={() => setIsPasswordVisible(!isPasswordVisible)}>{isPasswordVisible ? "Hide" : "Show"}</button>
                         </label>
                         <label htmlFor="signup-confirm-password" id='signup-confirm-password-label'>
-                            <input style={{ borderColor: confirmPasswordColor }} id="signup-confirm-password" type={isPasswordVisible ? "text" : "password"} name="password" value={confirmPassword} onChange={handleConfirmPasswordChange} placeholder="Confirm Password" required />
+                            <input style={confirmPasswordInputStyle} id="signup-confirm-password" type={isPasswordVisible ? "text" : "password"} name="password" value={confirmPassword} onChange={handleConfirmPasswordChange} placeholder="Confirm Password" required />
                             <button type='button' onClick={() => setIsPasswordVisible(!isPasswordVisible)}>{isPasswordVisible ? "Hide" : "Show"}</button>
                         </label>
                         <ul style={{ paddingLeft: '1em' }}>
