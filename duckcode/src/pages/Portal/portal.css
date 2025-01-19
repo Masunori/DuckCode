@@ -1,4 +1,4 @@
-#landing-container {
+#portal-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -7,16 +7,12 @@
     z-index: var(--landing-z-index);
 }
 
-#landing-content {
+#portal-content {
     width: 50vw;
     height: fit-content;
 }
 
-#landing-container h1 {
-    text-align: center;
-}
-
-#landing-container p {
+#portal-container h1 {
     text-align: center;
 }
 
@@ -74,6 +70,7 @@
 @keyframes illuminating-border {
     to {
       --border-angle: 360deg;
+      --border-angle-2: 540deg;
     }
 }
 
@@ -81,6 +78,12 @@
     syntax: "<angle>";
     inherits: true;
     initial-value: 0deg;
+}
+
+@property --border-angle-2 {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 180deg;
 }
 
 .login-signup-container-border {
@@ -93,6 +96,7 @@
     padding: 1px;
     z-index: var(--login-signup-z-index);
     --border-angle: 0deg;
+    --border-angle-2: 180deg;
     color: var(--foreground);
     border: 1px solid var(--third-layer-background-color);
     padding: 2px;
@@ -100,6 +104,11 @@
     border-radius: 0.75em;
     background-color: transparent;
     background-image: conic-gradient(from var(--border-angle) at 50% 50%, 
+                                    transparent, 
+                                    var(--significant-button-color) 10%, 
+                                    transparent 30%, 
+                                    transparent),
+                      conic-gradient(from var(--border-angle-2) at 50% 50%, 
                                     transparent, 
                                     var(--significant-button-color) 10%, 
                                     transparent 30%, 
@@ -114,10 +123,21 @@
     background-color: var(--first-layer-background-color);
     padding: 1em;
     border-radius: 0.60em;
+    height: calc(60vh);
+    overflow: auto;
+}
+
+.login-signup-container ul {
+    margin: 0.5em 0 1em;
+}
+
+.login-signup-container::-webkit-scrollbar {
+    display: none;
 }
 
 .login-signup-container h2, .login-signup-container h4 {
     text-align: center;
+    margin: 0.75em auto;
 }
 
 .login-signup-container form {
@@ -148,6 +168,12 @@
 
 .login-signup-container a:hover {
     color: var(--font-colour-hover);
+}
+
+.authentication-field-guide {
+    text-align: left;
+    margin: 0 0 0 0.5em;
+    font-weight: 600;
 }
 
 #login-password-label, #signup-password-label, #signup-confirm-password-label {
@@ -186,7 +212,8 @@
     background-color: var(--insignificant-button-hover-color);
 }
 
-#login-button {
+#login-button, #sign-up-button, 
+#get-verification-code-button {
     background-color: var(--significant-button-color);
     font-size: 1rem;
     font-weight: 600;
@@ -196,25 +223,10 @@
     bottom: 50px;
     transition-duration: 0.25s;
     margin: 0.5em 0;
+    width: 100%;
 }
 
-#login-button:hover {
-    background-color: var(--significant-button-hover-color);
-}
-
-#sign-up-button {
-    background-color: var(--significant-button-color);
-    font-size: 1rem;
-    font-weight: 600;
-    padding: 0.5em 1em;
-    border-radius: 0.5em;
-    border: 1px solid var(--fourth-layer-background-color);
-    bottom: 50px;
-    transition-duration: 0.25s;
-    margin: 0.5em 0;
-}
-
-#sign-up-button:hover {
+#login-button:hover, #sign-up-button:hover, #get-verification-code-button:hover {
     background-color: var(--significant-button-hover-color);
 }
 
@@ -231,6 +243,10 @@
 .login-signup-options-separator span {
     height: 2px;
     background-color: var(--fourth-layer-background-color);
+    align-self: center;
+}
+
+.login-signup-options-separator h4 {
     align-self: center;
 }
 
@@ -255,7 +271,50 @@
     border: none;
     background-color: transparent;
     font-size: 2em;
-    position: absolute;
-    top: 7px;
-    right: 7px;
+    top: 0;
+    position: sticky;
+    left: 100%;
+}
+
+#forget-password {
+    cursor: pointer;
+    text-align: right;
+}
+
+#forget-password:hover {
+    text-decoration: underline;
+}
+
+#forgot-email-verification {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 2fr 2fr 1fr;
+    column-gap: 0.75em;
+}
+
+.otp-input {
+    font-size: 1.5em;
+    grid-row: 2;
+}
+
+#key-in-code-guiding-text {
+    grid-row: 1;
+    grid-column: 1 / 7;
+}
+
+#check-verification-code-button {
+    background-color: var(--significant-button-color);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+    border: 1px solid var(--fourth-layer-background-color);
+    bottom: 50px;
+    transition-duration: 0.25s;
+    grid-column: 1 / 7;
+    grid-row: 3;
+}
+
+#check-verification-code-button:hover {
+    background-color: var(--significant-button-hover-color);
 }

@@ -108,11 +108,12 @@ export function ColorInput({
  * Returns a checkbox input component. This input is already encapsulated inside a label.
  * 
  * @param {Object} param0 the parameters, including
- * - name (string): the name to add to the input
+ * - name (string): the name of the input
  * - value (any): the value of the input
- * - key (any, defalut=null): if Array.map() is used to produce this input, pass the key here
  * - onChange (function, default=()=>{return;}: specify the onChange behaviour for the input
+ * - content (string): what the user will see as the option
  * - inputId (string, default = "radio-input-{counter}"): specify the identity of the input. We use an internal counter for default identity.
+ * - inputClassname (string, default = null): specify the class for the input if you need further styling
  * @returns a radio input
  */
 export function CheckboxInput({

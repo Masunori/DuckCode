@@ -257,3 +257,14 @@ export const PASSWORD_CONDITIONS = {
         checkFn: str => !/\s/.test(str)
     }
 }
+
+export const USERNAME_CONDITIONS = {
+    fiveToTwentyCharacters: {
+        name: 'Between 5 and 30 characters',
+        checkFn: str => str.length >= 5 && str.length <= 30
+    },
+    containsAllowedChars: {
+        name: 'Only contains letters (from any language), numbers, underscores (_), dot (.) or hyphen (-)',
+        checkFn: str => /^[\p{L}\p{N}_.-]+$/u.test(str)
+    }
+}
