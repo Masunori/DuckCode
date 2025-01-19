@@ -4,16 +4,24 @@ import './portal.css';
 import StarryBackground from "../../globalcomponents/StarryBackground";
 import { Signup } from "./Signup";
 import { ResetPassword } from "./ResetPassword";
+import { useNavigate } from "react-router-dom";
 
 export function Portal() {
     const [isLogin, setIsLogin] = useState(false);
     const [isSignup, setIsSignup] = useState(false);
     const [isResetPassword, setIsResetPassword] = useState(false);
 
+    const navigate = useNavigate();
+
+    const handleGoToLanding = () => {
+        navigate('/');
+    }
+
     const child = <div id="portal-container">
+        <p id="to-landing" onClick={handleGoToLanding}>About Us</p>
         <div id="portal-content">
             <h1 style={{ margin: 0, fontSize: '3em' }}>It's not just about learning to code or competitive programming</h1>
-            <p style={{ fontSize: '1.25em', textAlign: 'center' }}>DuckCode is your one-stop destination for programming. Dive into gamified tutorials, challenge peers in ranked matches, and participate in simulated contests with prizes!</p>
+            <p style={{ fontSize: '1.25em', textAlign: 'center' }}>Dive into gamified tutorials, challenge peers in ranked matches, and participate in simulated contests with prizes!</p>
             <button onClick={() => setIsLogin(true)} id="landing-login-button">Login</button>
             <button onClick={() => setIsSignup(true)} id="landing-signup-button">Sign Up</button>
         </div>

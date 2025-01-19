@@ -13,12 +13,13 @@
     
     --significant-button-color: #007fff;
     --significant-button-hover-color: #0560bc;
+    --significant-button-hover-heavier-color: #163d63;
     --insignificant-button-color: #363636;
     --insignificant-button-hover-color: #484848;
 
     --code-fragment-font: monospace;
     --font-colour: #ccc;
-    --font-colour-hover: #aaa;
+    --font-colour-hover: #999;
 
     --screen-padding: 20px;
     --navbar-padding: 50px;
