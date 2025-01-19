@@ -318,3 +318,14 @@
 #check-verification-code-button:hover {
     background-color: var(--significant-button-hover-color);
 }
+
+#to-landing {
+    cursor: pointer;
+    position: fixed;
+    top: 1vh;
+    right: 2vw;
+}
+
+#to-landing:hover {
+    text-decoration: underline;
+}

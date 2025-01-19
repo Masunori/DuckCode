@@ -1,0 +1,138 @@
+#landing {
+    width: calc(100vw);
+    height: calc(100vh);
+    min-height: calc(100vh);
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#landing::-webkit-scrollbar {
+    width: 5px;
+}
+
+#landing::-webkit-scrollbar-thumb {
+    background-color: var(--second-layer-background-color);
+    border-radius: 10px;
+}
+
+#landing nav {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    box-sizing: border-box;
+    background-color: var(--first-layer-background-color);
+    padding: 1em;
+    box-shadow: 0 1em 15em 2em var(--fourth-layer-background-color);
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+}
+
+#landing nav h3 {
+    margin: 0 0 0 1em;
+}
+
+#landing-play-duckcode-button-wrapper {
+    grid-column: 2;
+    place-self: stretch;
+    padding: 2px;
+
+    --border-angle: 0deg;
+    --border-angle-2: 180deg;
+    color: var(--foreground);
+    display: flex;
+    background-color: var(--significant-button-hover-heavier-color);
+    background-image: conic-gradient(from var(--border-angle) at 50% 50%, 
+                                    transparent, 
+                                    var(--significant-button-color) 10%, 
+                                    transparent 30%, 
+                                    transparent),
+                      conic-gradient(from var(--border-angle-2) at 50% 50%, 
+                                    transparent, 
+                                    var(--significant-button-color) 10%, 
+                                    transparent 30%, 
+                                    transparent);
+    animation: illuminating-border 4s linear infinite;
+}
+
+#landing-play-duckcode-button {
+    background-color: var(--first-layer-background-color);
+    border: none;
+    font-size: 1em;
+    width: 100%;
+    transition-duration: 0.25s;
+}
+
+@keyframes illuminating-border {
+    to {
+      --border-angle: 360deg;
+      --border-angle-2: 540deg;
+    }
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --border-angle-2 {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 180deg;
+}
+
+#landing-play-duckcode-button-wrapper:hover {
+    animation: illuminating-border 1s linear infinite;
+}
+
+#landing main {
+    flex: 1;
+}
+
+#landing-welcome-section {
+    text-align: center;
+}
+
+#landing-welcome-section h1 {
+    margin-top: 1em;
+    font-size: 5em;
+}
+
+#landing-latest-news {
+    padding-left: 5em;
+}
+
+#landing main article {
+    background-color: var(--second-layer-background-color);
+    width: calc(80vw);
+    margin: 1em auto;
+    padding: 0.5em 1em;
+}
+
+#landing footer {
+    background-color: var(--first-layer-background-color);
+    padding: 1px;
+}
+
+#landing footer ul {
+    list-style-type: none;
+    display: flex;
+    width: max(50vw, 500px);
+    margin: 1em auto;
+    justify-content: space-around;
+    padding: 0;
+}
+
+#landing footer a {
+    transition-duration: 0.25s;
+}
+
+#landing footer a:hover {
+    color: var(--font-colour-hover);
+}
+
+#landing footer p {
+    text-align: center;
+}

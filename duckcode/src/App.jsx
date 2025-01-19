@@ -106,7 +106,7 @@ export default function App() {
         <SettingsContext.Provider value={settingsContextObject} id='app'>
             <Router>
                 <Routes>
-                    <Route path='' element={<Landing />}/>
+                    <Route path='/' element={<Landing />}/>
                     <Route path='/gameplay' element={<Gameplay />}></Route>
                     <Route path='/portal' element={<Portal />}></Route>
                     </Routes>
