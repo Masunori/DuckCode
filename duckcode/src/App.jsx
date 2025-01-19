@@ -6,6 +6,7 @@ import { createContext, useCallback, useEffect, useMemo, useRef, useState } from
 import { THEME_MODES, EditorThemeObject, OverallThemeObject } from './globalcomponents/color_schemes/themes';
 import { PROGRAMMING_LANGUAGES } from './globalcomponents/constants';
 import { Portal } from './pages/Portal/Portal';
+import { Landing } from './pages/Landing/Landing';
 
 export const SettingsContext = createContext(null);
 
@@ -105,6 +106,7 @@ export default function App() {
         <SettingsContext.Provider value={settingsContextObject} id='app'>
             <Router>
                 <Routes>
+                    <Route path='' element={<Landing />}/>
                     <Route path='/gameplay' element={<Gameplay />}></Route>
                     <Route path='/portal' element={<Portal />}></Route>
                     </Routes>
