@@ -1,7 +1,14 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export function Login({ isLogin, setIsLogin, setIsResetPassword }) {
+export default function Login({ isLogin, setIsLogin, setIsResetPassword }) {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+    const navigate = useNavigate();
+
+    function handleToHome(event) {
+        navigate('/home');
+    }
 
     return (
         <div style={{ display: isLogin ? "block" : "none" }}>
@@ -24,7 +31,7 @@ export function Login({ isLogin, setIsLogin, setIsResetPassword }) {
                         
                         <p id='forget-password' onClick={() => setIsResetPassword(true)}>Forgot your password?</p>
 
-                        <button id="login-button" type="submit">Login</button>
+                        <button id="login-button" onClick={handleToHome} type="button">Login</button>
 
                         <div className="login-signup-options-separator">
                             <span></span>

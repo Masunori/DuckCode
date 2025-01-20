@@ -13,7 +13,7 @@ import GeneralSettings from "./settings_components/GeneralSettings";
  * - setValue (function): set the content of the code editor.
  * @returns the Settings component.
  */
-export default function Settings({ setValue }) {
+export default function Settings({ setValue=(value)=>null }) {
     const {history, temp, saveSettings, revertSettings, resetSettings, frozen, setFrozen} = useContext(SettingsContext);
     const [settingsStatus, setSettingsStatus] = useState(SETTINGS_STATUS.CANNOT_SAVE.CANNOT_REVERT);
     

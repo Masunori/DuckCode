@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import './landing.css';
 
-export function Landing() {
+export default function Landing() {
     const navigate = useNavigate();
 
     const handleGoToDuckCode = () => {

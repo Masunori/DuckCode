@@ -17,6 +17,9 @@
     --insignificant-button-color: #363636;
     --insignificant-button-hover-color: #484848;
 
+    --exp-bar-color: #007fff;
+    --exp-bar-color-tail: #9ccdff;
+
     --code-fragment-font: monospace;
     --font-colour: #ccc;
     --font-colour-hover: #999;
@@ -29,6 +32,7 @@
     --settings-option-border-color: #848484;
 
     --styled-background-z-index: 0;
+    --home-z-index: 1;
     --output-tcpanel-z-index: 3;
     --qn-editor-z-index: 5;
     --landing-z-index: 9;

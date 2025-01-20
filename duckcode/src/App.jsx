@@ -5,8 +5,9 @@ import UnsupportedScreenNotification from './globalcomponents/UnsupportedScreenN
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { THEME_MODES, EditorThemeObject, OverallThemeObject } from './globalcomponents/color_schemes/themes';
 import { PROGRAMMING_LANGUAGES } from './globalcomponents/constants';
-import { Portal } from './pages/Portal/Portal';
-import { Landing } from './pages/Landing/Landing';
+import Portal from './pages/Portal/Portal';
+import Landing from './pages/Landing/Landing';
+import MainMenu from './pages/MainMenu/MainMenu';
 
 export const SettingsContext = createContext(null);
 
@@ -109,8 +110,9 @@ export default function App() {
                     <Route path='/' element={<Landing />}/>
                     <Route path='/gameplay' element={<Gameplay />}></Route>
                     <Route path='/portal' element={<Portal />}></Route>
-                    </Routes>
-                </Router>
+                    <Route path='/home' element={<MainMenu />}></Route>
+                </Routes>
+            </Router>
             <UnsupportedScreenNotification />
         </SettingsContext.Provider>
     );

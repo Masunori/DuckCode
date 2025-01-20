@@ -291,6 +291,8 @@ input[type="checkbox"]:checked + .checkbox-input-indicator {
     position: fixed;
     width: calc(100vw);
     height: calc(100vh);
+    top: 0;
+    left: 0;
     background-color: var(--background-color);
     z-index: var(--settings-z-index);
 }
