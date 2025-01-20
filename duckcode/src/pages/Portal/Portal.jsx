@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Login } from "./Login";
+import Login from "./Login";
 import './portal.css';
 import StarryBackground from "../../globalcomponents/StarryBackground";
-import { Signup } from "./Signup";
-import { ResetPassword } from "./ResetPassword";
+import Signup from "./Signup";
+import ResetPassword from "./ResetPassword";
 import { useNavigate } from "react-router-dom";
 
-export function Portal() {
+export default function Portal() {
     const [isLogin, setIsLogin] = useState(false);
     const [isSignup, setIsSignup] = useState(false);
     const [isResetPassword, setIsResetPassword] = useState(false);

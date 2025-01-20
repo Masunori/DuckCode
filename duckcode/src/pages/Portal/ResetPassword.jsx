@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-export function ResetPassword({ isResetPassword, setIsResetPassword, setIsLogin }) {
+export default function ResetPassword({ isResetPassword, setIsResetPassword, setIsLogin }) {
     const [otp, setOtp] = useState(new Array(6).fill(""));
     const otpInputRefs = useRef([]);
 

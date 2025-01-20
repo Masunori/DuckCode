@@ -93,6 +93,7 @@
 
 #landing-welcome-section {
     text-align: center;
+    margin-bottom: 5em;
 }
 
 #landing-welcome-section h1 {
@@ -101,14 +102,19 @@
 }
 
 #landing-latest-news {
-    padding-left: 5em;
+    padding-left: 20vw;
 }
 
 #landing main article {
     background-color: var(--second-layer-background-color);
-    width: calc(80vw);
+    width: calc(65vw);
     margin: 1em auto;
     padding: 0.5em 1em;
+}
+
+#landing article h3 {
+    border-bottom: 1px solid var(--fourth-layer-background-color);
+    padding-bottom: 1em;
 }
 
 #landing footer {

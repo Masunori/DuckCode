@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { PASSWORD_CONDITIONS, USERNAME_CONDITIONS } from '../../globalcomponents/constants';
 
-export function Signup({ isSignup, setIsSignup }) {
+export default function Signup({ isSignup, setIsSignup }) {
     const EMPTY_STRING_BORDER_COLOR = 'var(--fourth-layer-background-color)';
     const INVALID_STRING_BORDER_COLOR = '#DC143C';
     const VALID_STRING_BORDER_COLOR = '#00DD00';
