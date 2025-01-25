@@ -83,7 +83,7 @@ export default function App() {
         'setFrozen': setFrozen
     }), [current, frozen, saveSettings]);
 
-    useEffect(()=> {
+    useEffect(() => {
         const themeAlias = current.defaultTheme;
         monacoRef?.current?.editor?.setTheme(themeAlias); 
 
