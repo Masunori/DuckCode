@@ -1,3 +1,6 @@
+import Home from "../pages/Landing/landing_components/Home";
+import News from "../pages/Landing/landing_components/News";
+
 /**
  * Object literal of key bindings in the format:
  * [keyBindingFunctionality]: [Functionality]
@@ -258,6 +261,19 @@ export const PASSWORD_CONDITIONS = {
     }
 }
 
+/**
+ * An object literal of username conditions used in Signup page. 
+ * 
+ * Each key-value pair is in the form 
+ * 
+ * [condition]: {
+ * 
+ *     name (str): The condition description the user will see.
+ * 
+ *     checkFn (function): The function to verify if this condition is achieved.
+ * 
+ * }
+ */
 export const USERNAME_CONDITIONS = {
     fiveToTwentyCharacters: {
         name: 'Between 5 and 30 characters',
@@ -266,5 +282,28 @@ export const USERNAME_CONDITIONS = {
     containsAllowedChars: {
         name: 'Only contains letters (from any language), numbers, underscores (_), dot (.) or hyphen (-)',
         checkFn: str => /^[\p{L}\p{N}_.-]+$/u.test(str)
+    }
+}
+
+/**
+ * An object literal storing the sections to be displayed in the Landing page.
+ * 
+ * Each key-value pair is in the form:
+ * 
+ * [section alias]: {
+ * 
+ *     name (str): The name of the section the user will see in the navigation bar.
+ * 
+ *     section (str): The JSX element representing the section.
+ * }
+ */
+export const SECTIONS = {
+    "home": {
+        name: "Home",
+        section: <Home />
+    },
+    "news": {
+        name: "News",
+        section: <News />
     }
 }

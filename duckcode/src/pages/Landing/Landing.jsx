@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import './landing.css';
+import { useEffect, useState } from "react";
+import { SECTIONS } from "../../globalcomponents/constants";
 
 export default function Landing() {
     const navigate = useNavigate();
@@ -10,6 +12,54 @@ export default function Landing() {
 
     const dummyLink = "https://youtu.be/dQw4w9WgXcQ?si=pbHjWVWDclnIJgTS";
 
+    // each section is 100vh
+    // enable special scrolling behaviour where each scroll directs you to another section neatly
+    const [currentSection, setCurrentSection] = useState(0);
+    
+    useEffect(() => {
+        const sectionElement = document.getElementById(`landing-section-${Object.keys(SECTIONS)[currentSection]}`);
+        sectionElement?.scrollIntoView({ behavior: 'smooth' });
+    }, [currentSection]);
+
+    useEffect(() => {
+        const handleScroll = (event) => {
+            const delta = event.deltaY;
+    
+            if (delta > 0 && currentSection < Object.keys(SECTIONS).length - 1) {
+                // scroll down
+                setCurrentSection(currentSection + 1);
+            } else if (delta < 0 && currentSection > 0) {
+                // scroll up
+                setCurrentSection(currentSection - 1);
+            }
+        };
+
+        const handleMouseEnter = (event) => {
+            event.target.style.backgroundColor = 'var(--second-layer-background-color)';
+        }
+
+        const handleMouseLeave = (event) => {
+            event.target.style.backgroundColor = parseInt(event.target.dataset.key, 10) === currentSection
+                ? 'var(--second-layer-background-color)'
+                : 'var(--first-layer-background-color)';
+        }
+
+        const navbarOptions = document.getElementById('landing-navbar-options').querySelectorAll('li');
+        navbarOptions.forEach(element => {
+            element.addEventListener('mouseenter', handleMouseEnter);
+            element.addEventListener('mouseleave', handleMouseLeave);
+        })
+
+        window.addEventListener('wheel', handleScroll, { passive: false });
+        return () => {
+            window.removeEventListener('wheel', handleScroll);
+            navbarOptions.forEach(element => {
+                element.removeEventListener('mouseenter', handleMouseEnter);
+                element.removeEventListener('mouseleave', handleMouseLeave);
+            })
+        };
+    });
+
     return (
         <div id="landing">
             <header>
@@ -17,55 +67,27 @@ export default function Landing() {
                     <div>
                         <h3>DuckCode</h3>
                     </div>
-                    <div id="landing-play-duckcode-button-wrapper">
+                    <ul id="landing-navbar-options">
+                        {Object.entries(SECTIONS).map(([key, value], idx) => (
+                            <li key={idx} data-key={idx} style={{
+                                backgroundColor: idx === currentSection ? "var(--second-layer-background-color)" : "var(--first-layer-background-color)"
+                            }}
+                            onClick={() => setCurrentSection(idx)}>
+                                {value.name}
+                            </li>
+                        ))}
+                    </ul>
+                    <div id="landing-navbar-play-duckcode-button-wrapper">
                         <button id="landing-play-duckcode-button" onClick={handleGoToDuckCode}>Play</button>
                     </div>
                 </nav>
             </header>
             <main>
-                <section id="landing-welcome-section">
-                    <h1>Welcome to DuckCode!</h1>
-                    <p>DuckCode is your one-stop solution for learning programming, and honing your programming skills!</p>
-                </section>
-                <section>
-                    <h2 id="landing-latest-news">Latest News</h2>
-                    <article>
-                        <h3>What is DuckCode?</h3>
-                        <time dateTime="2025-01-20">20 January, 2025</time>
-                        <p>
-                            DuckCode is a multiplayer game about programming for all demographic of users.<br />
-                            - <strong>Gamified Lessons</strong>: People new to programming can acquire computational thinking and programming methodologies with DuckCode's series of gamified lessons.<br />
-                            - <strong>Practice Matches</strong>: Zero-pressure environment for all programmers to hone their programming skills by tackling DuckCode's diverse database of interview-type (and some challenging) programming questions.<br />
-                            - <strong>Ranked Matches</strong>: Either 1v1 or in teams, test your programming skills by competing against other programmers and rise to the top.<br />
-                            - <strong>Simulated Competitions</strong>: Feeling disheartened or afraid of large-scale, professional competitive programming competitions? Try DuckCode's simulated competition! Enjoy a realistic competition environment at the comfort of your home,
-                            gaining exposure, and get tangible prizes! Maybe you can be the next champion?
-                        </p>
-                    </article>
-                    <article>
-                        <h3>DuckCode Global Invitational coming to you...</h3>
-                        <time dateTime="2025-01-20">20 January, 2025</time>
-                        <p>
-                            The most anticipated event hosted by the DuckCode team, DuckCode Global Invitational, is coming to you!<br />
-                            <strong>Date</strong>: 21 - 23 July 2028<br />
-                            <strong>Venue</strong>: To be confirmed...<br /><br />
-
-                            <strong>Activities</strong><br />
-                            - <strong>DuckCode ACG Fest</strong>: You cannot mention Computer Science without mentioning the Anime-Cosplay-Game culture. Dress up (or simply join us) in one of the biggest ACG event in Asia, with more than 200 international and regional artists, cosplayers and content creators, and tons of fulfilling activities awaiting you.<br />
-                            - <strong>DuckCode Career Fest</strong>: How about not just having fun, but also getting a job? Get your resume ready, and meet up with recruiters from more than 500 companies and businesses from all over the world!<br />
-                            - <strong>DuckCode Talkshow</strong>: Attend talks from professors and industrial specialists across various fields of Computer Science, and gain new insights into the field, or just be mind-blown!<br />
-                            - <strong>DuckCode Global Invitational</strong>: The best teams that have cleared the regional qualifiers will be invited to Singapore in a 7-day, 6-night trip to compete in one of the most (self-proclaimed) prestigious competitive programming competition, with a prize pool of up to USD1,000,000 and other opportunities. Audience will be allowed to watch the entire competition live, with commentary from professionals.<br />
-                            - <strong>DuckCode Concert</strong>: End the exciting 3-day event with a booming concert, with our special guests!
-                        </p>
-                    </article>
-                    <article>
-                        <h3>DuckCode v1.0 is in production!</h3>
-                        <time dateTime="2025-01-20">20 January, 2025</time>
-                        <p>
-                            As of January 20, 2025, the DuckCode team is actively working on creating the minimum viable product (MVP) for DuckCode!
-                            <br />Our team expects to bring DuckCode to you by June 2025.
-                        </p>
-                    </article>
-                </section>
+                {Object.entries(SECTIONS).map(([key, value], idx) => (
+                    <div id={`landing-section-${key}`} key={idx}>
+                        {value.section}
+                    </div>
+                ))}
             </main>
             <footer>
                 <ul>
@@ -82,7 +104,7 @@ export default function Landing() {
                         <a href={dummyLink}>Help Centre</a>
                     </li>
                 </ul>
-                <p>&copy; 2025 DuckCode Project. All rights reserved.</p>
+                <p>&copy; {new Date().getFullYear()} DuckCode Project. All rights reserved.</p>
             </footer>
         </div>
     )
