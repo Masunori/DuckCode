@@ -12,7 +12,9 @@ export default function GameplayNavbar() {
                     onClick={() => {
                         setFrozen(false);
                     }}
-                >Settings</button>
+                >
+                    <img src='/icons/settings.png' alt='settings' />
+                </button>
             </div>
             <CountdownTimer initialTime={900} asSpan={false} />
         </nav>

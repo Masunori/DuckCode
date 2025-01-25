@@ -29,7 +29,7 @@ button:hover {
     left: 0;
     width: 100vw;
     height: 50px;
-    background-color: #484848;
+    background-color: var(--third-layer-background-color);
     display: grid;
     grid-template-columns: 1fr 2fr;
 }
@@ -44,20 +44,28 @@ button:hover {
     left: 10px;
     top: 10px;
     height: 30px;
-    background-color: #727272;
-    border: 1px solid #242424;
-    padding: 5px 10px;
-    border-radius: 5px;
+    background-color: transparent;
+    border: transparent;
+    border-radius: 30px;
     transition-duration: 0.25s;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#gameplay-settings button:hover {
-    background-color: #888;
+#gameplay-settings button:hover img {
+    filter: brightness(0) saturate(100%) invert(0.8) sepia(1) saturate(0) brightness(0.8);
 }
 
 #gameplay-navbar #countdown-timer {
     grid-column: 2;
     place-self: center;
+}
+
+#gameplay-navbar button img {
+    width: 1.5em;
+    filter: brightness(0) saturate(100%) invert(1) sepia(1) hue-rotate(200deg) saturate(5) brightness(1.2);
 }
 
 /* Main game screen styling */

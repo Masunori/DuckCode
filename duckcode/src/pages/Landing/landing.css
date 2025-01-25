@@ -6,6 +6,22 @@
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
+
+    background-image: radial-gradient(circle at top right, 
+                                    rgb(78, 78, 78) 0%, 
+                                    rgb(78, 78, 78) 1%,
+                                    rgb(72, 72, 72) 1%, 
+                                    rgb(72, 72, 72) 10%,
+                                    rgb(65, 65, 65) 10%,
+                                    rgb(65, 65, 65) 22%,
+                                    rgb(59, 59, 59) 22%, 
+                                    rgb(59, 59, 59) 23%,
+                                    rgb(53, 53, 53) 23%, 
+                                    rgb(53, 53, 53) 28%,
+                                    rgb(46, 46, 46) 28%, 
+                                    rgb(46, 46, 46) 37%,
+                                    rgb(40, 40, 40) 37%, 
+                                    rgb(40, 40, 40) 100%);
 }
 
 #landing::-webkit-scrollbar {
@@ -21,20 +37,41 @@
     position: absolute;
     width: 100%;
     top: 0;
+    height: 50px;
     box-sizing: border-box;
     background-color: var(--first-layer-background-color);
-    padding: 1em;
+    padding: 0 1em;
     box-shadow: 0 1em 15em 2em var(--fourth-layer-background-color);
     display: grid;
-    grid-template-columns: 9fr 1fr;
+    grid-template-columns: 1fr 9fr 1fr;
+    align-items: center;
 }
 
 #landing nav h3 {
     margin: 0 0 0 1em;
+    height: inherit;
 }
 
-#landing-play-duckcode-button-wrapper {
-    grid-column: 2;
+#landing header ul {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+    height: inherit;
+}
+
+#landing header li {
+    height: inherit;
+    transition-duration: 0.25s;
+    display: flex;
+    align-items: center;
+    padding: 0 1em;
+    cursor: pointer;
+}
+
+
+#landing-navbar-play-duckcode-button-wrapper {
     place-self: stretch;
     padding: 2px;
 
@@ -83,7 +120,7 @@
     initial-value: 180deg;
 }
 
-#landing-play-duckcode-button-wrapper:hover {
+#landing-navbar-play-duckcode-button-wrapper:hover {
     animation: illuminating-border 1s linear infinite;
 }
 
@@ -91,35 +128,160 @@
     flex: 1;
 }
 
+#landing section {
+    height: 100vh;
+}
+
 #landing-welcome-section {
-    text-align: center;
-    margin-bottom: 5em;
+    display: grid;
+    grid-template-rows: 1fr 2fr 1fr;
+    align-items: center;
+    justify-content: center;
+}
+
+#landing-welcome-container {
+    grid-row: 2;
 }
 
 #landing-welcome-section h1 {
-    margin-top: 1em;
-    font-size: 5em;
+    font-size: 4.5em;
+    text-align: center;
+    justify-self: stretch;
+}
+
+#landing-welcome-section p {
+    text-align: center;
+    font-size: 1.5em;
+    width: 65%;
+    margin: auto;
+}
+
+#landing-welcome-play-duckcode-button-wrapper {
+    width: fit-content;
+    padding: 5px;
+    justify-self: center;
+    margin: 3em auto;
+
+    --border-angle: 0deg;
+    --border-angle-2: 180deg;
+    border-radius: 1.75em;
+    color: var(--foreground);
+    display: flex;
+    background-color: var(--significant-button-hover-heavier-color);
+    background-image: conic-gradient(from var(--border-angle) at 50% 50%, 
+                                    transparent, 
+                                    var(--significant-button-color) 10%, 
+                                    transparent 30%, 
+                                    transparent),
+                      conic-gradient(from var(--border-angle-2) at 50% 50%, 
+                                    transparent, 
+                                    var(--significant-button-color) 10%, 
+                                    transparent 30%, 
+                                    transparent);
+    animation: illuminating-border 4s linear infinite;
+}
+
+#landing-welcome-play-duckcode-button {
+    background-color: var(--first-layer-background-color);
+    border: none;
+    font-size: 3em;
+    padding: 0.5em 2em;
+    transition-duration: 0.25s;
+    font-weight: 600;
+    border-radius: 0.5em;
+}
+
+#landing-welcome-play-duckcode-button-wrapper:hover {
+    animation: illuminating-border 1s linear infinite;
+}
+
+#landing-welcome-play-duckcode-button-wrapper:hover button {
+    background-color: var(--significant-button-hover-color);
 }
 
 #landing-latest-news {
-    padding-left: 20vw;
+    text-align: center;
+    padding-top: 75px;
+    font-size: 3em;
 }
 
-#landing main article {
+#news-container {
+    width: 60vw;
+    height: fit-content;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 5fr 2fr;
+    border: 4px solid; /* Define the border width */
+    border-image: linear-gradient(to bottom left, 
+                                    var(--first-layer-background-color), 
+                                    var(--fourth-layer-background-color)) 1;
+}
+
+#news-display-wrapper {
     background-color: var(--second-layer-background-color);
-    width: calc(65vw);
-    margin: 1em auto;
-    padding: 0.5em 1em;
+    height: 65vh;
+    padding: 2em 3em;
 }
 
-#landing article h3 {
-    border-bottom: 1px solid var(--fourth-layer-background-color);
-    padding-bottom: 1em;
+#news-displayer {
+    height: calc(65vh - 4em);
+    grid-column: 1;
+    overflow-y: auto;
+    padding: 1em 0 2em;
+
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 1) 80%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 1) 80%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+#news-displayer::-webkit-scrollbar {
+    width: 5px;
+}
+
+#news-displayer::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+}
+
+#news-list {
+    grid-column: 2;
+    padding: 0;
+    margin: 0;
+    background-color: var(--first-layer-background-color);
+}
+
+#news-displayer time {
+    opacity: 0.7;
+}
+
+#news-displayer h3 {
+    font-size: 2em;
+    margin-bottom: 0.5em;
+}
+
+#news-list li {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    transition-duration: 0.25s;
+}
+
+#news-list span {
+    pointer-events: none;
+}
+
+#news-list-date {
+    margin-top: 5px;
+    opacity: 0.5;
+    font-size: 0.8em;
 }
 
 #landing footer {
     background-color: var(--first-layer-background-color);
-    padding: 1px;
+    /* border-bottom: 10px solid white; */
 }
 
 #landing footer ul {
@@ -128,7 +290,7 @@
     width: max(50vw, 500px);
     margin: 1em auto;
     justify-content: space-around;
-    padding: 0;
+    padding: 1em 0;
 }
 
 #landing footer a {
