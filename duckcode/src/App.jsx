@@ -112,7 +112,6 @@ export default function App() {
                     <Route path='/gameplay' element={<Gameplay />}></Route>
                     <Route path='/portal' element={<Portal />}></Route>
                     <Route path='/home' element={<MainMenu />}></Route>
-                    <Route path='/HIGHLY_SECRET' element={<StateAnimations />}></Route>
                 </Routes>
             </Router>
             <UnsupportedScreenNotification />
