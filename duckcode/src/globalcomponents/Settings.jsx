@@ -1,24 +1,20 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { PROGRAMMING_LANGUAGES, SETTINGS_OPTIONS, SETTINGS_STATUS } from "./constants";
-import CodeEditorSettings from "./settings_components/CodeEditorSettings";
-import KeyboardShortcutSettings from "./settings_components/KeyboardShortcutSettings";
 import { SettingsContext } from "../App";
 import Confirm, { openConfirmWithMessage } from "./Confirm";
-import GeneralSettings from "./settings_components/GeneralSettings";
 
 /**
  * Returns a Settings component that can be open or closed (almost) anywhere in the game.
  * 
  * @param {object} param0 The object literal containing the following pairs
- * - setValue (function): set the content of the code editor.
+ * - setCodeSnippet (function): set the content of the code editor.
  * @returns the Settings component.
  */
-export default function Settings({ setValue=(value)=>null }) {
+export default function Settings({ setCodeSnippet=(value)=>null }) {
     const {history, temp, saveSettings, revertSettings, resetSettings, frozen, setFrozen} = useContext(SettingsContext);
     const [settingsStatus, setSettingsStatus] = useState(SETTINGS_STATUS.CANNOT_SAVE.CANNOT_REVERT);
     
-    const settingsOptionsRef = useRef([]);
-    const [option, setOption] = useState('General');
+    const [option, setOption] = useState('general-settings');
 
     /**
      * Save the current settings.
@@ -26,7 +22,7 @@ export default function Settings({ setValue=(value)=>null }) {
      */
     function saveSettingsWrapper(event) {
         saveSettings();
-        setValue(temp.current.progLang.code_snippet);
+        setCodeSnippet(temp.current.progLang.code_snippet);
         setSettingsStatus(SETTINGS_STATUS.CANNOT_SAVE.CAN_REVERT);
     }
 
@@ -37,7 +33,7 @@ export default function Settings({ setValue=(value)=>null }) {
      */
     function revertSettingsWrapper(event) {
         revertSettings();
-        setValue(history.current.progLang.code_snippet);
+        setCodeSnippet(history.current.progLang.code_snippet);
         setSettingsStatus(SETTINGS_STATUS.CAN_SAVE.CANNOT_REVERT);
     }
 
@@ -48,11 +44,11 @@ export default function Settings({ setValue=(value)=>null }) {
      */
     function resetSettingsWrapper(event) {
         resetSettings();
-        setValue(PROGRAMMING_LANGUAGES['javascript'].code_snippet);
+        setCodeSnippet(PROGRAMMING_LANGUAGES['javascript'].code_snippet);
         setSettingsStatus(SETTINGS_STATUS.CAN_SAVE.CAN_REVERT);
     }
 
-    const cachedRevertSettings = useCallback(revertSettingsWrapper, [revertSettings, setValue, history]);
+    const cachedRevertSettings = useCallback(revertSettingsWrapper, [revertSettings, setCodeSnippet, history]);
 
     /*
         These two functions handle the mouse hover effect on the settings options.
@@ -62,42 +58,19 @@ export default function Settings({ setValue=(value)=>null }) {
      * Handle when the mouse is over the settings option.
      * @param {number} idx The index of the option
      */
-    const handleMouseEnter = (idx) => {
-        settingsOptionsRef.current[idx].style.backgroundColor = "var(--settings-bg-color)";
+    const handleMouseEnter = (event) => {
+        event.target.style.backgroundColor = "var(--settings-bg-color)";
     }
 
     /**
      * Handle when the mouse leaves the settings option.
      * @param {number} idx The index of the option
      */
-    const handleMouseLeave = (idx) => {
-        if (settingsOptionsRef.current[idx].innerText !== option) {
-            settingsOptionsRef.current[idx].style.backgroundColor = "var(--settings-option-bg-color)";    
-        }
+    const handleMouseLeave = (event) => {
+        event.target.style.backgroundColor = event.target.dataset.key !== option
+            ? "var(--settings-option-bg-color)"
+            : "var(--settings-bg-color)";
     }
-
-    /**
-     * Handle the event when the user clicks on any of the settings option.
-     * The settings option is the left column of the settings tab.
-     * 
-     * @param {Event} event 
-     */
-    const handleOnClick = (event) => {
-        setOption(event.target.innerText);
-
-        Object.entries(SETTINGS_OPTIONS).forEach(([key, value]) => {
-            const block = document.getElementById(key);
-            if (event.target.innerText === value) {
-                block.style.display = "grid";
-            } else {
-                block.style.display = "none";
-            }
-        });
-    }
-
-    const bgCol = (item) => item === option
-                            ? 'var(--settings-bg-color)'
-                            : 'var(--settings-option-bg-color)';
 
     useEffect(() => {
         const escapeFromSettings = (event) => {
@@ -141,7 +114,6 @@ export default function Settings({ setValue=(value)=>null }) {
             }
         }
 
-        // const inputElements = document.getElementById('settings').querySelectorAll('[class$="-label"]');
         const inputElements = document.getElementById('settings').querySelectorAll('input');
         inputElements.forEach(input => input.addEventListener('input', enableSave));
 
@@ -169,18 +141,25 @@ export default function Settings({ setValue=(value)=>null }) {
                 <ul id="settings-option">
                     {Object.entries(SETTINGS_OPTIONS).map(([key, value], idx) => (
                         <li key={idx}
-                            ref={el => settingsOptionsRef.current[idx] = el}
-                            style={{ backgroundColor: bgCol(value), cursor: "pointer" }}
-                            onClick={handleOnClick} 
-                            onMouseEnter={event => handleMouseEnter(idx)}
-                            onMouseLeave={event => handleMouseLeave(idx)}
-                        >{value}</li>
+                            data-key={key}
+                            style={{ 
+                                backgroundColor: key === option
+                                ? 'var(--settings-bg-color)'
+                                : 'var(--settings-option-bg-color)', 
+                                cursor: "pointer" 
+                            }}
+                            onClick={event => setOption(event.target.dataset.key)} 
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                        >{value.name}</li>
                     ))}
                 </ul>
                 <div id="settings-display">
-                    <GeneralSettings />
-                    <CodeEditorSettings />
-                    <KeyboardShortcutSettings />
+                    {Object.entries(SETTINGS_OPTIONS).map(([key, value], index) => (
+                        <div key={index} style={{ display: key === option ? 'block' : 'none' }}>
+                            {value.component}
+                        </div>
+                    ))}
                     <button 
                         id="settings-save-button" 
                         style={{     

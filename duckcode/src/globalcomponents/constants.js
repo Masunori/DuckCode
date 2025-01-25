@@ -1,5 +1,9 @@
 import Home from "../pages/Landing/landing_components/Home";
 import News from "../pages/Landing/landing_components/News";
+import CodeEditorSettings from "./settings_components/CodeEditorSettings";
+import GeneralSettings from "./settings_components/GeneralSettings";
+import KeyboardShortcutSettings from "./settings_components/KeyboardShortcutSettings";
+import AccountSettings from "./settings_components/AccountSettings";
 
 /**
  * Object literal of key bindings in the format:
@@ -33,9 +37,22 @@ export function resetKeyBindings() {
  * [ID of the settings option div]: [Name of the settings option the user sees]
  */
 export const SETTINGS_OPTIONS = {
-    "general-settings": "General",
-    "code-editor-settings": "Code Editor",
-    "keyboard-config-settings": "Keyboard Shortcut Configuration",
+    "general-settings": {
+        name: "General",
+        component: <GeneralSettings />,
+    },
+    "code-editor-settings": {
+        name: "Code Editor",
+        component: <CodeEditorSettings />,
+    },
+    "keyboard-config-settings": {
+        name: "Keyboard Shortcut Configuration",
+        component: <KeyboardShortcutSettings />
+    },
+    "account-settings": {
+        name: "Account",
+        component: <AccountSettings />
+    },
 };
 
 /**

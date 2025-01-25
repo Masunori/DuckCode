@@ -34,7 +34,7 @@ function CodeFontOptions() {
     )
 }
 
-export default function CodeEditorSettings({ setEditorTheme, settingsObject }) {
+export default function CodeEditorSettings() {
     const {modifySettings} = useContext(SettingsContext);
     const [selectedTheme, setSelectedTheme] = useState('vs-dark');
 

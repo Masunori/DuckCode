@@ -342,21 +342,13 @@ input[type="checkbox"]:checked + .checkbox-input-indicator {
     grid-area: display;
 }
 
-#code-editor-settings, #general-settings, #keyboard-config-settings {
+#settings-display div[id$='-settings'] {
     background-color: var(--settings-bg-color);
     height: calc(100vh);
     overflow-y: auto;
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
     grid-template-rows: 1fr 13fr 1fr;
-}
-
-#general-settings {
-    display: grid;
-}
-
-#code-editor-settings, #keyboard-config-settings {
-    display: none;
 }
 
 #settings-save-button {
@@ -451,15 +443,15 @@ input[type="checkbox"]:checked + .checkbox-input-indicator {
     Code editor settings section
 */
 
-#code-editor-settings::-webkit-scrollbar {
+div[id$='-settings']::-webkit-scrollbar {
     width: 5px;
 }
 
-#code-editor-settings::-webkit-scrollbar-thumb {
+div[id$='-settings']::-webkit-scrollbar-thumb {
     background-color: var(--fourth-layer-background-color);
 }
 
-#code-editor-settings-form, #general-settings-form, #keyboard-config-settings-form {
+#settings-display form {
     height: calc(86.66vh);
     grid-column: 2;
     grid-row: 2;
@@ -650,10 +642,12 @@ input[type="checkbox"]:checked + .checkbox-input-indicator {
 /* 
     General settings option
 */
-#general-settings::-webkit-scrollbar {
-    width: 5px;
-}
 
-#general-settings::-webkit-scrollbar-thumb {
-    background-color: var(--fourth-layer-background-color);
+/*
+    Account settings option
+*/
+
+#account-settings img {
+    width: 50px;
+    height: 50px;
 }
