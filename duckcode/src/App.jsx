@@ -8,7 +8,6 @@ import { PROGRAMMING_LANGUAGES } from './globalcomponents/constants';
 import Portal from './pages/Portal/Portal';
 import Landing from './pages/Landing/Landing';
 import MainMenu from './pages/MainMenu/MainMenu';
-import StateAnimations from './pages/experiment/StateAnimations';
 
 export const SettingsContext = createContext(null);
 
