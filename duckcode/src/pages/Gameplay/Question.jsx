@@ -1,49 +1,5 @@
-export class QuestionTemplate {
-    title;
-    input;
-    output;
-    difficulty;
-    description;
-    exampleObject;
-    constraints;
-
-    constructor(title, difficulty, input, output, description, examples, constraints) {
-        this.title = title;
-        this.difficulty = difficulty;
-        this.input = input.split('\n');
-        this.output = output.split('\n');
-        this.description = description.split('\n');
-        this.exampleObject = this.breakExample(examples);
-        this.constraints = constraints.split('\n');
-    }
-
-    /**
-     * Breaks an example string fetched from PostgreSQL into an object literal.
-     * 
-     * @param {string} example - The example string, separated by '\n' 
-     * @returns an object literal containing three keys: input, output, explanation
-     */
-    breakExample(example) {
-        const exampleObject = {
-            input: [],
-            output: [],
-            explanation: []
-        }
-
-        let currentKey = 'input';
-        example.split('\n').forEach(str => {
-            if (str === 'Output') {
-                currentKey = 'output';
-            } else if (str === 'Explanation') {
-                currentKey = 'explanation';
-            } else if (str !== 'Input') {
-                exampleObject[currentKey].push(str);
-            }
-        });
-
-        return exampleObject;
-    }
-}
+import { useContext } from "react"
+import { QuestionContext } from "./Gameplay";
 
 function Example( {exampleObject} ) {
     return (
@@ -55,14 +11,14 @@ function Example( {exampleObject} ) {
                 <h4>Output:</h4>
                 {exampleObject.output.map((o, index) => <span key={index}><code>{o}</code></span>)}
                 <h4>Explanation:</h4>
-                {exampleObject.explanation.map((e, index) => <p key={index}>{e}</p>)}
+                {exampleObject.explanation}
             </div>
         </div>
     )
 }
 
-export default function Question({ questionTemplate }) {
-    // console.log(JSON.stringify(questionTemplate.exampleObject, null, 4));
+export default function Question() {
+    const questionTemplate = useContext(QuestionContext);
 
     return (
         <div id="question">
@@ -89,7 +45,11 @@ export default function Question({ questionTemplate }) {
             </div>
 
             <h3>Example</h3>
-            <Example exampleObject={questionTemplate.exampleObject} />
+            {questionTemplate.examples.map((example, idx) => (
+                <div key={idx}>
+                    <Example exampleObject={example} />
+                </div>
+            ))}
             <div id='constraints'>
                 <h3>Constraints:</h3>
                 <ul>

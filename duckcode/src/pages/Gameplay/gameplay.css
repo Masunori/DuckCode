@@ -178,7 +178,7 @@ button:hover {
 #code-executor #test-case-buttons {
     display: grid;
     height: 50px;
-    grid-template-columns: 2fr 2fr 2fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-area: buttons;
     position: inherit;
     z-index: var(--qn-editor-z-index);

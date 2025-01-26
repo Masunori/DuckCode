@@ -39,7 +39,9 @@ export default function GeneralSettings() {
                                     key={idx}
                                     title='General Font'
                                     defaultValue='Honkai: Star Rail'
-                                    onSelectDropDownItem = {val => temp.current.overallTheme.updateTheme('overallFont', val)}
+                                    onSelectDropDownItem = {val => {
+                                        temp.current.overallTheme.updateTheme('overallFont', val);
+                                    }}
                                 />
                             )
                         } else {

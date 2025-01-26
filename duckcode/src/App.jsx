@@ -66,8 +66,16 @@ export default function App() {
     }
 
     function resetSettings() {
-        setCurrent(structuredClone(pristine.current));
+        // structured clone only works on JSON objects and will wipe all methods in OverallThemeObject and EditorThemeObject
+        // thus, manually reassign them to a new object to 'restore' the methods
+        const currentClone = structuredClone(pristine.current);
+        currentClone.overallTheme = new OverallThemeObject();
+        currentClone.theme = new EditorThemeObject();
+        setCurrent(currentClone);
+
         temp.current = structuredClone(pristine.current);
+        temp.current.overallTheme = new OverallThemeObject();
+        temp.current.theme = new EditorThemeObject();
     }
 
     const settingsContextObject = useMemo(() => ({

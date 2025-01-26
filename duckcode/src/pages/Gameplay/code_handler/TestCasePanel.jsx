@@ -1,19 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { QuestionContext } from "../Gameplay";
 
-export default function TestCasePanel({ testCases }) {
+export default function TestCasePanel() {
     const [activeIndex, setActiveIndex] = useState(0);
-    // console.log(activeIndex);
-
-    const setAndLog = (i) => {
-        setActiveIndex(i);
-        // console.log(i);
-    };
+    const testCases = useContext(QuestionContext).publicTestCases;
 
     return (
         <div id="test-case-panel">
             <ul id="test-case-selector">
                 {testCases.map((_, index) => <li 
-                        onClick={() => setAndLog(index)}
+                        onClick={() => setActiveIndex(index)}
                         key={index}
                         className={index === activeIndex ? "active" : ""}
                     >Test Case {index + 1}</li>)}
@@ -24,13 +20,21 @@ export default function TestCasePanel({ testCases }) {
                         <tr>
                             <th scope="row"><p>Input</p></th>
                             <td>
-                                <pre><code>{testCases[activeIndex][0]}</code></pre>
-                                </td>
+                                <pre>
+                                    {testCases[activeIndex].input.map((i, idx) => (
+                                        <code key={idx}>{i}</code>
+                                    ))}
+                                </pre>
+                            </td>
                         </tr>
                         <tr>
                             <th scope="row"><p>Expected</p></th>
                             <td>
-                                <pre><code>{testCases[activeIndex][1]}</code></pre>
+                                <pre>
+                                    {testCases[activeIndex].expectedOutput.map((o, idx) => (
+                                        <code key={idx}>{o}</code>
+                                    ))}
+                                </pre>
                             </td>
                         </tr>
                         <tr>
