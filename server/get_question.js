@@ -19,9 +19,7 @@ export async function get_question(cur_point) {
             const questionid = question.questionid;
             
             // get test case for question
-            const testcaseQuery = `SELECT * FROM question.testcase WHERE questionid = ${questionid}`;
-            const testcaseResult = await pool.query(testcaseQuery);
-            const testcases = testcaseResult.rows;
+            const testcases = await get_test_case_from_question(questionid, true);
             const mergedResponse = { ...splitFields(question), 
                                     testcases };
             return mergedResponse;
@@ -53,4 +51,22 @@ function splitFields(data) {
     });
     result.examples = currentExample;
     return result;
+}
+
+export async function get_test_case_from_question(questionid, ispublic) {
+    let query;
+    if(ispublic == false) {
+        //console.log('private');
+        query = `SELECT testcaseid, input, expected_output FROM question.testcase WHERE questionid = ${questionid}`;
+    }
+    else {
+        //console.log('public');
+        query = `SELECT testcaseid, input, expected_output FROM question.testcase WHERE questionid = ${questionid} AND ispublic is true`;
+    }
+    try {
+        const result = await pool.query(query);
+        return result.rows;
+    } catch (error) {     
+        throw new Error('Database query error: ' + error.message);
+    }
 }

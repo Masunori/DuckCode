@@ -2,22 +2,28 @@
   "name": "server",
   "version": "1.0.0",
   "description": "Backend for DuckCode",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "main": "test.js",
   "author": "Masunori",
+  "type": "module",
   "license": "ISC",
   "dependencies": {
+    "atob": "^2.1.2",
     "axios": "^1.7.9",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "piston-client": "^1.0.2"
+    "node-fetch": "^3.3.2",
+    "pg": "^8.13.1",
+    "piston-client": "^1.0.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "request": "^2.88.2"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0"
+    "nodemon": "^3.1.9"
+  },
+  "scripts": {
+    "start": "node test.js",
+    "dev": "nodemon test.js"
   }
 }
