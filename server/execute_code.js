@@ -8,8 +8,10 @@ const Status = {
     COMPLETED: 'COMPLETED',
 };
 const decoder = new TextDecoder('utf-8');
+const url_path = process.env.judge0_api;
 
-const API_URL = 'http://localhost:2358/submissions'; // api for compiler 
+//const API_URL = `http://localhost:2358/submissions`; // api for compiler
+const API_URL = `http://${url_path}/submissions`; // api for compiler 
 const HEADERS = {
     'Content-Type': 'application/json',
 };
@@ -115,6 +117,7 @@ export async function get_submission_result(token) {
 
         const decodedResult = {
             ...result,
+            message: decodeBase64(result.message) ? decoder.decode(decodeBase64(result.message)) : null,
             compile_output: decodeBase64(result.compile_output) ? decoder.decode(decodeBase64(result.compile_output)) : null,
             stdout: decodeBase64(result.stdout) ? decoder.decode(decodeBase64(result.stdout)) : null,
             stderr: decodeBase64(result.stderr) ? decoder.decode(decodeBase64(result.stderr)) : null,
@@ -130,7 +133,7 @@ export async function get_submission_result(token) {
 }
 
 // set timeout and status for getting submission result
-export async function wait_for_result(token, timeout = 30000) {
+export async function wait_for_result(token, timeout = 100000) {
     let result;
     let status = Status.PENDING;
     const start = Date.now();
@@ -174,5 +177,37 @@ export async function run_all_test_case(question_id, source_code, language_id) {
         console.error('Error running test cases:', error.message);
         throw error;
     }
+}
+
+export async function run_code_only(source_code, language_id) {
+    const payload = {
+        source_code,
+        language_id,
+    };
+
+    try {
+        const response = await fetch(`${API_URL}?base64_encoded=false&wait=false&fields=*`, {
+            method: 'POST',
+            headers: HEADERS,
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Submission failed: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        const token = result.token;
+        console.log('Submission token:', token);
+
+        const finalResult = await wait_for_result(token);
+        console.log('Final Result:', finalResult);
+
+        return finalResult;
+    } catch (error) {
+        console.error('Error submitting code:', error.message);
+        throw error;
+    }
+
 }
 
