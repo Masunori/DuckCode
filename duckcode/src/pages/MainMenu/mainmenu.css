@@ -77,12 +77,17 @@
     margin: 0;
 }
 
+#main-menu-profile-avatar {
+    width: 100%;
+    height: 100%;
+}
+
 #main-menu-settings {
     grid-area: settings;
     align-self: center;
 }
 
-#main-menu-settings img {
+#settings-logo {
     width: 1.5em;
     filter: brightness(0) saturate(100%) invert(1) sepia(1) hue-rotate(200deg) saturate(5) brightness(1.2);
 }

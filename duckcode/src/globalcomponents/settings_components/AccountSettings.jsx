@@ -4,7 +4,8 @@ export default function AccountSettings() {
         username: 'duck_administrator_420',
         email: 'iloveduckcode@duckcode.org',
         profile: {
-            avatar: "https://upload-os-bbs.hoyolab.com/upload/2022/08/22/11424699/210b0082f66875297c0b00a9fc770f21_5633321273991244528.jpg",
+            // avatar: "/icons/user_profile_pic.jpg",
+            avatar: 'https://i.pinimg.com/736x/55/1e/9a/551e9ad6616917d8335fe46db64688b9.jpg',
             level: 38,
             exp: 1200,
         }
@@ -13,8 +14,23 @@ export default function AccountSettings() {
     return (
         <div id="account-settings">
             <form id="account-settings-form">
-                <h2>Gameplay</h2>
-                <img src={user.profile.avatar} alt="avatar" />
+                <div className="one-settings-option-block" id="account-settings-profile">
+                    <img src={user.profile.avatar} alt="avatar" />
+                    <label id="account-settings-username-label" htmlFor="account-settings-username">
+                        <p>Username:</p>
+                        <input id="account-settings-username" value={user.username} type="text" readOnly autoComplete="false" />
+                    </label>
+                    <label id="account-settings-userid-label" htmlFor="account-settings-username">
+                        <p>User ID:</p>
+                        <input id="account-settings-userid" value={user.userId} type="text" readOnly autoComplete="false" />
+                    </label>
+                </div>
+                <div className="one-settings-option-block" id="account-settings-binding-method">
+                <label id="account-settings-email-label" htmlFor="account-settings-username">
+                        <p>Email:</p>
+                        <input id="account-settings-email" value={user.email} type="text" readOnly autoComplete="false" />
+                    </label>
+                </div>
             </form>
         </div>
     )

@@ -32,7 +32,7 @@ export default function MainMenu() {
             <div id='main-menu-navbar'>
                 <div ref={expBarRef} id='main-menu-user-image'>
                     <div id='image-wrapper'>
-                        <img src='https://static.wikia.nocookie.net/hoducks/images/5/55/Game_Chapter_31_Looping_CG36_Image.png/revision/latest/scale-to-width-down/1000?cb=20240531120130' alt='user-profile-picture' />
+                        <img id='main-menu-profile-avatar' src='https://i.pinimg.com/736x/55/1e/9a/551e9ad6616917d8335fe46db64688b9.jpg' alt='user-profile-picture' />
                     </div>
                 </div>
                 <h2 id='main-menu-username'>duck_administrator_420</h2>
@@ -40,7 +40,7 @@ export default function MainMenu() {
                 <p id='main-menu-user-exp'><span>{currentExp}</span> / <span>{expCap}</span></p>
                 <div id='main-menu-settings'>
                     <button id='main-menu-to-settings-button' onClick={() => setFrozen(false)}>
-                        <img src='/icons/settings.png' alt='settings' />
+                        <img id='settings-logo' src='/icons/settings.png' alt='settings' />
                     </button>
                     <Settings />
                 </div>
