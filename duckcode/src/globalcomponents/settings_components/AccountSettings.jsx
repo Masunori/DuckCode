@@ -1,15 +1,8 @@
+import { useContext } from "react"
+import { UserContext } from "../../App"
+
 export default function AccountSettings() {
-    const user = {
-        userId: '12345678',
-        username: 'duck_administrator_420',
-        email: 'iloveduckcode@duckcode.org',
-        profile: {
-            // avatar: "/icons/user_profile_pic.jpg",
-            avatar: 'https://i.pinimg.com/736x/55/1e/9a/551e9ad6616917d8335fe46db64688b9.jpg',
-            level: 38,
-            exp: 1200,
-        }
-    }
+    const user = useContext(UserContext);
 
     return (
         <div id="account-settings">

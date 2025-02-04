@@ -11,12 +11,16 @@ function Example( {exampleObject} ) {
                 <h4>Output:</h4>
                 {exampleObject.output.map((o, index) => <span key={index}><code>{o}</code></span>)}
                 <h4>Explanation:</h4>
-                {exampleObject.explanation}
+                {exampleObject.explanation || "None"}
             </div>
         </div>
     )
 }
 
+/**
+ * Encapsulates the question component of the gameplay interface of DuckCode.
+ * @returns the question component
+ */
 export default function Question() {
     const questionTemplate = useContext(QuestionContext);
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Login from "./Login";
 import './portal.css';
-import StarryBackground from "../../globalcomponents/StarryBackground";
+import StarryBackground from "../../globalcomponents/background_wrappers/StarryBackground";
 import Signup from "./Signup";
 import ResetPassword from "./ResetPassword";
 import { useNavigate } from "react-router-dom";

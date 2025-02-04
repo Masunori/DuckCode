@@ -22,6 +22,7 @@
 
     --code-fragment-font: monospace;
     --font-colour: #ccc;
+    --error-font-colour: #ff0000;
     --font-colour-hover: #999;
 
     --screen-padding: 20px;

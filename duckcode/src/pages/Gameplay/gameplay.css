@@ -275,6 +275,13 @@ button:hover {
     background-color: var(--second-layer-background-color);
 }
 
+#test-case-results table {
+    width: 100%;
+    padding: 5px 0;
+    border-spacing: 0 5px;
+    border-collapse: separate;
+}
+
 #test-case-results tbody {
     height: var(--test-case-panel-height);
     overflow: auto;
@@ -313,6 +320,7 @@ button:hover {
     border-radius: 3px;
     box-sizing: border-box;
     overflow: auto;
+    justify-self: stretch;
 }
 
 #test-case-results td::-webkit-scrollbar {
@@ -331,4 +339,12 @@ button:hover {
     box-sizing: border-box;
     font-family: var(--code-fragment-font) !important;
     overflow: auto;
+}
+
+#code-output::-webkit-scrollbar {
+    width: 3px;
+}
+
+#code-output::-webkit-scrollbar-thumb {
+    background-color: var(--second-layer-background-color);
 }

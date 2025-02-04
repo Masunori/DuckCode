@@ -2,9 +2,10 @@ import './gameplay.css';
 import CodeHandler from './code_handler/CodeHandler';
 import GameplayNavbar from './GameplayNavbar';
 import Question from './Question';
-import Settings from '../../globalcomponents/Settings';
-import { createContext, useContext, useState } from 'react';
+import Settings from '../../globalcomponents/settings_components/Settings';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { SettingsContext } from '../../App';
+import Loading from '../../globalcomponents/utility_screen/Loading';
 
 const questionResponse = {
     qid: 10000000, // int
@@ -84,13 +85,45 @@ const questionResponse = {
 
 export const QuestionContext = createContext(null);
 
+/**
+ * Encapsulates the gameplay interface of DuckCode.
+ * @returns The gameplay screen
+ */
 export default function Gameplay() {
+    const [question, setQuestion] = useState(null);
+
+    const difficulty = useRef(1000);
+
+    useEffect(() => {
+        // On entering the gameplay screen, fetch a question based on the current difficulty
+        const fetchQuestion = async () => {
+            try {
+                const response = await fetch(`http://13.236.119.143/get_question?cur_point=${difficulty.current}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch question! Status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                setQuestion(result);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        setTimeout(fetchQuestion, 1000);
+        // fetchQuestion();
+    }, []);
+
     const {settings} = useContext(SettingsContext);
 
     const [codeEditorContent, setCodeEditorContent] = useState(settings.progLang.code_snippet);
 
+    if (!question) {
+        return <Loading />;
+    } 
+
     return (
-        <QuestionContext.Provider value={questionResponse}>
+        <QuestionContext.Provider value={question}>
             <div id='entire-gameplay-screen'>
                 <GameplayNavbar />
                 <div id="gameplay">

@@ -1,9 +1,13 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { QuestionContext } from "../Gameplay";
 
-export default function TestCasePanel() {
+export default function TestCasePanel({ testCaseResults }) {
     const [activeIndex, setActiveIndex] = useState(0);
     const testCases = useContext(QuestionContext).publicTestCases;
+
+    useEffect(() => {
+        console.log(testCaseResults);
+    }, [testCaseResults]);
 
     return (
         <div id="test-case-panel">
@@ -21,7 +25,7 @@ export default function TestCasePanel() {
                             <th scope="row"><p>Input</p></th>
                             <td>
                                 <pre>
-                                    {testCases[activeIndex].input.map((i, idx) => (
+                                    {testCases[activeIndex].input.split('\n').map((i, idx) => (
                                         <code key={idx}>{i}</code>
                                     ))}
                                 </pre>
@@ -31,7 +35,7 @@ export default function TestCasePanel() {
                             <th scope="row"><p>Expected</p></th>
                             <td>
                                 <pre>
-                                    {testCases[activeIndex].expectedOutput.map((o, idx) => (
+                                    {testCases[activeIndex].expectedOutput.split('\n').map((o, idx) => (
                                         <code key={idx}>{o}</code>
                                     ))}
                                 </pre>
@@ -39,20 +43,24 @@ export default function TestCasePanel() {
                         </tr>
                         <tr>
                             <th scope="row"><p>Actual</p></th>
-                            <td><pre><code>0 2</code></pre></td>
+                            <td><pre>{
+                                testCaseResults && testCaseResults.success 
+                                ? testCaseResults.results[activeIndex].stdout
+                                    .split('\n')
+                                    .map((o, idx) => (<code key={idx}>{o}</code>))
+                                : <code></code>
+                            }</pre></td>
                         </tr>
                         <tr>
                             <th scope="row"><p>Message</p></th>
                             <td>
-                                <code>
-                                    [FAILED] Expected and Actual Outputs do not Match. 
-                                    This is a very long long long long long long long 
-                                    long long long long long long long long long long 
-                                    long long long long long long long long long message.
-                                    This is a very long long long long long long long 
-                                    long long long long long long long long long long 
-                                    long long long long long long long long long message.
-                                </code>
+                                {
+                                    testCaseResults && testCaseResults.success
+                                    ? testCaseResults.results[activeIndex].status
+                                        .split('\n')
+                                        .map((o, idx) => (<code key={idx}>{o}</code>))
+                                    : <code></code>
+                                }
                             </td>
                         </tr>
                     </tbody>

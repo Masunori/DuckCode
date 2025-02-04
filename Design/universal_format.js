@@ -1,3 +1,5 @@
+import { s } from "motion/react-client"
+
 // fetch question
 const QUESTION_REQUEST = {
     difficulty: 1000, // int
@@ -33,16 +35,17 @@ const QUESTION_RESPONSE = {
     publicTestCases: [ // JSON object array
         {
             tid: 12345678,
-            input: [], // string array
-            expectedOutput: [], // string array
+            input: '', // string with \n as delimiter
+            expectedOutput: '', // string with \n as delimiter
         }
     ]
 }
 
 // submit & run code
 const SUBMISSION_REQUEST = {
+    qid: 10000000, // int
     sourceCode: '// hello world', // string
-    language: 'javascript', // string
+    languageId: 'javascript', // string
 }
 
 /*
@@ -76,6 +79,24 @@ const RUN_CODE_REQUEST = {
 
 const RUN_CODE_RESPONSE = {
     output: "", // string
+}
+
+// Currently RUN_CODE_RESPONSE is of the format:
+const RUN_CODE_RESPONSE_2 = {
+    success: true, // boolean
+    results: {
+        compile_output: "", // string
+        memory: 0, // int
+        message: "", // string
+        'status': {
+            id: 0, // int
+            description: 'Accepted' // string
+        },
+        stderr: "", // string
+        stdout: "", // string
+        time: "0.00", // string
+        token: "", // string
+    }
 }
 
 

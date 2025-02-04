@@ -1,7 +1,7 @@
 import './styles/App.css';
 import Gameplay from './pages/Gameplay/Gameplay';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import UnsupportedScreenNotification from './globalcomponents/UnsupportedScreenNotification';
+import UnsupportedScreenNotification from './globalcomponents/utility_screen/UnsupportedScreenNotification';
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { THEME_MODES, EditorThemeObject, OverallThemeObject } from './globalcomponents/color_schemes/themes';
 import { PROGRAMMING_LANGUAGES } from './globalcomponents/constants';
@@ -9,7 +9,11 @@ import Portal from './pages/Portal/Portal';
 import Landing from './pages/Landing/Landing';
 import MainMenu from './pages/MainMenu/MainMenu';
 
+// Stores the settings context: theme, language, font, etc.
 export const SettingsContext = createContext(null);
+
+// Stores the user context: username, level, profile, etc.
+export const UserContext = createContext(null);
 
 export default function App() {
     const [frozen, setFrozen] = useState(true);
@@ -91,6 +95,19 @@ export default function App() {
         'setFrozen': setFrozen
     }), [current, frozen, saveSettings]);
 
+    const userObject = useMemo(() => ({
+        userId: '12345678',
+        username: 'duck_administrator_420',
+        email: 'iloveduckcode@duckcode.org',
+        rankPoints: 1000,
+        profile: {
+            // avatar: "/icons/user_profile_pic.jpg",
+            avatar: 'https://i.pinimg.com/736x/55/1e/9a/551e9ad6616917d8335fe46db64688b9.jpg',
+            level: 38,
+            exp: 1200,
+        }
+    }), []);
+
     useEffect(() => {
         const themeAlias = current.defaultTheme;
         monacoRef?.current?.editor?.setTheme(themeAlias); 
@@ -112,16 +129,19 @@ export default function App() {
     }, [current]);
 
     return (
-        <SettingsContext.Provider value={settingsContextObject} id='app'>
-            <Router>
-                <Routes>
-                    <Route path='/' element={<Landing />}/>
-                    <Route path='/gameplay' element={<Gameplay />}></Route>
-                    <Route path='/portal' element={<Portal />}></Route>
-                    <Route path='/home' element={<MainMenu />}></Route>
-                </Routes>
-            </Router>
-            <UnsupportedScreenNotification />
-        </SettingsContext.Provider>
+        <UserContext.Provider value={userObject}>
+            <SettingsContext.Provider value={settingsContextObject} id='app'>
+                <Router>
+                    <Routes>
+                        <Route path='/' element={<Landing />}/>
+                        <Route path='/gameplay' element={<Gameplay />}></Route>
+                        <Route path='/portal' element={<Portal />}></Route>
+                        <Route path='/home' element={<MainMenu />}></Route>
+                    </Routes>
+                </Router>
+                <UnsupportedScreenNotification />
+            </SettingsContext.Provider>
+        </UserContext.Provider>
+        
     );
 }

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { OVERALL_THEME_DESCRIPTOR } from "../color_schemes/themes";
-import { ColorInput, DropdownInput } from "../Input";
+import { ColorInput, DropdownInput } from "../utility_components/Input";
 import { SettingsContext } from "../../App";
 
 export default function GeneralSettings() {

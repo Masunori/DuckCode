@@ -1,8 +1,8 @@
 import { useContext, useEffect, useRef } from 'react';
 import './mainmenu.css';
-import Settings from '../../globalcomponents/Settings';
+import Settings from '../../globalcomponents/settings_components/Settings';
 import { SettingsContext } from '../../App';
-import StarryBackground from '../../globalcomponents/StarryBackground';
+import StarryBackground from '../../globalcomponents/background_wrappers/StarryBackground';
 import { useNavigate } from 'react-router-dom';
 
 export default function MainMenu() {

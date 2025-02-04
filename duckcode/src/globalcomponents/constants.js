@@ -88,7 +88,7 @@ export const PROGRAMMING_LANGUAGES = {
         'formal_name': 'C',
         'aliases': ['gcc'], 
         'runtime': 'gcc', 
-        'version': '10.2.0', 
+        'version': '9.2.0', 
         'monaco_editor_alias': 'cpp',
         'code_snippet': '// C code\n'
     },
@@ -96,7 +96,7 @@ export const PROGRAMMING_LANGUAGES = {
         'formal_name': 'C++',
         'aliases': ['cpp', 'g++'], 
         'runtime': 'gcc', 
-        'version': '10.2.0', 
+        'version': '9.2.0', 
         'monaco_editor_alias': 'cpp',
         'code_snippet': '// C++ code\n'
     },
@@ -109,35 +109,35 @@ export const PROGRAMMING_LANGUAGES = {
                     'c#',
                     'cs'],
         'runtime': 'mono',
-        'version': '6.12.0',
+        'version': '6.6.0.161',
         'monaco_editor_alias': 'csharp',
         'code_snippet': '// C# code\n'
     },
-    'dart': {
-        'formal_name': 'Dart',
-        'aliases': [], 
-        'version': '2.19.6', 
-        'monaco_editor_alias': 'dart',
-        'code_snippet': '// Dart code\n'
-    },
+    // 'dart': {
+    //     'formal_name': 'Dart',
+    //     'aliases': [], 
+    //     'version': '2.19.6', 
+    //     'monaco_editor_alias': 'dart',
+    //     'code_snippet': '// Dart code\n'
+    // },
     'elixir': {
         'formal_name': 'Elixir',
         'aliases': ['elixir', 'exs'], 
-        'version': '1.11.3', 
+        'version': '1.9.4', 
         'monaco_editor_alias': 'elixir',
         'code_snippet': '# Elixir code\n'
     },
     'go': {
         'formal_name': 'Go',
         'aliases': ['go', 'golang'], 
-        'version': '1.16.2', 
+        'version': '1.13.5', 
         'monaco_editor_alias': 'go',
         'code_snippet': '// Go code\n'
     },
     'java': {
         'formal_name': 'Java',
         'aliases': [], 
-        'version': '15.0.2', 
+        'version': '13.0.1', 
         'monaco_editor_alias': 'java',
         'code_snippet': '// Java code\n'
     },
@@ -145,63 +145,63 @@ export const PROGRAMMING_LANGUAGES = {
         'formal_name': 'JavaScript',
         'aliases': ['node-javascript', 'node-js', 'javascript', 'js'],
         'runtime': 'node',
-        'version': '18.15.0',
+        'version': '12.14.0',
         'monaco_editor_alias': 'javascript',
         'code_snippet': '// JavaScript code\n'
     },
     'kotlin': {
         'formal_name': 'Kotlin',
         'aliases': ['kt'], 
-        'version': '1.8.20', 
+        'version': '1.3.70', 
         'monaco_editor_alias': 'kotlin',
         'code_snippet': '// Kotlin code\n'
     },
     'php': {
         'formal_name': 'PHP',
         'aliases': [], 
-        'version': '8.2.3', 
+        'version': '7.4.1', 
         'monaco_editor_alias': 'php',
         'code_snippet': '// PHP code\n'
     },
     'python': {
         'formal_name': 'Python',
         'aliases': ['py', 'py3', 'python3', 'python3.10'],
-        'version': '3.10.0',
+        'version': '3.8.1',
         'monaco_editor_alias': 'python',
         'code_snippet': '# Python code\n'
     },
     'ruby': {
         'formal_name': 'Ruby',
         'aliases': ['ruby3', 'rb'], 
-        'version': '3.0.1', 
+        'version': '2.7.0', 
         'monaco_editor_alias': 'ruby',
         'code_snippet': '# Ruby code\n'
     },
     'rust': {
         'formal_name': 'Rust',
         'aliases': ['rs'], 
-        'version': '1.68.2', 
+        'version': '1.40.0', 
         'monaco_editor_alias': 'rust',
         'code_snippet': '// Rust code\n'
     },
     'scala': {
         'formal_name': 'Scala',
         'aliases': ['sc'], 
-        'version': '3.2.2', 
+        'version': '2.13.2', 
         'monaco_editor_alias': 'scala',
         'code_snippet': '// Scala code\n'
     },
     'swift': {
         'formal_name': 'Swift',
         'aliases': ['swift'], 
-        'version': '5.3.3', 
+        'version': '5.2.3', 
         'monaco_editor_alias': 'swift',
         'code_snippet': '// Swift code\n'
     },
     'typescript': {
         'formal_name': 'TypeScript',
         'aliases': ['ts', 'node-ts', 'tsc', 'typescript5', 'ts5'],
-        'version': '5.0.3', 
+        'version': '3.7.4', 
         'monaco_editor_alias': 'typescript',
         'code_snippet': '// TypeScript code\n'
     },
@@ -324,3 +324,169 @@ export const SECTIONS = {
         section: <News />
     }
 }
+
+export const LANGUAGE_TO_ID = [
+    // {
+    //   "id": 45,
+    //   "name": "Assembly (NASM 2.14.02)"
+    // },
+    // {
+    //   "id": 46,
+    //   "name": "Bash (5.0.0)"
+    // },
+    // {
+    //   "id": 47,
+    //   "name": "Basic (FBC 1.07.1)"
+    // },
+    {
+      "id": 50,
+      "name": "C"
+    },
+    {
+      "id": 54,
+      "name": "C++",
+    },
+    // {
+    //   "id": 86,
+    //   "name": "Clojure (1.10.1)"
+    // },
+    {
+      "id": 51,
+      "name": "C#",
+    },
+    // {
+    //   "id": 77,
+    //   "name": "COBOL (GnuCOBOL 2.2)"
+    // },
+    // {
+    //   "id": 55,
+    //   "name": "Common Lisp (SBCL 2.0.0)"
+    // },
+    // {
+    //   "id": 56,
+    //   "name": "D (DMD 2.089.1)"
+    // },
+    {
+      "id": 57,
+      "name": "Elixir"
+    },
+    // {
+    //   "id": 58,
+    //   "name": "Erlang (OTP 22.2)"
+    // },
+    // {
+    //   "id": 44,
+    //   "name": "Executable"
+    // },
+    // {
+    //   "id": 87,
+    //   "name": "F# (.NET Core SDK 3.1.202)"
+    // },
+    // {
+    //   "id": 59,
+    //   "name": "Fortran (GFortran 9.2.0)"
+    // },
+    {
+      "id": 60,
+      "name": "Go"
+    },
+    // {
+    //   "id": 88,
+    //   "name": "Groovy (3.0.3)"
+    // },
+    // {
+    //   "id": 61,
+    //   "name": "Haskell (GHC 8.8.1)"
+    // },
+    {
+      "id": 62,
+      "name": "Java"
+    },
+    {
+      "id": 63,
+      "name": "JavaScript"
+    },
+    {
+      "id": 78,
+      "name": "Kotlin"
+    },
+    // {
+    //   "id": 64,
+    //   "name": "Lua (5.3.5)"
+    // },
+    // {
+    //   "id": 89,
+    //   "name": "Multi-file program"
+    // },
+    // {
+    //   "id": 79,
+    //   "name": "Objective-C (Clang 7.0.1)"
+    // },
+    // {
+    //   "id": 65,
+    //   "name": "OCaml (4.09.0)"
+    // },
+    // {
+    //   "id": 66,
+    //   "name": "Octave (5.1.0)"
+    // },
+    // {
+    //   "id": 67,
+    //   "name": "Pascal (FPC 3.0.4)"
+    // },
+    // {
+    //   "id": 85,
+    //   "name": "Perl (5.28.1)"
+    // },
+    {
+      "id": 68,
+      "name": "PHP"
+    },
+    // {
+    //   "id": 43,
+    //   "name": "Plain Text"
+    // },
+    // {
+    //   "id": 69,
+    //   "name": "Prolog (GNU Prolog 1.4.5)"
+    // },
+    {
+      "id": 71,
+      "name": "Python"
+    },
+    // {
+    //   "id": 80,
+    //   "name": "R (4.0.0)"
+    // },
+    {
+      "id": 72,
+      "name": "Ruby"
+    },
+    {
+      "id": 73,
+      "name": "Rust"
+    },
+    {
+      "id": 81,
+      "name": "Scala"
+    },
+    // {
+    //   "id": 82,
+    //   "name": "SQL (SQLite 3.27.2)"
+    // },
+    {
+      "id": 83,
+      "name": "Swift"
+    },
+    {
+      "id": 74,
+      "name": "TypeScript"
+    },
+    // {
+    //   "id": 84,
+    //   "name": "Visual Basic.Net (vbnc 0.0.0.5943)"
+    // }
+].reduce((acc, { id, name }) => {
+    acc[name] = id;
+    return acc;
+}, {});

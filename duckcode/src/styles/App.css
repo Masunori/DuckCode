@@ -55,6 +55,50 @@ body {
     z-index: var(--unsupported-z-index);
 }
 
+/* Loading screen animation */
+#loading {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#loading p {
+    margin: 0;
+}
+
+#loading-spinner-container {
+    width: 10vw;
+    height: 10vw;
+    border-radius: 20vw;
+    /* background-image: conic-gradient(from 0deg at 50% 50%, 
+                                    var(--significant-button-color), 
+                                    var(--significant-button-color) 10%, 
+                                    transparent 10%, 
+                                    transparent);
+    position: relative; */
+}
+
+#loading-spinner {
+    width: 9vw;
+    height: 9vw;
+    background-color: var(--background-color);
+    border-radius: 4.5vw;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#loading-spinner p {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
 /*
     Input style
 */
