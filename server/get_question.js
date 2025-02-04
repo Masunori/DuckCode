@@ -1,9 +1,9 @@
 import { pool } from './config/db.js';
 
-export async function get_question(cur_point) {
-    const point = parseInt(cur_point, 10);
+export async function getQuestion(curPoint) {
+    const point = parseInt(curPoint, 10);
     if (isNaN(point)) {
-        throw new Error('Invalid cur_point value');
+        throw new Error('Invalid curPoint value');
     }
 
     const query = `SELECT * FROM question.question WHERE difficulty <= ${point + 500}`;
@@ -16,12 +16,11 @@ export async function get_question(cur_point) {
         } else {
             const randomIndex = Math.floor(Math.random() * questions.length);
             const question = questions[randomIndex];   
-            const questionid = question.questionid;
+            const questionId = question.questionid;
             
-            // get test case for question
-            const testcases = await get_test_case_from_question(questionid, true);
-            const mergedResponse = { ...splitFields(question), 
-                                    testcases };
+            // Get test case for question
+            const publicTestCases = await getTestCaseFromQuestion(questionId, true);
+            const mergedResponse = { ...splitFields(question), publicTestCases };
             return mergedResponse;
         }
     } catch (error) {
@@ -29,44 +28,70 @@ export async function get_question(cur_point) {
     }
 }
 
-// function to process the pure received json.
+// Function to process the pure received JSON
 function splitFields(data) {
     const result = {
+      questionId: data.questionid,
       title: data.title,
       difficulty: data.difficulty,
-      description: data.description.split('\\n\\n').filter(Boolean),
-      input_type: data.input_type.split('\\n\\n').filter(Boolean),
-      output_type: data.output_type.split('\\n\\n').filter(Boolean),
-      ques_constraint: data.ques_constraint.split('\\n\\n').filter(Boolean)
+      description: data.description.split('\n\n').filter(Boolean),
+      input: data.input_type.split('\n\n').filter(Boolean),
+      output: data.output_type.split('\n\n').filter(Boolean),
+      constraints: data.ques_constraint.split('\n\n').filter(Boolean)
     };
-    const exampleParts = data.example.split('\\n\\n').filter(Boolean);
-    let currentExample = { input: [], output: [] };
+    const exampleParts = data.example.split('\n\n').filter(Boolean);
+    let examples = []; // Array to hold multiple example objects
+
+    let currentExample = { input: [], output: [], explanation: '' };
 
     exampleParts.forEach((part, index) => {
         if (part.startsWith('Input:')) {
             currentExample.input.push(part.replace('Input: ', '').trim());
         } else if (part.startsWith('Output:')) {
             currentExample.output.push(part.replace('Output: ', '').trim());
+        } else if (part.startsWith('Explanation:')) {
+            currentExample.explanation = part.replace('Explanation: ', '').trim();
+        }
+
+        // Optionally, push the current example to examples array when input and output are both populated
+        if (currentExample.input.length && currentExample.output.length) {
+            examples.push({ ...currentExample });
+            currentExample = { input: [], output: [], explanation: '' }; // Reset for the next example
         }
     });
-    result.examples = currentExample;
+
+    // Now `examples` contains the structure you're looking for
+    result.examples = examples;
     return result;
 }
 
-export async function get_test_case_from_question(questionid, ispublic) {
+export async function getTestCaseFromQuestion(questionId, isPublic) {
     let query;
-    if(ispublic == false) {
-        //console.log('private');
-        query = `SELECT testcaseid, input, expected_output FROM question.testcase WHERE questionid = ${questionid}`;
+    if (isPublic === false) {
+        query = `SELECT testcaseid, input, expected_output FROM question.testcase WHERE questionid = ${questionId}`;
+    } else {
+        query = `SELECT testcaseid, input, expected_output FROM question.testcase WHERE questionid = ${questionId} AND ispublic = true`;
     }
-    else {
-        //console.log('public');
-        query = `SELECT testcaseid, input, expected_output FROM question.testcase WHERE questionid = ${questionid} AND ispublic is true`;
-    }
+
     try {
         const result = await pool.query(query);
-        return result.rows;
-    } catch (error) {     
+
+        // Ensure result.rows is an array
+        if (!Array.isArray(result.rows)) {
+            throw new Error('Expected an array of test cases, but got something else.');
+        }
+
+        // Map the results to the desired format
+        const filteredResults = result.rows.map(({ input, expected_output }) => {
+            return {
+                input: input,
+                expectedOutput: expected_output,
+            };
+        });
+
+        return filteredResults; // Return the array directly, without wrapping in an object
+    } catch (error) {
+        console.error('Error fetching test cases:', error.message);
         throw new Error('Database query error: ' + error.message);
     }
 }

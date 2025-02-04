@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import atob from 'atob';
-import { get_test_case_from_question } from './get_question.js';
+import { getTestCaseFromQuestion } from './get_question.js';
 
 const Status = {
     PENDING: 'PENDING',
@@ -8,23 +8,22 @@ const Status = {
     COMPLETED: 'COMPLETED',
 };
 const decoder = new TextDecoder('utf-8');
-const url_path = process.env.judge0_api;
+const urlPath = process.env.judge0_api;
 
-//const API_URL = `http://localhost:2358/submissions`; // api for compiler
-const API_URL = `http://${url_path}/submissions`; // api for compiler 
+//const API_URL = `http://localhost:2358/submissions`; // API for local compiler
+const API_URL = `http://${urlPath}/submissions`; // API for server compiler 
 const HEADERS = {
     'Content-Type': 'application/json',
 };
 
 const decodeBase64 = (encoded) => encoded ? Uint8Array.from(atob(encoded), c => c.charCodeAt(0)) : null;
 
-export async function execute_code(source_code, stdin, expected_output, language_id) {
-    //console.log(`Here is the source code`, source_code);
+export async function executeCode(sourceCode, stdin, expectedOutput, languageId) {
     const payload = {
-        source_code,
-        language_id,
+        source_code: sourceCode,
+        language_id: languageId,
         stdin,
-        expected_output,
+        expected_output: expectedOutput,
     };
 
     try {
@@ -42,9 +41,7 @@ export async function execute_code(source_code, stdin, expected_output, language
         const token = result.token;
         console.log('Submission token:', token);
 
-        const finalResult = await wait_for_result(token);
-        // console.log('Final Result:', finalResult);
-
+        const finalResult = await waitForResult(token);
         return finalResult;
     } catch (error) {
         console.error('Error submitting code:', error.message);
@@ -52,57 +49,51 @@ export async function execute_code(source_code, stdin, expected_output, language
     }
 }
 
-export async function submit_code(question_id, source_code, language_id) {
+export async function submitCode(questionId, sourceCode, languageId) {
     try {
-        //console.log(`Here is the source code`, source_code);
-        const testcases = await get_test_case_from_question(question_id, false);
-        const num_of_testcases = testcases.length;
-        //console.log(testcases.length);
+        const testCases = await getTestCaseFromQuestion(questionId, false);
+        console.log(testCases);
+        const numOfTestCases = testCases.length;
         const results = await Promise.all(
-            testcases.map(({ input, expected_output }) =>
-                execute_code(source_code, input, expected_output, language_id)
+            testCases.map(({ input, expectedOutput }) =>
+                executeCode(sourceCode, input, expectedOutput, languageId)
             )
         );
-        let custom_id = -1; // custom id for specific use of duckcode
-        // check for number of accepted test case
+        let customId = -1; // Custom ID for specific use of DuckCode
         let correct = 0;
         for (const result of results) {
             if (result.status.id === 3) {
                 correct++;
             }
-            else if(result.status.id === 6) {
-                custom_id = 2; // compile error
+            else if (result.status.id === 6) {
+                customId = 2; // Compile error
                 break;
             }
-            else if(result.status.id >= 7) {
-                custom_id = 3; // runtime error
+            else if (result.status.id >= 7) {
+                customId = 3; // Runtime error
             }
-            else if(result.status.id === 5) {
-                custom_id = 4; // tle
+            else if (result.status.id === 5) {
+                customId = 4; // TLE
             }
         }
-        if (correct === num_of_testcases) {
-            custom_id = 1; // accepted
-        }
-        else {
-            // check for other case // tle, mle, run time error
-            if(custom_id == -1) {
-                custom_id = 5; // wrong answer
+        if (correct === numOfTestCases) {
+            customId = 1; // Accepted
+        } else {
+            if (customId == -1) {
+                customId = 5; // Wrong answer
             }
-        }        
-        console.log('Submission status: ', custom_id);
+        }
+        console.log('Submission status: ', customId);
         console.log('Submission results:', results);    
-        return {num_of_correct: correct, total: num_of_testcases, statusId: custom_id };
+        return { correct, total: numOfTestCases, statusId: customId };
     } catch (error) {
         console.error('Error submitting code:', error.message);
         throw error;
     }
 }
 
-// get submission result from token
-export async function get_submission_result(token) {
-    const url = `${API_URL}/${token}?base64_encoded=true`; // get the submission result in base64 format
-
+export async function getSubmissionResult(token) {
+    const url = `${API_URL}/${token}?base64_encoded=true`; 
     try {
         const response = await fetch(url, {
             method: 'GET',
@@ -114,7 +105,6 @@ export async function get_submission_result(token) {
         }
 
         const result = await response.json();
-
         const decodedResult = {
             ...result,
             message: decodeBase64(result.message) ? decoder.decode(decodeBase64(result.message)) : null,
@@ -123,8 +113,6 @@ export async function get_submission_result(token) {
             stderr: decodeBase64(result.stderr) ? decoder.decode(decodeBase64(result.stderr)) : null,
         };
 
-        //console.log('Decoded Submission Result:', decodedResult);
-
         return decodedResult;
     } catch (error) {
         console.error('Error fetching submission result:', error.message);
@@ -132,57 +120,60 @@ export async function get_submission_result(token) {
     }
 }
 
-// set timeout and status for getting submission result
-export async function wait_for_result(token, timeout = 100000) {
+export async function waitForResult(token, timeout = 100000) {
     let result;
     let status = Status.PENDING;
     const start = Date.now();
 
     while ((status === Status.PENDING || status === Status.RUNNING || status === 'Processing') && Date.now() - start < timeout) {
         console.log('Waiting for submission result... Current status:', status);
-        await new Promise((resolve) => setTimeout(resolve, 2000)); // Poll every 2 seconds
+        await new Promise((resolve) => setTimeout(resolve, 4000)); 
 
-        result = await get_submission_result(token);
+        result = await getSubmissionResult(token);
         status = result.status.description;
     }
 
     if (status === Status.PENDING || status === Status.RUNNING || status === 'Processing') {
         throw new Error('Timeout waiting for submission result');
     }
-
-    // console.log('Final submission result:', result);
     return result;
 }
-// code for run all test case
-export async function run_all_test_case(question_id, source_code, language_id) {
+
+export async function runAllTestCase(questionId, sourceCode, languageId) {
     try {
-        const testcases = await get_test_case_from_question(question_id, true);
+        const testCases = await getTestCaseFromQuestion(questionId, true);
         const results = await Promise.all(
-            testcases.map(({ input, expected_output }) =>
-                execute_code(source_code, input, expected_output, language_id)
+            testCases.map(({ input, expectedOutput }) =>
+                executeCode(sourceCode, input, expectedOutput, languageId)
             )
         );
         console.log('Test case results:', results);
-        const filted_results = results.map(({ status, stdout, compile_output }) => {
+        const filteredResults = results.map(({ status, stdout, compile_output }) => {
+            const actualOutput = stdout ? stdout.split('\n') : [];
+            if (compile_output != null) {
+                return {
+                    actualOutput,
+                    status: status.description,
+                    message: compile_output
+                };
+            }
             return {
-                stdout: stdout,
-                status: status.description,
-                compile_output: compile_output,
-                
+                actualOutput,
+                status: status.description
             };
-        });
-        console.log('Filtered test case results:', filted_results);
-        return filted_results;
+        });        
+        console.log('Filtered test case results:', filteredResults);
+        return filteredResults;
     } catch (error) {
         console.error('Error running test cases:', error.message);
         throw error;
     }
 }
 
-export async function run_code_only(source_code, language_id) {
+export async function runCodeOnly(sourceCode, languageId) {
     const payload = {
-        source_code,
-        language_id,
+        source_code: sourceCode,
+        language_id: languageId,
     };
 
     try {
@@ -200,14 +191,11 @@ export async function run_code_only(source_code, language_id) {
         const token = result.token;
         console.log('Submission token:', token);
 
-        const finalResult = await wait_for_result(token);
+        const finalResult = await waitForResult(token);
         console.log('Final Result:', finalResult);
-
-        return finalResult;
+        return finalResult.stdout || finalResult.compile_output || finalResult.stderr;
     } catch (error) {
         console.error('Error submitting code:', error.message);
         throw error;
     }
-
 }
-
