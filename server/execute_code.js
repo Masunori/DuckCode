@@ -59,28 +59,28 @@ export async function submitCode(questionId, sourceCode, languageId) {
                 executeCode(sourceCode, input, expectedOutput, languageId)
             )
         );
-        let customId = -1; // Custom ID for specific use of DuckCode
+        let customId = -1; // custom ID for specific use of DuckCode
         let correct = 0;
         for (const result of results) {
             if (result.status.id === 3) {
                 correct++;
             }
             else if (result.status.id === 6) {
-                customId = 2; // Compile error
+                customId = 2; // compile error
                 break;
             }
             else if (result.status.id >= 7) {
-                customId = 3; // Runtime error
+                customId = 3; // runtime error
             }
             else if (result.status.id === 5) {
-                customId = 4; // TLE
+                customId = 4; // tle
             }
         }
         if (correct === numOfTestCases) {
-            customId = 1; // Accepted
+            customId = 1; // accepted
         } else {
             if (customId == -1) {
-                customId = 5; // Wrong answer
+                customId = 5; // wrong answer
             }
         }
         console.log('Submission status: ', customId);
