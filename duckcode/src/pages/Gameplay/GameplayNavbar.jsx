@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import CountdownTimer from "../../globalcomponents/CountdownTimer";
+import CountdownTimer from "../../globalcomponents/utility_components/CountdownTimer";
 import { SettingsContext } from "../../App";
 
 export default function GameplayNavbar() {

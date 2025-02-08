@@ -55,6 +55,44 @@ body {
     z-index: var(--unsupported-z-index);
 }
 
+/* Loading screen animation */
+#loading {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#loading p {
+    margin: 0;
+}
+
+#loading-spinner-container {
+    width: 10vw;
+    height: 10vw;
+    border-radius: 20vw;
+}
+
+#loading-spinner {
+    width: 9vw;
+    height: 9vw;
+    background-color: var(--background-color);
+    border-radius: 4.5vw;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#loading-spinner p {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
 /*
     Input style
 */
@@ -148,7 +186,7 @@ input[type="checkbox"]:checked + .checkbox-input-indicator {
     background-color: var(--second-layer-background-color);
     border: 1px solid var(--fourth-layer-background-color);
     width: 200px;
-    font-size: 16px;
+    font-size: 1em;
     padding: 8px;
     height: 2em;
     box-sizing: border-box;
@@ -648,6 +686,83 @@ div[id$='-settings']::-webkit-scrollbar-thumb {
 */
 
 #account-settings img {
-    width: 50px;
-    height: 50px;
+    width: 7rem;
+    height: 7rem;
+    border-radius: 4em;
+    border: 0.25em solid var(--significant-button-color);
+    box-sizing: border-box;
+}
+
+#account-settings-profile {
+    font-size: 1.5em;
+    display: grid;
+    grid-template-columns: 7rem 4fr;
+    grid-template-rows: 1fr 1fr;
+    column-gap: 2em;
+    grid-template-areas: 
+    "avatar username"
+    "avatar userid";
+}
+
+#account-settings-profile img {
+    grid-area: avatar;
+    align-self: center;
+}
+
+#account-settings-username-label {
+    grid-area: username;
+    justify-self: stretch;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    justify-items: stretch;
+    align-items: center;
+}
+
+#account-settings-userid-label {
+    grid-area: userid;
+    justify-self: stretch;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    justify-items: stretch;
+    align-items: center;
+    pointer-events: none;
+}
+
+#account-settings-profile p {
+    font-weight: 600;
+}
+
+#account-settings-username, #account-settings-userid {
+    justify-self: stretch;
+}
+
+#account-settings input[type='text'] {
+    background-color: var(--second-layer-background-color);
+    border: 1px solid var(--fourth-layer-background-color);
+    font-size: 1em;
+    padding: 8px;
+    height: 2em;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 3px;
+    margin-left: 10px;
+}
+
+#account-settings-email-label {
+    grid-area: userid;
+    justify-self: stretch;
+    display: grid;
+    grid-template-columns: 9em 1fr 3fr;
+    justify-items: stretch;
+    align-items: center;
+    pointer-events: none;
+}
+
+#account-settings-email {
+    grid-column: 3;
+}
+
+#account-settings-binding-method p {
+    font-size: 1.5em;
+    font-weight: 600;
 }

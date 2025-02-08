@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import '../styles/background.css';
+import '../../styles/background.css';
 
 /**
  * A wrapper for a starry background.

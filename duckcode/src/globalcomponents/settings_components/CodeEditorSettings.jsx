@@ -1,5 +1,5 @@
 import { useState, useContext, useCallback } from "react";
-import { /* CheckboxInput, ColorInput, */ DropdownInput, RadioInput } from "../Input";
+import { /* CheckboxInput, ColorInput, */ DropdownInput, RadioInput } from "../utility_components/Input";
 // import HoverableContent from "../HoverableContent";
 import { /* FONT_STYLES, */ PROGRAMMING_LANGUAGES, FONT_FAMILIES } from "../constants";
 import { presetThemes, /* customThemeSyntaxHighlight, customComponentColorScheme, */THEME_MODES, /* EditorThemeObject */ } from "../color_schemes/themes";

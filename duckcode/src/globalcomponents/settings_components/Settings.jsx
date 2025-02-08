@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { PROGRAMMING_LANGUAGES, SETTINGS_OPTIONS, SETTINGS_STATUS } from "./constants";
-import { SettingsContext } from "../App";
-import Confirm, { openConfirmWithMessage } from "./Confirm";
+import { PROGRAMMING_LANGUAGES, SETTINGS_OPTIONS, SETTINGS_STATUS } from "../constants";
+import { SettingsContext } from "../../App";
+import Confirm, { openConfirmWithMessage } from "../utility_components/Confirm";
 
 /**
  * Returns a Settings component that can be open or closed (almost) anywhere in the game.
