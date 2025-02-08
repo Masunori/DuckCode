@@ -72,12 +72,6 @@ body {
     width: 10vw;
     height: 10vw;
     border-radius: 20vw;
-    /* background-image: conic-gradient(from 0deg at 50% 50%, 
-                                    var(--significant-button-color), 
-                                    var(--significant-button-color) 10%, 
-                                    transparent 10%, 
-                                    transparent);
-    position: relative; */
 }
 
 #loading-spinner {

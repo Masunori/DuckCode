@@ -44,23 +44,17 @@ export default function TestCasePanel({ testCaseResults }) {
                         <tr>
                             <th scope="row"><p>Actual</p></th>
                             <td><pre>{
-                                testCaseResults && testCaseResults.success 
-                                ? testCaseResults.results[activeIndex].stdout
-                                    .split('\n')
-                                    .map((o, idx) => (<code key={idx}>{o}</code>))
+                                testCaseResults
+                                ? testCaseResults.result[activeIndex].actualOutput.map((a, idx) => (
+                                    <code key={idx}>{a}</code>
+                                ))
                                 : <code></code>
                             }</pre></td>
                         </tr>
                         <tr>
                             <th scope="row"><p>Message</p></th>
                             <td>
-                                {
-                                    testCaseResults && testCaseResults.success
-                                    ? testCaseResults.results[activeIndex].status
-                                        .split('\n')
-                                        .map((o, idx) => (<code key={idx}>{o}</code>))
-                                    : <code></code>
-                                }
+                                <code>{testCaseResults ? testCaseResults.result[activeIndex].status : ""}</code>
                             </td>
                         </tr>
                     </tbody>

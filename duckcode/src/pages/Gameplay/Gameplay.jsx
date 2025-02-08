@@ -98,7 +98,7 @@ export default function Gameplay() {
         // On entering the gameplay screen, fetch a question based on the current difficulty
         const fetchQuestion = async () => {
             try {
-                const response = await fetch(`http://13.236.119.143/get_question?cur_point=${difficulty.current}`);
+                const response = await fetch(`http://13.236.119.143/question/get_question?cur_point=${difficulty.current}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch question! Status: ${response.status}`);
                 }

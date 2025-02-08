@@ -6,13 +6,19 @@ export default function CodeExecutor({
     output, 
     executeCodeInOutputMode, 
     runAllTestCases,
-    testCaseResults 
+    submitCode,
+    testCaseResults,
+    isTestCasesMode,
+    toggleOutputAndTestCases 
 }) {
     return (
         <div id="code-executor">
             <CodeHandlerButtons 
                 executeCodeInOutputMode={executeCodeInOutputMode} 
                 runAllTestCases={runAllTestCases}
+                submitCode={submitCode}
+                isTestCasesMode={isTestCasesMode}
+                toggleOutputAndTestCases={toggleOutputAndTestCases}
             />
             <div id="output-and-test-cases">
                 <TestCasePanel testCaseResults={testCaseResults} />

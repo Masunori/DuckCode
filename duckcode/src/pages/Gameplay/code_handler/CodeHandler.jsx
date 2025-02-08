@@ -4,7 +4,7 @@ import CodeExecutor from "./CodeExecutor";
 import { SettingsContext } from "../../../App";
 import { presetThemes } from "../../../globalcomponents/color_schemes/themes";
 import { QuestionContext } from "../Gameplay";
-import { LANGUAGE_TO_ID } from "../../../globalcomponents/constants";
+import { LANGUAGE_TO_ID, STATUS_ID_TO_SUBMISSION_MESSAGE } from "../../../globalcomponents/constants";
 
 /**
  * CodeHandler contains two parts: the CodeEditor component and the CodeExecutor component
@@ -54,7 +54,7 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
             currentPistonCallController.current = controller;
 
             try {
-                const response = await fetch('http://13.236.119.143/run_code_only', {
+                const response = await fetch('http://13.236.119.143/code/run_code_only', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -72,17 +72,10 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
 
                 const result = await response.json();
 
-                if (result.results.stdout) {
-                    setCodeOutput({
-                        status: 'success',
-                        output: result.results.stdout,
-                    });
-                } else {
-                    setCodeOutput({
-                        status: 'error',
-                        output: result.results.stderr,
-                    });
-                }
+                setCodeOutput({
+                    status: 'success',
+                    output: result.output
+                })
             } catch (error) {
                 console.error(error);
             }
@@ -106,14 +99,20 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
             const controller = new AbortController();
             currentPistonCallController.current = controller;
 
+            console.table({
+                qid: questionTemplate.question_id,
+                sourceCode: codeEditorContent,
+                languageId: LANGUAGE_TO_ID[settings.progLang.formal_name]
+            })
+
             try {
-                const response = await fetch('http://13.236.119.143/run_all_test_case', {
+                const response = await fetch('http://13.236.119.143/code/run_all_test_case', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        qid: questionTemplate.qid,
+                        qid: questionTemplate.question_id,
                         sourceCode: codeEditorContent,
                         languageId: LANGUAGE_TO_ID[settings.progLang.formal_name]
                     })
@@ -124,7 +123,6 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
                 }
 
                 const result = await response.json();
-                console.log(result);
                 setTestCaseResults(result);
             } catch (error) {
                 console.error(error);
@@ -136,7 +134,76 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
             output: '>> Running code... You can click "Run Code" again to start a new execution!'
         });
         runCode();
-    }, [codeEditorContent, questionTemplate.qid, settings.progLang.formal_name]);
+    }, [codeEditorContent, questionTemplate.question_id, settings.progLang.formal_name]);
+
+    // toggle between output mode and test case mode
+    const [isTestCasesMode, setIsTestCasesMode] = useState(true);
+
+    const toggleOutputAndTestCases = useCallback(() => {
+        const toggleButton = document.getElementById('toggle-output-testcases');
+        const outputAndTestCasesDiv = document.getElementById('output-and-test-cases');
+        const test = document.getElementById('test-case-panel');
+        const runThisButton = document.getElementById('run-all-test-cases-button');
+    
+        if (isTestCasesMode) {
+            toggleButton.innerText = "Switch to Test Case Panel";
+            runThisButton.innerText = "Run Code";
+            outputAndTestCasesDiv.style.transform = "translate(0, -50%)";
+            setIsTestCasesMode(false);
+            test.style.opacity = 0;
+        } else {
+            toggleButton.innerText = "Switch to Output Mode";
+            runThisButton.innerText = "Run all Test Cases";
+            outputAndTestCasesDiv.style.transform = "translate(0, 0)";
+            setIsTestCasesMode(true);
+            test.style.opacity = 1
+        }
+    }, [setIsTestCasesMode, isTestCasesMode]);
+
+    const submitCode = useCallback(() => {
+        const runCode = async () => {
+            if (currentPistonCallController.current) {
+                currentPistonCallController.current.abort();
+            }
+
+            const controller = new AbortController();
+            currentPistonCallController.current = controller;
+            
+            try {
+                const response = await fetch('http://13.236.119.143/code/submit_code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        qid: questionTemplate.question_id,
+                        sourceCode: codeEditorContent,
+                        languageId: LANGUAGE_TO_ID[settings.progLang.formal_name]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to submit code! Status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                setCodeOutput({
+                    status: 'success',
+                    output: `Number of Correct Test Cases: ${result.result.correct}\nTotal Number of Correct Test Cases: ${result.result.total}\nStatus: ${STATUS_ID_TO_SUBMISSION_MESSAGE[result.result.statusId]}`
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        setCodeOutput({
+            status: 'loading',
+            output: '>> Running code... You can click "Run Code" again to start a new execution!'
+        });
+
+        runCode();
+        toggleOutputAndTestCases();
+    }, [codeEditorContent, questionTemplate.question_id, settings.progLang.formal_name, toggleOutputAndTestCases]);
 
     // Ctrl + Enter: Execute the code in the CodeEditor, if the CodeExecutor is set to Output Mode
     useEffect(() => {
@@ -164,6 +231,9 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
                 executeCodeInOutputMode={executeCodeInOutputMode} 
                 runAllTestCases={runAllTestCases}
                 testCaseResults={testCaseResults}
+                submitCode={submitCode}
+                isTestCasesMode={isTestCasesMode}
+                toggleOutputAndTestCases={toggleOutputAndTestCases}
             />
         </div>
     )

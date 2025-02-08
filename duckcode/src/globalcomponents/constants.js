@@ -490,3 +490,12 @@ export const LANGUAGE_TO_ID = [
     acc[name] = id;
     return acc;
 }, {});
+
+
+export const STATUS_ID_TO_SUBMISSION_MESSAGE = {
+    1: "Accepted",
+    2: "Compile Error",
+    3: "Runtime Error",
+    4: "Time Limit Exceeded",
+    5: "Wrong Answer"
+}

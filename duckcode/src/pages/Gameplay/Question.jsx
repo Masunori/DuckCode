@@ -11,7 +11,7 @@ function Example( {exampleObject} ) {
                 <h4>Output:</h4>
                 {exampleObject.output.map((o, index) => <span key={index}><code>{o}</code></span>)}
                 <h4>Explanation:</h4>
-                {exampleObject.explanation || "None"}
+                {exampleObject?.explanation || "None"}
             </div>
         </div>
     )
