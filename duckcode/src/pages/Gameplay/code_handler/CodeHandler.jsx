@@ -54,7 +54,7 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
             currentPistonCallController.current = controller;
 
             try {
-                const response = await fetch(`${GAMEPLAY_API_HTTPS}/code/run_code_only`, {
+                const response = await fetch(`${GAMEPLAY_API_HTTP}/code/run_code_only`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -106,7 +106,7 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
             })
 
             try {
-                const response = await fetch(`${GAMEPLAY_API_HTTPS}/code/run_all_test_case`, {
+                const response = await fetch(`${GAMEPLAY_API_HTTP}/code/run_all_test_case`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -170,7 +170,7 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
             currentPistonCallController.current = controller;
             
             try {
-                const response = await fetch(`${GAMEPLAY_API_HTTPS}/code/submit_code`, {
+                const response = await fetch(`${GAMEPLAY_API_HTTP}/code/submit_code`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
