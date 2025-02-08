@@ -499,3 +499,6 @@ export const STATUS_ID_TO_SUBMISSION_MESSAGE = {
     4: "Time Limit Exceeded",
     5: "Wrong Answer"
 }
+
+export const GAMEPLAY_API_HTTP = 'http://13.236.119.143'
+export const GAMEPLAY_API_HTTPS = 'https://cors-anywhere.herokuapp.com/' + GAMEPLAY_API_HTTP
