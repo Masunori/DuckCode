@@ -6,6 +6,7 @@ import Settings from '../../globalcomponents/settings_components/Settings';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { SettingsContext } from '../../App';
 import Loading from '../../globalcomponents/utility_screen/Loading';
+import { GAMEPLAY_API_HTTP, GAMEPLAY_API_HTTPS } from '../../globalcomponents/constants';
 
 const questionResponse = {
     qid: 10000000, // int
@@ -98,7 +99,7 @@ export default function Gameplay() {
         // On entering the gameplay screen, fetch a question based on the current difficulty
         const fetchQuestion = async () => {
             try {
-                const response = await fetch(`http://13.236.119.143/question/get_question?cur_point=${difficulty.current}`);
+                const response = await fetch(`${GAMEPLAY_API_HTTPS}/question/get_question?cur_point=${difficulty.current}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch question! Status: ${response.status}`);
                 }

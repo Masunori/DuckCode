@@ -4,7 +4,7 @@ import CodeExecutor from "./CodeExecutor";
 import { SettingsContext } from "../../../App";
 import { presetThemes } from "../../../globalcomponents/color_schemes/themes";
 import { QuestionContext } from "../Gameplay";
-import { LANGUAGE_TO_ID, STATUS_ID_TO_SUBMISSION_MESSAGE } from "../../../globalcomponents/constants";
+import { GAMEPLAY_API_HTTP, GAMEPLAY_API_HTTPS, LANGUAGE_TO_ID, STATUS_ID_TO_SUBMISSION_MESSAGE } from "../../../globalcomponents/constants";
 
 /**
  * CodeHandler contains two parts: the CodeEditor component and the CodeExecutor component
@@ -54,7 +54,7 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
             currentPistonCallController.current = controller;
 
             try {
-                const response = await fetch('http://13.236.119.143/code/run_code_only', {
+                const response = await fetch(`${GAMEPLAY_API_HTTPS}/code/run_code_only`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -106,7 +106,7 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
             })
 
             try {
-                const response = await fetch('http://13.236.119.143/code/run_all_test_case', {
+                const response = await fetch(`${GAMEPLAY_API_HTTPS}/code/run_all_test_case`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -170,7 +170,7 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
             currentPistonCallController.current = controller;
             
             try {
-                const response = await fetch('http://13.236.119.143/code/submit_code', {
+                const response = await fetch(`${GAMEPLAY_API_HTTPS}/code/submit_code`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -204,6 +204,7 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
         runCode();
         toggleOutputAndTestCases();
     }, [codeEditorContent, questionTemplate.question_id, settings.progLang.formal_name, toggleOutputAndTestCases]);
+
 
     // Ctrl + Enter: Execute the code in the CodeEditor, if the CodeExecutor is set to Output Mode
     useEffect(() => {
