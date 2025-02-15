@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { PROGRAMMING_LANGUAGES, SETTINGS_OPTIONS, SETTINGS_STATUS } from "../constants";
 import { SettingsContext } from "../../App";
-import Confirm, { openConfirmWithMessage } from "../utility_components/Confirm";
+import { openConfirmWithMessage } from "../utility_components/Confirm";
 
 /**
  * Returns a Settings component that can be open or closed (almost) anywhere in the game.
@@ -136,7 +136,7 @@ export default function Settings({ setCodeSnippet=(value)=>null }) {
 
     return (
         <div id="settings-fullscreen-cover" style={{ display: frozen ? "none" : "block" }}>
-            <Confirm />
+            {/* <Confirm /> */}
             <div id="settings">
                 <ul id="settings-option">
                     {Object.entries(SETTINGS_OPTIONS).map(([key, value], idx) => (

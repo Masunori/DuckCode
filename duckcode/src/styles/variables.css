@@ -25,6 +25,11 @@
     --error-font-colour: #ff0000;
     --font-colour-hover: #999;
 
+    --invalid-code-bg-color: #640A1E;
+    --invalid-code-border-color: #FF0000;
+    --valid-code-bg-color: #004400;
+    --valid-code-border-color: #00DD00;
+
     --screen-padding: 20px;
     --navbar-padding: 50px;
     

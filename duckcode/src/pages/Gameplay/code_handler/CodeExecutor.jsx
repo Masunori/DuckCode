@@ -9,7 +9,8 @@ export default function CodeExecutor({
     submitCode,
     testCaseResults,
     isTestCasesMode,
-    toggleOutputAndTestCases 
+    toggleOutputAndTestCases,
+    isCodeRunning 
 }) {
     return (
         <div id="code-executor">
@@ -19,6 +20,7 @@ export default function CodeExecutor({
                 submitCode={submitCode}
                 isTestCasesMode={isTestCasesMode}
                 toggleOutputAndTestCases={toggleOutputAndTestCases}
+                isCodeRunning={isCodeRunning}
             />
             <div id="output-and-test-cases">
                 <TestCasePanel testCaseResults={testCaseResults} />

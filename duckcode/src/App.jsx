@@ -8,6 +8,7 @@ import { PROGRAMMING_LANGUAGES } from './globalcomponents/constants';
 import Portal from './pages/Portal/Portal';
 import Landing from './pages/Landing/Landing';
 import MainMenu from './pages/MainMenu/MainMenu';
+import Confirm from './globalcomponents/utility_components/Confirm';
 
 // Stores the settings context: theme, language, font, etc.
 export const SettingsContext = createContext(null);
@@ -130,6 +131,7 @@ export default function App() {
 
     return (
         <UserContext.Provider value={userObject}>
+            <Confirm />
             <SettingsContext.Provider value={settingsContextObject} id='app'>
                 <Router>
                     <Routes>
