@@ -30,16 +30,12 @@ button:hover {
     width: 100vw;
     height: 50px;
     background-color: var(--third-layer-background-color);
-    display: grid;
-    grid-template-columns: 1fr 2fr;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#gameplay-settings {
-    grid-column: 1;
-    position: relative;
-}
-
-#gameplay-settings button {
+#gameplay-navbar #gameplay-settings {
     position: absolute;
     left: 10px;
     top: 10px;
@@ -54,18 +50,45 @@ button:hover {
     align-items: center;
 }
 
-#gameplay-settings button:hover img {
+#gameplay-settings:hover img {
     filter: brightness(0) saturate(100%) invert(0.8) sepia(1) saturate(0) brightness(0.8);
 }
 
-#gameplay-navbar #countdown-timer {
-    grid-column: 2;
-    place-self: center;
+#gameplay-navbar #gameplay-countdown-timer {
+    font-size: 1.2em;
+    display: flex;
+    background-color: var(--fourth-layer-background-color);
+    padding: 1px;
+    border-radius: 0.3em;
+}
+
+.countdown-timer-display {
+    padding: 0.4em;
+    border-radius: 0.2em;
+    margin: 0 1px;
+    background-color: var(--first-layer-background-color);
+    font-family: var(--code-fragment-font);
 }
 
 #gameplay-navbar button img {
     width: 1.5em;
     filter: brightness(0) saturate(100%) invert(1) sepia(1) hue-rotate(200deg) saturate(5) brightness(1.2);
+}
+
+#game-exit-button {
+    position: absolute;
+    right: 0;
+    background-color: var(--insignificant-button-color);
+    border: none;
+    height: 100%;
+    transition-duration: 0.25s;
+    padding: 0 1.5em;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+#game-exit-button:hover {
+    background-color: var(--insignificant-button-hover-color);
 }
 
 /* Main game screen styling */
@@ -267,6 +290,10 @@ button:hover {
     padding: 0 10px;
 }
 
+#test-case-results * {
+    transition-duration: 0.25s;
+}
+
 #test-case-results::-webkit-scrollbar {
     width: 3px;
 }
@@ -333,8 +360,7 @@ button:hover {
 
 /* Output styling */
 #code-output {
-    height: var(--output-height);
-    background-color: var(--terminal-like-background-color);
+    height: calc(var(--output-height) - 1px);
     padding: 1%;
     box-sizing: border-box;
     font-family: var(--code-fragment-font) !important;

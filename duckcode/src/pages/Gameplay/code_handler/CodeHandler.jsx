@@ -4,7 +4,12 @@ import CodeExecutor from "./CodeExecutor";
 import { SettingsContext } from "../../../App";
 import { presetThemes } from "../../../globalcomponents/color_schemes/themes";
 import { QuestionContext } from "../Gameplay";
-import { GAMEPLAY_API_HTTP, GAMEPLAY_API_HTTPS, LANGUAGE_TO_ID, STATUS_ID_TO_SUBMISSION_MESSAGE } from "../../../globalcomponents/constants";
+import { STATUS_ID_TO_SUBMISSION_MESSAGE } from "../../../globalcomponents/constants";
+import { runCodeFake } from "../../../services/gameplay/runCode";
+import { runAllTestCasesFake } from "../../../services/gameplay/runAllTestCases";
+import { submitCodeFake } from "../../../services/gameplay/submitCode";
+import { openConfirmWithMessage } from "../../../globalcomponents/utility_components/Confirm";
+import { useNavigate } from "react-router-dom";
 
 /**
  * CodeHandler contains two parts: the CodeEditor component and the CodeExecutor component
@@ -19,6 +24,9 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
     const {settings} = useContext(SettingsContext);
 
     const {assignMonacoInstance} = useContext(SettingsContext);
+    const [isCodeRunning, setIsCodeRunning] = useState(false);
+
+    const navigate = useNavigate();
 
     function handleEditorDidMount(editor, monaco) {
         editorRef.current = editor;
@@ -34,7 +42,7 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
     }
 
     const [codeOutput, setCodeOutput] = useState({
-        status: 'success',
+        status: 'loading',
         output: '>> Your code wil be displayed here...'
     });
 
@@ -42,36 +50,28 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
      * All functionalities of CodeHandlerButtons share the same AbortController instance.
      * This is so that only one function is running at any time
      */
-    const currentPistonCallController = useRef(null);
+    // const currentPistonCallController = useRef(null);
    
+    /**
+     * Executes the code in output mode.
+     */
     const executeCodeInOutputMode = useCallback(() => {
         const runCode = async () => {
-            if (currentPistonCallController.current) {
-                currentPistonCallController.current.abort();
-            }
+            // if (currentPistonCallController.current) {
+            //     currentPistonCallController.current.abort();
+            // }
 
-            const controller = new AbortController();
-            currentPistonCallController.current = controller;
+            // const controller = new AbortController();
+            // currentPistonCallController.current = controller;
 
             try {
-                const response = await fetch(`${GAMEPLAY_API_HTTP}/code/run_code_only`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        qid: questionTemplate.qid,
-                        sourceCode: codeEditorContent,
-                        languageId: LANGUAGE_TO_ID[settings.progLang.formal_name]
-                    })
-                });
+                const result = await runCodeFake(
+                    questionTemplate.qid,
+                    codeEditorContent,
+                    settings.progLang.formal_name
+                );
 
-                if (!response.ok) {
-                    throw new Error(`Failed to execute code! Status: ${response.status}`);
-                }
-
-                const result = await response.json();
-
+                setIsCodeRunning(false);
                 setCodeOutput({
                     status: 'success',
                     output: result.output
@@ -85,50 +85,39 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
             status: 'loading',
             output: '>> Running code... You can click "Run Code" again to start a new execution!'
         });
+        setIsCodeRunning(true);
         runCode();
     }, [codeEditorContent, questionTemplate.qid, settings.progLang.formal_name]);
     
     const [testCaseResults, setTestCaseResults] = useState(null);
 
+    /**
+     * Run the user's code against all public test cases.
+     */
     const runAllTestCases = useCallback(() => {
         const runCode = async () => {
-            if (currentPistonCallController.current) {
-                currentPistonCallController.current.abort();
-            }
+            // if (currentPistonCallController.current) {
+            //     currentPistonCallController.current.abort();
+            // }
 
-            const controller = new AbortController();
-            currentPistonCallController.current = controller;
-
-            console.table({
-                qid: questionTemplate.question_id,
-                sourceCode: codeEditorContent,
-                languageId: LANGUAGE_TO_ID[settings.progLang.formal_name]
-            })
+            // const controller = new AbortController();
+            // currentPistonCallController.current = controller;
 
             try {
-                const response = await fetch(`${GAMEPLAY_API_HTTP}/code/run_all_test_case`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        qid: questionTemplate.question_id,
-                        sourceCode: codeEditorContent,
-                        languageId: LANGUAGE_TO_ID[settings.progLang.formal_name]
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Failed to execute code! Status: ${response.status}`);
-                }
-
-                const result = await response.json();
+                const result = await runAllTestCasesFake(
+                    questionTemplate.question_id,
+                    codeEditorContent,
+                    settings.progLang.formal_name
+                );
+                
+                setIsCodeRunning(false);
                 setTestCaseResults(result);
             } catch (error) {
                 console.error(error);
             }
         }
 
+        setIsCodeRunning(true);
         setCodeOutput({
             status: 'loading',
             output: '>> Running code... You can click "Run Code" again to start a new execution!'
@@ -139,6 +128,9 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
     // toggle between output mode and test case mode
     const [isTestCasesMode, setIsTestCasesMode] = useState(true);
 
+    /**
+     * Toggles between the Output and TestCasePanel component UI.
+     */
     const toggleOutputAndTestCases = useCallback(() => {
         const toggleButton = document.getElementById('toggle-output-testcases');
         const outputAndTestCasesDiv = document.getElementById('output-and-test-cases');
@@ -160,50 +152,57 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
         }
     }, [setIsTestCasesMode, isTestCasesMode]);
 
+    /**
+     * Submits the user's code. A submission runs the user's code against all public and private test cases.
+     */
     const submitCode = useCallback(() => {
         const runCode = async () => {
-            if (currentPistonCallController.current) {
-                currentPistonCallController.current.abort();
-            }
+            // if (currentPistonCallController.current) {
+            //     currentPistonCallController.current.abort();
+            // }
 
-            const controller = new AbortController();
-            currentPistonCallController.current = controller;
+            // const controller = new AbortController();
+            // currentPistonCallController.current = controller;
             
             try {
-                const response = await fetch(`${GAMEPLAY_API_HTTP}/code/submit_code`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        qid: questionTemplate.question_id,
-                        sourceCode: codeEditorContent,
-                        languageId: LANGUAGE_TO_ID[settings.progLang.formal_name]
-                    })
-                });
+                const result = await submitCodeFake(
+                    questionTemplate.question_id,
+                    codeEditorContent,
+                    settings.progLang.formal_name,
+                    true
+                );
 
-                if (!response.ok) {
-                    throw new Error(`Failed to submit code! Status: ${response.status}`);
-                }
-
-                const result = await response.json();
+                setIsCodeRunning(false);
                 setCodeOutput({
-                    status: 'success',
+                    status: result.result.correct === result.result.total ? 'success' : 'fail',
                     output: `Number of Correct Test Cases: ${result.result.correct}\nTotal Number of Correct Test Cases: ${result.result.total}\nStatus: ${STATUS_ID_TO_SUBMISSION_MESSAGE[result.result.statusId]}`
                 });
+
+                if (result.result.correct === result.result.total) {
+                    openConfirmWithMessage(
+                        "Congratulations! Your code has passed all public and private test cases! Exit the match?",
+                        "Stay",
+                        "Exit Match",
+                        ()=>null,
+                        ()=>navigate('/home')
+                    )
+                }
             } catch (error) {
                 console.error(error);
             }
         }
 
+        setIsCodeRunning(true);
         setCodeOutput({
             status: 'loading',
             output: '>> Running code... You can click "Run Code" again to start a new execution!'
         });
 
         runCode();
-        toggleOutputAndTestCases();
-    }, [codeEditorContent, questionTemplate.question_id, settings.progLang.formal_name, toggleOutputAndTestCases]);
+        if (isTestCasesMode) {
+            toggleOutputAndTestCases();
+        }
+    }, [codeEditorContent, questionTemplate.question_id, settings.progLang.formal_name, toggleOutputAndTestCases, isTestCasesMode, navigate]);
 
 
     // Ctrl + Enter: Execute the code in the CodeEditor, if the CodeExecutor is set to Output Mode
@@ -214,7 +213,6 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
             }
         }
         document.addEventListener('keydown', runCode);
-
         return () => {
             document.removeEventListener('keydown', runCode);
         }
@@ -235,6 +233,7 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
                 submitCode={submitCode}
                 isTestCasesMode={isTestCasesMode}
                 toggleOutputAndTestCases={toggleOutputAndTestCases}
+                isCodeRunning={isCodeRunning}
             />
         </div>
     )

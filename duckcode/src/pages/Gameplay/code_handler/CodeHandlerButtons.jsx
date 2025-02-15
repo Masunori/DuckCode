@@ -3,7 +3,8 @@ export default function CodeHandlerButtons({
     runAllTestCases, 
     submitCode, 
     isTestCasesMode, 
-    toggleOutputAndTestCases 
+    toggleOutputAndTestCases,
+    isCodeRunning 
 }) {
     return (
         <div id="test-case-buttons">
@@ -12,8 +13,18 @@ export default function CodeHandlerButtons({
             <button 
                 id="run-all-test-cases-button" 
                 onClick={isTestCasesMode ? runAllTestCases : executeCodeInOutputMode}
+                style={{ 
+                    opacity: isCodeRunning ? 0.4 : 1,
+                    pointerEvents: isCodeRunning ? 'none' : 'auto'
+                }}
             >Run all Test Cases</button>
-            <button id="submit" onClick={submitCode}>Submit</button>
+            <button 
+                id="submit"
+                onClick={submitCode}
+                style={{ 
+                    opacity: isCodeRunning ? 0.4 : 1,
+                    pointerEvents: isCodeRunning ? 'none' : 'auto'
+                }}>Submit</button>
         </div>
     )
 }

@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 /**
  * Open the confirmation pop-up with the specified message.
  * 
@@ -6,13 +8,16 @@
  * @param {string} proceedMessage - The content on the proceed button. Default: "Proceed"
  * @param {Function} onCancel - The action executed when the cancel button is clicked. Default: ()=>null
  * @param {Function} onProceed - The action executed when the proceed button is clicked. Default: ()=>null
+ * @param {boolean} isInformativeMode: In informative mode, only the Proceed button will be visible, where there is inly one button to acknowledge the information. Default: false
+ * @returns the confirmation component as a pop-up.
  */
 export function openConfirmWithMessage(
     message="Do you want to proceed?",
     cancelMessage="Cancel",
     proceedMessage="Proceed",
     onCancel=()=>null,
-    onProceed=()=>null
+    onProceed=()=>null,
+    isInformativeMode=false,
 ) {
     const confirmPopup = document.getElementById('confirm');
     confirmPopup.style.transform = 'translateY(0)';
@@ -26,16 +31,20 @@ export function openConfirmWithMessage(
 
     document.getElementById('confirm-tab-cancel-button').onclick = onCancel;
     document.getElementById('confirm-tab-proceed-button').onclick = onProceed;
+
+    document.getElementById('confirm-tab-cancel-button').style.display = isInformativeMode ? 'none' : 'block';
 }
 
 /**
  * Returns a confirmation pop-up. 
+ * 
  * @param {object} param0 - The list of values to pass in the confirmation pop-up
  * - message (str): The confirmation pop-up message.
- * - cancelMessage (str): The content on the cancel button.
+ * - cancelMessage (str): The content on the cancel button. 
  * - proceedMessage (str): The content on the proceed button.
  * - onCancel (function): The action executed when the cancel button is clicked.
  * - onProceed (function): The action executed when the proceed button is clicked.
+ * - isInformativeMode (boolean, default=false): In informative mode, only the Proceed button will be visible, where there is inly one button to acknowledge the information.
  * @returns the confirmation component as a pop-up.
  */
 export default function Confirm({ 
@@ -43,7 +52,8 @@ export default function Confirm({
     cancelMessage="Cancel",
     proceedMessage="Proceed",
     onCancel=()=>null,
-    onProceed=()=>null
+    onProceed=()=>null,
+    isInformativeMode=false,
 }) {
     function handleCancelWrapper() {
         onCancel();
@@ -64,6 +74,10 @@ export default function Confirm({
         const overlay = document.getElementById('confirmation-popup-overlay');
         overlay.style.visibility = 'hidden';
     }
+
+    useEffect(() => {
+        console.log(cancelMessage);
+    })
 
     return (
         <div id="confirmation-popup-overlay">

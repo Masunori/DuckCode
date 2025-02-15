@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 
-export default function CountdownTimer({ initialTime, asSpan = false }) {
+/**
+ * Return a countdown timer UI component.
+ * @param {object} param0 Contains the following fields:
+ * - initialTime (int): The starting time of the timer
+ * - id (string, default=null): The ID of the countdown timer to apply more styling if necessary.
+ * @returns The countdown timer UI component
+ */
+export default function CountdownTimer({ initialTime, id="" }) {
     const [timeLeft, setTimeLeft] = useState(initialTime);
 
     useEffect(() => {
@@ -15,20 +22,16 @@ export default function CountdownTimer({ initialTime, asSpan = false }) {
         return () => clearInterval(intervalId);
     }, [timeLeft]);
 
-    const formatTime = time => {
-        const minutes = Math.floor(time / 60);
-        const seconds = time % 60;
-
-        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
-
-    if (asSpan) {
-        return <span>Time left: {formatTime(timeLeft)}</span>;
-    } else {
-        return (
-            <div id="countdown-timer">
-                Time left: {formatTime(timeLeft)}
-            </div>
-        );
-    }
+    return (
+        <div id={id}>
+            <div className="countdown-timer-display">{Math.floor(timeLeft / 36000)}</div>
+            <div className="countdown-timer-display">{Math.floor(timeLeft / 3600) % 10}</div>
+            <div className="countdown-timer-display">:</div>
+            <div className="countdown-timer-display">{Math.floor((timeLeft % 3600) / 600)}</div>
+            <div className="countdown-timer-display">{Math.floor(((timeLeft % 3600) / 60)) % 10}</div>
+            <div className="countdown-timer-display">:</div>
+            <div className="countdown-timer-display">{Math.floor((timeLeft % 60) / 10)}</div>
+            <div className="countdown-timer-display">{timeLeft % 10}</div>
+        </div>
+    )
 }
