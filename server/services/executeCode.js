@@ -10,15 +10,16 @@ const Status = {
 const decoder = new TextDecoder('utf-8');
 const urlPath = process.env.judge0_api;
 
-//const API_URL = `http://localhost:2358/submissions`; // API for local compiler
-const API_URL = `http://${urlPath}/submissions`; // API for server compiler 
+const API_URL = 'http://localhost:2358/submissions';
+//const API_URL = `https://e778-14-191-33-219.ngrok-free.app/submissions`; // API for local compiler
+//const API_URL = `http://${urlPath}/submissions`; // API for server compiler 
 const HEADERS = {
     'Content-Type': 'application/json',
 };
 
 const decodeBase64 = (encoded) => encoded ? Uint8Array.from(atob(encoded), c => c.charCodeAt(0)) : null;
 
-export async function executeCode(sourceCode, stdin, expectedOutput, languageId) {
+async function executeCode(sourceCode, stdin, expectedOutput, languageId) {
     const payload = {
         source_code: sourceCode,
         language_id: languageId,
@@ -92,7 +93,7 @@ export async function submitCode(questionId, sourceCode, languageId) {
     }
 }
 
-export async function getSubmissionResult(token) {
+async function getSubmissionResult(token) {
     const url = `${API_URL}/${token}?base64_encoded=true`; 
     try {
         const response = await fetch(url, {
@@ -120,7 +121,7 @@ export async function getSubmissionResult(token) {
     }
 }
 
-export async function waitForResult(token, timeout = 100000) {
+async function waitForResult(token, timeout = 100000) {
     let result;
     let status = Status.PENDING;
     const start = Date.now();
@@ -193,7 +194,18 @@ export async function runCodeOnly(sourceCode, languageId) {
 
         const finalResult = await waitForResult(token);
         console.log('Final Result:', finalResult);
-        return finalResult.stdout || finalResult.compile_output || finalResult.stderr;
+        if(finalResult.stdout) {
+            return {
+                status: "success",
+                output: finalResult.stdout
+            }
+        }
+        else {
+            return {
+                status: "error",
+                output: finalResult.stderr || finalResult.compile_output
+            }
+        }
     } catch (error) {
         console.error('Error submitting code:', error.message);
         throw error;

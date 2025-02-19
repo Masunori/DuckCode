@@ -15,6 +15,7 @@ export async function logIn(req, res) {
         const query = `SELECT * FROM users.account WHERE username = $1`;
 
         const { rows } = await pool.query(query, [username]);
+        //console.log(rows);
         if (!rows.length) {
             return res.status(400).json({ error: 'Invalid username or password' });
         }
@@ -23,7 +24,8 @@ export async function logIn(req, res) {
         if(!isMatch) {
             return res.status(400).json({ error: 'Invalid username or password' });
         }
-        const token = jwt.sign({id: user.account_id}, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({userId: user.account_id, username: user.username, email: user.email, rankPoints: user.rankpoints, level: user.level, experincePoint: user.exp}, process.env.JWT_SECRET, { expiresIn: '36h' }); 
+        //console.log(jwtDecode(token));
         res.json({ message: 'Login successful', token});
     } catch(error) {
         console.error('Error during login:', error.message);
@@ -42,7 +44,7 @@ export async function register(req, res) {
             const hashedPassword = await hashPassword(password);
             const insertUserQuery = `INSERT INTO users.account (username, password, email) VALUES ($1, $2, $3)`;
             await pool.query(insertUserQuery, [username, hashedPassword, email]);
-            res.json({ message: 'User registered successfully' }); // then back to login screen :)
+            res.json({ message: 'User registered successfully' }); // then back to login screen :) // việc của chú Duck
         }
     } catch(error) {
         console.error('Error during registration:', error.message);
@@ -50,4 +52,16 @@ export async function register(req, res) {
     }
 }
 
+export async function handlerThirdPartyLogin(req, res) {
+    try {
+        if(!req.user) {
+            return res.status(401).json({error: "Unauthorized"});
+        }
+        const token = jwt.sign({ id: req.user.account_id }, process.env.JWT_SECRET, { expiresIn: "1h" }); 
+        res.json({ message: "Google login successful", token });  // return jwt token for accessing 
+    } catch(error) {
+        console.error("Error during third-party login:", error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
 

@@ -1,5 +1,5 @@
-import {logIn as logInService, register as registerService } from '../services/userAuthen.js';
-
+import {logIn as logInService, register as registerService, handlerThirdPartyLogin as handlerThirdPartyLoginService } from '../services/userAuthen.js';
+import { sendOTPForEmail as sendOTPService, verifyOTPForEmail as verifyOTPService  } from '../services/otpService.js';
 export const logIn = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -29,3 +29,38 @@ export const register = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+export const sendEmail = async (req, res) => {
+    try {
+        const {email} = req.body;
+        if(!email) {
+            return res.status(400).json({
+                error: 'Missing information about email bro',
+            })
+        }
+        await sendOTPService(req, res);
+    } catch(error) {
+        console.error('Error: ', error.message);
+        res.status(500).json({error: 'Internal server error'});
+    }
+};
+
+export const verifyOTP = async (req, res) => {
+    try {
+        await verifyOTPService(req, res);
+    } catch(error) {
+        console.error('Error: ', error.message);
+        res.status(500).json({error: 'Internal server error'});
+    }
+};
+export const handlerThirdPartyLogin = async(req, res) => {
+    try {
+        if(!req.user) {
+            return res.status(401).json({error: "Unauthorized: No user data received"});
+        }
+        await handlerThirdPartyLoginService(req, res);
+    } catch(error) {
+        console.error("Third-Party Login Error:", error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
