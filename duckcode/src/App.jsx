@@ -9,6 +9,7 @@ import Portal from './pages/Portal/Portal';
 import Landing from './pages/Landing/Landing';
 import MainMenu from './pages/MainMenu/MainMenu';
 import Confirm from './globalcomponents/utility_components/Confirm';
+import GameplayLoading from './pages/Gameplay/GameplayLoading';
 
 // Stores the settings context: theme, language, font, etc.
 export const SettingsContext = createContext(null);
@@ -136,7 +137,8 @@ export default function App() {
                 <Router>
                     <Routes>
                         <Route path='/' element={<Landing />}/>
-                        <Route path='/gameplay' element={<Gameplay />}></Route>
+                        <Route path='/gameplay/qid/:qid' element={<Gameplay />}></Route>
+                        <Route path='/gameplay' element={<GameplayLoading />}></Route>
                         <Route path='/portal' element={<Portal />}></Route>
                         <Route path='/home' element={<MainMenu />}></Route>
                     </Routes>

@@ -1,4 +1,4 @@
-import { GAMEPLAY_API_HTTP, LANGUAGE_TO_ID } from "../../globalcomponents/constants";
+import { LANGUAGE_TO_ID } from "../../globalcomponents/constants";
 import { delay } from "../fakeApiUtils";
 
 /**
@@ -10,6 +10,8 @@ import { delay } from "../fakeApiUtils";
  * @returns the JSON response containing the results for each public test case
  */
 export async function runAllTestCases(qid, sourceCode, language) {
+    const GAMEPLAY_API_HTTP = process.env.REACT_APP_GAMEPLAY_API_HTTP;
+    
     const response = await fetch(`${GAMEPLAY_API_HTTP}/code/run_all_test_case`, {
         method: 'POST',
         headers: {
@@ -74,6 +76,9 @@ export async function runAllTestCasesFake(qid, sourceCode, language) {
             },
         ]
     };
+
+    const GAMEPLAY_API_HTTP = process.env.REACT_APP_GAMEPLAY_API_HTTP;
+    console.log(GAMEPLAY_API_HTTP);
 
     return await delay(1000, response);
 }

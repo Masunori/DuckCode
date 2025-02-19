@@ -1,4 +1,4 @@
-import { GAMEPLAY_API_HTTP, LANGUAGE_TO_ID } from "../../globalcomponents/constants";
+import { LANGUAGE_TO_ID } from "../../globalcomponents/constants";
 import { delay } from "../fakeApiUtils";
 
 /**
@@ -10,6 +10,8 @@ import { delay } from "../fakeApiUtils";
  * @returns the JSON response containing the code status and code output
  */
 export async function runCode(qid, sourceCode, language) {
+    const GAMEPLAY_API_HTTP = process.env.REACT_APP_GAMEPLAY_API_HTTP;
+
     const response = await fetch(`${GAMEPLAY_API_HTTP}/code/run_code_only`, {
         method: 'POST',
         headers: {
@@ -44,6 +46,9 @@ export async function runCode(qid, sourceCode, language) {
  * @returns the JSON response containing the code status and code output
  */
 export async function runCodeFake(qid, sourceCode, languageId, isSuccessful=true) {
+    const GAMEPLAY_API_HTTP = process.env.REACT_APP_GAMEPLAY_API_HTTP;
+    console.log(GAMEPLAY_API_HTTP);
+
     if (isSuccessful) {
         return await delay(1000, {
             status: 'success',

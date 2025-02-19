@@ -1,4 +1,4 @@
-import { GAMEPLAY_API_HTTP, LANGUAGE_TO_ID } from "../../globalcomponents/constants";
+import { LANGUAGE_TO_ID } from "../../globalcomponents/constants";
 import { delay } from "../fakeApiUtils";
 
 /**
@@ -11,6 +11,8 @@ import { delay } from "../fakeApiUtils";
  * @returns the JSON response containing the submission results
  */
 export async function submitCode(qid, sourceCode, language) {
+    const GAMEPLAY_API_HTTP = process.env.REACT_APP_GAMEPLAY_API_HTTP;
+
     const response = await fetch(`${GAMEPLAY_API_HTTP}/code/submit_code`, {
         method: 'POST',
         headers: {
@@ -43,6 +45,9 @@ export async function submitCode(qid, sourceCode, language) {
  * @returns the JSON response containing the submission results
  */
 export async function submitCodeFake(qid, sourceCode, language, isSuccessful=false) {
+    const GAMEPLAY_API_HTTP = process.env.REACT_APP_GAMEPLAY_API_HTTP;
+    console.log(GAMEPLAY_API_HTTP);
+
     if (isSuccessful) {
         return delay(1000, {
             result: {

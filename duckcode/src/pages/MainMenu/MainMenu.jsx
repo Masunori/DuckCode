@@ -3,7 +3,7 @@ import './mainmenu.css';
 import Settings from '../../globalcomponents/settings_components/Settings';
 import { SettingsContext } from '../../App';
 import StarryBackground from '../../globalcomponents/background_wrappers/StarryBackground';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function MainMenu() {
     const currentExp = 1200;
@@ -46,6 +46,7 @@ export default function MainMenu() {
                 </div>
             </div>
             <div id='main-menu-selections'>
+                {/* <Link to="/gameplay" className='main-menu-sig-choice' id='play-ranked-match-button'>Play Ranked Match</Link> */}
                 <button onClick={handleToGameplay} className='main-menu-sig-choice' id='play-ranked-match-button'>Play Ranked Match</button>
                 <button className='main-menu-insig-choice'>Play Practice Match</button>
                 <button className='main-menu-insig-choice'>Tutorial</button>
