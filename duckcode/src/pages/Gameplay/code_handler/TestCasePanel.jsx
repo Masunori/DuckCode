@@ -97,7 +97,7 @@ export default function TestCasePanel({ testCaseResults }) {
                         ()=>null,
                         ()=>null,
                         true
-                    )
+                    );
 
                     break;
                 }

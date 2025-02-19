@@ -1,5 +1,3 @@
-import { s } from "motion/react-client"
-
 // fetch question
 const QUESTION_REQUEST = {
     difficulty: 1000, // int
@@ -78,6 +76,7 @@ const RUN_CODE_REQUEST = {
 }
 
 const RUN_CODE_RESPONSE = {
+    status: "", // 'success' or 'error'
     output: "", // string
 }
 
@@ -99,4 +98,181 @@ const RUN_CODE_RESPONSE_2 = {
     }
 }
 
+const USER_RESPONSE = {
+    userId: '12345678',
+    username: 'duck_administrator_420',
+    email: 'iloveduckcode@duckcode.org',
+    rankPoints: 1000,
+    profile: {
+        // avatar: 'https://i.pinimg.com/736x/55/1e/9a/551e9ad6616917d8335fe46db64688b9.jpg',
+        level: 38,
+        exp: 1200,
+    },
+    settings: {
+        theme: {
+            base: "vs-dark",
+            inherit: "false",
+            rules: [
+                { token: 'comment', foreground: '', background: '', fontStyle: '' },
+                { token: 'string', foreground: '', background: '', fontStyle: '' },
+                { token: 'keyword', foreground: '', background: '', fontStyle: '' },
+                { token: 'invalid', foreground: '', background: '', fontStyle: '' },
+                { token: 'number', foreground: '', background: '', fontStyle: '' },
+                { token: 'number.hex', foreground: '', background: '', fontStyle: '' },
+                { token: 'regexp', foreground: '', background: '', fontStyle: '' },
+                { token: 'annotation', foreground: '', background: '', fontStyle: '' },
+                { token: 'type', foreground: '', background: '', fontStyle: '' },
+                { token: 'typeParameter', foreground: '', background: '', fontStyle: '' },
+                { token: 'function', foreground: '', background: '', fontStyle: '' },
+                { token: 'method', foreground: '', background: '', fontStyle: '' },
+                { token: 'macro', foreground: '', background: '', fontStyle: '' },
+                { token: 'interface', foreground: '', background: '', fontStyle: '' },
+                { token: 'property', foreground: '', background: '', fontStyle: '' },
+                { token: 'decorator', foreground: '', background: '', fontStyle: '' },
+            ],
+            color: {
+                'editor.background': '',
+                'editor.foreground': '',
+                'editorLineNumber.foreground': '',
 
+                'editor.selectionBackground': '',
+                'editor.selectionHighlightBackground': '',
+                'editor.foldBackground': '',
+
+                'editor.wordHighlightBackground': '',
+                'editor.wordHighlightStrongBackground': '',
+
+                'editor.findMatchBackground': '',
+                'editor.findMatchHighlightBackground': '',
+                'editor.findRangeHighlightBackground': '',
+
+                'editor.hoverHighlightBackground': '',
+
+                'editor.lineHighlightBorder': '',
+                'editorLink.activeForeground': '',
+                'editor.rangeHighlightBackground': '',
+                'editor.snippetTabstopHighlightBackground': '',
+                'editor.snippetTabstopHighlightBorder': '',
+                'editor.snippetFinalTabstopHighlightBackground': '',
+                'editor.snippetFinalTabstopHighlightBorder': '',
+                'editorWhitespace.foreground': '',
+                'editorIndentGuide.background': '',
+                'editorIndentGuide.activeBackground': '',
+                'editorRuler.foreground': '',
+
+                'editorCodeLens.foreground': '',
+
+                'editorBracketHighlight.foreground1': '',
+                'editorBracketHighlight.foreground2': '',
+                'editorBracketHighlight.foreground3': '',
+                'editorBracketHighlight.foreground4': '',
+                'editorBracketHighlight.foreground5': '',
+                'editorBracketHighlight.foreground6': '',
+                'editorBracketHighlight.unexpectedBracket.foreground': '',
+
+                'editorOverviewRuler.border': '',
+                'editorOverviewRuler.selectionHighlightForeground': '',
+                'editorOverviewRuler.wordHighlightForeground': '',
+                'editorOverviewRuler.wordHighlightStrongForeground': '',
+                'editorOverviewRuler.modifiedForeground': '',
+                'editorOverviewRuler.addedForeground':    '',
+                'editorOverviewRuler.deletedForeground':  '',
+                'editorOverviewRuler.errorForeground':    '',
+                'editorOverviewRuler.warningForeground':  '',
+                'editorOverviewRuler.infoForeground':     '',
+
+                'editorError.foreground': '',
+                'editorWarning.foreground': '',
+
+                'editorGutter.modifiedBackground': '',
+                'editorGutter.addedBackground':    '',
+                'editorGutter.deletedBackground':  '',
+
+                'sideBar.background': '',
+                'sideBarTitle.foreground': '',
+                'sideBarSectionHeader.background': '',
+                'sideBarSectionHeader.border': '',
+
+                'minimap.background': '',
+                'minimap.foregroundOpacity': '',
+                'scrollbarSlider.background': ''
+            }
+        },
+        progLang: 'javascript',
+        codeEditorFont: 'monospace',
+        overallTheme: {
+            background: {
+                type: 'color',
+                value: '#121212',
+            },
+            firstLayerBackground: {
+                type: 'color',
+                value: '#242424',
+            },
+            secondLayerBackground: {
+                type: 'color',
+                value: '#484848',
+            },
+            thirdLayerBackground: {
+                type: 'color',
+                value: '#525252',
+            },
+            fourthLayerBackground: {
+                type: 'color',
+                value: '#606060',
+            },
+            significantChoiceButton: {
+                type: 'color',
+                value: '#0077ff',
+            },
+            significantChoiceButtonSelected: {
+                type: 'color',
+                value: '#0560bc',
+            },
+            insignificantChoiceButton: {
+                type: 'color',
+                value: '#363636',
+            },
+            insignificantChoiceButtonSelected: {
+                type: 'color',
+                value: '#484848',
+            },
+            settingsBackground: {
+                type: 'color',
+                value: '#484848',
+            },
+            settingsOptionBackground: {
+                type: 'color',
+                value: '#363636',
+            },
+            settingsOptionBorder: {
+                type: 'color',
+                value: '#848484',
+            },
+            overallFont: {
+                type: 'dropdown',
+                value: "'PF Din Text Pro', 'sans-serif'",
+            }, 
+        }  
+    }
+};
+
+// no need to check for valid format
+const USER_LOGIN_REQUEST = {
+    username: "duck", // string
+    password: "duck", // string
+}
+
+// must check for valid username and password
+const USER_SIGNUP_REQUEST = {
+    username: "duck", // string
+    password: "duck", // string
+    email: "", // string
+}
+
+
+// if successful sign-up, must return status = "SUCCESS"
+// else, return the reason for failure 
+const USER_SIGNUP_STATUS = {
+    status: "", // string
+}

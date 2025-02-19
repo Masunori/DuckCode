@@ -2,16 +2,20 @@ import { useContext } from "react";
 import CountdownTimer from "../../globalcomponents/utility_components/CountdownTimer";
 import { SettingsContext } from "../../App";
 import { openConfirmWithMessage } from "../../globalcomponents/utility_components/Confirm";
+import { useNavigate } from "react-router-dom";
 
 export default function GameplayNavbar() {
     const {setFrozen} = useContext(SettingsContext);
+    const navigate = useNavigate();
 
     function confirmExit(event) {
         openConfirmWithMessage(
             "Exit the game? Your progress will not be saved!",
             "Stay",
-            "Exit" 
-        )
+            "Exit",
+            ()=>null,
+            ()=>navigate('/home') 
+        );
     }
 
     return (

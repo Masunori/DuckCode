@@ -500,5 +500,5 @@ export const STATUS_ID_TO_SUBMISSION_MESSAGE = {
     5: "Wrong Answer"
 }
 
-export const GAMEPLAY_API_HTTP = 'http://52.63.69.143'
+export const GAMEPLAY_API_HTTP = 'http://3.27.214.139'
 export const GAMEPLAY_API_HTTPS = 'https://cors-anywhere.herokuapp.com/' + GAMEPLAY_API_HTTP

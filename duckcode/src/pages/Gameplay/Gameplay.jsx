@@ -3,10 +3,9 @@ import CodeHandler from './code_handler/CodeHandler';
 import GameplayNavbar from './GameplayNavbar';
 import Question from './Question';
 import Settings from '../../globalcomponents/settings_components/Settings';
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { SettingsContext } from '../../App';
-import Loading from '../../globalcomponents/utility_screen/Loading';
-import { getQuestionFake } from '../../services/gameplay/getQuestion';
+import { useLocation } from 'react-router-dom';
 
 export const QuestionContext = createContext(null);
 
@@ -15,39 +14,18 @@ export const QuestionContext = createContext(null);
  * @returns The gameplay screen
  */
 export default function Gameplay() {
-    const [question, setQuestion] = useState(null);
-
-    const difficulty = useRef(1000);
-
     const {settings} = useContext(SettingsContext);
 
     const [codeEditorContent, setCodeEditorContent] = useState(settings.progLang.code_snippet);
-
-    useEffect(() => {
-        async function fetchQuestion() {
-            try {
-                const questionResponse = await getQuestionFake(difficulty.current);
-                setQuestion(questionResponse);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        fetchQuestion();
-    }, []);
-
-    if (!question) {
-        return <Loading />;
-    }
-
+    const location = useLocation();
+    
     return (
-        <QuestionContext.Provider value={question}>
+        <QuestionContext.Provider value={location.state.questionResponse}>
             <div id='entire-gameplay-screen'>
                 <GameplayNavbar />
                 <div id="gameplay">
                     <Question />
-                    <CodeHandler 
-                        testCases={ question.publicTestCases }
+                    <CodeHandler
                         codeEditorContent={codeEditorContent}
                         setCodeEditorContent={setCodeEditorContent}
                     />

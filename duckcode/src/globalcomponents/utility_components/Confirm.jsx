@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 /**
  * Open the confirmation pop-up with the specified message.
  * 
@@ -74,10 +72,6 @@ export default function Confirm({
         const overlay = document.getElementById('confirmation-popup-overlay');
         overlay.style.visibility = 'hidden';
     }
-
-    useEffect(() => {
-        console.log(cancelMessage);
-    })
 
     return (
         <div id="confirmation-popup-overlay">

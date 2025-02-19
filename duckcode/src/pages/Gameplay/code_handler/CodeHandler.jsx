@@ -5,9 +5,9 @@ import { SettingsContext } from "../../../App";
 import { presetThemes } from "../../../globalcomponents/color_schemes/themes";
 import { QuestionContext } from "../Gameplay";
 import { STATUS_ID_TO_SUBMISSION_MESSAGE } from "../../../globalcomponents/constants";
-import { runCodeFake } from "../../../services/gameplay/runCode";
-import { runAllTestCasesFake } from "../../../services/gameplay/runAllTestCases";
-import { submitCodeFake } from "../../../services/gameplay/submitCode";
+import { runCode, runCodeFake } from "../../../services/gameplay/runCode";
+import { runAllTestCases, runAllTestCasesFake } from "../../../services/gameplay/runAllTestCases";
+import { submitCode, submitCodeFake } from "../../../services/gameplay/submitCode";
 import { openConfirmWithMessage } from "../../../globalcomponents/utility_components/Confirm";
 import { useNavigate } from "react-router-dom";
 
@@ -94,7 +94,7 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
     /**
      * Run the user's code against all public test cases.
      */
-    const runAllTestCases = useCallback(() => {
+    const fetchRunAllTestCases = useCallback(() => {
         const runCode = async () => {
             // if (currentPistonCallController.current) {
             //     currentPistonCallController.current.abort();
@@ -155,7 +155,7 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
     /**
      * Submits the user's code. A submission runs the user's code against all public and private test cases.
      */
-    const submitCode = useCallback(() => {
+    const fetchSubmitCode = useCallback(() => {
         const runCode = async () => {
             // if (currentPistonCallController.current) {
             //     currentPistonCallController.current.abort();
@@ -228,9 +228,9 @@ export default function CodeHandler({ codeEditorContent, setCodeEditorContent })
             <CodeExecutor 
                 output={codeOutput} 
                 executeCodeInOutputMode={executeCodeInOutputMode} 
-                runAllTestCases={runAllTestCases}
+                runAllTestCases={fetchRunAllTestCases}
                 testCaseResults={testCaseResults}
-                submitCode={submitCode}
+                submitCode={fetchSubmitCode}
                 isTestCasesMode={isTestCasesMode}
                 toggleOutputAndTestCases={toggleOutputAndTestCases}
                 isCodeRunning={isCodeRunning}
