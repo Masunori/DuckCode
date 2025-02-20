@@ -30,6 +30,17 @@ passport.use(
                 else {
                     user = rows[0];
                 }
+                 // Create JWT Token
+                const token = jwt.sign({
+                    userId: user.account_id,
+                    username: user.username,
+                    email: user.email,
+                    rankPoints: user.rankpoints,
+                    level: user.level,
+                    experiencePoints: user.exp,},
+                    process.env.JWT_SECRET,
+                    { expiresIn: "36h" });
+                user.token = token;
                 return done(null, user)
             } catch(error) {
                 return done(error, null);
