@@ -1,5 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { PASSWORD_CONDITIONS, USERNAME_CONDITIONS } from '../../globalcomponents/constants';
+import { signup } from '../../services/user_auth/signup';
+import { openConfirmWithMessage } from '../../globalcomponents/utility_components/Confirm';
 
 export default function Signup({ isSignup, setIsSignup }) {
     const EMPTY_STRING_BORDER_COLOR = 'var(--fourth-layer-background-color)';
@@ -148,6 +150,33 @@ export default function Signup({ isSignup, setIsSignup }) {
         }
     }
 
+    const fetchSignupStatus = useCallback((username, email, password) => {
+        const f = async (username, password, email) => {
+            try {
+                const status = signup(username, password, email);
+                openConfirmWithMessage(
+                    'Signup successful!',
+                    null,
+                    'OK',
+                    null,
+                    null,
+                    true
+                );
+            } catch (error) {
+                openConfirmWithMessage(
+                    'Signup failed!' + error,
+                    null,
+                    'OK',
+                    null,
+                    null,
+                    true
+                )
+            }
+        }
+
+        f(username, password, email);
+    }, []);
+
     return (
         <div style={{ display: isSignup ? "block" : "none" }}>
             <div className='login-signup-fullscreen' ></div>
@@ -156,7 +185,7 @@ export default function Signup({ isSignup, setIsSignup }) {
                     <button id="signup-close-button" onClick={() => setIsSignup(false)}>×</button>
                     <h2>Welcome to DuckCode!</h2>
                     <h4>Your journey starts here!</h4>
-                    <form action='#' method='POST'>
+                    <form>
                         <label htmlFor="signup-username">
                             <p className='authentication-field-guide'>Username</p>
                             <input style={usernameInputStyle} id="signup-username" type="text" name="username" value={username} onChange={handleUsernameChange} placeholder='Username' required />
@@ -190,7 +219,7 @@ export default function Signup({ isSignup, setIsSignup }) {
                             ))}
                         </ul>
 
-                        <button id="sign-up-button" type="submit">Sign Up</button>
+                        <button id="sign-up-button" type="submit" onClick={() => fetchSignupStatus(username, email, password)}>Sign Up</button>
 
                         <div className="login-signup-options-separator">
                             <span></span>
