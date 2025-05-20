@@ -1,4 +1,4 @@
- === Stage 1: Build (if you have a build step like TypeScript) ===
+# === Stage 1: Build (if you have a build step like TypeScript) ===
  FROM node:20-alpine AS builder
  WORKDIR /app/server
  COPY package.json package-lock.json ./
