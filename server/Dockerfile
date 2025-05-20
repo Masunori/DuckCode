@@ -1,11 +1,11 @@
-# === Stage 1: Build (if you have a build step like TypeScript) ===
-# FROM node:20-alpine AS builder
-# WORKDIR /app/server
-# COPY package.json package-lock.json ./
-# RUN npm install
-# COPY . .
-# RUN npm run build # Example: if you have a TypeScript build script
-
+ === Stage 1: Build (if you have a build step like TypeScript) ===
+ FROM node:20-alpine AS builder
+ WORKDIR /app/server
+ COPY package.json package-lock.json ./
+ RUN npm install
+ COPY . .
+ RUN npm run build 
+ 
 # === Stage 2: Production ===
 # Use an official Node.js runtime as a parent image
 FROM node:20-alpine
