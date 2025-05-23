@@ -2,7 +2,7 @@ import { PRISTINE_USER } from "@/app/userPrefs/userPrefsUtils"
 import HomeNavbar from "./components/HomeNavbar";
 import styles from "./page.module.css";
 import EventMenu from "./components/EventMenu";
-import NewsCaruosel from "./components/NewsCaruosel";
+import NewsCarousel from "./components/NewsCarousel";
 import GameMenu from "./components/GameMenu";
 import ChatPanel from "./components/ChatPanel";
 
@@ -13,7 +13,7 @@ export default function Page() {
         <div className={styles.home}>
             <HomeNavbar user={user} />
             <EventMenu />
-            <NewsCaruosel />
+            <NewsCarousel />
             <GameMenu />
             <ChatPanel />
         </div>

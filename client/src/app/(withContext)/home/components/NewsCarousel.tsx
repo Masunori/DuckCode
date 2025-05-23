@@ -3,11 +3,9 @@
 import { useState } from "react";
 import styles from "../page.module.css";
 
-export default function NewsCaruosel() {
+export default function NewsCarousel() {
     const [activeNewsTab, setActiveNewsTab] = useState(0);
     // const [isAnimating, setIsAnimating] = useState(true);
-
-    setActiveNewsTab(0);
 
     const data = ["1", "2", "3", "4", "5"];
 
@@ -19,12 +17,9 @@ export default function NewsCaruosel() {
         return augmentedData;
     }
 
-    
-
-
     return (
         <div className={styles.newsCarousel}>
-            <button className={styles.leftButton}>{"<"}</button>
+            <button className={styles.leftButton} onClick={() => setActiveNewsTab(prev => prev - 1)}>{"<"}</button>
             <div className={styles.allNewsTabs}>
                 {augmentData(data).map((info, index) => (
                     <div 

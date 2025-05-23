@@ -28,7 +28,8 @@
     width: fit-content;
 }
 
-.userInfo img {
+.img {
+/* .userInfo img { */
     width: 100%;
     border: 3px solid var(--first-layer-background-color);
 }
