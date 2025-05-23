@@ -20,14 +20,14 @@ export async function POST(request: NextRequest) {
         });
         if (!isValidPassword) {
             return NextResponse.json({
-                code: ResetPasswordStatuses.INVALID_PASSWORD,
+                code: ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS,
             }, { status: 400 });
         }
 
         const isPasswordMatch = password === confirmPassword;
         if (!isPasswordMatch) {
             return NextResponse.json({
-                code: ResetPasswordStatuses.MISMATCH_CONFIRM_PASSWORD,
+                code: ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS,
             }, { status: 400 });
         }
 
