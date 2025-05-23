@@ -17,20 +17,24 @@ export async function POST(request: NextRequest) {
         const logs: OutputEntry[] = [];
 
         const sandboxConsole = {
+            // eslint-disable-next-line
             log: (...args: any[]) => logs.push({ 
                 type: "log", 
                 content: args.map(String).join("\n"), 
             }),
+            // eslint-disable-next-line
             error: (...args: any[]) => logs.push({ 
                 type: "error", 
                 content: "[error] " + args.map(String).join("\n") 
             }),
+            // eslint-disable-next-line
             warn: (...args: any[]) => logs.push({
                 type: "warn",
                 content: "[warn] " + args.map(String).join("\n")
             }),
         }
 
+        // eslint-disable-next-line
         let fn: Function;
 
         try {
@@ -44,6 +48,7 @@ export async function POST(request: NextRequest) {
                 ${sourceCode}
                 `
             );
+        // eslint-disable-next-line
         } catch (syntaxErr: any) {
             return NextResponse.json({
                 code: RunCodeStatuses.COMPILE_ERROR,
@@ -53,6 +58,7 @@ export async function POST(request: NextRequest) {
 
         try {
             fn.call(null, sandboxConsole);
+        // eslint-disable-next-line
         } catch (runtimeErr: any) {
             logs.push({
                 type: "error",

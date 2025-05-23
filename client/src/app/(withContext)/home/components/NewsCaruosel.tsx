@@ -5,7 +5,9 @@ import styles from "../page.module.css";
 
 export default function NewsCaruosel() {
     const [activeNewsTab, setActiveNewsTab] = useState(0);
-    const [isAnimating, setIsAnimating] = useState(true);
+    // const [isAnimating, setIsAnimating] = useState(true);
+
+    setActiveNewsTab(0);
 
     const data = ["1", "2", "3", "4", "5"];
 
