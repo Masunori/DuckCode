@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
         const isValidEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})*$/.test(email);
         if (!isValidEmail) {
             return NextResponse.json({
-                code: ResetPasswordStatuses.INVALID_EMAIL,
+                code: ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS,
             }, { status: 400 });
         }
 
