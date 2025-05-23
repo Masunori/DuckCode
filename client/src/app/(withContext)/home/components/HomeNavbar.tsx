@@ -13,12 +13,15 @@ export default function HomeNavbar({ user }: { user: User }) {
             className={styles.homeNavbar}
         >
             <div className={styles.userInfo}>
-                <Image 
+                {/* <Image 
                     src={null} 
                     alt="user-profile-pic" 
                     width={user.userPreference.fontSize * 3} 
                     height={user.userPreference.fontSize * 3} 
-                />
+                /> */}
+                <div className={styles.img}>
+                    
+                </div>
                 <div className={styles.usernameLevelExp}>
                     <p>{user.name}</p>
                     <div className={styles.expBarWithLevel}>
