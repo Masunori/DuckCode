@@ -68,10 +68,10 @@ export default function News() {
                         <time dateTime="2025-01-20">{articles[currentArticle].date}</time>
                         <div style={{
                             border: '1px solid var(--third-layer-background-color)',
-                            margin: '1em 0'
+                            margin: '1rem 0'
                         }}></div>
                         {articles[currentArticle].content.map((paragraph, index) => (
-                            <div key={index} style={{ margin: "0.8em 0" }}>
+                            <div key={index} style={{ margin: "0.8rem 0" }}>
                                 {paragraph.paragraph.map((segment, index2) => (
                                     <span key={index2} style={{ fontWeight: segment.bold ? 600 : 400 }}>
                                         {segment.text}

@@ -40,7 +40,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
     const [passwordInputState, setPasswordInputState] = useState(FieldState.EMPTY);
     const [confirmPasswordInputState, setConfirmPasswordInputState] = useState(FieldState.EMPTY);
 
-    const [serverSideResetPasswordStatus, setServerSideResetPasswordStatus] = useState<ResetPasswordStatuses| null>(null);
+    const [resetPasswordStatus, setResetPasswordStatus] = useState<ResetPasswordStatuses| null>(null);
 
     const borderColors = {
         [FieldState.EMPTY]: EMPTY_STRING_BORDER_COLOR,
@@ -161,6 +161,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
 
     function closePopup() {
         setPortalMode(PortalMode.None);
+        setResetPasswordStatus(null);
         setStage(0);
 
         // reset all input fields
@@ -182,6 +183,14 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
     const resetPasswordAPILink = '/api/portal/resetPassword/verifyNewPassword';
 
     async function getVerificationCode() {
+        console.log("Getting verification code...");
+
+        if (email === '' || !(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})*$/.test(email))) {
+            setResetPasswordStatus(ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS);
+            setEmailInputState(FieldState.SERVER_SIDE_INVALID);
+            return;
+        }
+
         await fetch(sendVerificationCodeAPILink, {
             method: 'POST',
             headers: {
@@ -191,7 +200,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
         })
         .then(response => {
             response.json().then(data => {
-                setServerSideResetPasswordStatus(data.code);
+                setResetPasswordStatus(data.code);
             });
 
             if (response.status === 200) {
@@ -206,6 +215,11 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
     }
 
     async function verifyOtp() {
+        if (otp.some(value => value === '')) {
+            setResetPasswordStatus(ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS);
+            return;
+        }
+
         const code = otp.join('');
 
         await fetch(verifyOtpAPILink, {
@@ -217,7 +231,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
         })
         .then(response => {
             response.json().then(data => {
-                setServerSideResetPasswordStatus(data.code);
+                setResetPasswordStatus(data.code);
             });
 
             if (response.status === 200) {
@@ -227,6 +241,18 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
     }
 
     async function setNewPassword() {
+        if (Object.values(PASSWORD_CONDITIONS).some(pred => !pred.checkFn(password))) {
+            setResetPasswordStatus(ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS);
+            setPasswordInputState(FieldState.SERVER_SIDE_INVALID);
+            return;
+        }
+
+        if (confirmPassword !== password) {
+            setResetPasswordStatus(ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS);
+            setConfirmPasswordInputState(FieldState.SERVER_SIDE_INVALID);
+            return;
+        }
+
         await fetch(resetPasswordAPILink, {
             method: 'POST',
             headers: {
@@ -236,13 +262,9 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
         })
         .then(response => {
             response.json().then(data => {
-                setServerSideResetPasswordStatus(data.code);
+                setResetPasswordStatus(data.code);
 
-                if (data.code === ResetPasswordStatuses.INVALID_PASSWORD) {
-                    setPasswordInputState(FieldState.SERVER_SIDE_INVALID);
-                } else if (data.code === ResetPasswordStatuses.MISMATCH_CONFIRM_PASSWORD) {
-                    setConfirmPasswordInputState(FieldState.SERVER_SIDE_INVALID);
-                } else if (data.code === ResetPasswordStatuses.SAME_PASSWORD) {
+                if (data.code === ResetPasswordStatuses.SAME_PASSWORD) {
                     setPasswordInputState(FieldState.SERVER_SIDE_INVALID);
                     setConfirmPasswordInputState(FieldState.SERVER_SIDE_INVALID);
                 }
@@ -256,6 +278,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
 
     function toLogin() {
         setStage(0);
+        setResetPasswordStatus(null);
 
         // reset all input fields
         setEmail('');
@@ -331,14 +354,15 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                                 onChange={handleEmailChange}
                             ></input>
                         </label>
-                        {serverSideResetPasswordStatus === ResetPasswordStatuses.INVALID_EMAIL 
+                        {resetPasswordStatus === ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS 
                         && 
                             <p style={{
                                 color: SERVER_SIDE_ERROR_BORDER_COLOR, 
                                 fontWeight: 'bold', 
                                 margin: '0 0 1rem 0'
                             }}>
-                                Invalid email! Please make sure that your email follows the conventional email format.
+                                Someone is trying to bypass client-side validation... 
+                                Please make sure that your email follows the conventional email format.
                             </p>
                         }
                         <button 
@@ -382,22 +406,35 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                                 opacity: otp.some(value => value === '') ? 0.5 : 1,
                             }}
                         >Verify</button>
-                        {serverSideResetPasswordStatus === ResetPasswordStatuses.WRONG_VERIFICATION_CODE
-                        && 
-                            <p style={{
-                                color: SERVER_SIDE_ERROR_BORDER_COLOR, 
-                                fontWeight: 'bold', 
-                                margin: '0 0 1rem 0'
-                            }}>
-                                Wrong verification code!
-                            </p>
-                        }
+                        <ul>
+                            {resetPasswordStatus === ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS
+                            && 
+                                <li style={{
+                                    color: SERVER_SIDE_ERROR_BORDER_COLOR, 
+                                    fontWeight: 'bold', 
+                                    margin: '0 0 1rem 0'
+                                }}>
+                                    Someone is trying to bypass client-side validation... 
+                                    Please fill in the verification code properly!
+                                </li>
+                            }
+                            {resetPasswordStatus === ResetPasswordStatuses.WRONG_VERIFICATION_CODE
+                            && 
+                                <li style={{
+                                    color: SERVER_SIDE_ERROR_BORDER_COLOR, 
+                                    fontWeight: 'bold', 
+                                    margin: '0 0 1rem 0'
+                                }}>
+                                    Wrong verification code!
+                                </li>
+                            }
+                        </ul>
                     </div>
                     <div className={styles.resetPassword}>
-                        <label htmlFor="signupPassword" className={styles.passwordLabel}>
+                        <label htmlFor="resetPasswordNewPassword" className={styles.passwordLabel}>
                             <p>3. Tell us your new password</p>
                             <input 
-                                id="signupPassword" 
+                                id="resetPasswordNewPassword" 
                                 style={{
                                     borderColor: borderColors[passwordInputState], 
                                     backgroundColor: backgroundColors[passwordInputState]
@@ -411,10 +448,10 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                                 {isPasswordVisible ? 'Hide' : 'Show'}
                             </button>
                         </label>
-                        <label htmlFor="signupConfirmPassword" className={styles.passwordLabel}>
+                        <label htmlFor="resetPasswordNewConfirmedPasswordpConfirmPassword" className={styles.passwordLabel}>
                             <p>Confirm the new password</p>
                             <input 
-                                id="signupConfirmPassword" 
+                                id="resetPasswordNewConfirmedPassword" 
                                 style={{
                                     borderColor: borderColors[confirmPasswordInputState], 
                                     backgroundColor: backgroundColors[confirmPasswordInputState]
@@ -429,27 +466,17 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                             </button>
                         </label>
                         <ul>
-                            {serverSideResetPasswordStatus === ResetPasswordStatuses.INVALID_PASSWORD
-                            && 
+                            {resetPasswordStatus === ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS
+                            &&
                                 <li style={{
                                     color: SERVER_SIDE_ERROR_BORDER_COLOR, 
                                     fontWeight: 'bold', 
                                     margin: '0 0 1rem 0'
                                 }}>
-                                    Invalid password! Please make sure that your password follows the given criteria.
+                                    Someone is trying to bypass client-side validation... Request blocked!
                                 </li>
                             }
-                            {serverSideResetPasswordStatus === ResetPasswordStatuses.MISMATCH_CONFIRM_PASSWORD
-                            && 
-                                <li style={{
-                                    color: SERVER_SIDE_ERROR_BORDER_COLOR, 
-                                    fontWeight: 'bold', 
-                                    margin: '0 0 1rem 0'
-                                }}>
-                                    Confirmed password does not match password! Please check if you key in the correct password/confirmed password.
-                                </li>
-                            }
-                            {serverSideResetPasswordStatus === ResetPasswordStatuses.SAME_PASSWORD
+                            {resetPasswordStatus === ResetPasswordStatuses.SAME_PASSWORD
                             && 
                                 <li style={{
                                     color: SERVER_SIDE_ERROR_BORDER_COLOR, 
@@ -459,11 +486,6 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                                     New password cannot be the same as the old password! Please key in a new password.
                                 </li>
                             }
-                            {Object.entries(PASSWORD_CONDITIONS).map(([key, value], index) => (
-                                <li key={key} ref={el => { passwordConditionsRef.current[index] = el; }}>
-                                    {value.name}
-                                </li>
-                            ))}
                         </ul>
                         <button 
                             className={styles.resetPasswordButton} 
@@ -474,6 +496,13 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                                 opacity: passwordInputState !== FieldState.VALID || confirmPasswordInputState !== FieldState.VALID ? 0.5 : 1,
                             }}
                         >Reset Password</button>
+                        <ul>
+                            {Object.entries(PASSWORD_CONDITIONS).map(([key, value], index) => (
+                                <li key={key} ref={el => { passwordConditionsRef.current[index] = el; }}>
+                                    {value.name}
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                     <div className={styles.resetPasswordSuccess}>
                         <p style={{ marginBottom: '15%' }}>4. Your password has been reset successfully!</p>

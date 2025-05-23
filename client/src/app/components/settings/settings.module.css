@@ -1,0 +1,156 @@
+.settingsOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--background-color);
+    z-index: var(--settings-z-index);
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 9fr 1fr;
+    grid-template-areas:
+        "options display"
+        "options buttons";
+}
+
+/* Floating buttons */
+.settingsFunctionalButtons {
+    grid-area: buttons;
+    display: flex;
+    border-top: 1px solid var(--settings-option-border-color);
+}
+
+.settingsFunctionalButtons button {
+    width: 100%;
+    border: none;
+    background-color: var(--insignificant-button-color);
+    transition-duration: 0.25s;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 1rem;
+    font-weight: 600;
+}
+
+.settingsFunctionalButtons button:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.saveButton {
+    background-color: var(--significant-button-color) !important;
+}
+
+.saveButton:hover {
+    background-color: var(--significant-button-hover-color) !important;
+}
+
+/* Settings options */
+.settingsOptions {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    grid-area: options;
+}
+
+.settingsOptions::-webkit-scrollbar {
+    width: 5px;
+}
+
+.settingsOptions::-webkit-scrollbar-thumb {
+    background-color: #484848;
+    border-radius: 10px;
+}
+
+.settingsOptions li {
+    padding: 10px;
+    border-bottom: 1px solid var(--settings-option-border-color);
+    margin: 0;
+    transition-duration: 0.25s;
+    cursor: pointer;
+}
+
+/* Display panel for the active settings option */
+.settingsOptionDisplay {
+    grid-area: display;
+    background-color: var(--settings-bg-color);
+    padding: 5%;
+    overflow-y: scroll;
+}
+
+.settingsOptionDisplay::-webkit-scrollbar {
+    width: 0;
+}
+
+.settingsContentChunk {
+    border-bottom: 1px solid var(--settings-option-border-color);
+    margin-bottom: 1rem;
+}
+
+/* Keyboard Shortcut Configuration */
+.keyboardShortcutDisplay table {
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.keyboardShortcutDisplay tr {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: center;
+    transition-duration: 0.25s;
+    border-radius: 0.5rem;
+    padding: 0 0.5rem;
+}
+
+.keyboardShortcutDisplay td {
+    padding: 1rem 0;
+}
+
+.keyboardShortcutDisplay td code {
+    background-color: var(--terminal-like-background-color);
+    width: 100%;
+    display: block;
+    padding: 0.5rem;
+    border: 1px solid var(--settings-option-border-color);
+    border-radius: 5px;
+}
+
+.keyboardShortcutDisplay tr:hover {
+    background-color: var(--settings-bg-hover-color);
+    font-weight: 600;
+}
+
+/* Code editor settings */
+/* .codeEditorSettingsDisplay {
+    
+} */
+
+.resizeHandler {
+    width: 0.35rem;
+    margin: 0 0.7rem 0 0.35rem;
+    transition-duration: 0.25s;
+    border-radius: 1000px;
+}
+
+.resizeHandler:hover {
+    background-color: var(--significant-button-color);
+}
+
+.demoEditor h2 {
+    margin-bottom: 1rem;
+}
+
+.codeEditorSettingsOptions {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.codeEditorSettingsOptions::-webkit-scrollbar {
+    width: 5px;
+}
+
+.codeEditorSettingsOptions::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 1000px;
+}

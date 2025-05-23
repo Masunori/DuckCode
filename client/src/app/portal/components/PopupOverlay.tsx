@@ -11,7 +11,12 @@ type PopupOverlayProps = {
 
 export default function PopupOverlay({ children, portalMode, referencePortalMode }: PopupOverlayProps) {
     return (
-        <div className={styles.overlay} style={{ display: portalMode === referencePortalMode ? 'block' : 'none' }}>
+        <div 
+            className={styles.overlay} 
+            style={{ 
+                display: portalMode === referencePortalMode ? 'block' : 'none' 
+            }}
+        >
             {children}
         </div>
     )

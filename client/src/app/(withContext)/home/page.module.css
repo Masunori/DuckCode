@@ -1,0 +1,284 @@
+/* Overall Home Layout */
+.home {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: 5rem 1fr 10rem;
+    grid-template-areas: 
+        "nav nav nav nav nav nav nav nav nav"
+        "evt inf inf inf inf inf inf gam gam"
+        ". . . mess mess mess . . .";
+}
+
+/* Home navbar */
+.homeNavbar {
+    display: grid;
+    grid-area: nav;
+    grid-template-columns: 1fr 4rem;
+}
+
+.userInfo {
+    display: grid;
+    margin: 1rem;
+    grid-template-columns: 3rem 15rem 6rem;
+    align-items: center;
+    column-gap: 2px;
+    background-color: var(--terminal-like-background-color);
+    width: fit-content;
+}
+
+.userInfo img {
+    width: 100%;
+    border: 3px solid var(--first-layer-background-color);
+}
+
+.usernameLevelExp {
+    height: 100%;
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    align-items: center;
+}
+
+.usernameLevelExp p {
+    display: block;
+    height: 100%;
+}
+
+.expBarWithLevel {
+    display: grid;
+    height: 100%;
+    grid-template-columns: 2em 1fr 2em;
+    column-gap: 2px;
+}
+
+.expBarWithLevel span {
+    display: block;
+    text-align: center;
+}
+
+.expBarWithLevel span:first-of-type {
+    background-color: var(--significant-button-color);
+}
+
+.expBarWithLevel span:last-of-type {
+    background-color: var(--first-layer-background-color);
+}
+
+.expBarTotal {
+    background-color: var(--first-layer-background-color);
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.expBarAcquired {
+    height: 100%;
+    background-color: var(--significant-button-color);
+    overflow: hidden;
+}
+
+@keyframes runningExpBar {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+.expBarRunner {
+    animation: runningExpBar 5s linear infinite;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to right, var(--significant-button-color), rgb(111, 166, 206));
+}
+
+.rank {
+    background-color: brown;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rank p {
+    display: block;
+}
+
+.toSettings {
+    background-color: transparent;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border: none;
+}
+
+.toSettings img {
+    filter: brightness(0) saturate(100%) invert(1) sepia(1) hue-rotate(200deg) saturate(5) brightness(1.2);
+    scale: 1.5;
+}
+
+.toSettings:hover img {
+    filter: brightness(0) saturate(100%) invert(0.6) sepia(1) saturate(0) brightness(0.8);
+}
+
+/* Event menu: A set of buttons that leads to temporary/rotating content */
+.eventMenu {
+    grid-area: evt;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stylizedEventMenuButton {
+    position: relative;
+}
+
+.stylizedEventMenuButton button {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    font-size: 1.5rem;
+    padding: 1.5rem 0;
+    background-color: var(--insignificant-button-hover-color);
+    z-index: var(--stylized-game-menu-button-z-index);
+    border: 1px solid #888;
+}
+
+.stylizedEventMenuButtonDescription {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition-duration: 0.25s;
+    z-index: var(--stylized-game-menu-button-description-z-index);
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 0.5em;
+}
+
+.stylizedEventMenuButtonOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    transition-duration: 0.25s;
+    z-index: var(--stylized-game-menu-button-z-index);
+}
+
+.stylizedEventMenuButton:hover .stylizedEventMenuButtonOverlay {
+    width: 0%;
+}
+
+.stylizedEventMenuButton:hover .stylizedEventMenuButtonDescription {
+    left: 100%;
+}
+
+.stylizedEventMenuButton button:hover {
+    cursor: pointer;
+}
+
+/* News carousel */
+.newsCarousel {
+    grid-area: inf;
+    display: grid;
+    padding: 4rem;
+    grid-template-columns: 2rem 1fr 2rem;
+    grid-template-rows: 1fr 3rem;
+    grid-template-areas: 
+        "left tab right"
+        ". indicators .";
+    column-gap: 1rem;
+}
+
+.leftButton {
+    grid-area: "left";
+    display: block;
+}
+
+.rightButton {
+    grid-area: "right";
+    display: block;
+}
+
+.allNewsTabs {
+    border: 1px solid white;
+    grid-area: "tab";
+    display: flex;
+    overflow: hidden;
+}
+
+.allNewsTabs div {
+    flex: 0 0 100%;
+    height: 100%;
+    background-color: var(--second-layer-background-color);
+}
+
+/* Game menu: a set of buttons that leads to game modes and permanent features */
+.gameMenu {
+    grid-area: gam;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stylizedGameMenuButton {
+    position: relative;
+}
+
+.stylizedGameMenuButton button {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    font-size: 1.5rem;
+    padding: 1.5rem 0;
+    background-color: var(--insignificant-button-hover-color);
+    z-index: var(--stylized-game-menu-button-z-index);
+    border: 1px solid #888;
+}
+
+.stylizedGameMenuButtonDescription {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition-duration: 0.25s;
+    z-index: var(--stylized-game-menu-button-description-z-index);
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 0.5em;
+}
+
+.stylizedGameMenuButtonOverlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    transition-duration: 0.25s;
+    z-index: var(--stylized-game-menu-button-z-index);
+}
+
+.stylizedGameMenuButton:hover .stylizedGameMenuButtonOverlay {
+    width: 0%;
+}
+
+.stylizedGameMenuButton:hover .stylizedGameMenuButtonDescription {
+    left: -100%;
+}
+
+.stylizedGameMenuButton button:hover {
+    cursor: pointer;
+}
+
+/* Chat panel */
+.chatPanel {
+    grid-area: mess;
+    border: 1px solid white;
+}

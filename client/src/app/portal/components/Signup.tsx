@@ -4,6 +4,7 @@ import styles from '../page.module.css';
 import PopupOverlay from "./PopupOverlay";
 import { PASSWORD_CONDITIONS, USERNAME_CONDITIONS } from "./fieldConditions";
 import { SignupStatuses } from "@/app/api/portal/signup/SignupStatuses";
+import { signUp } from "@/lib/apiClient/user";
 
 type SignupProps = {
     portalMode: PortalMode;
@@ -37,7 +38,7 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
     const [passwordInputState, setPasswordInputState] = useState(FieldState.EMPTY);
     const [confirmPasswordInputState, setConfirmPasswordInputState] = useState(FieldState.EMPTY);
 
-    const [serverSideSignupStatus, setServerSideSignupStatus] = useState<SignupStatuses[] | null>(null);
+    const [signupStatus, setSignupStatus] = useState<SignupStatuses[] | null>(null);
 
     const borderColors = {
         [FieldState.EMPTY]: EMPTY_STRING_BORDER_COLOR,
@@ -165,35 +166,34 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
 
     async function signup(event: React.FormEvent<HTMLFormElement>): Promise<void> {
         event.preventDefault();
-        const form = event.target as HTMLFormElement;
-        const formData = new FormData(form);
 
-        await fetch(form.action, {
-            method: 'POST',
-            body: formData
-        })
+        if (
+            usernameInputState != FieldState.VALID
+            || emailInputState != FieldState.VALID
+            || passwordInputState != FieldState.VALID
+            || confirmPasswordInputState != FieldState.VALID
+        ) {
+            setSignupStatus([SignupStatuses.INVALID_CLIENT_SIDE_CREDENTIALS]);
+            return;
+        }
+
+        await signUp(
+            username, email, password, confirmPassword
+        )
         .then(response => {
             if (response.status === 400) {
-                response.json().then(data => {
-                    const code: SignupStatuses[] = data.code;
-                    setServerSideSignupStatus(code);
+                const data = response.data;
 
-                    if (code.includes(SignupStatuses.USERNAME_TAKEN) || code.includes(SignupStatuses.INVALID_USERNAME)) {
-                        setUsernameInputState(FieldState.SERVER_SIDE_INVALID);
-                    }
+                const code: SignupStatuses[] = data.code;
+                setSignupStatus(code);
 
-                    if (code.includes(SignupStatuses.EMAIL_USED) || code.includes(SignupStatuses.INVALID_EMAIL)) {
-                        setEmailInputState(FieldState.SERVER_SIDE_INVALID);
-                    }
+                if (code.includes(SignupStatuses.USERNAME_TAKEN)) {
+                    setUsernameInputState(FieldState.SERVER_SIDE_INVALID);
+                }
 
-                    if (code.includes(SignupStatuses.INVALID_PASSWORD)) {
-                        setPasswordInputState(FieldState.SERVER_SIDE_INVALID);
-                    }
-
-                    if (code.includes(SignupStatuses.MISMATCH_CONFIRM_PASSWORD)) {
-                        setConfirmPasswordInputState(FieldState.SERVER_SIDE_INVALID);
-                    }
-                });
+                if (code.includes(SignupStatuses.EMAIL_USED)) {
+                    setEmailInputState(FieldState.SERVER_SIDE_INVALID);
+                }
             }
         })
         .catch(error => {
@@ -224,7 +224,7 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                         ></input>
                     </label>
                     <ul>
-                        {serverSideSignupStatus?.includes(SignupStatuses.USERNAME_TAKEN) 
+                        {signupStatus?.includes(SignupStatuses.USERNAME_TAKEN) 
                         && 
                             <li style={{
                                 color: SERVER_SIDE_ERROR_BORDER_COLOR, 
@@ -232,16 +232,6 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                                 margin: '0 0 1rem 0'
                             }}>
                                 Username already taken! Please use a different name, or log in if you already have an account.
-                            </li>
-                        }
-                        {serverSideSignupStatus?.includes(SignupStatuses.INVALID_USERNAME) 
-                        && 
-                            <li style={{
-                                color: SERVER_SIDE_ERROR_BORDER_COLOR, 
-                                fontWeight: 'bold', 
-                                margin: '0 0 1rem 0'
-                            }}>
-                                Invalid username! Please make sure that your username follows the given criteria.
                             </li>
                         }
                         {Object.entries(USERNAME_CONDITIONS).map(([key, value], index) => (
@@ -265,7 +255,7 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                         ></input>
                     </label>
                     <ul>
-                        {serverSideSignupStatus?.includes(SignupStatuses.EMAIL_USED) 
+                        {signupStatus?.includes(SignupStatuses.EMAIL_USED) 
                         &&  
                             <li style={{
                                 color: SERVER_SIDE_ERROR_BORDER_COLOR, 
@@ -273,16 +263,6 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                                 margin: '0 0 1rem 0'
                             }}>
                                 This email is already binded to an account! Please use a different email address, or log in if you already have an account.
-                            </li>
-                        }
-                        {serverSideSignupStatus?.includes(SignupStatuses.INVALID_EMAIL) 
-                        && 
-                            <li style={{
-                                color: SERVER_SIDE_ERROR_BORDER_COLOR, 
-                                fontWeight: 'bold', 
-                                margin: '0 0 1rem 0'
-                            }}>
-                                Invalid email! Please make sure that your email follows the conventional email format.
                             </li>
                         }
                     </ul>
@@ -321,32 +301,23 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                         </button>
                     </label>
                     <ul>
-                        {serverSideSignupStatus?.includes(SignupStatuses.INVALID_PASSWORD) 
-                        && 
-                            <li style={{
-                                color: SERVER_SIDE_ERROR_BORDER_COLOR, 
-                                fontWeight: 'bold', 
-                                margin: '0 0 1rem 0'
-                            }}>
-                                Invalid password! Please make sure that your password follows the given criteria.
-                            </li>
-                        }
-                        {serverSideSignupStatus?.includes(SignupStatuses.MISMATCH_CONFIRM_PASSWORD) 
-                        && 
-                            <li style={{
-                                color: SERVER_SIDE_ERROR_BORDER_COLOR, 
-                                fontWeight: 'bold', 
-                                margin: '0 0 1rem 0'
-                            }}>
-                                Confirmed password does not match password! Please check if you key in the correct password/confirmed password.
-                            </li>
-                        }
                         {Object.entries(PASSWORD_CONDITIONS).map(([key, value], index) => (
                             <li key={key} ref={el => { passwordConditionsRef.current[index] = el; }}>
                                 {value.name}
                             </li>
                         ))}
                     </ul>
+
+                    {signupStatus?.includes(SignupStatuses.INVALID_CLIENT_SIDE_CREDENTIALS)
+                    && 
+                        <p style={{
+                            color: SERVER_SIDE_ERROR_BORDER_COLOR, 
+                            fontWeight: 'bold', 
+                            margin: '0 0 1rem 0'
+                        }}>
+                            Someone is trying to bypass client-side validation... Request blocked!
+                        </p>
+                    }
 
                     <button 
                         type="submit" 

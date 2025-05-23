@@ -1,23 +1,16 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { PASSWORD_CONDITIONS, USERNAME_CONDITIONS } from "@/app/portal/components/fieldConditions";
 import { NextRequest, NextResponse } from 'next/server';
 import { SignupStatuses } from '@/app/api/portal/signup/SignupStatuses';
-
-type User = {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-}
+import { PRISTINE_USER_PREFERENCE, User, UserPreference } from '@/app/userPrefs/userPrefsUtils';
 
 export async function POST(request: NextRequest) {
     try {
-        const formData = await request.formData();
-        const username = formData.get('username')?.toString() || '';
-        const email = formData.get('email')?.toString() || '';
-        const password = formData.get('password')?.toString() || '';
-        const confirmPassword = formData.get('confirmPassword')?.toString() || '';
+        const requestData = await request.json();
+
+        const username = requestData.username;
+        const email = requestData.email;
+        const password = requestData.password;
 
         const filePath = path.join(process.cwd(), 'src', 'app', 'api', 'portal', 'dummyUserDB.json');
         const file = await fs.readFile(filePath, 'utf-8');
@@ -25,30 +18,6 @@ export async function POST(request: NextRequest) {
         const users: User[] = data.users;
 
         const listOfErrors: SignupStatuses[] = [];
-
-        const isValidUsername = Object.entries(USERNAME_CONDITIONS).every((condition) => {
-            return condition[1].checkFn(username); // [key, condition]
-        });
-        if (!isValidUsername) {
-            listOfErrors.push(SignupStatuses.INVALID_USERNAME);
-        }
-
-        const isValidEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})*$/.test(email);
-        if (!isValidEmail) {
-            listOfErrors.push(SignupStatuses.INVALID_EMAIL);
-        }
-
-        const isValidPassword = Object.entries(PASSWORD_CONDITIONS).every((condition) => {
-            return condition[1].checkFn(password); // [key, condition]
-        });
-        if (!isValidPassword) {
-            listOfErrors.push(SignupStatuses.INVALID_PASSWORD);
-        }
-
-        const isPasswordMatch = password === confirmPassword;
-        if (!isPasswordMatch) {
-            listOfErrors.push(SignupStatuses.MISMATCH_CONFIRM_PASSWORD);
-        }
 
         const userExists = users.some((user => user.name === username));
         if (userExists) {
@@ -72,6 +41,10 @@ export async function POST(request: NextRequest) {
             name: username,
             email: email,
             password: password,
+            level: 1,
+            exp: 0,
+            rank: "Rookie",
+            userPreference: structuredClone(PRISTINE_USER_PREFERENCE),
         };
         data.users.push(newUser);
         await fs.writeFile(filePath, JSON.stringify(data, null, 4));

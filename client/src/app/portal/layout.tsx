@@ -1,4 +1,4 @@
-import StarryBackground from "../components/StarryBackground";
+import StarryBackground from "../components/backgrounds/StarryBackground";
 
 export default function PortalLayout({
     children,

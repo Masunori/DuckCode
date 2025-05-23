@@ -4,10 +4,20 @@ import PopupOverlay from "@/app/portal/components/PopupOverlay";
 import { PortalMode } from "@/app/portal/PortalMode"; 
 import styles from '../page.module.css';
 import { Dispatch, SetStateAction, useState } from "react";
+import { login } from "../../../lib/apiClient/user";
+import { useUser } from "@/app/components/contexts/UserContext";
+import { User } from "@/app/userPrefs/userPrefsUtils";
+import { useRouter } from "next/navigation";
 
 type LoginProps = {
     portalMode: PortalMode;
     setPortalMode: Dispatch<SetStateAction<PortalMode>>;
+}
+
+enum LoginStatus {
+    NONE,
+    EMPTY_FIELDS,
+    WRONG_USERNAME_OR_PASSWORD
 }
 
 export default function Login({ portalMode, setPortalMode }: LoginProps) {
@@ -15,38 +25,43 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-    const [loginError, setLoginError] = useState(false);
+    const [loginError, setLoginError] = useState(LoginStatus.NONE);
     const ERROR_COLOR = '#FF5C00';
 
-    async function login(event: React.FormEvent<HTMLFormElement>): Promise<void> {
-        event.preventDefault();
-        const form = event.target as HTMLFormElement;
-        const formData = new FormData(form);
+    const { setUser } = useUser();
 
-        await fetch(form.action, {
-            method: 'POST',
-            body: formData
-        })
+    const router = useRouter();
+
+    async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        if (username === '' || password === '') {
+            setLoginError(LoginStatus.EMPTY_FIELDS);
+            return;
+        }
+
+        await login(username, password)
         .then(response => {
             if (response.status === 401) {
-                setLoginError(true);
+                setLoginError(LoginStatus.WRONG_USERNAME_OR_PASSWORD);
             }
+
+            setUser(response.data.user as User);
+            router.push('/home');
         })
         .catch(error => {
-            console.error('Network or unexpected error:', error);
-        });
+            console.error(`An unexpected error occurred: ${error}`)
+        })
     }
 
     function handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>) {
         const value = event.target.value;
         setUsername(value);
-        setLoginError(false);
     }
 
     function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
         const value = event.target.value;
         setPassword(value);
-        setLoginError(false);
     }
     
     const children = 
@@ -56,7 +71,7 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
 
                 <h2>Welcome back to DuckCode!</h2>
                 <h4>Please login to continue</h4>
-                <form action={"/api/portal/login"} method="POST" onSubmit={login}>
+                <form onSubmit={handleLogin}>
                     <label htmlFor="loginUsername">
                         <p>Username</p>
                         <input 
@@ -81,7 +96,7 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
                         </button>
                     </label>
                     <ul>
-                        {loginError && 
+                        {loginError === LoginStatus.WRONG_USERNAME_OR_PASSWORD && 
                             <li style={{ 
                                 color: ERROR_COLOR,
                                 fontWeight: 'bold', 
@@ -89,11 +104,26 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
                             >
                                 Username or password is incorrect!
                         </li>}
+                        {loginError === LoginStatus.EMPTY_FIELDS && 
+                            <li style={{ 
+                                color: ERROR_COLOR,
+                                fontWeight: 'bold', 
+                                margin: '0 0 1rem 0' }}
+                            >
+                                Username and password cannot be empty!
+                        </li>}
                     </ul>
 
                     <p className={styles.forgotPassword} onClick={() => setPortalMode(PortalMode.ResetPassword)}>Forgot your password?</p>
 
-                    <button type="submit">Login</button>
+                    <button 
+                        type="submit"
+                        disabled={username === '' || password === ''}
+                        style={{
+                            cursor: username === '' || password === '' ? 'not-allowed' : 'pointer',
+                            opacity: username === '' || password === '' ? 0.5 : 1
+                        }}
+                    >Login</button>
 
                     <div className={styles.or}>
                         <span></span>

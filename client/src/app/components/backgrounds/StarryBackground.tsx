@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./layout.module.css";
-import debounce from "../utils/debounce";
+import debounce from "../../utils/debounce";
 
 type Star = {
     size: number;
@@ -11,7 +11,7 @@ type Star = {
     delay: number;
 }
 
-export default function PortalLayout({
+export default function StarryBackground({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -23,7 +23,6 @@ export default function PortalLayout({
     const [hydrated, setHydrated] = useState(false);
 
     const generateStars = useCallback(() => {
-        console.log("Generating stars...");
         if (!hydrated) {
             return [];
         }
@@ -59,7 +58,6 @@ export default function PortalLayout({
         if (!hydrated) return; // Ensure the container exists and is hydrated
 
         setStars(generateStars());
-        window.addEventListener("resize", () => console.log("Resized"));
         window.addEventListener("resize", debouncedGenerateStars);
         return () => {
             window.removeEventListener("resize", debouncedGenerateStars);

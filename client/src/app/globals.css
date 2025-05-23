@@ -15,9 +15,9 @@
   
   --background-color: #121212;
   --first-layer-background-color: #242424;
-  --second-layer-background-color: #484848;
-  --third-layer-bakground-color: #525252;
-  --fourth-layer-background-color: #606060;
+  --second-layer-background-color: #363636;
+  --third-layer-background-color: #424242;
+  --fourth-layer-background-color: #484848;
   --terminal-like-background-color: #1e1e1e;
 
   --confirmation-popup-background-color: #242424;
@@ -40,30 +40,23 @@
   --invalid-code-border-color: #FF0000;
   --valid-code-bg-color: #004400;
   --valid-code-border-color: #00DD00;
-
-  --screen-padding: 20px;
-  --navbar-padding: 50px;
   
-  --settings-option-bg-color: #363636;
-  --settings-bg-color: #484848;
-  --settings-option-border-color: #848484;
+  --settings-option-bg-color: #242424;
+  --settings-bg-color: #323232;
+  --settings-bg-hover-color: #424242;
+  --settings-option-border-color: #606060;
 
-  --styled-background-z-index: 0;
-  --home-z-index: 1;
-  --output-tcpanel-z-index: 3;
-  --qn-editor-z-index: 5;
-  --landing-z-index: 9;
-  --login-signup-overlay-z-index: 10;
-  --login-signup-z-index: 11;
+  --landing-z-index: 1;
+  --login-signup-overlay-z-index: 2;
+  --login-signup-z-index: 3;
+
+  --stylized-game-menu-button-z-index: 2;
+  --stylized-game-menu-button-description-z-index: 1;
+
   --navbar-z-index: 15;
   --settings-z-index: 20;
-  --prog-lang-dropdown-z-index: 22;
-  --code-editor-font-z-index: 21;
-  --hoverable-z-index: 25;
-  --settings-button-z-index: 28;
-  --key-binding-overlay-z-index: 30;
-  --confirmation-popup-z-index: 30;
-  --unsupported-z-index: 1000;
+  --popup-overlay-z-index: 30;
+  --popup-z-index: 31;
 }
 
 /* global reset or common styles */
@@ -88,7 +81,7 @@
   font-style: normal;
 }
 
-body {
+body, p, h1, h2, h3, h4, h5, h6, button {
   font-family: 'PF Din Text Pro', Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

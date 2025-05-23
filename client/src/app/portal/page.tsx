@@ -9,8 +9,8 @@ export default function Page() {
             <div className={styles.content}>
                 <h1>It&apos;s more than just writing code... It&apos;s the Duck way of writing Code!</h1>
                 <p>Dive into gamified tutorials, challenge peers in ranked matches, and participate in simulated contests with prizes!</p>
-                <PortalClient />
             </div>
+            <PortalClient />
         </div> 
     )
 }
