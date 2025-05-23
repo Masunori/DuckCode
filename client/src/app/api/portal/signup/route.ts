@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { NextRequest, NextResponse } from 'next/server';
 import { SignupStatuses } from '@/app/api/portal/signup/SignupStatuses';
-import { PRISTINE_USER_PREFERENCE, User, UserPreference } from '@/app/userPrefs/userPrefsUtils';
+import { PRISTINE_USER_PREFERENCE, User } from '@/app/userPrefs/userPrefsUtils';
 
 export async function POST(request: NextRequest) {
     try {
