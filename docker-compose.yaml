@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  client: # Frontend Next.js service
+    build:
+      context: ./client # Path to the client Dockerfile directory
+      dockerfile: Dockerfile
+      args:
+        # You can pass build-time arguments here if needed
+        # Example: NEXT_PUBLIC_API_URL: http://localhost:5001/api # For local build, but better to set at runtime
+        NEXT_PUBLIC_API_URL: http://server:8080/api # For container-to-container communication
+    ports:
+      - "5000:3000" # Map host port 5000 to container port 3000 (Next.js default)
+    environment:
+      # HOSTNAME: 0.0.0.0 # Already set in Dockerfile, but can be overridden
+      # PORT: 3000 # Already set in Dockerfile
+      NEXT_PUBLIC_API_URL: http://server:8080/api # Runtime URL for client to reach backend
+      # Add any other Next.js specific runtime environment variables here
+      # e.g. NEXT_PUBLIC_SOME_KEY: your_value
+    depends_on:
+      - server # Ensures server starts before client (optional, but good practice)
+    networks:
+      - app-network
+    # For development, you might want to add volume mounts for live reloading
+    # Be cautious with Next.js and node_modules in volumes
+    # volumes:
+    #   - ./client:/app/client
+    #   - /app/client/node_modules # Exclude node_modules from being overwritten by host
+    #   - /app/client/.next # Exclude .next from being overwritten
+
+  server: # Backend Node.js service
+    build:
+      context: ./server # Path to the server Dockerfile directory
+      dockerfile: Dockerfile
+    ports:
+      - "5001:8080" # Map host port 5001 to container port 8080
+    environment:
+      PORT: 8080 # Port for the backend server to listen on inside the container
+      DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-adminpass}@db:5432/${DB_NAME:-mydatabase}
+      # Add any other backend specific runtime environment variables here
+      # e.g. JWT_SECRET: your_secret
+    depends_on:
+      - db # Ensures database is ready (or at least started) before backend
+    networks:
+      - app-network
+    # For development:
+    # volumes:
+    #   - ./server:/app/server
+    #   - /app/server/node_modules
+
+  db: # PostgreSQL Database service
+    image: postgres:15-alpine # Use a specific version of PostgreSQL
+    ports:
+      - "5432:5432" # Map host port 5432 to container port 5432 (Postgres default)
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-adminpass}
+      POSTGRES_DB: ${DB_NAME:-mydatabase}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persist database data
+    networks:
+      - app-network
+    # Healthcheck to ensure DB is ready before services depending on it try to connect (optional but good)
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-mydatabase}"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+
+volumes:
+  postgres_data: # Defines the named volume for data persistence
+
+networks:
+  app-network: # Defines the custom network
+    driver: bridge
