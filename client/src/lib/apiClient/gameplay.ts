@@ -1,4 +1,4 @@
-import { CodeSubmissionResponse, TestCaseResult } from '@/app/gameplay/gameplayUtils';
+import { CodeSubmissionResponse, TestCaseResult } from '@/app/(withContext)/gameplay/gameplayUtils';
 import { PLKeys, PROGRAMMING_LANGUAGES } from '@/app/components/settings/settingsUtils';
 import sleep from '@/app/utils/delay';
 

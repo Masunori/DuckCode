@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Question } from "@/app/gameplay/gameplayUtils";
 import { readFileSync } from "fs";
+import { Question } from "@/app/(withContext)/gameplay/gameplayUtils";
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
