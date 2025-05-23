@@ -1,0 +1,105 @@
+/* :root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+:root {
+  /* --normal-text-font: 'PF Din Text Pro', 'sans-serif'; */
+  
+  --background-color: #121212;
+  --first-layer-background-color: #242424;
+  --second-layer-background-color: #363636;
+  --third-layer-background-color: #424242;
+  --fourth-layer-background-color: #484848;
+  --terminal-like-background-color: #1e1e1e;
+
+  --confirmation-popup-background-color: #242424;
+  
+  --significant-button-color: #007fff;
+  --significant-button-hover-color: #0560bc;
+  --significant-button-hover-heavier-color: #163d63;
+  --insignificant-button-color: #363636;
+  --insignificant-button-hover-color: #484848;
+
+  --exp-bar-color: #007fff;
+  --exp-bar-color-tail: #9ccdff;
+
+  --code-fragment-font: monospace;
+  --font-colour: #ccc;
+  --error-font-colour: #ff0000;
+  --font-colour-hover: #999;
+
+  --invalid-code-bg-color: #640A1E;
+  --invalid-code-border-color: #FF0000;
+  --valid-code-bg-color: #004400;
+  --valid-code-border-color: #00DD00;
+  
+  --settings-option-bg-color: #242424;
+  --settings-bg-color: #323232;
+  --settings-bg-hover-color: #424242;
+  --settings-option-border-color: #606060;
+
+  --landing-z-index: 1;
+  --login-signup-overlay-z-index: 2;
+  --login-signup-z-index: 3;
+
+  --stylized-game-menu-button-z-index: 2;
+  --stylized-game-menu-button-description-z-index: 1;
+
+  --navbar-z-index: 15;
+  --settings-z-index: 20;
+  --popup-overlay-z-index: 30;
+  --popup-z-index: 31;
+}
+
+/* global reset or common styles */
+@font-face {
+  font-family: 'HYWenHei';
+  src: url('../../public/fonts/zhcn.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PF Din Text Pro';
+  src: url("../../public/fonts/PFDinTextPro-Regular.ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PF Din Text Pro';
+  src: url("../../public/fonts/PFDinTextPro-Bold.ttf");
+  font-weight: 700;
+  font-style: normal;
+}
+
+body, p, h1, h2, h3, h4, h5, h6, button {
+  font-family: 'PF Din Text Pro', Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}

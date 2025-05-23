@@ -10,3 +10,5 @@ You can click on [this](duck-code.vercel.app) link to take a look at the UI.
 - [/gameplay](duck-code.vercel.app/gameplay) leads you to the gameplay UI. Alternatively, click on Play Ranked Matches from the main game interface page.
 
 
+The frontend of DuckCode is being rewritten in Next.js, but the old mockup is available [here](duck-code.vercel.app).
+

@@ -1,0 +1,429 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: calc(100vw);
+    height: calc(100vh);
+    z-index: var(--landing-z-index);
+}
+
+.content {
+    width: 50vw;
+    height: fit-content;
+}
+
+.content h1 {
+    margin: 1rem 0;
+    font-size: 3rem;
+    text-align: center;
+}
+
+.content p {
+    font-size: 1.155rem;
+    text-align: center;
+    margin: 0.5rem 0;
+}
+
+.loginButton {
+    background-color: var(--significant-button-color);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--fourth-layer-background-color);
+    bottom: 50px;
+    transition-duration: 0.25s;
+    margin: 1rem auto;
+    width: 10rem;
+    display: block;
+}
+
+.loginButton:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+.signupButton {
+    background-color: var(--insignificant-button-color);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--fourth-layer-background-color);
+    bottom: 50px;
+    transition-duration: 0.25s;
+    margin: 1remauto;
+    width: 10rem;
+    display: block;
+}
+
+.signupButton:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.toLanding {
+    cursor: pointer;
+    position: fixed;
+    top: 2vh;
+    right: 2vw;
+}
+
+.toLanding:hover {
+    text-decoration: underline;
+}
+
+/* overlays for sign up and login */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: var(--login-signup-overlay-z-index);
+}
+
+/* login, signup and reset password */
+@keyframes illuminating-border {
+    to {
+      --border-angle: 360deg;
+      --border-angle-2: 540deg;
+    }
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --border-angle-2 {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 180deg;
+}
+
+.popupBorder {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(min(max(30vw, 400px), 600px));
+    height: 60vh;
+    padding: 1px;
+    z-index: var(--login-signup-z-index);
+    --border-angle: 0deg;
+    --border-angle-2: 180deg;
+    color: var(--foreground);
+    border: 1px solid var(--third-layer-background-color);
+    padding: 2px;
+    display: flex;
+    border-radius: 0.75rem;
+    background-color: transparent;
+    background-image: conic-gradient(from var(--border-angle) at 50% 50%, 
+                                    transparent, 
+                                    var(--significant-button-color) 10%, 
+                                    transparent 30%, 
+                                    transparent),
+                      conic-gradient(from var(--border-angle-2) at 50% 50%, 
+                                    transparent, 
+                                    var(--significant-button-color) 10%, 
+                                    transparent 30%, 
+                                    transparent);
+    animation: illuminating-border 4s linear infinite;
+    transition-duration: 0.25s;
+    overflow: hidden;
+}
+
+.popup {
+    position: relative;
+    width: 100%;
+    background-color: var(--first-layer-background-color);
+    padding: 1rem;
+    border-radius: 0.60rem;
+    height: calc(60vh - 4px);
+    overflow: auto;
+}
+
+.popup .closePopup {
+    border: none;
+    border-radius: 1000px;
+    background-color: transparent;
+    font-size: 2rem;
+    top: 0;
+    position: sticky;
+    left: 100%;
+    transition-duration: 0.25s;
+}
+
+.popup .closePopup:hover {
+    cursor: pointer;
+    color: var(--fourth-layer-background-color);
+}
+
+.popup h2, .popup h4 {
+    text-align: center;
+    margin: 0.75remauto;
+}
+
+.popup form {
+    display: flex;
+    flex-direction: column;
+}
+
+.popup form input {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 1rem 0;
+    padding: 0.25rem;
+    background-color: var(--second-layer-background-color);
+    border: 2px solid var(--fourth-layer-background-color);
+    border-radius: 3px;
+    font-family: var(--code-fragment-font);
+    transition: 0.25s;
+}
+
+.popup form input:focus {
+    outline: none;
+}
+
+.popup form label p {
+    text-align: left;
+    margin-left: 0.5rem;
+}
+
+.passwordLabel {
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+    grid-template-rows: 1.5rem 1fr;
+    column-gap: 1rem;
+}
+
+.passwordLabel p {
+    grid-row: 1;
+    grid-column: 1;
+    align-self: center;
+}
+
+.passwordLabel input {
+    grid-row: 2;
+    grid-column: 1;
+}
+
+.passwordLabel button {
+    font-family: var(--code-fragment-font);
+    background-color: var(--insignificant-button-color);
+    border-radius: 0.5rem;
+    height: 1.5rem;
+    border: 1px solid var(--fourth-layer-background-color);
+    transition-duration: 0.25s;
+    align-self: center;
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.passwordLabel button:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.popup button[type="submit"] {
+    background-color: var(--significant-button-color);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--fourth-layer-background-color);
+    bottom: 50px;
+    transition-duration: 0.25s;
+    margin: 0.5rem 0;
+    width: 100%;
+}
+
+.popup button[type="submit"]:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+/* the separator between traditional login and third-party login */
+.or {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+.or span {
+    height: 2px;
+    background-color: var(--fourth-layer-background-color);
+    align-self: center;
+}
+
+.or h4 {
+    align-self: center;
+}
+
+/* third-party login */
+.alternativeOptions {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 1rem 0;
+}
+
+.alternativeOptions button {
+    background-color: var(--insignificant-button-color);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--fourth-layer-background-color);
+    transition-duration: 0.25s;
+}
+
+.alternativeOptions button:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.popup ul {
+    padding: 0 1rem;
+    list-style-type: none;
+    margin: 1rem 0;
+}
+
+.forgotPassword {
+    text-align: right;
+    margin: 0 1rem 1rem 0;
+}
+
+.forgotPassword:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Reset Password */
+.otpInputContainer {
+    position: relative;
+}
+
+.otpInput {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    pointer-events: none;
+    margin: 0.5rem 0;
+}
+
+.otpInput input {
+    width: 2rem;
+    height: 2rem;
+    margin: 0 0.5em
+}
+
+.otpInputOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.emailVerification input, .resetPassword input {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 1rem 0;
+    padding: 0.25rem;
+    background-color: var(--second-layer-background-color);
+    border: 2px solid var(--fourth-layer-background-color);
+    border-radius: 3px;
+    font-family: var(--code-fragment-font);
+    transition: 0.25s;
+}
+
+.emailVerification input:focus, .resetPassword input:focus {
+    outline: none;
+}
+
+.emailVerification button, .otp button {
+    background-color: var(--insignificant-button-color);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--fourth-layer-background-color);
+    bottom: 50px;
+    transition-duration: 0.25s;
+    width: 100%;
+}
+
+.emailVerification button:hover, .otp button:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.emailVerification, .otp, .resetPassword, .resetPasswordSuccess {
+    height: 25%;
+    padding-top: 10%;
+}
+
+.popupHeightLimiter {
+    width: 100%;
+    background-color: var(--first-layer-background-color);
+    padding: 1rem;
+    border-radius: 0.60rem;
+    height: calc(60vh - 4px);
+    overflow: hidden;
+    position: relative;
+}
+
+.resetPasswordButton, .resetPasswordSuccess button {
+    background-color: var(--significant-button-color);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--fourth-layer-background-color);
+    bottom: 50px;
+    transition-duration: 0.25s;
+    width: 100%;
+}
+
+.resetPasswordButton:hover, .resetPasswordSuccess button:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+.resetPasswordPopup {
+    scrollbar-width: none;
+    padding: 0 1rem;
+    overflow-y: hidden;
+    height: calc(240vh - 4px);
+}
+
+.popupHeightLimiter .closePopup {
+    border: none;
+    border-radius: 1000px;
+    background-color: transparent;
+    font-size: 2rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    transition-duration: 0.25s;
+    z-index: calc(var(--login-signup-z-index) + 1);
+}
+
+.popupHeightLimiter .closePopup:hover {
+    cursor: pointer;
+    color: var(--fourth-layer-background-color);
+}
+
+.resetPasswordPopup .closePopup {
+    top: 1rem;
+    right: 0;
+}
+
+.resetPasswordPopup::-webkit-scrollbar {
+    width: 0;
+}
+
+.resetPasswordPopup::-webkit-scrollbar-thumb {
+    width: 0;
+}
+
+.resetPasswordWarning {
+    color: #FFC107;
+    font-size: 1.1rem;
+    text-align: center;
+    margin: 0.5rem 0 1rem;
+}

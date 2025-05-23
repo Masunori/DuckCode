@@ -1,0 +1,25 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "name": "duckcode",
+            "email": "dmd1281990@gmail.com",
+            "password": "Dmd1281990!",
+            "level": 1,
+            "exp": 0,
+            "rank": "Rookie",
+            "userPreference": {
+                "fontSize": 16,
+                "language": "JavaScript",
+                "editorOptions": {
+                    "enableMinimap": true,
+                    "lineNumbers": "On",
+                    "renderWhiteSpace": "None",
+                    "tabSize": 4,
+                    "wordWrap": "Off",
+                    "wordWrapColumn": 80
+                }
+            }
+        }
+    ]
+}

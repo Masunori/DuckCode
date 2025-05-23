@@ -1,0 +1,4502 @@
+[
+  {
+    "qid": 10000000,
+    "title": "Two Sum (0)",
+    "difficulty": 0,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000001,
+    "title": "Two Sum (1)",
+    "difficulty": 100,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000002,
+    "title": "Two Sum (2)",
+    "difficulty": 200,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000003,
+    "title": "Two Sum (3)",
+    "difficulty": 300,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000004,
+    "title": "Two Sum (4)",
+    "difficulty": 400,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000005,
+    "title": "Two Sum (5)",
+    "difficulty": 500,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000006,
+    "title": "Two Sum (6)",
+    "difficulty": 600,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000007,
+    "title": "Two Sum (7)",
+    "difficulty": 700,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000008,
+    "title": "Two Sum (8)",
+    "difficulty": 800,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000009,
+    "title": "Two Sum (9)",
+    "difficulty": 900,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000010,
+    "title": "Two Sum (10)",
+    "difficulty": 1000,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000011,
+    "title": "Two Sum (11)",
+    "difficulty": 1100,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000012,
+    "title": "Two Sum (12)",
+    "difficulty": 1200,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000013,
+    "title": "Two Sum (13)",
+    "difficulty": 1300,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000014,
+    "title": "Two Sum (14)",
+    "difficulty": 1400,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000015,
+    "title": "Two Sum (15)",
+    "difficulty": 1500,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000016,
+    "title": "Two Sum (16)",
+    "difficulty": 1600,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000017,
+    "title": "Two Sum (17)",
+    "difficulty": 1700,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000018,
+    "title": "Two Sum (18)",
+    "difficulty": 1800,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000019,
+    "title": "Two Sum (19)",
+    "difficulty": 1900,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000020,
+    "title": "Two Sum (20)",
+    "difficulty": 2000,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000021,
+    "title": "Two Sum (21)",
+    "difficulty": 2100,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000022,
+    "title": "Two Sum (22)",
+    "difficulty": 2200,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000023,
+    "title": "Two Sum (23)",
+    "difficulty": 2300,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000024,
+    "title": "Two Sum (24)",
+    "difficulty": 2400,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000025,
+    "title": "Two Sum (25)",
+    "difficulty": 2500,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000026,
+    "title": "Two Sum (26)",
+    "difficulty": 2600,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000027,
+    "title": "Two Sum (27)",
+    "difficulty": 2700,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000028,
+    "title": "Two Sum (28)",
+    "difficulty": 2800,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000029,
+    "title": "Two Sum (29)",
+    "difficulty": 2900,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000030,
+    "title": "Two Sum (30)",
+    "difficulty": 3000,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000031,
+    "title": "Two Sum (31)",
+    "difficulty": 3100,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000032,
+    "title": "Two Sum (32)",
+    "difficulty": 3200,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000033,
+    "title": "Two Sum (33)",
+    "difficulty": 3300,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000034,
+    "title": "Two Sum (34)",
+    "difficulty": 3400,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000035,
+    "title": "Two Sum (35)",
+    "difficulty": 3500,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000036,
+    "title": "Two Sum (36)",
+    "difficulty": 3600,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000037,
+    "title": "Two Sum (37)",
+    "difficulty": 3700,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000038,
+    "title": "Two Sum (38)",
+    "difficulty": 3800,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000039,
+    "title": "Two Sum (39)",
+    "difficulty": 3900,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000040,
+    "title": "Two Sum (40)",
+    "difficulty": 4000,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000041,
+    "title": "Two Sum (41)",
+    "difficulty": 4100,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000042,
+    "title": "Two Sum (42)",
+    "difficulty": 4200,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000043,
+    "title": "Two Sum (43)",
+    "difficulty": 4300,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000044,
+    "title": "Two Sum (44)",
+    "difficulty": 4400,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000045,
+    "title": "Two Sum (45)",
+    "difficulty": 4500,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000046,
+    "title": "Two Sum (46)",
+    "difficulty": 4600,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000047,
+    "title": "Two Sum (47)",
+    "difficulty": 4700,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000048,
+    "title": "Two Sum (48)",
+    "difficulty": 4800,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  },
+  {
+    "qid": 10000049,
+    "title": "Two Sum (49)",
+    "difficulty": 4900,
+    "description": [
+      "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n",
+      "You may assume that each input would have exactly one solution, and you may not use the same element twice.\n",
+      "Arrange the values in your answer in INCREASING order."
+    ],
+    "input": [
+      "Line 1 contains 1 integer, specifying the size n of the nums array.",
+      "Line 2 contains n integers, specifying the elements of the array.",
+      "Line 3 contains 1 integer, specifying the target."
+    ],
+    "output": [
+      "One line containing two integers, specifying the indices of the pair of numbers whose sum equals the target.",
+      "Return the two integers in increasing order."
+    ],
+    "examples": [
+      {
+        "input": [
+          "4",
+          "1 3 4 6",
+          "9"
+        ],
+        "output": [
+          "1 3"
+        ],
+        "explanation": "Because nums[1] + nums[3] == 7, we print 1 and 3."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Only one valid answer exists"
+    ],
+    "publicTestCases": [
+      {
+        "tid": 12345678,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345679,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345680,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345681,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345682,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345688,
+        "input": "4\n2 7 11 15\n9",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345689,
+        "input": "3\n3 2 4\n6",
+        "expectedOutput": "1 2"
+      },
+      {
+        "tid": 12345690,
+        "input": "2\n3 3\n6",
+        "expectedOutput": "0 1"
+      },
+      {
+        "tid": 12345691,
+        "input": "4\n1 7 2 9\n16",
+        "expectedOutput": "1 3"
+      },
+      {
+        "tid": 12345692,
+        "input": "6\n1 2 7 8 12 13\n10",
+        "expectedOutput": "1 3"
+      }
+    ]
+  }
+]
