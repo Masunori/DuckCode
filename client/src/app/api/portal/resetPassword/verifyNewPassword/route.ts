@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
         const user = users.find(user => user.email === email); // user confirms to exist at this stage
         if (!user) {
             return NextResponse.json({
-                code: ResetPasswordStatuses.INVALID_EMAIL,
+                code: ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS,
             }, { status: 400 });
         }
         
