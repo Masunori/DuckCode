@@ -42,7 +42,10 @@ export default function Settings() {
                 "There are unsaved changes! Do you want to discard changes and close settings?",
                 "Discard changes and close settings",
                 "Go back to settings",
-                closeSettings,
+                () => {
+                    setNextUserPreference(structuredClone(user.userPreference));
+                    closeSettings();
+                },
                 () => {}
             );
         } else {

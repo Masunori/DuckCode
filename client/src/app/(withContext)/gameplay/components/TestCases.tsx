@@ -34,15 +34,15 @@ export default function TestCases({
 } : TestCaseProps) {
     const testCaseSelectorsRef = useRef<HTMLLIElement[] | null[]>([]);
 
-    const CODE_FAIL_BORDER_COLOR = '#DC143C';
-    const CODE_SUCCEED_BORDER_COLOR = '#00FF00';
-    const CODE_WARNING_COLOR = '#FF4D00';
+    const CODE_FAIL_BORDER_COLOR = 'var(--error-code-text-border-color)';
+    const CODE_SUCCEED_BORDER_COLOR = 'var(--success-code-text-border-color)';
+    const CODE_WARNING_COLOR = 'var(--warn-code-text-border-color)';
 
-    const CODE_FAIL_BG_COLOR = '#640A1E';
-    const CODE_FAIL_BG_COLOR_HOVER = '#750C23';
+    const CODE_FAIL_BG_COLOR = 'var(--error-test-case-bg-color)';
+    const CODE_FAIL_BG_COLOR_HOVER = 'var(--error-test-case-bg-color-hover)';
 
-    const CODE_SUCCEED_BG_COLOR = '#004400';
-    const CODE_SUCCEED_BG_COLOR_HOVER = '#016101';
+    const CODE_SUCCEED_BG_COLOR = 'var(--success-test-case-bg-color)';
+    const CODE_SUCCEED_BG_COLOR_HOVER = 'var(--success-test-case-bg-color-hover)';
 
     const tdStyle: CSSProperties = {
         backgroundColor: !testCaseResults[activeIndex]
@@ -123,7 +123,11 @@ export default function TestCases({
                                         ? (index === activeIndex ? "var(--first-layer-background-color" : "var(--second-layer-background-color)")
                                         : RUN_CODE_RESPONSES[testCaseResults[index].statusId] === RunCodeStatuses.ACCEPTED
                                         ? (index === activeIndex ? CODE_SUCCEED_BG_COLOR_HOVER : CODE_SUCCEED_BG_COLOR) 
-                                        : (index === activeIndex ? CODE_FAIL_BG_COLOR_HOVER : CODE_FAIL_BG_COLOR)
+                                        : (index === activeIndex ? CODE_FAIL_BG_COLOR_HOVER : CODE_FAIL_BG_COLOR),
+
+                                    fontWeight: testCaseResults[index] && RUN_CODE_RESPONSES[testCaseResults[index].statusId] !== RunCodeStatuses.ACCEPTED
+                                        ? 600
+                                        : 400,
                                 }}
                                 onMouseEnter={() => handleOnMouseEnter(index)}
                                 onMouseLeave={() => handleOnMouseLeave(index)}

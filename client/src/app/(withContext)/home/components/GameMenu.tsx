@@ -34,6 +34,7 @@ export default function GameMenu() {
             <StylizedGameMenuButton buttonName="Playground" onClick={() => router.push("/gameplay")} buttonDescription="DuckCode's sandbox code editor that you can fiddle with." />
             <StylizedGameMenuButton buttonName="Tutorial" onClick={undefined} buttonDescription="Beginners or seasoned programmers, there is something for you here..." />
             <StylizedGameMenuButton buttonName="Inventory" onClick={undefined} buttonDescription="Every item you have earned is stored here!" />
+            <StylizedGameMenuButton buttonName="Clan" onClick={undefined} buttonDescription="Meet programmers with the same interest." />
         </div>
     )
 }

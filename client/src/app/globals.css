@@ -13,6 +13,7 @@
 :root {
   /* --normal-text-font: 'PF Din Text Pro', 'sans-serif'; */
   
+  /* General game theme color */
   --background-color: #121212;
   --first-layer-background-color: #242424;
   --second-layer-background-color: #363636;
@@ -22,30 +23,48 @@
 
   --confirmation-popup-background-color: #242424;
   
+  /* Button colors */
   --significant-button-color: #007fff;
   --significant-button-hover-color: #0560bc;
   --significant-button-hover-heavier-color: #163d63;
   --insignificant-button-color: #363636;
   --insignificant-button-hover-color: #484848;
 
+  /* Home navbar, user information UI component */
   --exp-bar-color: #007fff;
   --exp-bar-color-tail: #9ccdff;
 
   --code-fragment-font: monospace;
   --font-colour: #ccc;
-  --error-font-colour: #ff0000;
   --font-colour-hover: #999;
 
-  --invalid-code-bg-color: #640A1E;
-  --invalid-code-border-color: #FF0000;
-  --valid-code-bg-color: #004400;
-  --valid-code-border-color: #00DD00;
+  /* Code output (and terminal in the future) */
+  /* --error-code-text-border-color: #ff0000;
+  --warn-code-text-border-color: #FF4D00;
+  --success-code-text-border-color: #00FF00; */
   
+  --error-code-text-border-color: #FF4040;
+  --warn-code-text-border-color: #FF4D00;
+  --success-code-text-border-color: #00FF00;
+
+  /* Test case selector */
+  /* --error-test-case-bg-color: #4d1622;
+  --error-test-case-bg-color-hover: #cd0c0c;
+  --success-test-case-bg-color: #014a01;
+  --success-test-case-bg-color-hover: #008200; */
+
+  --error-test-case-bg-color: #480000;
+  --error-test-case-bg-color-hover: #FF4040;
+  --success-test-case-bg-color: #005600;
+  --success-test-case-bg-color-hover: #009600;
+  
+  /* Settings background color */
   --settings-option-bg-color: #242424;
   --settings-bg-color: #323232;
   --settings-bg-hover-color: #424242;
   --settings-option-border-color: #606060;
 
+  /* z-index */
   --landing-z-index: 1;
   --login-signup-overlay-z-index: 2;
   --login-signup-z-index: 3;
