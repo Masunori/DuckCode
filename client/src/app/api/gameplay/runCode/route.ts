@@ -67,7 +67,11 @@ export async function POST(request: NextRequest) {
         }
 
         return NextResponse.json({
-            output: [{ type: "error", content: "This has not been implemented yet..." }],
+            output: [
+                { type: "error", content: "[error] This has not been implemented yet..." },
+                { type: "log", content: "[log] This has not been implemented yet..." },
+                { type: "warn", content: "[warn] This has not been implemented yet..." },
+            ],
         }, { status: 200 });
     } catch (error) {
         console.log(error);

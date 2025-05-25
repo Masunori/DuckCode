@@ -13,6 +13,8 @@ export type EditorOptions = {
 export type UserPreference = {
     fontSize: number;
     language: PLKeys;
+    significantButtonColor: string;
+    significantButtonHoverColor: string;
     editorOptions: EditorOptions;
 }
 
@@ -52,6 +54,8 @@ export const WORD_WRAP_OPTIONS: Record<string, "on" | "off" | "wordWrapColumn" |
 export const PRISTINE_USER_PREFERENCE: UserPreference = {
     fontSize: 16,
     language: "JavaScript",
+    significantButtonColor: '#007fff',
+    significantButtonHoverColor: '#0560bc',
     editorOptions : {
         enableMinimap: true,
         lineNumbers: "On",

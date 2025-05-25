@@ -9,6 +9,8 @@ export default function UserPrefRootSetter() {
 
     useEffect(() => {
         document.documentElement.style.fontSize = `${userPreference.fontSize}px`;
+        document.documentElement.style.setProperty('--significant-button-color', userPreference.significantButtonColor);
+        document.documentElement.style.setProperty('--significant-button-hover-color', userPreference.significantButtonHoverColor);
     }, [userPreference]);
 
     return null;

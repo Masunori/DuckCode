@@ -28,32 +28,32 @@ RUN npm run build
 
 # === Stage 2: Production ===
 # Use a smaller Node.js image for production
-FROM node:20-alpine
+# FROM node:20-alpine
 
-WORKDIR /app/client
+# WORKDIR /app/client
 
-# Set environment variables
-ENV NODE_ENV=production
-# The HOSTNAME variable is crucial for Next.js to listen on all interfaces
-# when running inside a Docker container, especially with `next start`.
-ENV HOSTNAME=0.0.0.0
-# Set the port Next.js will run on inside the container
-ENV PORT=3000
+# # Set environment variables
+# ENV NODE_ENV=production
+# # The HOSTNAME variable is crucial for Next.js to listen on all interfaces
+# # when running inside a Docker container, especially with `next start`.
+# ENV HOSTNAME=0.0.0.0
+# # Set the port Next.js will run on inside the container
+# ENV PORT=3000
 
-# Copy the standalone output from the builder stage
-# This requires `output: 'standalone'` in next.config.js
-COPY --from=builder /app/client/.next/standalone ./
-COPY --from=builder /app/client/.next/static ./.next/static
-COPY --from=builder /app/client/public ./public
+# # Copy the standalone output from the builder stage
+# # This requires `output: 'standalone'` in next.config.js
+# COPY --from=builder /app/client/.next/standalone ./
+# COPY --from=builder /app/client/.next/static ./.next/static
+# COPY --from=builder /app/client/public ./public
 
-# Expose the port the app runs on
-EXPOSE 3000
+# # Expose the port the app runs on
+# EXPOSE 3000
 
-# The command to start the Next.js server in standalone mode
-# The server.js file is created by the `output: 'standalone'` build
-CMD ["node", "server.js"]
+# # The command to start the Next.js server in standalone mode
+# # The server.js file is created by the `output: 'standalone'` build
+# CMD ["node", "server.js"]
 
-# --- If NOT using standalone output (larger image, less recommended for production) ---
+# # # --- If NOT using standalone output (larger image, less recommended for production) ---
 # FROM node:20-alpine AS runner
 # WORKDIR /app/client
 # ENV NODE_ENV production
@@ -66,3 +66,24 @@ CMD ["node", "server.js"]
 # EXPOSE 3000
 # # Ensure your package.json's "start" script is "next start -H 0.0.0.0" or adjust CMD
 # CMD ["npm", "run", "start"]
+
+FROM node:20-alpine AS runner
+WORKDIR /app/client
+
+ENV NODE_ENV production
+ENV HOSTNAME 0.0.0.0
+ENV PORT 3000
+
+# Copy only package files, install production deps
+COPY --from=builder /app/client/package.json ./package.json
+COPY --from=builder /app/client/package-lock.json ./package-lock.json
+RUN npm install --production
+
+# Copy build output
+COPY --from=builder /app/client/.next ./.next
+COPY --from=builder /app/client/public ./public
+
+EXPOSE 3000
+
+# Use next start instead of node server.js
+CMD ["npm", "run", "start"]
