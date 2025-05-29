@@ -7,6 +7,7 @@ import * as monaco from "monaco-editor";
 import { useUser } from "@/app/components/contexts/UserContext";
 import { PROGRAMMING_LANGUAGES } from "@/app/components/settings/settingsUtils";
 import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "../../../userPrefs/userPrefsUtils";
+import { PRESET_THEMES } from "@/app/components/themes/themes";
 
 type CodeEditorProps = {
     onMount: (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => void;
@@ -41,7 +42,7 @@ export default function CodeEditor({ onMount, codeContent, setCodeContent }: Cod
     return (
         <div className={styles.codeEditor}>
             <Editor
-                theme="vs-dark"
+                theme={PRESET_THEMES[user.userPreference.editorOptions.theme].monacoEditorAlias}
                 language={PROGRAMMING_LANGUAGES[user.userPreference.language].monaco_editor_alias}
                 defaultLanguage="javascript"
                 onMount={onMount}

@@ -8,6 +8,7 @@ import { Editor } from "@monaco-editor/react";
 import NumberInput from "../../inputs/NumberInput";
 import { useUser } from "../../contexts/UserContext";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import { PRESET_THEMES } from "../../themes/themes";
 
 type CodeEditorSettingsProps = {
     nextUserPreference: UserPreference;
@@ -40,8 +41,8 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
                 <h2>Code Editor Preview</h2>
                 <Editor
                     options={ editorOptions }
-                    theme="vs-dark"
                     value={CODE_EDITOR_LIVE_PREVIEW_TEXT}
+                    theme={PRESET_THEMES[nextUserPreference.editorOptions.theme].monacoEditorAlias}
                     language={PROGRAMMING_LANGUAGES[nextUserPreference.language].monaco_editor_alias}
                 />
             </Panel>
@@ -66,8 +67,23 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
                     <div className={styles.settingsContentChunk}>
                         <h2>Visual Settings</h2>
                         {nextUserPreference && <DropdownInput
+                            options={Object.keys(PRESET_THEMES)}
+                            defaultOption={nextUserPreference.editorOptions.theme}
+                            inputId="editor-theme"
+                            dropdownName="Theme"
+                            handleOptionChange={option => {
+                                setNextUserPreference({
+                                    ...nextUserPreference,
+                                    editorOptions: {
+                                        ...nextUserPreference.editorOptions,
+                                        theme: option
+                                    }
+                                })
+                            }}
+                        />}
+                        {nextUserPreference && <DropdownInput
                             options={Object.keys(LINE_NUMBERS_OPTIONS)}
-                            defaultOption={"On"}
+                            defaultOption={nextUserPreference.editorOptions.lineNumbers}
                             inputId="line-numbers"
                             dropdownName="Line Numbers"
                             handleOptionChange={option => {
@@ -82,7 +98,7 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
                         />}
                         {nextUserPreference && <DropdownInput
                             options={["True", "False"]}
-                            defaultOption={"True"}
+                            defaultOption={nextUserPreference.editorOptions.enableMinimap ? "True" : "False"}
                             inputId="enable-minimap"
                             dropdownName="Enable Minimap"
                             handleOptionChange={option => {
@@ -97,7 +113,7 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
                         />}
                         {nextUserPreference && <DropdownInput
                             options={Object.keys(RENDER_WHITESPACE_OPTIONS)}
-                            defaultOption={"Selection"}
+                            defaultOption={nextUserPreference.editorOptions.renderWhiteSpace}   
                             inputId="render-whitespace"
                             dropdownName="Whitespace Rendering"
                             handleOptionChange={option => {
@@ -112,7 +128,7 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
                         />}
                         {nextUserPreference && <DropdownInput
                             options={["2", "4", "8"]}
-                            defaultOption={"4"}
+                            defaultOption={nextUserPreference.editorOptions.tabSize.toString()}
                             inputId="tab-size"
                             dropdownName="Tab size"
                             handleOptionChange={option => {
@@ -127,7 +143,7 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
                         />}
                         {nextUserPreference && <DropdownInput
                             options={Object.keys(WORD_WRAP_OPTIONS)}
-                            defaultOption={"Off"}
+                            defaultOption={nextUserPreference.editorOptions.wordWrap}
                             inputId="word-wrap"
                             dropdownName="Word Wrap"
                             handleOptionChange={option => {

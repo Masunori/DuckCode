@@ -35,7 +35,7 @@ export const GAMEPLAY_KEY_BINDINGS: Record<GameplayKeyBindingNames, KeyBinding> 
         combo: { ctrl: true, shift: true, key: 'Enter' }
     },
     TOGGLE_OUTPUT_TEST_CASE_MODE: { 
-        action: "Toggle Output/Test Case Mode", 
+        action: "Toggle Output/Test Case Mode (and Question Mode for some layouts)", 
         combo: { ctrl: false, shift: false, key: 'T' }
     },
     SUBMIT_CODE: {
@@ -44,11 +44,19 @@ export const GAMEPLAY_KEY_BINDINGS: Record<GameplayKeyBindingNames, KeyBinding> 
     }
 }
 
-export type GeneralKeyBindingNames = "CLOSE_SETTINGS";
+export type GeneralKeyBindingNames = "CLOSE_SETTINGS" | "CONFIRM_POPUP" | "CANCEL_POPUP";
 
 export const GENERAL_KEY_BINDINGS: Record<GeneralKeyBindingNames, KeyBinding> = {
     CLOSE_SETTINGS: { 
         action: "Escape settings", 
+        combo: { ctrl: false, shift: false, key: 'Escape' } 
+    },
+    CONFIRM_POPUP: { 
+        action: "Popup - Confirm decision", 
+        combo: { ctrl: false, shift: false, key: 'Enter' } 
+    },
+    CANCEL_POPUP: { 
+        action: "Popup - Cancel decision", 
         combo: { ctrl: false, shift: false, key: 'Escape' } 
     }
 }

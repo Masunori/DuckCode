@@ -1,11 +1,9 @@
 "use client";
 
 import { CSSProperties, Dispatch, SetStateAction, useRef } from "react";
-import { TestCase, TestCaseResult } from "../gameplayUtils";
 import styles from "../page.module.css";
 import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeStatuses";
-
-// ignore this
+import { TestCase, TestCaseResult } from "../../../gameplayUtils";
 
 type TestCaseProps = {
     activeIndex: number;
@@ -14,16 +12,25 @@ type TestCaseProps = {
     isOutputMode: boolean;
     setIsOutputMode: Dispatch<SetStateAction<boolean>>;
     codeOutput: OutputEntry[];
+    runCode: () => void;
+    runTestCases: () => void;
+    submitCode: () => void;
     testCaseResults: TestCaseResult[];
+    isClusterLocked: boolean;
 }
 
 export default function TestCases({ 
     activeIndex,
     setActiveIndex,
     testCases, 
-    isOutputMode,
+    isOutputMode, 
+    setIsOutputMode, 
     codeOutput,
+    runCode,
+    runTestCases,
+    submitCode,
     testCaseResults, 
+    isClusterLocked
 } : TestCaseProps) {
     const testCaseSelectorsRef = useRef<HTMLLIElement[] | null[]>([]);
 
@@ -77,6 +84,26 @@ export default function TestCases({
 
     return (
         <div className={styles.testCases}>
+            <div className={styles.codeHandlerButtons}>
+                <button 
+                    className={styles.togglePanelButton}
+                    onClick={() => setIsOutputMode(bool => !bool)}
+                >{isOutputMode ? "Switch to Test Cases Mode" : "Switch to Output Mode"}</button>
+                <button 
+                    className={styles.runAllTestCasesButton}
+                    onClick={isOutputMode ? runCode : runTestCases}
+                    disabled={isClusterLocked}style={{
+                        pointerEvents: isClusterLocked ? "none" : "auto",
+                    }}
+                >{isOutputMode ? "Run Code" : "Run all Test Cases"}</button>
+                <button 
+                    className={styles.submitCodeButton} 
+                    onClick={submitCode}
+                    disabled={isClusterLocked}style={{
+                        pointerEvents: isClusterLocked ? "none" : "auto",
+                    }}
+                >Submit</button>
+            </div>
             <div className={styles.codeResults}>
                 <div 
                     className={styles.testCasePanel}

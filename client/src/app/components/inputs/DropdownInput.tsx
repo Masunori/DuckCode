@@ -45,6 +45,13 @@ export default function DropdownInput({ options, inputId, defaultOption, dropdow
         handleOptionChange(options[index]);
     }
 
+    // in case of a discard, we want to set the selected option to the default option
+    useEffect(() => {
+        if (defaultOption && options.includes(defaultOption)) {
+            setSelectedOption(defaultOption);
+        }
+    }, [defaultOption, options]);
+
     useEffect(() => {
         function closeDropdown(e: MouseEvent) {
             if (!dropdownRef.current) {

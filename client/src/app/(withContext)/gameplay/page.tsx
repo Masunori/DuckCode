@@ -1,6 +1,6 @@
 import { Question } from "./gameplayUtils";
-import { ResizableLayout } from "./ResizableLayout";
 import styles from "./page.module.css";
+import GameplayClient from "./GameplayClient";
 // import { getQuestion } from "@/lib/apiClient/gameplay";
 
 export default async function Page() {
@@ -97,7 +97,7 @@ export default async function Page() {
 
     return (
         <div className={styles.container}>
-            <ResizableLayout question={question} />
+            <GameplayClient question={question} />
         </div>
     )
 }

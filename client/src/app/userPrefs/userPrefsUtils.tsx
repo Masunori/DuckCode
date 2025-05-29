@@ -2,6 +2,7 @@ import { PLKeys } from "@/app/components/settings/settingsUtils";
 import * as monaco from 'monaco-editor';
 
 export type EditorOptions = {
+    theme: string;
     enableMinimap: boolean;
     lineNumbers: string;
     renderWhiteSpace: string;
@@ -15,6 +16,7 @@ export type UserPreference = {
     language: PLKeys;
     significantButtonColor: string;
     significantButtonHoverColor: string;
+    gameplayLayout: string;
     editorOptions: EditorOptions;
 }
 
@@ -56,7 +58,9 @@ export const PRISTINE_USER_PREFERENCE: UserPreference = {
     language: "JavaScript",
     significantButtonColor: '#007fff',
     significantButtonHoverColor: '#0560bc',
+    gameplayLayout: "Default",
     editorOptions : {
+        theme: "Visual Studio - Dark",
         enableMinimap: true,
         lineNumbers: "On",
         renderWhiteSpace: "None",
