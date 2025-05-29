@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from './input.module.css';
 
 type RadioInputProps = {
@@ -15,7 +15,7 @@ type RadioInputProps = {
  * 
  * @param param0 The props
  * - `inputName (string)`: the description of the input
- * - `inputId (string)`: the RadioInput contains a set of labels and inputs, use this value to set the prefix for label's htmlFor and input's id attributes
+ * - `options (string[])`: the options that the user can choose from
  * - `defaultOptionIndex (string)`: the index of the default chosen option, in which the user must make sure that it is within the bounds of options
  * - `handleOptionChange (number => void)`: the function that will be executed upon a change of option
  * @returns 
@@ -27,6 +27,11 @@ export default function RadioInput({ inputName, options, defaultOptionIndex, han
         setSelectedIndex(index);
         handleOptionChosen(index);
     };
+
+    // in case of a discard, we want to set the selected index to the default option index
+    useEffect(() => {
+        setSelectedIndex(defaultOptionIndex);
+    }, [defaultOptionIndex]);
 
     return (
         <div className={styles.radioInputs}>

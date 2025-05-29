@@ -1,23 +1,29 @@
 "use client";
 
-import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { Question, TestCaseResult } from "./gameplayUtils";
-import QuestionDisplay from "./components/QuestionDisplay";
-import CodeEditor from "./components/CodeEditor";
-import TestCases from "./components/TestCases";
-import styles from "./page.module.css";
-import GameplayNavbar from "./components/GameplayNavbar";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import * as monaco from "monaco-editor";
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from "@/app/components/settings/settingsUtils";
-import { runAllTestCases, runCode, submitCode } from "@/lib/apiClient/gameplay";
+import { Question, TestCaseResult } from "../../gameplayUtils";
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, PROGRAMMING_LANGUAGES } from "@/app/components/settings/settingsUtils";
+import { useUser } from "@/app/components/contexts/UserContext";
+import * as monaco from 'monaco-editor';
+import { PRESET_THEMES } from "@/app/components/themes/themes";
 import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeStatuses";
 import { usePopup } from "@/app/components/contexts/PopupContext";
 import { Lock } from "@/app/utils/lock";
+import { runAllTestCases, runCode, submitCode } from "@/lib/apiClient/gameplay";
+import GameplayNavbar from "../../components/GameplayNavbar";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import QuestionDisplay from "../../components/QuestionDisplay";
+import CodeEditor from "../../components/CodeEditor";
+import TestCases from "./components/TestCases";
+import styles from "./page.module.css";
+import Output from "./components/Output";
+import { GAMEPLAY_KEY_PRIORITY, keyboardManager } from "@/app/utils/keyboardManager";
+import InformationPanelButtons from "../../components/InformationPanelButtons";
 
-export function ResizableLayout({ question }: {question: Question}) {
+export function TwoTabsInvertedLayout({ question }: {question: Question}) {
     // for code editor
-    const [codeContent, setCodeContent] = useState<string | undefined>("// JavaScript code");
+    const { user } = useUser();
+    const [codeContent, setCodeContent] = useState<string | undefined>(PROGRAMMING_LANGUAGES[user.userPreference.language].code_snippet);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
     const lock: Lock = useMemo(() => new Lock(), []);
@@ -25,6 +31,11 @@ export function ResizableLayout({ question }: {question: Question}) {
 
     const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
         editorRef.current = editor;
+
+        monacoInstance.editor.defineTheme(
+            PRESET_THEMES[user.userPreference.editorOptions.theme].monacoEditorAlias,
+            PRESET_THEMES[user.userPreference.editorOptions.theme].theme
+        )
 
         editor.onKeyDown((e: monaco.IKeyboardEvent) => {
             if (e.keyCode === monacoInstance.KeyCode.Escape) {
@@ -36,8 +47,8 @@ export function ResizableLayout({ question }: {question: Question}) {
         })
     }
 
-    // this is used in the code output UI component
-    const [isOutputMode, setIsOutputMode] = useState(false);
+    // this is used in the information panel
+    const [informationMode, setInformationMode] = useState<"question" | "testCases" | "output">("question");
     const [codeOutput, setCodeOutput] = useState<OutputEntry[]>(
         [
             {
@@ -60,9 +71,9 @@ export function ResizableLayout({ question }: {question: Question}) {
             return;
         }
         
-        try{
+        try {
             setIsClusterLocked(true);const response = await lock.call(() => runCode(question.qid, codeContent as string, 'JavaScript'));
-            setIsOutputMode(true);
+            setInformationMode("output");
             setCodeOutput(response.output);
         } catch {
             openPopupWith(
@@ -88,7 +99,7 @@ export function ResizableLayout({ question }: {question: Question}) {
             setIsClusterLocked(true);
             const response = await lock.call(() => submitCode(question.qid, codeContent as string, 'JavaScript'));
 
-            setIsOutputMode(true);
+            setInformationMode("output");
             setCodeOutput([
                 { type: "log", content: `Correct: ${response.result.correct}` },
                 { type: "log", content: `Total: ${response.result.total}` },
@@ -118,7 +129,7 @@ export function ResizableLayout({ question }: {question: Question}) {
             setIsClusterLocked(true);
             const response = await lock.call(() => runAllTestCases(question.qid, codeContent as string, 'JavaScript'));
 
-            setIsOutputMode(false);
+            setInformationMode("testCases");
             setTestCaseResults(response.results);
 
             for (let i = 0; i < response.results.length; i++) {
@@ -163,48 +174,45 @@ export function ResizableLayout({ question }: {question: Question}) {
             const active = document.activeElement;
             const isFocusOnEditor = editor && editor.getDomNode()?.contains(active);
 
-            if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TEST_CASE_MODE"].combo)) {
-                if (isFocusOnEditor) {
-                    return;
+            if (isFocusOnEditor) {
+                if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["DEFOCUS_EDITOR"].combo)) {
+                    gameplayRef.current?.focus();
+                    return true;
                 }
-
-                e.preventDefault();
-                setIsOutputMode(prev => !prev);
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)) {
-                if (isFocusOnEditor) {
-                    return;
-                }
-
                 e.preventDefault();
                 runCodeOutputMode();
+                return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["RUN_TEST_CASES"].combo)) {
-                if (isFocusOnEditor) {
-                    return;
-                }
-
                 e.preventDefault();
                 runTestCases();
+                return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["SUBMIT_CODE"].combo)) {
-                if (isFocusOnEditor) {
-                    return;
-                }
-
                 e.preventDefault();
                 submit();
+                return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["FOCUS_EDITOR"].combo) && editor) {
-                if (isFocusOnEditor) {
-                    return;
-                }
-
                 e.preventDefault(); // stop "i" from inserting text somewhere random
                 editor.focus();
+                return true;
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TEST_CASE_MODE"].combo)) {
+                e.preventDefault();
+                setInformationMode((prevMode) => prevMode === "question" 
+                    ? "testCases" 
+                    : prevMode === "testCases" 
+                    ? "output" 
+                    : "question"
+                );
+                return true;
             }
+
+            return false;
         }
 
-        const gameplayDiv = gameplayRef.current;
-
-        gameplayDiv?.addEventListener("keydown", handleKeyDown);
-        return () => gameplayDiv?.removeEventListener("keydown", handleKeyDown);
+        keyboardManager.register("gameplay", GAMEPLAY_KEY_PRIORITY, handleKeyDown);
+        return () => {
+            keyboardManager.unregister("gameplay");
+        }
     }, [runCodeOutputMode, runTestCases, submit]);
 
 
@@ -212,29 +220,57 @@ export function ResizableLayout({ question }: {question: Question}) {
         <div ref={gameplayRef} tabIndex={0}>
             <GameplayNavbar />
             <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
-                <Panel defaultSize={40} minSize={2}>
-                    <QuestionDisplay question={question} />
-                </Panel>
-                <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
-                <Panel defaultSize={60} minSize={2} className={styles.codePanel}>
+                <Panel defaultSize={50} minSize={2}>
                     <CodeEditor 
                         onMount={handleEditorDidMount}
                         codeContent={codeContent}
                         setCodeContent={setCodeContent}
                     />
-                    <TestCases 
-                        activeIndex={activeIndex}
-                        setActiveIndex={setActiveIndex}
-                        testCases={question.publicTestCases} 
-                        isOutputMode={isOutputMode}
-                        setIsOutputMode={setIsOutputMode}
-                        codeOutput={codeOutput}
-                        runCode={runCodeOutputMode}
-                        runTestCases={runTestCases}
-                        submitCode={submit}
-                        testCaseResults={testCaseResults}
-                        isClusterLocked={isClusterLocked}
+                </Panel>
+                <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
+                <Panel defaultSize={50} minSize={2} className={styles.informationPanel}>
+                    <InformationPanelButtons 
+                        informationMode={informationMode}
+                        setInformationMode={setInformationMode}
                     />
+                    {informationMode === "question" 
+                        ? <QuestionDisplay question={question} />
+                        : informationMode === "output"
+                        ? <Output codeOutput={codeOutput} />
+                        : informationMode === "testCases"
+                        ? <TestCases 
+                            activeIndex={activeIndex}
+                            setActiveIndex={setActiveIndex}
+                            testCases={question.publicTestCases}
+                            testCaseResults={testCaseResults}
+                        /> : <></>
+                    }
+                    <div className={styles.codeHandlerButtons}>
+                        <button
+                            className={styles.runCodeButton}
+                            onClick={runCodeOutputMode}
+                            disabled={isClusterLocked}
+                            style={{ 
+                                pointerEvents: isClusterLocked ? "none" : "auto" 
+                            }}
+                        >Run Code</button>
+                        <button
+                            className={styles.runAllTestCasesButton}
+                            onClick={runTestCases}
+                            disabled={isClusterLocked}
+                            style={{ 
+                                pointerEvents: isClusterLocked ? "none" : "auto" 
+                            }}
+                        >Run All Test Cases</button>
+                        <button
+                            className={styles.submitCodeButton}
+                            onClick={submit}
+                            disabled={isClusterLocked}
+                            style={{ 
+                                pointerEvents: isClusterLocked ? "none" : "auto" 
+                            }}
+                        >Submit</button>
+                    </div>
                 </Panel>
             </PanelGroup>
         </div>

@@ -32,6 +32,11 @@ export default function ColorInput({ inputName, inputId, defaultValue, handleOpt
         handleOptionChange(color);
     }
 
+    // in case of a discard, we want to set the color to the default value
+    useEffect(() => {
+        setColor(defaultValue);
+    }, [defaultValue]);
+
     useEffect(() => {
         if (directInjectionValue) {
             setColor(directInjectionValue);

@@ -253,15 +253,21 @@ const hcWhite: monaco.editor.IStandaloneThemeData = {
 	}
 };
 
-export type PresetThemeNames = "vs" | "vs-dark" | "hc-black" | "hc-white";
-type PresetTheme = {
-    name: string;
-    theme: monaco.editor.IStandaloneThemeData;
-}
-
-export const presetThemes: Record<PresetThemeNames, PresetTheme> = {
-    "vs": { name: "Visual Studio - Light", theme: vs },
-    "vs-dark": { name: "Visual Studio - Dark", theme: vsDark },
-    "hc-black": { name: "High Contrast - Black", theme: hcBlack },
-    "hc-white": { name: "High Contrast - White", theme: hcWhite },
+export const PRESET_THEMES: Record<string, { monacoEditorAlias: string, theme: monaco.editor.IStandaloneThemeData }> = {
+    "Visual Studio - Light": {
+		monacoEditorAlias: "vs",
+		theme: vs,
+	},
+    "Visual Studio - Dark": {
+		monacoEditorAlias: "vs-dark",
+		theme: vsDark,
+	},
+    "High Contrast - Black": {
+		monacoEditorAlias: "hc-black",
+		theme: hcBlack,
+	},
+    "High Contrast - White": {
+		monacoEditorAlias: "hc-light",
+		theme: hcWhite,
+	},
 }

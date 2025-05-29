@@ -1,11 +1,12 @@
 import { UserPreference } from "@/app/userPrefs/userPrefsUtils";
 import NumberInput from "../../inputs/NumberInput";
 import styles from "../settings.module.css";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import ColorInput from "../../inputs/ColorInput";
 import { computeHoverColour, toGrayscale } from "@/app/utils/colors";
 import CheckboxInput from "../../inputs/CheckboxInput";
-// import RadioInput from "../../inputs/RadioInput";
+import RadioInput from "../../inputs/RadioInput";
+import { LAYOUTS } from "@/app/(withContext)/gameplay/layout/layoutUtils";
 
 type GeneralSettingsPrompt = {
     nextUserPreference: UserPreference;
@@ -43,6 +44,20 @@ export default function GeneralSettings({ nextUserPreference, setNextUserPrefere
     }
 
     // handles layout
+    const [layoutIndex, setLayoutIndex] = useState(Object.keys(LAYOUTS).indexOf(nextUserPreference.gameplayLayout));
+
+    // in case of a discard, we want to set the layout index to the default option index
+    useEffect(()=> {
+        setLayoutIndex(Object.keys(LAYOUTS).indexOf(nextUserPreference.gameplayLayout));
+    }, [nextUserPreference.gameplayLayout]);
+    
+    function handleChangeLayout(index: number) {
+        setLayoutIndex(index);
+        setNextUserPreference({
+            ...nextUserPreference,
+            gameplayLayout: Object.keys(LAYOUTS)[index],
+        });
+    }
 
     return (
         <div
@@ -121,16 +136,25 @@ export default function GeneralSettings({ nextUserPreference, setNextUserPrefere
                 <p className={styles.autoHoverSelectorExplanation}>
                     The automatic selection of hover color is selected in a way that for each red, green and blue component,<br></br>
                     - If its value is below 128, the new value is: <code>value + min(floor(0.4 * (128 - value)), 24)</code><br></br>
-                    - If its value is above 128, the new value is: <code>value - min(floor(0.4 * (value - 128)), 24)</code>
+                    - If its value is above 128, the new value is: <code>value - min(floor(0.4 * (value - 128)), 24)</code><br></br><br></br>
+                    Note: Change the Main Action Button Color once after ticking this option to see the effect.
                 </p>
             </div>
             <div className={styles.settingsContentChunk}>
-                {/* <RadioInput
-                    inputName="Layout"
-                    options={["One", "Two"]}
-                    defaultOptionIndex={0}
-                    handleOptionChosen={index => {}}
-                /> */}
+                <div className={styles.layoutSettings}>
+                    <RadioInput
+                        inputName="Layout"
+                        options={Object.keys(LAYOUTS)}
+                        defaultOptionIndex={layoutIndex}
+                        handleOptionChosen={handleChangeLayout}
+                    />
+                    <div style={{
+                        width: "100%",
+                        height: "100%",
+                    }}>
+                        {LAYOUTS[Object.keys(LAYOUTS)[layoutIndex]].miniPreview}
+                    </div>
+                </div>
             </div>
         </div>
     )

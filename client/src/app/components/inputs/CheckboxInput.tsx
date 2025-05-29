@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./input.module.css";
 
 type CheckboxInputProps = {
@@ -27,6 +27,11 @@ export default function CheckboxInput({ inputId, inputName, defaultChecked, hand
         handleOptionChange(!isChecked);
         setIsChecked(prev => !prev);
     }
+
+    // in case of a discard, we want to set the checked status to the default value
+    useEffect(() => {
+        setIsChecked(defaultChecked);
+    }, [defaultChecked]);
 
     return (
         <div className={styles.checkboxInput}>

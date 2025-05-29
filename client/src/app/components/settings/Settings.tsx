@@ -11,6 +11,8 @@ import { PRISTINE_USER_PREFERENCE, UserPreference } from "@/app/userPrefs/userPr
 import { useUser } from "../contexts/UserContext";
 import { usePopup } from "../contexts/PopupContext";
 import equal from 'fast-deep-equal';
+import { keyboardManager, SETTINGS_KEY_PRIORITY } from "@/app/utils/keyboardManager";
+import sleep from "@/app/utils/delay";
 
 type SettingsOptionNames = "General" | "Code Editor" | "Keyboard Shortcut Configuration";
 
@@ -37,13 +39,18 @@ export default function Settings() {
 
     // handle Settings's 4 big events: exit, revert, reset, save
     function handleExit() {
+        // there is an await sleep(1) because for the code editor theme, an update to the theme will be reflected for all editors (somehow)
+        // React states are updated asynchronously, so even if closeSettings()  is called after setNextUserPreference(),
+        // the nextUserPreference will not be updated immediately, causing the gameplay code editor to reflect the hypothetical settings value instead of the current settings value.
+        // thus, we need to wait for the nextUserPreference to be updated before closing settings, by forcing a sleep of 1ms (a blocking call)
         if (!equal(nextUserPreference, user.userPreference)) {
             openPopupWith(
                 "There are unsaved changes! Do you want to discard changes and close settings?",
                 "Discard changes and close settings",
                 "Go back to settings",
-                () => {
+                async () => {
                     setNextUserPreference(structuredClone(user.userPreference));
+                    await sleep(1);
                     closeSettings();
                 },
                 () => {}
@@ -138,13 +145,16 @@ export default function Settings() {
     useEffect(() => {
         function handleEscape(event: KeyboardEvent) {
             if (isKeyCombo(event, GENERAL_KEY_BINDINGS["CLOSE_SETTINGS"].combo) && isSettingsOpen) {
-                closeSettings();
+                handleExit();
+                return true;
             }
+
+            return false;
         }
 
-        window.addEventListener("keydown", handleEscape);
+        keyboardManager.register("settingsExit", SETTINGS_KEY_PRIORITY, handleEscape);
         return () => {
-            window.removeEventListener("keydown", handleEscape);
+            keyboardManager.unregister("settingsExit");
         }
     });
 

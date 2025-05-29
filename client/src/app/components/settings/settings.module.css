@@ -207,3 +207,10 @@
     background-color: var(--terminal-like-background-color);
     padding: 0 0.5rem;
 }
+
+.layoutSettings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}

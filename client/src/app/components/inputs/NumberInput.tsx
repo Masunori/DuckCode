@@ -1,6 +1,6 @@
 "use client";
 
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import styles from "./input.module.css";
 
 type NumberInputProps = {
@@ -45,6 +45,10 @@ export default function NumberInput({ inputId, defaultValue, min, max, increment
         opacity: value < max ? 1 : 0.5,
     }
 
+    // in case of a discard, we want to set the value to the default value
+    useEffect(() => {
+        setValue(defaultValue);
+    }, [defaultValue]);
 
     return (
         <div className={styles.numberInput}>

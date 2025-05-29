@@ -22,6 +22,9 @@ export default function KeyboardShortcutSettings() {
         >
             <div className={styles.settingsContentChunk}>
                 <h2>General Key Bindings</h2>
+                <p style={{ margin: "1rem 0" }}>NOTE: When the popup is open and only requires the user to <b>acknowledge the information</b> rather than to finalise a decision, both the keys to confirm or cancel the decision will bind to the acknowledgement button and close the popup.</p>
+                <p style={{ margin: "1rem 0" }}>Also, when the popup is open, all other key bindings will be disabled until the popup is closed.</p>
+                
                 <table>
                     <tbody>
                         {Object.values(GENERAL_KEY_BINDINGS).map((bind, index) => (

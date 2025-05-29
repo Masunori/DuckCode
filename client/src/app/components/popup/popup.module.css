@@ -9,6 +9,12 @@
 }
 
 .popup {
+    position: fixed;
+    z-index: var(--popup-z-index);
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
     border: 1px solid var(--fourth-layer-background-color);
     border-top: 0;
     width: 50vw;
