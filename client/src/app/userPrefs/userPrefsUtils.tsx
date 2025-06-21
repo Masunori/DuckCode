@@ -29,10 +29,6 @@ export type User = {
     exp: number;
     rank: string;
     userPreference: UserPreference;
-    bio?: string;
-    createdAt?: string;
-    isTwoFactorEnabled?: boolean;
-    profilePicture?: string;
 }
 
 export const LINE_NUMBERS_OPTIONS: Record<string, monaco.editor.LineNumbersType> = {
@@ -83,10 +79,6 @@ export const PRISTINE_USER: User = {
     exp: 0,
     rank: "Rookie",
     userPreference: structuredClone(PRISTINE_USER_PREFERENCE),
-    bio: "Welcome to my DuckCode profile!",
-    createdAt: "2023-01-01T00:00:00Z",
-    isTwoFactorEnabled: false,
-    profilePicture: "/default-profile.png", // Update with a default profile picture path
 }
 
 /*

@@ -6,7 +6,6 @@ import KeyboardShortcutSettings from "./options/KeyboardShortcutSettings";
 import styles from './settings.module.css';
 import GeneralSettings from "./options/GeneralSettings";
 import CodeEditorSettings from "./options/CodeEditorSettings";
-import AccountSettings from "./options/AccountSettings";
 import { GENERAL_KEY_BINDINGS, isKeyCombo } from "./settingsUtils";
 import { PRISTINE_USER_PREFERENCE, UserPreference } from "@/app/userPrefs/userPrefsUtils";
 import { useUser } from "../contexts/UserContext";
@@ -15,7 +14,7 @@ import equal from 'fast-deep-equal';
 import { keyboardManager, SETTINGS_KEY_PRIORITY } from "@/app/utils/keyboardManager";
 import sleep from "@/app/utils/delay";
 
-type SettingsOptionNames = "General" | "Code Editor" | "Keyboard Shortcut Configuration" | "Account Settings";
+type SettingsOptionNames = "General" | "Code Editor" | "Keyboard Shortcut Configuration";
 
 export default function Settings() {
     const { isSettingsOpen, closeSettings } = useSettings();
@@ -139,10 +138,6 @@ export default function Settings() {
         },
         "Keyboard Shortcut Configuration": {
             component: <KeyboardShortcutSettings />
-        },
-
-        "Account Settings": {
-            component: <AccountSettings nextUserPreference={user} setNextUserPreference={setUser} />
         },
     }
 
