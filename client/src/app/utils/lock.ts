@@ -38,7 +38,6 @@ export class Lock {
         const release = this.tryAcquire();
 
         if (!release) {
-            console.error("Another function is acquiring the same lock, please try again later.");
             throw new Error("Another function is acquiring the same lock, please try again later.");
         }
 

@@ -13,8 +13,9 @@ import { usePopup } from "../contexts/PopupContext";
 import equal from 'fast-deep-equal';
 import { keyboardManager, SETTINGS_KEY_PRIORITY } from "@/app/utils/keyboardManager";
 import sleep from "@/app/utils/delay";
+import AccountSettings from "./options/AccountSettings";
 
-type SettingsOptionNames = "General" | "Code Editor" | "Keyboard Shortcut Configuration";
+type SettingsOptionNames = "General" | "Code Editor" | "Keyboard Shortcut Configuration" | "Account";
 
 export default function Settings() {
     const { isSettingsOpen, closeSettings } = useSettings();
@@ -139,6 +140,9 @@ export default function Settings() {
         "Keyboard Shortcut Configuration": {
             component: <KeyboardShortcutSettings />
         },
+        "Account": {
+            component: <AccountSettings nextUserPreference={nextUserPreference} setNextUserPreference={setNextUserPreference} />
+        }
     }
 
     // key binding to exit settings

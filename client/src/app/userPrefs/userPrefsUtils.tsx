@@ -28,6 +28,7 @@ export type User = {
     level: number;
     exp: number;
     rank: string;
+    rankPoints: number;
     userPreference: UserPreference;
 }
 
@@ -54,7 +55,7 @@ export const WORD_WRAP_OPTIONS: Record<string, "on" | "off" | "wordWrapColumn" |
 }
 
 export const PRISTINE_USER_PREFERENCE: UserPreference = {
-    fontSize: 16,
+    fontSize: 20,
     language: "JavaScript",
     significantButtonColor: '#007fff',
     significantButtonHoverColor: '#0560bc',
@@ -78,8 +79,28 @@ export const PRISTINE_USER: User = {
     level: 1,
     exp: 0,
     rank: "Rookie",
+    rankPoints: 1000,
     userPreference: structuredClone(PRISTINE_USER_PREFERENCE),
 }
+
+/**
+    The list of all (modifiable) paths in the user object
+*/
+export type UserPath = "name"
+    | "email"
+    | "password"
+    | "userPreference.fontSize"
+    | "userPreference.language"
+    | "userPreference.significantButtonColor"
+    | "userPreference.significantButtonHoverColor"
+    | "userPreference.gameplayLayout"
+    | "userPreference.editorOptions.theme"
+    | "userPreference.editorOptions.enableMinimap"
+    | "userPreference.editorOptions.lineNumbers"
+    | "userPreference.editorOptions.renderWhiteSpace"
+    | "userPreference.editorOptions.tabSize"
+    | "userPreference.editorOptions.wordWrap"
+    | "userPreference.editorOptions.wordWrapColumn";
 
 /*
     Settings to consider:

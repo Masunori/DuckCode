@@ -183,3 +183,93 @@
     border-radius: 1000px;
     transition-duration: 0.25s;
 }
+
+/* For range inputs */
+.rangeInput {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas: 
+        "desc slider";
+    align-items: center;
+    row-gap: 0.5rem;
+    column-gap: 0.5rem;
+}
+
+.rangeInputDescription {
+    grid-area: desc;
+    width: 100%;
+    display: block;
+    margin-left: 1rem;
+}
+
+.sliderAndValue {
+    grid-area: slider;
+    display: grid;
+    grid-template-columns: 3rem 1fr 3rem;
+    align-items: center;
+    column-gap: 1rem;
+}
+
+.sliderAndValue .lower {
+    font-family: var(--code-fragment-font);
+    padding: 0.5rem;
+}
+
+.sliderAndValue .higher {
+    font-family: var(--code-fragment-font);
+    padding: 0.5rem;
+}
+
+.slider {
+    justify-self: center;
+    position: relative;
+    padding: 1rem;
+    width: 100%;
+}
+
+.sliderTrack {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    background-color: var(--terminal-like-background-color);
+    height: 1rem;
+    border: 1px solid var(--fourth-layer-background-color);
+}
+
+.sliderMinThumb {
+    position: absolute;
+    top: 50%;
+    width: 0.5rem;
+    height: 1.5rem;
+    transform: translate(-100%, -50%);
+    cursor: pointer;
+    background-color: var(--significant-button-color);
+    border: 2px solid var(--insignificant-button-color);
+    border-radius: 1000px;
+}
+
+.sliderMaxThumb {
+    position: absolute;
+    top: 50%;
+    width: 0.5rem;
+    height: 1.5rem;
+    transform: translate(0%, -50%);
+    cursor: pointer;
+    background-color: var(--significant-button-color);
+    border: 2px solid var(--insignificant-button-color);
+    border-radius: 1000px;
+}
+
+.selectedRange {
+    background-color: var(--significant-button-color);
+    height: 1rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.sliderMinThumb:hover, .sliderMaxThumb:hover {
+    background-color: var(--significant-button-hover-color);
+}
