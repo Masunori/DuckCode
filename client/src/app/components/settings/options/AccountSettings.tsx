@@ -1,7 +1,7 @@
 "use client";
 
 import { UserPreference } from "@/app/userPrefs/userPrefsUtils";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import styles from "../settings.module.css";
 import { useUserStore } from"../../contexts/UserContext";
 
@@ -10,6 +10,8 @@ type AccountSettingsProps = {
     setNextUserPreference: Dispatch<SetStateAction<UserPreference>>;
 }
 
+// remove later
+// eslint-disable-next-line
 export default function AccountSettings({ nextUserPreference, setNextUserPreference }: AccountSettingsProps) {
     const user = useUserStore(state => state.user);
 
