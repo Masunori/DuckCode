@@ -1,7 +1,7 @@
 "use client";
 
 import { UserPreference } from "@/app/userPrefs/userPrefsUtils";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction } from "react";
 import styles from "../settings.module.css";
 import { useUserStore } from"../../contexts/UserContext";
 
