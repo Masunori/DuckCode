@@ -55,7 +55,7 @@ export const WORD_WRAP_OPTIONS: Record<string, "on" | "off" | "wordWrapColumn" |
 }
 
 export const PRISTINE_USER_PREFERENCE: UserPreference = {
-    fontSize: 20,
+    fontSize: 16,
     language: "JavaScript",
     significantButtonColor: '#007fff',
     significantButtonHoverColor: '#0560bc',
@@ -84,23 +84,17 @@ export const PRISTINE_USER: User = {
 }
 
 /**
-    The list of all (modifiable) paths in the user object
+    The list of all paths in the user object.
+    Type 'T' is the type of the object to extract all types.
 */
-export type UserPath = "name"
-    | "email"
-    | "password"
-    | "userPreference.fontSize"
-    | "userPreference.language"
-    | "userPreference.significantButtonColor"
-    | "userPreference.significantButtonHoverColor"
-    | "userPreference.gameplayLayout"
-    | "userPreference.editorOptions.theme"
-    | "userPreference.editorOptions.enableMinimap"
-    | "userPreference.editorOptions.lineNumbers"
-    | "userPreference.editorOptions.renderWhiteSpace"
-    | "userPreference.editorOptions.tabSize"
-    | "userPreference.editorOptions.wordWrap"
-    | "userPreference.editorOptions.wordWrapColumn";
+export type LeafPath<T, Prev extends string = ""> = {
+    [K in keyof T]: T[K] extends object
+        ? `${Prev}${Extract<K, string>}` | LeafPath<T[K], `${Prev}${Extract<K, string>}.`>
+        : `${Prev}${Extract<K, string>}`;
+}[keyof T];
+
+// uncomment the following line, and type quotation marks to see all available hinted values:
+// const userPath: LeafPath<User> = <delete this and type quotation marks ("") here>
 
 /*
     Settings to consider:

@@ -1,14 +1,14 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { Question } from "../../../gameplayUtils";
+import { InformationMode, Question } from "../../../gameplayUtils";
 import styles from "../page.module.css";
 import { motion, AnimatePresence } from "motion/react";
 
 type QuestionDisplayProps = {
     question: Question;
-    informationMode: "Question" | "Test Cases" | "Output" | "";
-    setInformationMode: Dispatch<SetStateAction<"Question" | "Test Cases" | "Output" | "">>;
+    informationMode: InformationMode;
+    setInformationMode: Dispatch<SetStateAction<InformationMode>>;
 }
 
 export default function QuestionDisplay({ question, informationMode, setInformationMode }: QuestionDisplayProps) {
@@ -21,7 +21,7 @@ export default function QuestionDisplay({ question, informationMode, setInformat
                 && overlayRef.current.contains(event.target as Node)
                 && !questionRef.current.contains(event.target as Node)
             ) {
-                setInformationMode("");
+                setInformationMode("-");
             }
         };
 
@@ -29,11 +29,11 @@ export default function QuestionDisplay({ question, informationMode, setInformat
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         }
-    })
+    });
 
     return (
         <AnimatePresence>
-            {informationMode === "Question" && (
+            {informationMode === "question" && (
                 <>
                     <motion.div 
                         className={styles.questionOverlay}
@@ -49,7 +49,7 @@ export default function QuestionDisplay({ question, informationMode, setInformat
                         initial={{ opacity: 0, x: "100%" }}
                         animate={{ opacity: 1, x: "0%" }}
                         exit={{ opacity: 0, x: "100%" }}
-                        transition={{ duration: 0.75 }}
+                        transition={{ duration: 0.5 }}
                     >
                         <motion.h1>{question.title}</motion.h1>
                         <motion.h3>Difficulty: {question.difficulty}</motion.h3>

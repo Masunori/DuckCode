@@ -3,7 +3,7 @@
 import { UserPreference } from "@/app/userPrefs/userPrefsUtils";
 import { Dispatch, SetStateAction } from "react";
 import styles from "../settings.module.css";
-import { useUser } from "../../contexts/UserContext";
+import { useUserStore } from"../../contexts/UserContext";
 
 type AccountSettingsProps = {
     nextUserPreference: UserPreference;
@@ -11,7 +11,7 @@ type AccountSettingsProps = {
 }
 
 export default function AccountSettings({ nextUserPreference, setNextUserPreference }: AccountSettingsProps) {
-    const { user } = useUser();
+    const user = useUserStore(state => state.user);
 
     return (
         <div className={`${styles.settingsOptionDisplay} ${styles.accountSettingsDisplay}`}>

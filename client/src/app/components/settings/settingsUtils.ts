@@ -15,11 +15,15 @@ export type GameplayKeyBindingNames =
     | "RUN_CODE_OUTPUT_MODE"
     | "RUN_TEST_CASES"
     | "TOGGLE_OUTPUT_TEST_CASE_MODE"
-    | "SUBMIT_CODE";
+    | "SUBMIT_CODE"
+    | "EXIT_TAB_ON_FULLSCREEN"
+    | "TOGGLE_QUESTION_TAB"
+    | "TOGGLE_OUTPUT_TAB"
+    | "TOGGLE_TEST_CASES_TAB";
 
 export const GAMEPLAY_KEY_BINDINGS: Record<GameplayKeyBindingNames, KeyBinding> = {
     FOCUS_EDITOR: { 
-        action: "Focus on code editor", 
+        action: "Focus on code editor (disable all key bindings that are involved in typing)", 
         combo: { ctrl: false, shift: false, key: 'I' }
     },
     DEFOCUS_EDITOR: { 
@@ -35,13 +39,29 @@ export const GAMEPLAY_KEY_BINDINGS: Record<GameplayKeyBindingNames, KeyBinding> 
         combo: { ctrl: true, shift: true, key: 'Enter' }
     },
     TOGGLE_OUTPUT_TEST_CASE_MODE: { 
-        action: "Toggle Output/Test Case Mode (and Question Mode for some layouts)", 
+        action: "Toggle Output/Test Case Mode (and Question Mode for Two Tabs, Two Tabs Inverted and Fullscreen Editor layouts)", 
         combo: { ctrl: false, shift: false, key: 'T' }
     },
     SUBMIT_CODE: {
         action: "Submit code", 
         combo: { ctrl: false, shift: false, key: 'S' }
-    }
+    },
+    EXIT_TAB_ON_FULLSCREEN: {
+        action: "(Only Fullscreen Editor Layout) Escape from Question, Test Cases or Output Mode",
+        combo: { ctrl: false, shift: false, key: 'Escape' }
+    },
+    TOGGLE_QUESTION_TAB: {
+        action: "(Only Fullscreen MoEditor Layoutde) Toggle Question Mode",
+        combo: { ctrl: false, shift: true, key: 'Q' }
+    },
+    TOGGLE_OUTPUT_TAB: {
+        action: "(Only Fullscreen Editor Layout) Toggle Output Mode",
+        combo: { ctrl: false, shift: true, key: 'O' }
+    },
+    TOGGLE_TEST_CASES_TAB: {
+        action: "(Only Fullscreen Editor Layout) Toggle Test Cases Mode",
+        combo: { ctrl: false, shift: true, key: 'C' }
+    },
 }
 
 export type GeneralKeyBindingNames = "CLOSE_SETTINGS" | "CONFIRM_POPUP" | "CANCEL_POPUP";

@@ -1,8 +1,10 @@
 type InformationPanelButtonsProps = {
-    informationMode: "question" | "testCases" | "output";
-    setInformationMode: (mode: "question" | "testCases" | "output") => void;
+    informationMode: InformationMode;
+    setInformationMode: Dispatch<SetStateAction<InformationMode>>;
 }
 
+import { Dispatch, SetStateAction } from 'react';
+import { InformationMode } from '../gameplayUtils';
 import styles from '../page.module.css';
 
 export default function InformationPanelButtons({ informationMode, setInformationMode }: InformationPanelButtonsProps) {

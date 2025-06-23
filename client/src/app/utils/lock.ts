@@ -38,7 +38,7 @@ export class Lock {
         const release = this.tryAcquire();
 
         if (!release) {
-            throw new Error("Another function is acquiring the same lock, please try again later.");
+            throw new LockUnavailableError();
         }
 
         try {
@@ -46,5 +46,17 @@ export class Lock {
         } finally {
             release();
         }
+    }
+}
+
+/**
+ * The LockUnavailableError is thrown when two or more actions share the same lock, and one function is trying to 
+ * acquire the lock when another function is using it.
+ */
+export class LockUnavailableError extends Error {
+    constructor(message = "Another function is acquiring the same lock, please try again later.") {
+        super(message);
+        this.name = "LockUnavailableError";
+        Object.setPrototypeOf(this, LockUnavailableError.prototype);
     }
 }

@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
 import styles from "./timer.module.css";
 
-export default function CountdownTimer({ initialTime }: {initialTime: number}) {
+type CountdownTimerProps = {
+    initialTime: number;
+    onCountdownEnds?: () => void;
+}
+
+export default function CountdownTimer({ initialTime, onCountdownEnds }: CountdownTimerProps) {
     const [timeLeft, setTimeLeft] = useState(initialTime);
 
     useEffect(() => {
         if (timeLeft <= 0) {
+            if (onCountdownEnds) {
+                onCountdownEnds();
+            }
+            
             return;
         }
 
@@ -14,7 +23,7 @@ export default function CountdownTimer({ initialTime }: {initialTime: number}) {
         }, 1000);
 
         return () => clearInterval(intervalId);
-    }, [timeLeft]);
+    }, [timeLeft, onCountdownEnds]);
 
     const getHour = (time: number) => time / 3600 >= 10
         ? Math.floor(time / 3600)

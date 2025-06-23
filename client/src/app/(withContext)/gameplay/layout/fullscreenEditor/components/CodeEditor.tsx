@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import styles from "../page.module.css";
 import { Editor } from '@monaco-editor/react';
 import * as monaco from "monaco-editor";
-import { useUser } from "@/app/components/contexts/UserContext";
+import { useUserStore } from"@/app/components/contexts/UserContext";
 import { PROGRAMMING_LANGUAGES } from "@/app/components/settings/settingsUtils";
 import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "../../../../../userPrefs/userPrefsUtils";
 import { PRESET_THEMES } from "@/app/components/themes/themes";
@@ -16,7 +16,7 @@ type CodeEditorProps = {
 }
 
 export default function CodeEditor({ onMount, codeContent, setCodeContent }: CodeEditorProps) {
-    const { user } = useUser();
+    const user = useUserStore(state => state.user);
 
     function handleEditorChange(value: string | undefined) {
         setCodeContent(value);

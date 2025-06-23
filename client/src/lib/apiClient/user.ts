@@ -4,14 +4,14 @@ const REST_PASSWORD_SEND_CODE_API = "/api/portal/resetPassword/sendVerificationC
 const REST_PASSWORD_VERIFY_CODE_API = "/api/portal/resetPassword/verifyOtp";
 const REST_PASSWORD_VERIFY_NEW_PASSWORD_API = "/api/portal/resetPassword/verifyNewPassword";
 
-export async function login(username: string, password: string) {
+export async function login(email: string, password: string) {
     const response = await fetch(LOGIN_API, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            username: username,
+            email: email,
             password: password,
         })
     });

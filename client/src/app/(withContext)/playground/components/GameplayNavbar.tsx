@@ -1,6 +1,3 @@
-"use client";
-
-import CountdownTimer from "@/app/components/countdownTimer/CountdownTimer";
 import Image from "next/image";
 import styles from "../page.module.css";
 import { useSettings } from "@/app/components/contexts/SettingsContext";
@@ -51,14 +48,15 @@ export default function GameplayNavbar() {
                     height={20}
                 />
             </button>
-            <CountdownTimer initialTime={900} />
-            <DropdownInput
-                options={options}
-                defaultOption={`${user.userPreference.language} (${PROGRAMMING_LANGUAGES[user.userPreference.language].version})`}
-                inputId="quick-programming-language-options"
-                dropdownName="Programming Language"
-                handleOptionChange={handleOptionChange}
-            />
+            <div className={styles.programmingLanguageDropdown}>
+                <DropdownInput
+                    options={options}
+                    defaultOption={`${user.userPreference.language} (${PROGRAMMING_LANGUAGES[user.userPreference.language].version})`}
+                    inputId="quick-programming-language-options"
+                    dropdownName="Programming Language"
+                    handleOptionChange={handleOptionChange}
+                />
+            </div> 
             <button className={styles.toHome} onClick={() => router.push("/home")}>
                 Exit
             </button>

@@ -1,9 +1,9 @@
 "use client";
 
-import { CSSProperties, Dispatch, SetStateAction, useRef } from "react";
+import { CSSProperties, Dispatch, SetStateAction, useEffect, useRef } from "react";
 import styles from "../page.module.css";
 import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeStatuses";
-import { TestCase, TestCaseResult } from "../../../gameplayUtils";
+import { InformationMode, TestCase, TestCaseResult } from "../../../gameplayUtils";
 import { motion, AnimatePresence } from "motion/react";
 
 type TestCaseProps = {
@@ -11,8 +11,8 @@ type TestCaseProps = {
     setActiveIndex: Dispatch<SetStateAction<number>>
     testCases: TestCase[];
     testCaseResults: TestCaseResult[];
-    informationMode: "Question" | "Output" | "Test Cases" | "";
-    setInformationMode: Dispatch<SetStateAction<"Question" | "Output" | "Test Cases" | "">>;
+    informationMode: InformationMode;
+    setInformationMode: Dispatch<SetStateAction<InformationMode>>;
 }
 
 export default function TestCases({ 
@@ -24,6 +24,8 @@ export default function TestCases({
     setInformationMode
 } : TestCaseProps) {
     const testCaseSelectorsRef = useRef<HTMLLIElement[] | null[]>([]);
+    const overlayRef = useRef<HTMLDivElement>(null);
+    const testCasesRef = useRef<HTMLDivElement>(null);
 
     const CODE_FAIL_BORDER_COLOR = 'var(--error-code-text-border-color)';
     const CODE_SUCCEED_BORDER_COLOR = 'var(--success-code-text-border-color)';
@@ -46,6 +48,22 @@ export default function TestCases({
             ? CODE_SUCCEED_BORDER_COLOR
             : CODE_FAIL_BORDER_COLOR,
     }
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (overlayRef.current && testCasesRef.current
+                && overlayRef.current.contains(event.target as Node)
+                && !testCasesRef.current.contains(event.target as Node)
+            ) {
+                setInformationMode("-");
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+    });
 
     // handle test case selector hovering
     function handleOnMouseEnter(index: number) {
@@ -74,10 +92,11 @@ export default function TestCases({
 
     return (
         <AnimatePresence>
-            {informationMode === "Test Cases" && (
+            {informationMode === "testCases" && (
                 <>
                     <motion.div
                         className={styles.testCasePanelOverlay}
+                        ref={overlayRef}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -85,10 +104,11 @@ export default function TestCases({
                     ></motion.div>
                     <motion.div 
                         className={styles.testCasePanel}
+                        ref={testCasesRef}
                         initial={{ opacity: 0, y: "100%" }}
                         animate={{ opacity: 1, y: "0%" }}
                         exit={{ opacity: 0, y: "100%" }}
-                        transition={{ duration: 0.5, ease: "linear" }}
+                        transition={{ duration: 0.25, ease: "linear" }}
                     >
                         <motion.ul className={styles.testCaseSelector}>
                             {testCases.map((_, index) => (

@@ -8,10 +8,15 @@
             "level": 1,
             "exp": 0,
             "rank": "Rookie",
+            "rankPoints": 1000,
             "userPreference": {
                 "fontSize": 16,
                 "language": "JavaScript",
+                "significantButtonColor": "#007fff",
+                "significantButtonHoverColor": "#0560bc",
+                "gameplayLayout": "Default",
                 "editorOptions": {
+                    "theme": "Visual Studio - Dark",
                     "enableMinimap": true,
                     "lineNumbers": "On",
                     "renderWhiteSpace": "None",

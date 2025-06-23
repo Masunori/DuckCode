@@ -4,7 +4,7 @@
     height: 100vh;
     display: grid;
     grid-template-columns: repeat(9, 1fr);
-    grid-template-rows: 5rem 1fr 10rem;
+    grid-template-rows: 5rem 4fr 1fr;
     grid-template-areas: 
         "nav nav nav nav nav nav nav nav nav"
         "evt inf inf inf inf inf inf gam gam"
@@ -115,6 +115,7 @@
     transition-duration: 0.25s;
     border: none;
     background-color: var(--first-layer-background-color);
+    font-size: 1.2rem;
 }
 
 .inventory:hover, .clan:hover {
@@ -365,70 +366,6 @@
 }
 
 /* Arcade Mode */
-/* .arcadeModeTab {
-    position: fixed;
-    top: 0;
-    right: 0;
-    background-color: var(--second-layer-background-color);
-    width: 50%;
-    height: 100%;
-    z-index: var(--game-menu-tab-z-index);
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-}
-
-.arcadeGameModes {
-    list-style-type: none;
-    border-right: 1px solid var(--settings-option-border-color);
-}
-
-.arcadeGameModes li {
-    padding: 1rem;
-    border-bottom: 1px solid var(--settings-option-border-color);
-    background-color: var(--settings-option-bg-color);
-    cursor: pointer;
-    transition-duration: 0.25s;
-}
-
-.arcadeGameModes li:hover, .arcadeGameModes li.selected {
-    background-color: var(--settings-option-bg-hover-color);
-}
-
-.arcadeGameModeInformation {
-    padding: 1rem;
-}
-
-.arcadeGameModeDescription {
-    padding: 1rem;
-    background-color: var(--terminal-like-background-color);
-    width: 100%;
-    height: 50%;
-    overflow-y: auto;
-    border: 1px solid var(--settings-option-border-color);
-    font-family: var(--code-fragment-font);
-}
-
-.arcadeGameModeInformation .customisation {
-    width: 100%;
-    height: 50%;
-}
-
-.arcadeGameModeInformation .startButton {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    font-size: 1.2rem;
-    padding: 1rem 3rem;
-    background-color: var(--significant-button-color);
-    transition-duration: 0.25s;
-    border: 2px solid var(--first-layer-background-color);
-    border-radius: 0.5rem;
-}
-
-.arcadeGameModeInformation .startButton:hover {
-    background-color: var(--significant-button-hover-color);
-} */
-
 .arcadeModeTab {
     position: fixed;
     top: 10%;

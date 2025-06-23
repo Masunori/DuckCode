@@ -1,61 +1,46 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Question, TestCaseResult } from "../../gameplayUtils";
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { InformationMode, instantiateEditorOnMount, Question, runCodeOutputModeClientSide, runTestCasesClientSide, submitCodeClientSide, TestCaseResult } from "../../gameplayUtils";
 import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, PROGRAMMING_LANGUAGES } from "@/app/components/settings/settingsUtils";
-import { useUser } from "@/app/components/contexts/UserContext";
+import { useUserStore } from "@/app/components/contexts/UserContext";
 import * as monaco from 'monaco-editor';
-import { PRESET_THEMES } from "@/app/components/themes/themes";
-import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeStatuses";
+import { OutputEntry } from "@/app/api/gameplay/RunCodeStatuses";
 import { usePopup } from "@/app/components/contexts/PopupContext";
 import { Lock } from "@/app/utils/lock";
-import { runAllTestCases, runCode, submitCode } from "@/lib/apiClient/gameplay";
 import GameplayNavbar from "../../components/GameplayNavbar";
 import QuestionDisplay from "./components/QuestionDisplay";
 import CodeEditor from "./components/CodeEditor";
 import TestCases from "./components/TestCases";
 import styles from "./page.module.css";
-import { GAMEPLAY_KEY_PRIORITY, keyboardManager } from "@/app/utils/keyboardManager";
+import { GAMEPLAY_KEY_PRIORITY, GAMEPLAY_TAB_KEY_PRIORITY, keyboardManager } from "@/app/utils/keyboardManager";
+import Output from "./components/Output";
 
 export function FullscreenEditorLayout({ question }: {question: Question}) {
     // for code editor
-    const { user } = useUser();
+    const user = useUserStore(state => state.user);
     const [codeContent, setCodeContent] = useState<string | undefined>(PROGRAMMING_LANGUAGES[user.userPreference.language].code_snippet);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
     const lock: Lock = useMemo(() => new Lock(), []);
-    const [isClusterLocked, setIsClusterLocked] = useState(false);
+    // eslint-disable-next-line
+    const setIsClusterLocked: Dispatch<SetStateAction<boolean>> = bool => {};
 
     const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
-        editorRef.current = editor;
-
-        monacoInstance.editor.defineTheme(
-            PRESET_THEMES[user.userPreference.editorOptions.theme].monacoEditorAlias,
-            PRESET_THEMES[user.userPreference.editorOptions.theme].theme
-        )
-
-        editor.onKeyDown((e: monaco.IKeyboardEvent) => {
-            if (e.keyCode === monacoInstance.KeyCode.Escape) {
-                const domNode = editor.getDomNode();
-                if (domNode && domNode.contains(document.activeElement)) {
-                    (document.activeElement as HTMLElement).blur();
-                }
-            }
-        })
+        instantiateEditorOnMount(editorRef, editor, monacoInstance, user);
     }
 
     // this is used in the code output UI component
-    const [informationMode, setInformationMode] = useState<"Question" | "Test Cases" | "Output" | "">("");
+    const [informationMode, setInformationMode] = useState<InformationMode>("-");
     const setNextInformationMode = () => {
-        setInformationMode(prev => (
-            prev === ""
-                ? "Question"
-                : prev === "Question"
-                ? "Output"
-                : prev === "Output"
-                ? "Test Cases"
-                : ""
-        ))
+        setInformationMode(prev => prev === "-"
+            ? "question"
+            : prev === "question"
+            ? "output"
+            : prev === "output"
+            ? "testCases"
+            : "-"
+        );
     }
 
     const [codeOutput, setCodeOutput] = useState<OutputEntry[]>(
@@ -80,24 +65,16 @@ export function FullscreenEditorLayout({ question }: {question: Question}) {
             return;
         }
         
-        try{
-            setIsClusterLocked(true);
-            const response = await lock.call(() => runCode(question.qid, codeContent as string, 'JavaScript'));
-            setInformationMode("Output");
-            setCodeOutput(response.output);
-        } catch {
-            openPopupWith(
-                "Please wait for the code to run before attempting running the code again, running test cases, or submitting the code.",
-                "Understood",
-                null,
-                () => {},
-                () => {}
-            )
-        } finally {
-            setIsClusterLocked(false);
-        }
-        
-    }, [codeContent, lock, openPopupWith, question.qid]);
+        runCodeOutputModeClientSide(
+            codeContent as string,
+            user.userPreference.language,
+            lock,
+            setIsClusterLocked,
+            setCodeOutput,
+            openPopupWith,
+            setInformationMode,
+        );     
+    }, [codeContent, lock, openPopupWith, user.userPreference.language]);
 
     // submit code
     const submit = useCallback(async () => {
@@ -105,28 +82,17 @@ export function FullscreenEditorLayout({ question }: {question: Question}) {
             return;
         }
 
-        try {
-            setIsClusterLocked(true);
-            const response = await lock.call(() => submitCode(question.qid, codeContent as string, 'JavaScript'));
-
-            setInformationMode("Output");
-            setCodeOutput([
-                { type: "log", content: `Correct: ${response.result.correct}` },
-                { type: "log", content: `Total: ${response.result.total}` },
-                { type: response.result.statusId === 1 ? "log" : "error", content: `Status: ${RUN_CODE_RESPONSES[response.result.statusId]}` },
-            ]);
-        } catch {
-            openPopupWith(
-                "Please wait for the code to run before attempting running the code, running test cases, or submitting the code again.",
-                "Understood",
-                null,
-                () => {},
-                () => {}
-            )
-        } finally {  
-            setIsClusterLocked(false);
-        }
-    }, [codeContent, lock, openPopupWith, question.qid]);
+        submitCodeClientSide(
+            codeContent as string,
+            user.userPreference.language,
+            question,
+            lock,
+            setIsClusterLocked,
+            setCodeOutput,
+            openPopupWith,
+            setInformationMode
+        );
+    }, [codeContent, lock, openPopupWith, user.userPreference.language, question]);
 
     // run code against all test cases
     // if all test cases passed, prompt to submit code
@@ -135,47 +101,19 @@ export function FullscreenEditorLayout({ question }: {question: Question}) {
             return;
         }
 
-        try {
-            setIsClusterLocked(true);
-            const response = await lock.call(() => runAllTestCases(question.qid, codeContent as string, 'JavaScript'));
-
-            setInformationMode("Test Cases");
-            setTestCaseResults(response.results);
-
-            for (let i = 0; i < response.results.length; i++) {
-                if (RUN_CODE_RESPONSES[response.results[i].statusId] !== RunCodeStatuses.ACCEPTED) {
-                    openPopupWith(
-                        `Test case ${i + 1} failed. Reason: ${response.results[i].message}`,
-                        "Understood",
-                        null,
-                        () => {},
-                        () => {}
-                    );
-
-                    setActiveIndex(i);
-                    return;
-                }
-            }
-            
-            openPopupWith(
-                `All public test cases passed!`,
-                "Submit Code",
-                "Go back to code",
-                submit,
-                () => {}
-            );
-        } catch {
-            openPopupWith(
-                "Please wait for the code to run before attempting running the code, running test cases again, or submitting the code.",
-                "Understood",
-                null,
-                () => {},
-                () => {}
-            )
-        } finally {
-            setIsClusterLocked(false);
-        }
-    }, [codeContent, lock, openPopupWith, question.qid, submit]);
+        runTestCasesClientSide(
+            codeContent as string,
+            user.userPreference.language,
+            question,
+            lock,
+            setIsClusterLocked,
+            setCodeOutput,
+            setTestCaseResults,
+            setActiveIndex,
+            openPopupWith,
+            setInformationMode
+        );
+    }, [codeContent, lock, openPopupWith, question, user.userPreference.language]);
 
     // this useEffect encapsulates all key bindings
     useEffect(() => {
@@ -207,7 +145,6 @@ export function FullscreenEditorLayout({ question }: {question: Question}) {
                 return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TEST_CASE_MODE"].combo)) {
                 e.preventDefault();
-                // setInformationMode(prev => prev === "Question" ? "Test Cases" : prev === "Test Cases" ? "Output" : "Question");
                 setNextInformationMode();
                 return true;
             }
@@ -215,11 +152,37 @@ export function FullscreenEditorLayout({ question }: {question: Question}) {
             return false;
         }
 
+        const handleCloseTab = (e: KeyboardEvent) => {
+            if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["EXIT_TAB_ON_FULLSCREEN"].combo) && informationMode !== "-") {
+                e.preventDefault();
+                setInformationMode("-");
+                return true;
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_QUESTION_TAB"].combo)) {
+                e.preventDefault();
+                setInformationMode(prev => prev === "question" ? "-" : "question");
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TAB"].combo)) {
+                e.preventDefault();
+                setInformationMode(prev => prev === "output" ? "-" : "output");
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_TEST_CASES_TAB"].combo)) {
+                e.preventDefault();
+                setInformationMode(prev => prev === "testCases" ? "-" : "testCases");
+            }
+
+            return false;
+        };
+        
         keyboardManager.register("gameplay", GAMEPLAY_KEY_PRIORITY, handleKeyDown);
+        keyboardManager.register("gameplayFullscreen", GAMEPLAY_TAB_KEY_PRIORITY, handleCloseTab);
+
         return () => {
             keyboardManager.unregister("gameplay");
+            keyboardManager.unregister("gameplayFullscreen");
         }
-    }, [runCodeOutputMode, runTestCases, submit]);
+    }, [runCodeOutputMode, runTestCases, submit, informationMode]);
+
+    useEffect(() => {
+        console.log(informationMode);
+    }, [informationMode]);
 
     return (
         <div ref={gameplayRef} tabIndex={0} className={styles.fullscreenEditorLayout}>
@@ -242,32 +205,11 @@ export function FullscreenEditorLayout({ question }: {question: Question}) {
                 informationMode={informationMode}
                 setInformationMode={setInformationMode}
             />
-            {/* <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
-                <Panel defaultSize={40} minSize={2}>
-                    <QuestionDisplay question={question} />
-                </Panel>
-                <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
-                <Panel defaultSize={60} minSize={2} className={styles.codePanel}>
-                    <CodeEditor 
-                        onMount={handleEditorDidMount}
-                        codeContent={codeContent}
-                        setCodeContent={setCodeContent}
-                    />
-                    <TestCases 
-                        activeIndex={activeIndex}
-                        setActiveIndex={setActiveIndex}
-                        testCases={question.publicTestCases} 
-                        isOutputMode={isOutputMode}
-                        setIsOutputMode={setIsOutputMode}
-                        codeOutput={codeOutput}
-                        runCode={runCodeOutputMode}
-                        runTestCases={runTestCases}
-                        submitCode={submit}
-                        testCaseResults={testCaseResults}
-                        isClusterLocked={isClusterLocked}
-                    />
-                </Panel>
-            </PanelGroup> */}
+            <Output
+                codeOutput={codeOutput}
+                informationMode={informationMode}
+                setInformationMode={setInformationMode}
+            />
         </div>
     );
 }

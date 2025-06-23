@@ -30,7 +30,7 @@ function StylizedGameMenuButton({ buttonName, onClick, buttonDescription }: Styl
 export default function GameMenu() {
     const router = useRouter();
 
-    const [tab, setTab] = useState<GameMenuTab>("Arcade");
+    const [tab, setTab] = useState<GameMenuTab>("");
 
     return (
         <div className={styles.gameMenu}>

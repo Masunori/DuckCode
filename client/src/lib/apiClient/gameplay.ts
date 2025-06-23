@@ -1,4 +1,5 @@
-import { CodeSubmissionResponse, TestCaseResult } from '@/app/(withContext)/gameplay/gameplayUtils';
+import { CodeSubmissionResponse, Question, TestCaseResult } from '@/app/(withContext)/gameplay/gameplayUtils';
+import { OutputEntry } from '@/app/api/gameplay/RunCodeStatuses';
 import { PLKeys, PROGRAMMING_LANGUAGES } from '@/app/components/settings/settingsUtils';
 import sleep from '@/app/utils/delay';
 
@@ -11,7 +12,7 @@ function consume(item: unknown) {
     return item;
 }
 
-export async function getQuestion(difficulty: number) {
+export async function getQuestion(difficulty: number): Promise<Question> {
     const response = await fetch(getQuestionApi(difficulty), {
         cache: "no-store",
     });
@@ -21,7 +22,7 @@ export async function getQuestion(difficulty: number) {
     return data.question;
 }
 
-export async function runCode(qid: number, sourceCode: string, language: string) {
+export async function runCode(qid: number, sourceCode: string, language: string): Promise<{ status: number, output: OutputEntry[] | undefined, message: string | undefined }> {
     const response = await fetch(RUN_CODE_API, {
         method: 'POST',
         headers: {
@@ -39,7 +40,8 @@ export async function runCode(qid: number, sourceCode: string, language: string)
 
     return {
         status: response.status,
-        output: data.output
+        output: data?.output,
+        message: data?.message,
     }
 }
 

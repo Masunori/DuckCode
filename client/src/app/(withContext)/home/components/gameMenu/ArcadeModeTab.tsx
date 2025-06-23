@@ -3,7 +3,7 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import styles from "../../page.module.css";
 import { GAME_MODES, GameMenuTab } from "../../homeUtils";
-import { useUser } from "@/app/components/contexts/UserContext";
+import { useUserStore } from "@/app/components/contexts/UserContext";
 import { motion } from 'motion/react';
 import DoubleThumbRangeInput from "@/app/components/inputs/DoubleThumbRangeInput";
 
@@ -12,7 +12,7 @@ type ArcadeModeTabProps = {
 }
 
 export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
-    const { user } = useUser();
+    const user = useUserStore(state => state.user);
 
     // Handle closing the tab when clicking outside of it.
     const overlayRef = useRef<HTMLDivElement>(null);
@@ -67,14 +67,14 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                         <div className={styles.container}>
                             <div className={styles.arcadeModeOption}>
                                 <DoubleThumbRangeInput
-                                    inputId="diffucilty-slider"
+                                    inputId="difficulty-slider"
                                     inputName="Difficulty"
                                     defaultMinThumbValue={Math.min(Math.max(user.rankPoints, 0), 5000)}
                                     defaultMaxThumbValue={Math.min(Math.max(user.rankPoints, 0), 5000)}
                                     min={0}
                                     max={5000}
                                     step={25}
-                                    onChange={(lower, upper) => {}}
+                                    onChange={(lower, upper) => { console.log(lower + " " + upper) }}
                                 />
                             </div>
                         </div>
