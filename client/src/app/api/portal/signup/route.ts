@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { NextRequest, NextResponse } from 'next/server';
 import { SignupStatuses } from '@/app/api/portal/signup/SignupStatuses';
-import { PRISTINE_USER, PRISTINE_USER_PREFERENCE, User } from '@/app/userPrefs/userPrefsUtils';
+import { PRISTINE_USER, User } from '@/app/userPrefs/userPrefsUtils';
 
 export async function POST(request: NextRequest) {
     try {
@@ -37,6 +37,10 @@ export async function POST(request: NextRequest) {
         }
 
         const newUser: User = structuredClone(PRISTINE_USER);
+        newUser.name = username;
+        newUser.email = email;
+        newUser.password = password;
+
         data.users.push(newUser);
         await fs.writeFile(filePath, JSON.stringify(data, null, 4));
 
