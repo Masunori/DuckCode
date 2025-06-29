@@ -146,10 +146,24 @@ export function DefaultLayout({ question }: {question: Question}) {
         }
     }, [runCodeOutputMode, runTestCases, submit, informationMode]);
 
+    function forceSubmitOnCountdownEnds() {
+        submit()
+            .catch(err => {
+                console.log(err);
+            });
+
+        openPopupWith(
+            "Time's up! Your code is being submitted...",
+            "Understood",
+            null,
+            () => {},
+            () => {}
+        );
+    }
 
     return (
         <div ref={gameplayRef} tabIndex={0}>
-            <GameplayNavbar />
+            <GameplayNavbar forceSubmitOnCountdownEnds={forceSubmitOnCountdownEnds} />
             <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
                 <Panel defaultSize={40} minSize={2}>
                     <QuestionDisplay question={question} />

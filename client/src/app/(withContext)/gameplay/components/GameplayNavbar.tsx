@@ -11,7 +11,11 @@ import { usePopup } from "@/app/components/contexts/PopupContext";
 import { UserPreference } from "../../../userPrefs/userPrefsUtils";
 import { useRouter } from "next/navigation";
 
-export default function GameplayNavbar() {
+type GameplayNavbarProps = {
+    forceSubmitOnCountdownEnds?: () => void;
+}
+
+export default function GameplayNavbar({ forceSubmitOnCountdownEnds = () => {} }: GameplayNavbarProps) {
     const { openSettings } = useSettings();
     const user = useUserStore(state => state.user);
     const setUserField = useUserStore(state => state.setUserField);
@@ -51,7 +55,10 @@ export default function GameplayNavbar() {
                     height={20}
                 />
             </button>
-            <CountdownTimer initialTime={900} />
+            <CountdownTimer 
+                initialTime={10} 
+                onCountdownEnds={forceSubmitOnCountdownEnds}
+            />
             <DropdownInput
                 options={options}
                 defaultOption={`${user.userPreference.language} (${PROGRAMMING_LANGUAGES[user.userPreference.language].version})`}

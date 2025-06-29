@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./timer.module.css";
 
 type CountdownTimerProps = {
@@ -8,11 +8,21 @@ type CountdownTimerProps = {
 
 export default function CountdownTimer({ initialTime, onCountdownEnds }: CountdownTimerProps) {
     const [timeLeft, setTimeLeft] = useState(initialTime);
+    const hasEndedRef = useRef(false);
+
+    /*
+        If the timer is ever reset, add
+
+        useEffect(() => {
+            hasEndedRef.current = false;
+        }, [countdownId]);
+    */
 
     useEffect(() => {
         if (timeLeft <= 0) {
-            if (onCountdownEnds) {
-                onCountdownEnds();
+            if (!hasEndedRef.current) {
+                hasEndedRef.current = true;
+                onCountdownEnds?.();
             }
             
             return;
