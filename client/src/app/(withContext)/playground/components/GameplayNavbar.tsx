@@ -1,6 +1,3 @@
-"use client";
-
-import CountdownTimer from "@/app/components/countdownTimer/CountdownTimer";
 import Image from "next/image";
 import styles from "../page.module.css";
 import { useSettings } from "@/app/components/contexts/SettingsContext";
@@ -11,11 +8,7 @@ import { usePopup } from "@/app/components/contexts/PopupContext";
 import { UserPreference } from "../../../userPrefs/userPrefsUtils";
 import { useRouter } from "next/navigation";
 
-type GameplayNavbarProps = {
-    forceSubmitOnCountdownEnds?: () => void;
-}
-
-export default function GameplayNavbar({ forceSubmitOnCountdownEnds = () => {} }: GameplayNavbarProps) {
+export default function GameplayNavbar() {
     const { openSettings } = useSettings();
     const user = useUserStore(state => state.user);
     const setUserField = useUserStore(state => state.setUserField);
@@ -55,17 +48,15 @@ export default function GameplayNavbar({ forceSubmitOnCountdownEnds = () => {} }
                     height={20}
                 />
             </button>
-            <CountdownTimer 
-                initialTime={10} 
-                onCountdownEnds={forceSubmitOnCountdownEnds}
-            />
-            <DropdownInput
-                options={options}
-                defaultOption={`${user.userPreference.language} (${PROGRAMMING_LANGUAGES[user.userPreference.language].version})`}
-                inputId="quick-programming-language-options"
-                dropdownName="Programming Language"
-                handleOptionChange={handleOptionChange}
-            />
+            <div className={styles.programmingLanguageDropdown}>
+                <DropdownInput
+                    options={options}
+                    defaultOption={`${user.userPreference.language} (${PROGRAMMING_LANGUAGES[user.userPreference.language].version})`}
+                    inputId="quick-programming-language-options"
+                    dropdownName="Programming Language"
+                    handleOptionChange={handleOptionChange}
+                />
+            </div> 
             <button className={styles.toHome} onClick={() => router.push("/home")}>
                 Exit
             </button>

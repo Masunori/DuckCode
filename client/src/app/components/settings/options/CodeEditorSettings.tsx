@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction } from "react";
 import * as monaco from 'monaco-editor';
 import { Editor } from "@monaco-editor/react";
 import NumberInput from "../../inputs/NumberInput";
-import { useUser } from "../../contexts/UserContext";
+import { useUserStore } from"../../contexts/UserContext";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { PRESET_THEMES } from "../../themes/themes";
 
@@ -16,7 +16,7 @@ type CodeEditorSettingsProps = {
 }
 
 export default function CodeEditorSettings({ nextUserPreference, setNextUserPreference }: CodeEditorSettingsProps) {
-    const { user } = useUser();
+    const user = useUserStore(state => state.user);
     const userPreference = user.userPreference;
 
     const options = Object.entries(PROGRAMMING_LANGUAGES).map(([plkey, value]) => `${plkey} (${value.version})`);

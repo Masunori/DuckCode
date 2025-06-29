@@ -1,10 +1,10 @@
 "use client";
 
-import { useUser } from "@/app/components/contexts/UserContext";
+import { useUserStore } from "@/app/components/contexts/UserContext";
 import { useEffect } from "react";
 
 export default function UserPrefRootSetter() {
-    const { user } = useUser();
+    const user = useUserStore(state => state.user);
     const userPreference = user.userPreference;
 
     useEffect(() => {

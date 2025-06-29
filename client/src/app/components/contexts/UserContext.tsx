@@ -1,29 +1,41 @@
 "use client";
 
-import React, { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
-import { PRISTINE_USER, User } from "@/app/userPrefs/userPrefsUtils";
+import { LeafPath, PRISTINE_USER, User } from "@/app/userPrefs/userPrefsUtils";
+import { create } from "zustand";
+import { combine } from "zustand/middleware";
 
-type UserContextType = {
+type UserStore = {
     user: User;
-    setUser: Dispatch<SetStateAction<User>>
+    setUserField: (path: LeafPath<User>, value: unknown) => void;
+    setUser: (user: User) => void;
 }
 
-const UserContext = createContext<UserContextType | null>(null);
+export const useUserStore = create<UserStore>(
+    combine({ user: structuredClone(PRISTINE_USER) }, (set) => {
+        return {
+            setUserField: (path: LeafPath<User>, value: unknown) => {
+                set((state) => {
+                    const keys = path.split(".");
+                    const newUser = { ...state.user };
 
-export function UserProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<User>(structuredClone(PRISTINE_USER)); 
+                    // To traverse the User object recursively, `cursor` must be of type User or any object within User
+                    // However, cursor = User does not work because it cannot confirm if keys[i] is a valid user attribute.
+                    // cursor = object also does not work because it (somehow) cannot "cast type string to {}"
+                    // cursor = Record<string, unknown> also does not work because Record cannot be spread
+                    // Hence, cast cursor to any and suppress eslint.
 
-    return (
-        <UserContext.Provider value={{ user, setUser }}>
-            {children}
-        </UserContext.Provider>
-    )
-}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    let cursor: any = newUser;
 
-export function useUser() {
-    const ctx = useContext(UserContext);
-    if (!ctx) {
-        throw new Error('useUser must be used inside a UserProvider');
-    }
-    return ctx;
-}
+                    for (let i = 0; i < keys.length - 1; i++) {
+                        cursor[keys[i]] = { ...cursor[keys[i]] };
+                        cursor = cursor[keys[i]];
+                    }
+                    cursor[keys.at(-1)!] = value;
+                    return { user: newUser };
+                })
+            },
+            setUser: (user: User) => set(() => ({ user })),
+        }
+    })
+)

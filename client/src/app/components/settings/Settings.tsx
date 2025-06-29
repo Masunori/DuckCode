@@ -8,17 +8,21 @@ import GeneralSettings from "./options/GeneralSettings";
 import CodeEditorSettings from "./options/CodeEditorSettings";
 import { GENERAL_KEY_BINDINGS, isKeyCombo } from "./settingsUtils";
 import { PRISTINE_USER_PREFERENCE, UserPreference } from "@/app/userPrefs/userPrefsUtils";
-import { useUser } from "../contexts/UserContext";
+import { useUserStore } from "../contexts/UserContext";
 import { usePopup } from "../contexts/PopupContext";
 import equal from 'fast-deep-equal';
 import { keyboardManager, SETTINGS_KEY_PRIORITY } from "@/app/utils/keyboardManager";
 import sleep from "@/app/utils/delay";
+import AccountSettings from "./options/AccountSettings";
 
-type SettingsOptionNames = "General" | "Code Editor" | "Keyboard Shortcut Configuration";
+type SettingsOptionNames = "General" | "Code Editor" | "Keyboard Shortcut Configuration" | "Account";
 
 export default function Settings() {
     const { isSettingsOpen, closeSettings } = useSettings();
-    const { user, setUser } = useUser();
+
+    const user = useUserStore(state => state.user);
+    const setUserField = useUserStore(state => state.setUserField);
+
     const { openPopupWith } = usePopup();
     const [activeSettingsOption, setActiveSettingsOption] = useState<SettingsOptionNames>("Keyboard Shortcut Configuration");
 
@@ -27,10 +31,7 @@ export default function Settings() {
     const [nextUserPreference, setNextUserPreference] = useState<UserPreference>(structuredClone(user.userPreference));
 
     function setUserPreference(userPreference: UserPreference) {
-        setUser({
-            ...user,
-            userPreference: userPreference
-        })
+        setUserField("userPreference", userPreference);
     }
 
     useEffect(() => { // re-initializes whenever Settings is opened
@@ -139,6 +140,9 @@ export default function Settings() {
         "Keyboard Shortcut Configuration": {
             component: <KeyboardShortcutSettings />
         },
+        "Account": {
+            component: <AccountSettings nextUserPreference={nextUserPreference} setNextUserPreference={setNextUserPreference} />
+        }
     }
 
     // key binding to exit settings

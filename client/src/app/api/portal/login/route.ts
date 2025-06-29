@@ -12,7 +12,7 @@ type User = {
 export async function POST(request: NextRequest) {
     try {
         const requestData = await request.json();
-        const username = requestData.username;
+        const email = requestData.email;
         const password = requestData.password;
 
         const filePath = path.join(process.cwd(), 'src', 'app', 'api', 'portal', 'dummyUserDB.json');
@@ -20,10 +20,10 @@ export async function POST(request: NextRequest) {
         const data = JSON.parse(file);
         const users: User[] = data.users;
 
-        const user = users.find((user => user.name === username && user.password === password));
+        const user = users.find((user => user.email === email && user.password === password));
         if (!user) {
             return NextResponse.json({ 
-                message: "Username or password is incorrect!" 
+                message: "Email or password is incorrect!" 
             }, { status: 401 });
         }
 
