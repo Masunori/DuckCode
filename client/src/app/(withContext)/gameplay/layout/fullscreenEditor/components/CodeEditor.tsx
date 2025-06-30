@@ -6,7 +6,7 @@ import { Editor } from '@monaco-editor/react';
 import * as monaco from "monaco-editor";
 import { useUserStore } from"@/app/components/contexts/UserContext";
 import { PROGRAMMING_LANGUAGES } from "@/app/components/settings/settingsUtils";
-import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "../../../userPrefs/userPrefsUtils";
+import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "../../../../../userPrefs/userPrefsUtils";
 import { PRESET_THEMES } from "@/app/components/themes/themes";
 
 type CodeEditorProps = {

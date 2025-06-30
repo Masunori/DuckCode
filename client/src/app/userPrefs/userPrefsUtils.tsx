@@ -28,6 +28,7 @@ export type User = {
     level: number;
     exp: number;
     rank: string;
+    rankPoints: number;
     userPreference: UserPreference;
     bio?: string;
     createdAt?: string;
@@ -82,12 +83,26 @@ export const PRISTINE_USER: User = {
     level: 1,
     exp: 0,
     rank: "Rookie",
+    rankPoints: 1000,
     userPreference: structuredClone(PRISTINE_USER_PREFERENCE),
     bio: "Welcome to my DuckCode profile!",
     createdAt: "2023-01-01T00:00:00Z",
     isTwoFactorEnabled: false,
     profilePicture: "/default-profile.png", // Update with a default profile picture path
 }
+
+/**
+    The list of all paths in the user object.
+    Type 'T' is the type of the object to extract all types.
+*/
+export type LeafPath<T, Prev extends string = ""> = {
+    [K in keyof T]: T[K] extends object
+        ? `${Prev}${Extract<K, string>}` | LeafPath<T[K], `${Prev}${Extract<K, string>}.`>
+        : `${Prev}${Extract<K, string>}`;
+}[keyof T];
+
+// uncomment the following line, and type quotation marks to see all available hinted values:
+// const userPath: LeafPath<User> = <delete this and type quotation marks ("") here>
 
 /*
     Settings to consider:

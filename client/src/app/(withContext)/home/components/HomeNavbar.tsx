@@ -42,6 +42,8 @@ export default function HomeNavbar({ user }: { user: User }) {
                     <p>{user.rank}</p>
                 </div>
             </div>
+            <button className={styles.inventory}>Inventory</button>
+            <button className={styles.clan}>Clan</button>
             <button className={styles.toSettings} onClick={openSettings}>
                 <Image 
                     src={'/icons/settings.png'} 

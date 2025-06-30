@@ -5,7 +5,7 @@ import { PortalMode } from "@/app/portal/PortalMode";
 import styles from '../page.module.css';
 import { Dispatch, SetStateAction, useState } from "react";
 import { login } from "../../../lib/apiClient/user";
-import { useUser } from "@/app/components/contexts/UserContext";
+import { useUserStore } from"@/app/components/contexts/UserContext";
 import { User } from "@/app/userPrefs/userPrefsUtils";
 import { useRouter } from "next/navigation";
 
@@ -17,33 +17,33 @@ type LoginProps = {
 enum LoginStatus {
     NONE,
     EMPTY_FIELDS,
-    WRONG_USERNAME_OR_PASSWORD
+    WRONG_EMAIL_OR_PASSWORD
 }
 
 export default function Login({ portalMode, setPortalMode }: LoginProps) {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const [loginError, setLoginError] = useState(LoginStatus.NONE);
     const ERROR_COLOR = '#FF5C00';
 
-    const { setUser } = useUser();
+    const setUser = useUserStore(state => state.setUser);
 
     const router = useRouter();
 
     async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        if (username === '' || password === '') {
+        if (email === '' || password === '') {
             setLoginError(LoginStatus.EMPTY_FIELDS);
             return;
         }
 
-        await login(username, password)
+        await login(email, password)
         .then(response => {
             if (response.status === 401) {
-                setLoginError(LoginStatus.WRONG_USERNAME_OR_PASSWORD);
+                setLoginError(LoginStatus.WRONG_EMAIL_OR_PASSWORD);
             }
 
             setUser(response.data.user as User);
@@ -54,9 +54,9 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
         })
     }
 
-    function handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
         const value = event.target.value;
-        setUsername(value);
+        setEmail(value);
     }
 
     function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -72,14 +72,14 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
                 <h2>Welcome back to DuckCode!</h2>
                 <h4>Please login to continue</h4>
                 <form onSubmit={handleLogin}>
-                    <label htmlFor="loginUsername">
-                        <p>Username</p>
+                    <label htmlFor="loginEmail">
+                        <p>Email</p>
                         <input 
-                            id="loginUsername"
-                            type="text" 
+                            id="loginEmail"
+                            type="email" 
                             name="username"
-                            value={username}
-                            onChange={handleUsernameChange}
+                            value={email}
+                            onChange={handleEmailChange}
                         ></input>
                     </label>
                     <label htmlFor="loginPassword" className={styles.passwordLabel}>
@@ -96,7 +96,7 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
                         </button>
                     </label>
                     <ul>
-                        {loginError === LoginStatus.WRONG_USERNAME_OR_PASSWORD && 
+                        {loginError === LoginStatus.WRONG_EMAIL_OR_PASSWORD && 
                             <li style={{ 
                                 color: ERROR_COLOR,
                                 fontWeight: 'bold', 
@@ -118,10 +118,10 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
 
                     <button 
                         type="submit"
-                        disabled={username === '' || password === ''}
+                        disabled={email === '' || password === ''}
                         style={{
-                            cursor: username === '' || password === '' ? 'not-allowed' : 'pointer',
-                            opacity: username === '' || password === '' ? 0.5 : 1
+                            cursor: email === '' || password === '' ? 'not-allowed' : 'pointer',
+                            opacity: email === '' || password === '' ? 0.5 : 1
                         }}
                     >Login</button>
 

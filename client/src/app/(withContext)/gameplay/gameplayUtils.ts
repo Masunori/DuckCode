@@ -1,3 +1,13 @@
+"use client";
+
+import { Dispatch, RefObject, SetStateAction } from "react";
+import * as monaco from 'monaco-editor';
+import { PRESET_THEMES } from "@/app/components/themes/themes";
+import { User } from "@/app/userPrefs/userPrefsUtils";
+import { Lock, LockUnavailableError } from "@/app/utils/lock";
+import { runAllTestCases, runCode, submitCode } from "@/lib/apiClient/gameplay";
+import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeStatuses";
+
 export type TestCase = {
     tid: number;
     input: string;
@@ -124,4 +134,264 @@ export type CodeSubmissionResponse = {
     correct: number;
     total: number;
     statusId: number;
+}
+
+export type InformationMode = "question" | "testCases" | "output" | "-";
+
+/**
+ * A utility function to help instantiate Monaco Editor when the editor mounts.
+ * When passing a function to the Editor's `onMount` attribute, the function looks something like this:
+ * 
+ * ```typescript
+ * import * as monaco from 'monaco-editor';
+ * import { Editor } from '@monaco-editor/react;;
+ * 
+ * const user = useUserStore(state => state.user); // call the user context
+ * const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+ * 
+ * function handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) {
+ *      handleEditorDidMount(editorRef, editor, MonacoInstance, user);
+ * }
+ * 
+ * return {
+ *     <Editor
+ *         onMount={handleEditorDidMount}
+ *     />
+ * }
+ * ```
+ * 
+ * @param editorRef The React reference to the editor, initialised using `useRef`
+ * @param editor The `onMount` attribute is a function that exposes the `editor` instance, pass this to editorRef.current for future use
+ * @param monacoInstance The `onMount` attribute is a function that exposes the `monaco` instance, use this to manipulate monaco settings
+ * @param user Stores the preference to pass into the editor
+ */
+export function instantiateEditorOnMount(
+    editorRef: RefObject<monaco.editor.IStandaloneCodeEditor | null>,
+    editor: monaco.editor.IStandaloneCodeEditor, 
+    monacoInstance: typeof monaco,
+    user: User
+) {
+    editorRef.current = editor;
+
+    monacoInstance.editor.defineTheme(
+        PRESET_THEMES[user.userPreference.editorOptions.theme].monacoEditorAlias,
+        PRESET_THEMES[user.userPreference.editorOptions.theme].theme
+    );
+
+    // the "Escape" key will defocus from the code editor
+    editor.onKeyDown((e: monaco.IKeyboardEvent) => {
+        if (e.keyCode === monacoInstance.KeyCode.Escape) {
+            const domNode = editor.getDomNode();
+            if (domNode && domNode.contains(document.activeElement)) {
+                (document.activeElement as HTMLElement).blur();
+            }
+        }
+    });
+}
+
+/*
+    ABOUT THE LOCK MECHANISM
+
+    In multiplayer or arcade, there are 3 functionalities that make a call to the same compiler API:
+    - Run code in output mode (just run the code and get whatever printed)
+    - Run code in test cases mode (run the code against a bunch of public test cases)
+    - Submit code (run the code against both public and private test cases)
+
+    These functionalities will share a lock. A lock is a mechanism that, when one of the functionalities are running, 
+    it will block the other functionalities (even another call to this same functionality) from running, until this run ends.
+    Read more about the `Lock` class at `src/app/utils/lock.tsx`.
+
+    This mechanism prevents spamming calls on te client side by spamming buttons.
+*/
+
+/**
+ * Runs the user code and handles the necessary UI display.
+ * 
+ * @param codeContent The user's code
+ * @param programmingLanguage The user's chosen programming language for the code
+ * @param lock Refer to line 192 of this file for the lock
+ * @param setIsClusterLocked Set the React state of the cluster's locked status
+ * @param setCodeOutput Set the output returned by the compiler API
+ * @param openPopupWith This function cannot access the popup context, so it relies on the caller which is a React component within the popup context provider
+ * @param setInformationMode in some layouts, the user toggles between `"question"`, `"output"` and `"testCases"` modes, pass the set function here. If there is no multiple information modes, you can ignore this
+ */
+export async function runCodeOutputModeClientSide(
+    codeContent: string,
+    programmingLanguage: string,
+    lock: Lock,
+    setIsClusterLocked: Dispatch<SetStateAction<boolean>>,
+    setCodeOutput: Dispatch<SetStateAction<OutputEntry[]>>,
+    openPopupWith: (popupMessage: string, confirmMessage: string, cancelMessage: string | null, confirm: () => void, cancelFn: () => void) => void,
+    setInformationMode?: Dispatch<SetStateAction<InformationMode>>,
+) {
+    try {
+        setIsClusterLocked(true);
+        const response = await lock.call(() => runCode(0, codeContent, programmingLanguage));
+        
+        if (setInformationMode) {
+            setInformationMode("output");
+        }
+
+        if (response.status != 200 || !response.output) {
+            throw new Error(`An error occurred. Error code: ${response.status}. Message: ${response.message}`);
+        }
+
+        setCodeOutput(response.output);
+    } catch (err) {
+        if (err instanceof LockUnavailableError) {
+            openPopupWith(
+                "Please wait for the code to run before attempting running the code again, running test cases, or submitting the code.",
+                "Understood",
+                null,
+                () => {},
+                () => {}
+            );
+        } else {
+            openPopupWith(
+                (err as Error).message,
+                "Understood",
+                null,
+                () => {},
+                () => {}
+            );
+        }
+    } finally {
+        setIsClusterLocked(false);
+    }
+}
+
+/**
+ * Run the user's code against a list of public test cases for a question and handles the necessary UI display.
+ * 
+ * @param codeContent The user's code
+ * @param programmingLanguage The user's chosen programming language for the code
+ * @param question The question in which the user is submitting code for
+ * @param lock Refer to line 192 of this file for the lock
+ * @param setIsClusterLocked Set the React state of the cluster's locked status
+ * @param setCodeOutput Set the output returned by the compiler API
+ * @param setTestCaseResults Set the test case results array with the API call's response
+ * @param setActiveIndex Set the index for the test case that is displayed in the test case panel
+ * @param openPopupWith This function cannot access the popup context, so it relies on the caller which is a React component within the popup context provider
+ * @param setInformationMode in some layouts, the user toggles between `"question"`, `"output"` and `"testCases"` modes, pass the set function here. If there is no multiple information modes, you can ignore this
+ */
+export async function runTestCasesClientSide(
+    codeContent: string,
+    programmingLanguage: string,
+    question: Question,
+    lock: Lock,
+    setIsClusterLocked: Dispatch<SetStateAction<boolean>>,
+    setCodeOutput: Dispatch<SetStateAction<OutputEntry[]>>,
+    setTestCaseResults: Dispatch<SetStateAction<TestCaseResult[]>>,
+    setActiveIndex: Dispatch<SetStateAction<number>>,
+    openPopupWith: (popupMessage: string, confirmMessage: string, cancelMessage: string | null, confirm: () => void, cancelFn: () => void) => void,
+    setInformationMode?: Dispatch<SetStateAction<InformationMode>>,
+) {
+    try {
+        setIsClusterLocked(true);
+        const response = await lock.call(() => runAllTestCases(question.qid, codeContent, programmingLanguage));
+
+        if (setInformationMode) {
+            setInformationMode("testCases");
+        }
+        setTestCaseResults(response.results);
+
+        for (let i = 0; i < response.results.length; i++) {
+            if (RUN_CODE_RESPONSES[response.results[i].statusId] !== RunCodeStatuses.ACCEPTED) {
+                openPopupWith(
+                    `Test case ${i + 1} failed. Reason: ${response.results[i].message}`,
+                    "Understood",
+                    null,
+                    () => {},
+                    () => {}
+                );
+
+                setActiveIndex(i);
+                return;
+            }
+        }
+        
+        openPopupWith(
+            `All public test cases passed!`,
+            "Submit Code",
+            "Go back to code",
+            () => submitCodeClientSide(
+                codeContent,
+                programmingLanguage,
+                question,
+                lock,
+                setIsClusterLocked,
+                setCodeOutput,
+                openPopupWith,
+                setInformationMode
+            ),
+            () => {}
+        );
+    } catch {
+        openPopupWith(
+            "Please wait for the code to run before attempting running the code, running test cases again, or submitting the code.",
+            "Understood",
+            null,
+            () => {},
+            () => {}
+        )
+    } finally {
+        setIsClusterLocked(false);
+    }
+}
+
+/**
+ * Submits the user code for a question and handles the necessary UI display.
+ * 
+ * @param codeContent The user's code
+ * @param programmingLanguage The user's chosen programming language for the code
+ * @param question The question in which the user is submitting code for
+ * @param lock Refer to line 192 of this file for the lock
+ * @param setIsClusterLocked Set the React state of the cluster's locked status
+ * @param setCodeOutput Set the output returned by the compiler API
+ * @param openPopupWith This function cannot access the popup context, so it relies on the caller which is a React component within the popup context provider
+ * @param setInformationMode in some layouts, the user toggles between `"question"`, `"output"` and `"testCases"` modes, pass the set function here. If there is no multiple information modes, you can ignore this
+ */
+export async function submitCodeClientSide(
+    codeContent: string,
+    programmingLanguage: string,
+    question: Question,
+    lock: Lock,
+    setIsClusterLocked: Dispatch<SetStateAction<boolean>>,
+    setCodeOutput: Dispatch<SetStateAction<OutputEntry[]>>,
+    openPopupWith: (popupMessage: string, confirmMessage: string, cancelMessage: string | null, confirm: () => void, cancelFn: () => void) => void,
+    setInformationMode?: Dispatch<SetStateAction<InformationMode>>,
+) {
+    try {
+        setIsClusterLocked(true);
+        const response = await lock.call(() => submitCode(question.qid, codeContent, programmingLanguage));
+
+        if (setInformationMode) {
+            setInformationMode("output");
+        }
+        setCodeOutput([
+            { type: "log", content: `Correct: ${response.result.correct}` },
+            { type: "log", content: `Total: ${response.result.total}` },
+            { type: response.result.statusId === 1 ? "log" : "error", content: `Status: ${RUN_CODE_RESPONSES[response.result.statusId]}` },
+        ]);
+    } catch (err) {
+        if (err instanceof LockUnavailableError) {
+            openPopupWith(
+                "Please wait for the code to run before attempting running the code, running test cases, or submitting the code again.",
+                "Understood",
+                null,
+                () => {},
+                () => {}
+            );
+        } else {
+            openPopupWith(
+                (err as Error).message,
+                "Understood",
+                null,
+                () => {},
+                () => {}
+            );
+        }
+    } finally {
+        setIsClusterLocked(false);
+    }
 }

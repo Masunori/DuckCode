@@ -1,26 +1,28 @@
 "use client";
 
-import { User } from "@/app/userPrefs/userPrefsUtils";
+import { User, UserPreference } from "@/app/userPrefs/userPrefsUtils";
 import styles from '../settings.module.css';
 import { Dispatch, SetStateAction, useState } from "react";
 import Image from "next/image";
 import editIcon from '../../../../../public/icons/edit.png';
-import { useUser } from "../../contexts/UserContext";
+import { useUserStore } from "../../contexts/UserContext";
+
 import CheckboxInput from "../../inputs/CheckboxInput";
 
 type AccountSettingsProps = {
-    nextUserPreference: User;
-    setNextUserPreference: Dispatch<SetStateAction<User>>;
+    nextUserInfo: TempAccountInfo;
+    handleAccountChange: (key: keyof TempAccountInfo, value: string) => void;
 }
 
-export default function AccountSettings({ nextUserPreference, setNextUserPreference }: AccountSettingsProps) {
-    const { user } = useUser();
-    const userPreference = user.userPreference;
+type TempAccountInfo = Pick<User, 'name' | 'email' | 'bio' | 'isTwoFactorEnabled'>;
+
+export default function AccountSettings({ nextUserInfo, handleAccountChange }: AccountSettingsProps) {
+    const user = useUserStore(state => state.user);
 
     const [isEditingUsername, setIsEditingUsername] = useState(false);
-    const [tempUsername, setTempUsername] = useState(nextUserPreference.name);
+    const [tempUsername, setTempUsername] = useState(nextUserInfo.name);
     const [isEditingBio, setIsEditingBio] = useState(false);
-    const [tempBio, setTempBio] = useState(nextUserPreference.bio || "");
+    const [tempBio, setTempBio] = useState(nextUserInfo.bio || "");
     const [isHoveringProfilePic, setIsHoveringProfilePic] = useState(false);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
@@ -28,36 +30,28 @@ export default function AccountSettings({ nextUserPreference, setNextUserPrefere
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const handleSaveUsername = () => {
-        setNextUserPreference({
-            ...nextUserPreference,
-            name: tempUsername
-        });
+        handleAccountChange("name", tempUsername);
         setIsEditingUsername(false);
     };
 
     const handleCancelUsername = () => {
-        setTempUsername(nextUserPreference.name);
+        setTempUsername(tempUsername);
         setIsEditingUsername(false);
     };
 
     const handleSaveBio = () => {
-        setNextUserPreference({
-            ...nextUserPreference,
-            bio: tempBio
-        });
+        handleAccountChange("bio", tempBio);
         setIsEditingBio(false);
     };
 
     const handleCancelBio = () => {
-        setTempBio(nextUserPreference.bio || "");
+        setTempBio(tempBio || "");
         setIsEditingBio(false);
     };
 
     const handlePasswordChange = () => {
-        // Add password validation and change logic here
-        alert("Password change functionality would be implemented here");
-        setIsChangingPassword(false);
-    };
+        // No temporary password stored, immediately change for user object upon typing - to update
+    }
 
     return (
         <div className={`${styles.settingsOptionDisplay} ${styles.accountSettingsDisplay}`}>
@@ -71,7 +65,7 @@ export default function AccountSettings({ nextUserPreference, setNextUserPrefere
                         onMouseLeave={() => setIsHoveringProfilePic(false)}
                     >
                         <Image
-                            src={nextUserPreference.profilePicture || "/default-profile.png"}
+                            src={user.profilePicture || "/default-profile.png"}
                             alt="Profile"
                             width={80}
                             height={80}
@@ -118,7 +112,7 @@ export default function AccountSettings({ nextUserPreference, setNextUserPrefere
                                 </>
                             ) : (
                                 <>
-                                    <span className={styles.usernameText}>{nextUserPreference.name}</span>
+                                    <span className={styles.usernameText}>{nextUserInfo.name}</span>
                                     <button
                                         className={styles.editSmallButton}
                                         onClick={() => setIsEditingUsername(true)}
@@ -163,7 +157,7 @@ export default function AccountSettings({ nextUserPreference, setNextUserPrefere
                                 </>
                             ) : (
                                 <>
-                                    <p className={styles.bioText}>{nextUserPreference.bio || "No bio yet"}</p>
+                                    <p className={styles.bioText}>{nextUserInfo.bio || "No bio yet"}</p>
                                     <button
                                         className={styles.editSmallButton}
                                         onClick={() => setIsEditingBio(true)}
@@ -192,13 +186,13 @@ export default function AccountSettings({ nextUserPreference, setNextUserPrefere
                     <div className={styles.topRow}>
                         <div className={styles.infoItem}>
                             <span className={styles.infoLabel}>Email:</span>
-                            <span className={styles.infoValue}>{nextUserPreference.email}</span>
+                            <span className={styles.infoValue}>{nextUserInfo.email}</span>
                         </div>
-                        {nextUserPreference.createdAt && (
+                        {user.createdAt && (
                             <div className={styles.infoItem}>
                                 <span className={styles.infoLabel}>Account Created:</span>
                                 <span className={styles.infoValue}>
-                                    {new Date(nextUserPreference.createdAt).toLocaleDateString()}
+                                    {new Date(user.createdAt).toLocaleDateString()}
                                 </span>
                             </div>
                         )}
@@ -209,24 +203,24 @@ export default function AccountSettings({ nextUserPreference, setNextUserPrefere
                         <div className={styles.levelRankContainer}>
                             <div className={styles.levelContainer}>
                                 <span className={styles.levelLabel}>Level</span>
-                                <span className={styles.levelValue}>{nextUserPreference.level}</span>
+                                <span className={styles.levelValue}>{user.level}</span>
                             </div>
-                            <div className={`${styles.rank} ${styles[nextUserPreference.rank.toLowerCase()]}`}>
-                                {nextUserPreference.rank}
+                            <div className={`${styles.rank} ${styles[user.rank.toLowerCase()]}`}>
+                                {user.rank}
                             </div>
                         </div>
                         <div className={styles.expContainer}>
                             <div className={styles.expBarWithLevel}>
-                                <span className={styles.levelMin}>{nextUserPreference.level}</span>
+                                <span className={styles.levelMin}>{user.level}</span>
                                 <div className={styles.expBarTotal}>
                                     <div
                                         className={styles.expBarAcquired}
-                                        style={{ width: `${nextUserPreference.exp}%` }}
+                                        style={{ width: `${user.exp}%` }}
                                     >
                                         <div className={styles.expBarRunner}></div>
                                     </div>
                                 </div>
-                                <span className={styles.levelMax}>{nextUserPreference.level + 1}</span>
+                                <span className={styles.levelMax}>{user.level + 1}</span>
                             </div>
 
                         </div>
@@ -287,19 +281,18 @@ export default function AccountSettings({ nextUserPreference, setNextUserPrefere
                     </button>
                 )}
 
+{/*}
                 <div className={styles.securityOptions}>
                     <CheckboxInput
                         inputId="two-factor-auth"
                         inputName="Enable Two-Factor Authentication"
-                        defaultChecked={nextUserPreference.isTwoFactorEnabled || false}
+                        defaultChecked={user.isTwoFactorEnabled || false}
                         handleOptionChange={(checked) => {
-                            setNextUserPreference({
-                                ...nextUserPreference,
-                                isTwoFactorEnabled: checked
-                            });
+                            setNextUserFA();
                         }}
                     />
                 </div>
+                                    */}
             </div>
         </div>
     );

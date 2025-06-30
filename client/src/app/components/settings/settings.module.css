@@ -103,8 +103,8 @@
     padding: 0 0.5rem;
 }
 
-.keyboardShortcutDisplay td {
-    padding: 1rem 0;
+.keyboardShortcutDisplay td, .keyboardShortcutDisplay th {
+    padding: 1rem;
 }
 
 .keyboardShortcutDisplay td code {

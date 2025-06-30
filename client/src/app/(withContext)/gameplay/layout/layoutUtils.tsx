@@ -1,5 +1,6 @@
 import { Question } from '../gameplayUtils';
 import { DefaultLayout } from './default/DefaultLayout';
+import { FullscreenEditorLayout } from './fullscreenEditor/FullscreenEditorLayout';
 import styles from './gameplay.layout.module.css';
 import { InvertedLayout } from './inverted/InvertedLayout';
 import { TwoTabsLayout } from './twoTabs/TwoTabsLayout';
@@ -49,14 +50,16 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
             </div>,
         implementation: (question: Question) => (<TwoTabsInvertedLayout question={question} />)
     },
-    // "Fullscreen Editor": {
-    //     miniPreview: 
-    //         <div className={styles.fullScreenEditorLayoutPreview}>
-    //             <div className={styles.navbar}>
-    //                 Navigation Bar + Open Question + Open Test Cases
-    //             </div>
-    //             <div className={styles.editor}>Code Editor</div>
-    //         </div>,
-    //     implementation: <div></div>
-    // },
+    "Fullscreen Editor": {
+        miniPreview: 
+            <div className={styles.fullScreenEditorLayoutPreview}>
+                <div className={styles.navbar}>
+                    Navigation Bar + Toggle Question + Toggle Test Cases
+                </div>
+                <div className={styles.question}>Question (toggle)</div>
+                <div className={styles.testCases}>Test Cases + Output (toggle)</div>
+                <div className={styles.editor}>Code Editor</div>
+            </div>,
+        implementation: (question: Question) => (<FullscreenEditorLayout question={question} />)
+    },
 }

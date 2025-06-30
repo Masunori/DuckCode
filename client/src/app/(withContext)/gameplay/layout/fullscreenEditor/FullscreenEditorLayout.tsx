@@ -1,38 +1,48 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { InformationMode, instantiateEditorOnMount, Question, runCodeOutputModeClientSide, runTestCasesClientSide, submitCodeClientSide, TestCaseResult } from "../../gameplayUtils";
 import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, PROGRAMMING_LANGUAGES } from "@/app/components/settings/settingsUtils";
-import { useUserStore } from"@/app/components/contexts/UserContext";
+import { useUserStore } from "@/app/components/contexts/UserContext";
 import * as monaco from 'monaco-editor';
 import { OutputEntry } from "@/app/api/gameplay/RunCodeStatuses";
 import { usePopup } from "@/app/components/contexts/PopupContext";
 import { Lock } from "@/app/utils/lock";
 import GameplayNavbar from "../../components/GameplayNavbar";
-import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import QuestionDisplay from "../../components/QuestionDisplay";
-import CodeEditor from "../../components/CodeEditor";
+import QuestionDisplay from "./components/QuestionDisplay";
+import CodeEditor from "./components/CodeEditor";
 import TestCases from "./components/TestCases";
 import styles from "./page.module.css";
+import { GAMEPLAY_KEY_PRIORITY, GAMEPLAY_TAB_KEY_PRIORITY, keyboardManager } from "@/app/utils/keyboardManager";
 import Output from "./components/Output";
-import { GAMEPLAY_KEY_PRIORITY, keyboardManager } from "@/app/utils/keyboardManager";
-import InformationPanelButtons from "../../components/InformationPanelButtons";
 
-export function TwoTabsInvertedLayout({ question }: {question: Question}) {
+export function FullscreenEditorLayout({ question }: {question: Question}) {
     // for code editor
     const user = useUserStore(state => state.user);
     const [codeContent, setCodeContent] = useState<string | undefined>(PROGRAMMING_LANGUAGES[user.userPreference.language].code_snippet);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
     const lock: Lock = useMemo(() => new Lock(), []);
-    const [isClusterLocked, setIsClusterLocked] = useState(false);
+    // eslint-disable-next-line
+    const setIsClusterLocked: Dispatch<SetStateAction<boolean>> = bool => {};
 
     const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
         instantiateEditorOnMount(editorRef, editor, monacoInstance, user);
     }
 
-    // this is used in the information panel
-    const [informationMode, setInformationMode] = useState<InformationMode>("question");
+    // this is used in the code output UI component
+    const [informationMode, setInformationMode] = useState<InformationMode>("-");
+    const setNextInformationMode = () => {
+        setInformationMode(prev => prev === "-"
+            ? "question"
+            : prev === "question"
+            ? "output"
+            : prev === "output"
+            ? "testCases"
+            : "-"
+        );
+    }
+
     const [codeOutput, setCodeOutput] = useState<OutputEntry[]>(
         [
             {
@@ -54,7 +64,7 @@ export function TwoTabsInvertedLayout({ question }: {question: Question}) {
         if (typeof(codeContent) === undefined) {
             return;
         }
-
+        
         runCodeOutputModeClientSide(
             codeContent as string,
             user.userPreference.language,
@@ -135,82 +145,71 @@ export function TwoTabsInvertedLayout({ question }: {question: Question}) {
                 return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TEST_CASE_MODE"].combo)) {
                 e.preventDefault();
-                setInformationMode((prevMode) => prevMode === "question" 
-                    ? "testCases" 
-                    : prevMode === "testCases" 
-                    ? "output" 
-                    : "question"
-                );
+                setNextInformationMode();
                 return true;
             }
 
             return false;
         }
 
+        const handleCloseTab = (e: KeyboardEvent) => {
+            if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["EXIT_TAB_ON_FULLSCREEN"].combo) && informationMode !== "-") {
+                e.preventDefault();
+                setInformationMode("-");
+                return true;
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_QUESTION_TAB"].combo)) {
+                e.preventDefault();
+                setInformationMode(prev => prev === "question" ? "-" : "question");
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TAB"].combo)) {
+                e.preventDefault();
+                setInformationMode(prev => prev === "output" ? "-" : "output");
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_TEST_CASES_TAB"].combo)) {
+                e.preventDefault();
+                setInformationMode(prev => prev === "testCases" ? "-" : "testCases");
+            }
+
+            return false;
+        };
+        
         keyboardManager.register("gameplay", GAMEPLAY_KEY_PRIORITY, handleKeyDown);
+        keyboardManager.register("gameplayFullscreen", GAMEPLAY_TAB_KEY_PRIORITY, handleCloseTab);
+
         return () => {
             keyboardManager.unregister("gameplay");
+            keyboardManager.unregister("gameplayFullscreen");
         }
-    }, [runCodeOutputMode, runTestCases, submit]);
+    }, [runCodeOutputMode, runTestCases, submit, informationMode]);
 
+    useEffect(() => {
+        console.log(informationMode);
+    }, [informationMode]);
 
     return (
-        <div ref={gameplayRef} tabIndex={0}>
+        <div ref={gameplayRef} tabIndex={0} className={styles.fullscreenEditorLayout}>
             <GameplayNavbar />
-            <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
-                <Panel defaultSize={50} minSize={2}>
-                    <CodeEditor 
-                        onMount={handleEditorDidMount}
-                        codeContent={codeContent}
-                        setCodeContent={setCodeContent}
-                    />
-                </Panel>
-                <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
-                <Panel defaultSize={50} minSize={2} className={styles.informationPanel}>
-                    <InformationPanelButtons 
-                        informationMode={informationMode}
-                        setInformationMode={setInformationMode}
-                    />
-                    {informationMode === "question" 
-                        ? <QuestionDisplay question={question} />
-                        : informationMode === "output"
-                        ? <Output codeOutput={codeOutput} />
-                        : informationMode === "testCases"
-                        ? <TestCases 
-                            activeIndex={activeIndex}
-                            setActiveIndex={setActiveIndex}
-                            testCases={question.publicTestCases}
-                            testCaseResults={testCaseResults}
-                        /> : <></>
-                    }
-                    <div className={styles.codeHandlerButtons}>
-                        <button
-                            className={styles.runCodeButton}
-                            onClick={runCodeOutputMode}
-                            disabled={isClusterLocked}
-                            style={{ 
-                                pointerEvents: isClusterLocked ? "none" : "auto" 
-                            }}
-                        >Run Code</button>
-                        <button
-                            className={styles.runAllTestCasesButton}
-                            onClick={runTestCases}
-                            disabled={isClusterLocked}
-                            style={{ 
-                                pointerEvents: isClusterLocked ? "none" : "auto" 
-                            }}
-                        >Run All Test Cases</button>
-                        <button
-                            className={styles.submitCodeButton}
-                            onClick={submit}
-                            disabled={isClusterLocked}
-                            style={{ 
-                                pointerEvents: isClusterLocked ? "none" : "auto" 
-                            }}
-                        >Submit</button>
-                    </div>
-                </Panel>
-            </PanelGroup>
+            <CodeEditor 
+                onMount={handleEditorDidMount}
+                codeContent={codeContent}
+                setCodeContent={setCodeContent}
+            />
+            <QuestionDisplay 
+                question={question}
+                informationMode={informationMode}
+                setInformationMode={setInformationMode}
+            />
+            <TestCases
+                activeIndex={activeIndex}
+                setActiveIndex={setActiveIndex}
+                testCases={question.publicTestCases}
+                testCaseResults={testCaseResults}
+                informationMode={informationMode}
+                setInformationMode={setInformationMode}
+            />
+            <Output
+                codeOutput={codeOutput}
+                informationMode={informationMode}
+                setInformationMode={setInformationMode}
+            />
         </div>
     );
 }

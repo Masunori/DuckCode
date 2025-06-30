@@ -2,7 +2,8 @@ type KeyHandler = (event: KeyboardEvent) => boolean;
 
 export const GENERAL_KEY_PRIORITY = 1;
 export const GAMEPLAY_KEY_PRIORITY = 2;
-export const SETTINGS_KEY_PRIORITY = 3;
+export const GAMEPLAY_TAB_KEY_PRIORITY = 3;
+export const SETTINGS_KEY_PRIORITY = 4;
 export const POPUP_KEY_PRIORITY = 1000;
 
 interface Layer {

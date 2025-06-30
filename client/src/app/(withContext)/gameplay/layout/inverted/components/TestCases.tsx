@@ -3,14 +3,14 @@
 import { CSSProperties, Dispatch, SetStateAction, useRef } from "react";
 import styles from "../page.module.css";
 import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeStatuses";
-import { TestCase, TestCaseResult } from "../../../gameplayUtils";
+import { InformationMode, TestCase, TestCaseResult } from "../../../gameplayUtils";
 
 type TestCaseProps = {
     activeIndex: number;
     setActiveIndex: Dispatch<SetStateAction<number>>
     testCases: TestCase[];
-    isOutputMode: boolean;
-    setIsOutputMode: Dispatch<SetStateAction<boolean>>;
+    informationMode: InformationMode;
+    setInformationMode: Dispatch<SetStateAction<InformationMode>>;
     codeOutput: OutputEntry[];
     runCode: () => void;
     runTestCases: () => void;
@@ -23,8 +23,8 @@ export default function TestCases({
     activeIndex,
     setActiveIndex,
     testCases, 
-    isOutputMode, 
-    setIsOutputMode, 
+    informationMode, 
+    setInformationMode, 
     codeOutput,
     runCode,
     runTestCases,
@@ -87,15 +87,15 @@ export default function TestCases({
             <div className={styles.codeHandlerButtons}>
                 <button 
                     className={styles.togglePanelButton}
-                    onClick={() => setIsOutputMode(bool => !bool)}
-                >{isOutputMode ? "Switch to Test Cases Mode" : "Switch to Output Mode"}</button>
+                    onClick={() => setInformationMode(informationMode === "output" ? "testCases" : "output")}
+                >{informationMode === "output" ? "Switch to Test Cases Mode" : "Switch to Output Mode"}</button>
                 <button 
                     className={styles.runAllTestCasesButton}
-                    onClick={isOutputMode ? runCode : runTestCases}
+                    onClick={informationMode === "output" ? runCode : runTestCases}
                     disabled={isClusterLocked}style={{
                         pointerEvents: isClusterLocked ? "none" : "auto",
                     }}
-                >{isOutputMode ? "Run Code" : "Run all Test Cases"}</button>
+                >{informationMode === "output" ? "Run Code" : "Run all Test Cases"}</button>
                 <button 
                     className={styles.submitCodeButton} 
                     onClick={submitCode}
@@ -108,8 +108,8 @@ export default function TestCases({
                 <div 
                     className={styles.testCasePanel}
                     style={{
-                        height: isOutputMode ? "0" : "100%",
-                        opacity: isOutputMode ? "0" : "1"
+                        height: informationMode === "output" ? "0" : "100%",
+                        opacity: informationMode === "output" ? "0" : "1"
                     }}
                 >
                     <ul className={styles.testCaseSelector}>
@@ -182,8 +182,8 @@ export default function TestCases({
                 <div 
                     className={styles.codeOutput}
                     style={{
-                        height: isOutputMode ? "100%" : "0",
-                        opacity: isOutputMode ? "1" : "0"
+                        height: informationMode === "output" ? "100%" : "0",
+                        opacity: informationMode === "output" ? "1" : "0"
                     }}
                 >
                     {codeOutput.map((line, index) => (
