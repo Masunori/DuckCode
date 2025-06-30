@@ -1,13 +1,11 @@
 "use client";
 
-import { User, UserPreference } from "@/app/userPrefs/userPrefsUtils";
+import { User } from "@/app/userPrefs/userPrefsUtils";
 import styles from '../settings.module.css';
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import editIcon from '../../../../../public/icons/edit.png';
 import { useUserStore } from "../../contexts/UserContext";
-
-import CheckboxInput from "../../inputs/CheckboxInput";
 
 type AccountSettingsProps = {
     nextUserInfo: TempAccountInfo;
