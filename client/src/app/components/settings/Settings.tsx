@@ -6,16 +6,17 @@ import KeyboardShortcutSettings from "./options/KeyboardShortcutSettings";
 import styles from './settings.module.css';
 import GeneralSettings from "./options/GeneralSettings";
 import CodeEditorSettings from "./options/CodeEditorSettings";
+import AccountSettings from "./options/AccountSettings";
 import { GENERAL_KEY_BINDINGS, isKeyCombo } from "./settingsUtils";
-import { PRISTINE_USER_PREFERENCE, UserPreference } from "@/app/userPrefs/userPrefsUtils";
+import { PRISTINE_USER_PREFERENCE, User, UserPreference, LeafPath } from "@/app/userPrefs/userPrefsUtils";
 import { useUserStore } from "../contexts/UserContext";
 import { usePopup } from "../contexts/PopupContext";
 import equal from 'fast-deep-equal';
 import { keyboardManager, SETTINGS_KEY_PRIORITY } from "@/app/utils/keyboardManager";
 import sleep from "@/app/utils/delay";
-import AccountSettings from "./options/AccountSettings";
 
 type SettingsOptionNames = "General" | "Code Editor" | "Keyboard Shortcut Configuration" | "Account";
+export type TempAccountInfo = Pick<User, 'name' | 'email' | 'bio' | 'isTwoFactorEnabled'>;
 
 export default function Settings() {
     const { isSettingsOpen, closeSettings } = useSettings();
@@ -29,6 +30,16 @@ export default function Settings() {
     // Settings keep track of a previous user preference object and an editable future user preference object.
     // These only exist during the lifetime of Settings. Thus, all unsaved changes will be lost.
     const [nextUserPreference, setNextUserPreference] = useState<UserPreference>(structuredClone(user.userPreference));
+    const [nextUserInfo, setNextUserInfo] = useState<TempAccountInfo>({
+        name: user.name,
+        email: user.email,
+        bio: user.bio,
+        isTwoFactorEnabled: user.isTwoFactorEnabled,
+    });
+      
+    const handleAccountChange = (key: keyof TempAccountInfo, value: string) => {
+        setNextUserInfo(prev => ({ ...prev, [key]: value }));
+    };
 
     function setUserPreference(userPreference: UserPreference) {
         setUserField("userPreference", userPreference);
@@ -99,6 +110,9 @@ export default function Settings() {
                 "Keep the current settings",
                 () => {
                     setUserPreference(nextUserPreference);
+                    Object.entries(nextUserInfo).forEach(([key, value]) => {
+                        setUserField(key as LeafPath<User>, value);
+                    });
                 },
                 () => {}
             );
@@ -141,7 +155,7 @@ export default function Settings() {
             component: <KeyboardShortcutSettings />
         },
         "Account": {
-            component: <AccountSettings nextUserPreference={nextUserPreference} setNextUserPreference={setNextUserPreference} />
+            component: <AccountSettings nextUserInfo={nextUserInfo} handleAccountChange={handleAccountChange} />
         }
     }
 
