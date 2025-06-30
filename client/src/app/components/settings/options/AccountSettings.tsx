@@ -14,6 +14,9 @@ type AccountSettingsProps = {
 }
 
 export default function AccountSettings({ nextUserPreference, setNextUserPreference }: AccountSettingsProps) {
+    const { user } = useUser();
+    const userPreference = user.userPreference;
+
     const [isEditingUsername, setIsEditingUsername] = useState(false);
     const [tempUsername, setTempUsername] = useState(nextUserPreference.name);
     const [isEditingBio, setIsEditingBio] = useState(false);
