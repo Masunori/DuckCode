@@ -51,7 +51,7 @@ export const GAMEPLAY_KEY_BINDINGS: Record<GameplayKeyBindingNames, KeyBinding> 
         combo: { ctrl: false, shift: false, key: 'Escape' }
     },
     TOGGLE_QUESTION_TAB: {
-        action: "(Only Fullscreen MoEditor Layoutde) Toggle Question Mode",
+        action: "(Only Fullscreen Editor Layoutde) Toggle Question Mode",
         combo: { ctrl: false, shift: true, key: 'Q' }
     },
     TOGGLE_OUTPUT_TAB: {
@@ -261,7 +261,7 @@ The following is for tab sizes:
           10 spaces
 
 The following is for word wrap:
-    On: Lines wrap when reaching editor width width (auto line break).
+    On: Lines wrap when reaching editor width (auto line break).
     Off: No word wrapping. Long lines scroll horizontally.
     Word Wrap Column: Each line can only be at most some number of characters long.
     Bounded: Text is wrapped based on the smaller value between editor width and word wrap column value

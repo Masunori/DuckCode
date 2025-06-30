@@ -52,6 +52,10 @@
     background-color: var(--insignificant-button-hover-color);
 }
 
+.dropdownInput li.selected {
+    background-color: var(--insignificant-button-hover-color);
+}
+
 /* for numerical inputs */
 .numberInput {
     display: grid;

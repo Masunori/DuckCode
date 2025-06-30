@@ -8,7 +8,7 @@
     grid-template-areas: 
         "nav nav nav nav nav nav nav nav nav"
         "evt inf inf inf inf inf inf gam gam"
-        "mess mess mess . . . . . .";
+        ". . . . . . mess mess mess";
 }
 
 /* Home navbar */

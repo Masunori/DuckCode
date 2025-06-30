@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "../page.module.css";
 import debounce from "@/app/utils/debounce";
 
@@ -23,33 +23,33 @@ export default function NewsCarousel() {
         return augmentedData;
     }
 
-    function handleLeftShift() {
+    const handleLeftShift = useCallback(() => {
         if (isAnimating) {
             return;
         }
 
         setIsAnimating(true);
         setActiveNewsTab(prev => prev - 1);
-    }
+    }, [isAnimating]);
 
-    function handleRightShift() {
+    const handleRightShift = useCallback(() => {
         if (isAnimating) {
             return;
         }
 
         setIsAnimating(true);
         setActiveNewsTab(prev => prev + 1);
-    }
+    }, [isAnimating]);
 
     const debounceHandleLeftShift = debounce(handleLeftShift, 250);
     const debounceHandleRightShift = debounce(handleRightShift, 250);
 
     // When the user is at slide 5 and click right, the 5 transits to the last 1 smoothly
     // 5, 1, 2, 3, 4, 5, 1 => 5, 1, 2, 3, 4, 5, 1
-    //                .                         .
+    //                |                         |
     // then, secretly snap back to the first 1 with no animation
     // 5, 1, 2, 3, 4, 5, 1 => 5, 1, 2, 3, 4, 5, 1
-    //                   .       .               
+    //                   |       |               
     // then the next right click smoothly transits to slide 2
     useEffect(() => {
         setTimeout(() => {
@@ -61,7 +61,16 @@ export default function NewsCarousel() {
                 setActiveNewsTab(1);
             }
         }, transitionDuration * 1001);
-    }, [activeNewsTab, data.length])
+    }, [activeNewsTab, data.length]);
+
+    // Automatically shift the carousel to the right every 10 seconds
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            handleRightShift();
+        }, 10000);
+
+        return () => clearInterval(intervalId);
+    }, [handleRightShift]);
 
     return (
         <div className={styles.newsCarousel}>
