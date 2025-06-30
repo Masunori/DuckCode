@@ -5,6 +5,7 @@ export const GAMEPLAY_KEY_PRIORITY = 2;
 export const GAMEPLAY_TAB_KEY_PRIORITY = 3;
 export const SETTINGS_KEY_PRIORITY = 4;
 export const POPUP_KEY_PRIORITY = 1000;
+export const INPUT_KEY_PRIORITY = 10;
 
 interface Layer {
     id: string;
@@ -29,7 +30,7 @@ class KeyboardManager {
         }
         
         this.layers.push({ id, priority, handler });
-        this.layers.sort((a, b) => a.priority - b.priority);
+        this.layers.sort((a, b) => b.priority - a.priority);
     }
 
     unregister(id: string): void {

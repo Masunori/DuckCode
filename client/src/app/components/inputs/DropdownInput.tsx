@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./input.module.css";
+import { isKeyCombo } from "../settings/settingsUtils";
+import { INPUT_KEY_PRIORITY, keyboardManager } from "@/app/utils/keyboardManager";
 
 type DropdownInputProps = {
     dropdownName: string;
@@ -23,13 +25,16 @@ type DropdownInputProps = {
  * @returns 
  */
 export default function DropdownInput({ options, inputId, defaultOption, dropdownName, handleOptionChange }: DropdownInputProps) {
-    const [selectedOption, setSelectedOption] = useState(defaultOption);
+    const [previewOption, setPreviewOption] = useState(defaultOption);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null); 
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const dropdownOptionsRef = useRef<HTMLUListElement | null>(null);
+
+    const selectedOptionRef = useRef(previewOption);
 
     useEffect(() => {
-        setSelectedOption(defaultOption);
+        setPreviewOption(defaultOption);
     }, [defaultOption]);
 
     /*
@@ -41,14 +46,14 @@ export default function DropdownInput({ options, inputId, defaultOption, dropdow
             2. The user clicks on a dropdown option: dropdown closes
     */
     function handleClick(index: number) {
-        setSelectedOption(options[index]);
+        setPreviewOption(options[index]);
         handleOptionChange(options[index]);
     }
 
     // in case of a discard, we want to set the selected option to the default option
     useEffect(() => {
         if (defaultOption && options.includes(defaultOption)) {
-            setSelectedOption(defaultOption);
+            setPreviewOption(defaultOption);
         }
     }, [defaultOption, options]);
 
@@ -76,6 +81,84 @@ export default function DropdownInput({ options, inputId, defaultOption, dropdow
         }
     }, []);
 
+    // typical dropdown input effects:
+    // - arrow up: shift to the option above
+    // - arrow down: shift to the option below
+    // - enter: select option
+    // - escape: escape from the dropdown
+    useEffect(() => {
+        const handleSelectOption = (e: KeyboardEvent) => {
+            if (!isDropdownVisible || !dropdownOptionsRef.current || !inputRef.current || !selectedOptionRef.current) {
+                return false;
+            }
+
+            if (isKeyCombo(e, { ctrl: false, shift: false, key: "ArrowDown" })) {
+                e.preventDefault();
+                const currentIndex = options.indexOf(previewOption);
+                const nextIndex = (currentIndex + 1) % options.length;
+                setPreviewOption(options[nextIndex]);
+
+                // Scroll the selected <li> into view
+                const ul = dropdownOptionsRef.current;
+                if (ul) {
+                    const li = ul.children[nextIndex] as HTMLElement;
+                    if (li) {
+                        li.scrollIntoView({ block: "nearest", behavior: "smooth" });
+                    }
+                }
+
+                return true;
+            } else if (isKeyCombo(e, { ctrl: false, shift: false, key: "ArrowUp" })) {
+                e.preventDefault();
+                const currentIndex = options.indexOf(previewOption);
+                const prevIndex = (currentIndex - 1 + options.length) % options.length;
+                setPreviewOption(options[prevIndex]);
+
+                // Scroll the selected <li> into view
+                const ul = dropdownOptionsRef.current;
+                if (ul) {
+                    const li = ul.children[prevIndex] as HTMLElement;
+                    if (li) {
+                        li.scrollIntoView({ block: "nearest", behavior: "smooth" });
+                    }
+                }
+
+                return true;
+            } else if (isKeyCombo(e, { ctrl: false, shift: false, key: "Enter" })) {
+                e.preventDefault();
+                handleOptionChange(previewOption);
+                setIsDropdownVisible(false);
+                selectedOptionRef.current = previewOption;
+                return true;
+            } else if (isKeyCombo(e, { ctrl: false, shift: false, key: "Escape" })) {
+                e.preventDefault();
+                setIsDropdownVisible(false);
+                setPreviewOption(selectedOptionRef.current);
+                return true;
+            }
+
+            return false
+        }
+
+        keyboardManager.register(`handleSelectOption-${inputId}`, INPUT_KEY_PRIORITY, handleSelectOption);
+
+        return () => {
+            keyboardManager.unregister(`handleSelectOption-${inputId}`);
+        }
+    });
+
+    
+    // when the dropdown is first opened, the preview option should automatically be scrolled into view
+    useEffect(() => {
+        const ul = dropdownOptionsRef.current;
+        if (ul) {
+            const li = ul.children[options.indexOf(previewOption)] as HTMLElement;
+            if (li) {
+                li.scrollIntoView({ block: "nearest", behavior: "smooth" });
+            }
+        }
+    }, [options, previewOption]);
+
     return (
         <div 
             className={styles.dropdownInput}
@@ -87,11 +170,12 @@ export default function DropdownInput({ options, inputId, defaultOption, dropdow
                     id={inputId}
                     ref={inputRef}
                     type="text"
-                    value={selectedOption}
+                    value={previewOption}
                     onClick={() => setIsDropdownVisible(prev => !prev)}
                     readOnly
                 />
-                <ul 
+                <ul
+                    ref={dropdownOptionsRef}
                     style={{
                         height: isDropdownVisible ? "10em" : 0,
                         overflowY: isDropdownVisible ? "auto" : "hidden"
@@ -101,6 +185,7 @@ export default function DropdownInput({ options, inputId, defaultOption, dropdow
                         <li
                             key={index}
                             onClick={() => handleClick(index)}
+                            className={previewOption === option ? styles.selected : ""}
                         >
                             {option}
                         </li>

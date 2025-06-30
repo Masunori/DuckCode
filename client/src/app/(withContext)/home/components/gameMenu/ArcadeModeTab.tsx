@@ -116,7 +116,7 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                                         router.push("/gameplay");
                                     }
                                 }}
-                            >Start Match</button>
+                            >Confirm</button>
                         </div>
                     </motion.div>
                 </motion.div>

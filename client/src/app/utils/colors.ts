@@ -29,9 +29,6 @@ export function computeHoverColour(color: string): string {
     const ng = g < 128 ? brighten(g) : darken(g);
     const nb = b < 128 ? brighten(b) : darken(b);
 
-    console.log(`${r}, ${g}, ${b}`);
-    console.log(`${nr}, ${ng}, ${nb}`);
-
     const toHex = (val: number) => val.toString(16).padStart(2, '0');
     return `#${toHex(nr)}${toHex(ng)}${toHex(nb)}`;
 }
