@@ -15,6 +15,9 @@ export const useUserStore = create<UserStore>(
         return {
             setUserField: (path: LeafPath<User>, value: unknown) => {
                 set((state) => {
+                    if (!path) {
+                        return { user: state.user };
+                    }
                     const keys = path.split(".");
                     const newUser = { ...state.user };
 
