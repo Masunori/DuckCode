@@ -63,7 +63,7 @@ export default function GeneralSettings({ nextUserPreference, setNextUserPrefere
         <div
             className={`${styles.settingsOptionDisplay} ${styles.generalSettingsDisplay}`}
         >
-            <div className={styles.settingsContentChunk}>
+            <section className={styles.settingsContentChunk}>
                 <NumberInput 
                     inputId="font-size"
                     defaultValue={nextUserPreference.fontSize}
@@ -78,8 +78,8 @@ export default function GeneralSettings({ nextUserPreference, setNextUserPrefere
                         })
                     }}
                 />
-            </div>
-            <div className={styles.settingsContentChunk}>
+            </section>
+            <section className={styles.settingsContentChunk}>
                 <div className={styles.buttonColorControls}>
                     <div className={styles.significantButtonColor}>
                         <ColorInput 
@@ -139,8 +139,8 @@ export default function GeneralSettings({ nextUserPreference, setNextUserPrefere
                     - If its value is above 128, the new value is: <code>value - min(floor(0.4 * (value - 128)), 24)</code><br></br><br></br>
                     Note: Change the Main Action Button Color once after ticking this option to see the effect.
                 </p>
-            </div>
-            <div className={styles.settingsContentChunk}>
+            </section>
+            <section className={styles.settingsContentChunk}>
                 <div className={styles.layoutSettings}>
                     <RadioInput
                         inputName="Layout"
@@ -155,7 +155,7 @@ export default function GeneralSettings({ nextUserPreference, setNextUserPrefere
                         {LAYOUTS[Object.keys(LAYOUTS)[layoutIndex]].miniPreview}
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     )
 }

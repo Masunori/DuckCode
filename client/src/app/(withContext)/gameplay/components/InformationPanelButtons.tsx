@@ -1,13 +1,16 @@
-type InformationPanelButtonsProps = {
-    informationMode: InformationMode;
-    setInformationMode: Dispatch<SetStateAction<InformationMode>>;
-}
+"use client";
 
-import { Dispatch, SetStateAction } from 'react';
-import { InformationMode } from '../gameplayUtils';
 import styles from '../page.module.css';
+import { useGameplayController } from '../hooks/useGameplayController';
+import { useShallow } from 'zustand/shallow';
 
-export default function InformationPanelButtons({ informationMode, setInformationMode }: InformationPanelButtonsProps) {
+export default function InformationPanelButtons() {
+    const [informationMode, setInformationMode] = useGameplayController(
+        useShallow(
+            state => [state.informationMode, state.setInformationMode]
+        )
+    );
+
     return (
         <div className={styles.informationPanelButtons}>
             <button 

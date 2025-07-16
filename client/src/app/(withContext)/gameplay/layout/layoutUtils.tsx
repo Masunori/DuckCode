@@ -1,4 +1,3 @@
-import { Question } from '../gameplayUtils';
 import { DefaultLayout } from './default/DefaultLayout';
 import { FullscreenEditorLayout } from './fullscreenEditor/FullscreenEditorLayout';
 import styles from './gameplay.layout.module.css';
@@ -8,7 +7,7 @@ import { TwoTabsInvertedLayout } from './twoTabsInverted/TwoTabsInvertedLayout';
 
 export type LayoutInfo = {
     miniPreview: React.JSX.Element;
-    implementation: (question: Question) => React.JSX.Element;
+    implementation: React.JSX.Element,
 }
 
 export const LAYOUTS: Record<string, LayoutInfo> = {
@@ -20,7 +19,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.editor}>Code Editor</div>
                 <div className={styles.testCases}>Test Cases</div>
             </div>,
-        implementation: (question: Question) => (<DefaultLayout question={question} />)
+        implementation: <DefaultLayout />
     },
     "Inverted": {
         miniPreview: 
@@ -30,7 +29,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.editor}>Code Editor</div>
                 <div className={styles.testCases}>Test Cases</div>
             </div>,
-        implementation: (question: Question) => (<InvertedLayout question={question} />)
+        implementation: <InvertedLayout />
     },
     "Two Tabs": {
         miniPreview: 
@@ -39,7 +38,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.question}>Question + Test Cases (Toggle)</div>
                 <div className={styles.editor}>Code Editor</div>
             </div>,
-        implementation: (question: Question) => (<TwoTabsLayout question={question} />)
+        implementation: <TwoTabsLayout />
     },
     "Two Tabs Inverted": {
         miniPreview: 
@@ -48,7 +47,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.question}>Question + Test Cases (Toggle)</div>
                 <div className={styles.editor}>Code Editor</div>
             </div>,
-        implementation: (question: Question) => (<TwoTabsInvertedLayout question={question} />)
+        implementation: <TwoTabsInvertedLayout />
     },
     "Fullscreen Editor": {
         miniPreview: 
@@ -60,6 +59,6 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.testCases}>Test Cases + Output (toggle)</div>
                 <div className={styles.editor}>Code Editor</div>
             </div>,
-        implementation: (question: Question) => (<FullscreenEditorLayout question={question} />)
+        implementation: <FullscreenEditorLayout />
     },
 }

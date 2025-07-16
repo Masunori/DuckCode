@@ -49,7 +49,7 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
             <PanelResizeHandle className={styles.resizeHandler} />
             <Panel defaultSize={50} >
                 <div className={styles.codeEditorSettingsOptions}>
-                    <div className={styles.settingsContentChunk}>
+                    <section className={styles.settingsContentChunk}>
                         <h2>Functional Settings</h2>
                         {nextUserPreference && <DropdownInput
                             options={options}
@@ -63,8 +63,8 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
                                 })
                             }}
                         />}
-                    </div>
-                    <div className={styles.settingsContentChunk}>
+                    </section>
+                    <section className={styles.settingsContentChunk}>
                         <h2>Visual Settings</h2>
                         {nextUserPreference && <DropdownInput
                             options={Object.keys(PRESET_THEMES)}
@@ -173,7 +173,7 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
                                 })
                             }}
                         />}
-                    </div>
+                    </section>
                 </div>
             </Panel>
         </PanelGroup>

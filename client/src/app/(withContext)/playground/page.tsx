@@ -13,7 +13,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import CodeEditor from "./components/CodeEditor";
 import styles from "./page.module.css";
 import Output from "./components/Output";
-import { GAMEPLAY_KEY_PRIORITY, keyboardManager } from "@/app/utils/keyboardManager";
+import { keyboardManager } from "@/app/utils/keyboardManager";
 import { instantiateEditorOnMount } from "../gameplay/gameplayUtils";
 
 export default function Page() {
@@ -109,7 +109,7 @@ export default function Page() {
             return false;
         }
 
-        keyboardManager.register("gameplay", GAMEPLAY_KEY_PRIORITY, handleKeyDown);
+        keyboardManager.register("gameplay", "GAMEPLAY_KEY_PRIORITY", handleKeyDown);
         return () => {
             keyboardManager.unregister("gameplay");
         }

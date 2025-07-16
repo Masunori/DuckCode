@@ -3,43 +3,24 @@
 import { useEffect } from "react";
 import { usePopup } from "../contexts/PopupContext";
 import styles from "./popup.module.css";
-import { GENERAL_KEY_BINDINGS, isKeyCombo } from "../settings/settingsUtils";
-import { keyboardManager, POPUP_KEY_PRIORITY } from "@/app/utils/keyboardManager";
+import { keyboardManager } from "@/app/utils/keyboardManager";
 import { motion, AnimatePresence } from "motion/react";
 
 export default function Popup() {
-    const { isPopupOpen, popupMessage, confirmMessage, cancelMessage, confirmFn, cancelFn } = usePopup();
+    const { isPopupOpen, popupMessage, confirmMessage, cancelMessage, confirmFn, cancelFn, handleKeyBinding } = usePopup();
 
     // when the popup is on, disable all keyboard events, except:
     // - the confirm button (Enter)
     // - the cancel button (Escape)
     useEffect(() => {
-        function handleKeyDown(event: KeyboardEvent) {
-            if (!isPopupOpen) {
-                return false;
-            }
-
-            if (isKeyCombo(event, GENERAL_KEY_BINDINGS["CONFIRM_POPUP"].combo)
-                || (isKeyCombo(event, GENERAL_KEY_BINDINGS["CANCEL_POPUP"].combo) && cancelMessage !== null)) {
-                event.preventDefault();
-                confirmFn();
-                return true;
-            } else if (isKeyCombo(event, GENERAL_KEY_BINDINGS["CANCEL_POPUP"].combo)) {
-                event.preventDefault();
-                if (cancelMessage !== null) {
-                    cancelFn();
-                }
-                return true;
-            }
-
-            return false;
+        if (isPopupOpen) {
+            keyboardManager.register("popup", "POPUP_KEY_PRIORITY", handleKeyBinding);
         }
 
-        keyboardManager.register("popup", POPUP_KEY_PRIORITY, handleKeyDown);
         return () => {
             keyboardManager.unregister("popup");
         }
-    })
+    }, [handleKeyBinding, isPopupOpen]);
 
     return (
         <AnimatePresence>

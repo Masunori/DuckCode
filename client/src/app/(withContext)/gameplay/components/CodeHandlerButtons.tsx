@@ -2,12 +2,14 @@ type CodeHandlerButtonsProps = {
     onRunCode: () => void;
     onRunTestCases: () => void;
     onSubmitCode: () => void;
-    isClusterLocked: boolean;
 }
 
+import { useGameplayController } from '../hooks/useGameplayController';
 import styles from '../page.module.css';
 
-export default function CodeHandlerButtons({ onRunCode, onRunTestCases, onSubmitCode, isClusterLocked }: CodeHandlerButtonsProps) {
+export default function CodeHandlerButtons({ onRunCode, onRunTestCases, onSubmitCode }: CodeHandlerButtonsProps) {
+    const isClusterLocked = useGameplayController(state => state.isClusterLocked);
+
     return (
         <div className={styles.codeHandlerButtons}>
             <button

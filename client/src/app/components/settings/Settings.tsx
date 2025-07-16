@@ -8,18 +8,19 @@ import GeneralSettings from "./options/GeneralSettings";
 import CodeEditorSettings from "./options/CodeEditorSettings";
 import AccountSettings from "./options/AccountSettings";
 import { GENERAL_KEY_BINDINGS, isKeyCombo } from "./settingsUtils";
-import { PRISTINE_USER_PREFERENCE, User, UserPreference, LeafPath } from "@/app/userPrefs/userPrefsUtils";
+import { PRISTINE_USER_PREFERENCE, User, UserPreference } from "@/app/userPrefs/userPrefsUtils";
 import { useUserStore } from "../contexts/UserContext";
 import { usePopup } from "../contexts/PopupContext";
 import equal from 'fast-deep-equal';
-import { keyboardManager, SETTINGS_KEY_PRIORITY } from "@/app/utils/keyboardManager";
+import { keyboardManager } from "@/app/utils/keyboardManager";
 import sleep from "@/app/utils/delay";
+import { Paths } from "@/app/utils/types";
 
 type SettingsOptionNames = "General" | "Code Editor" | "Keyboard Shortcut Configuration" | "Account";
 export type TempAccountInfo = Pick<User, 'name' | 'email' | 'bio' | 'isTwoFactorEnabled'>;
 
 export default function Settings() {
-    const { isSettingsOpen, closeSettings } = useSettings();
+    const { isSettingsOpen, openSettings, closeSettings } = useSettings();
 
     const user = useUserStore(state => state.user);
     const setUserField = useUserStore(state => state.setUserField);
@@ -111,7 +112,7 @@ export default function Settings() {
                 () => {
                     setUserPreference(nextUserPreference);
                     Object.entries(nextUserInfo).forEach(([key, value]) => {
-                        setUserField(key as LeafPath<User>, value);
+                        setUserField(key as Paths<User>, value);
                     });
                 },
                 () => {}
@@ -163,14 +164,19 @@ export default function Settings() {
     useEffect(() => {
         function handleEscape(event: KeyboardEvent) {
             if (isKeyCombo(event, GENERAL_KEY_BINDINGS["CLOSE_SETTINGS"].combo) && isSettingsOpen) {
+                event.preventDefault();
                 handleExit();
+                return true;
+            } else if (isKeyCombo(event, GENERAL_KEY_BINDINGS["OPEN_SETTINGS"].combo)) {
+                event.preventDefault();
+                openSettings();
                 return true;
             }
 
             return false;
         }
 
-        keyboardManager.register("settingsExit", SETTINGS_KEY_PRIORITY, handleEscape);
+        keyboardManager.register("settingsExit", "SETTINGS_KEY_PRIORITY", handleEscape);
         return () => {
             keyboardManager.unregister("settingsExit");
         }

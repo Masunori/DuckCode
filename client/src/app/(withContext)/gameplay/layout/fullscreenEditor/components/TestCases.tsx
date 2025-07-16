@@ -1,28 +1,32 @@
 "use client";
 
-import { CSSProperties, Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { CSSProperties, useEffect, useRef } from "react";
 import styles from "../page.module.css";
 import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeStatuses";
-import { InformationMode, TestCase, TestCaseResult } from "../../../gameplayUtils";
 import { motion, AnimatePresence } from "motion/react";
+import { useGameplayController } from "../../../hooks/useGameplayController";
+import { useShallow } from "zustand/shallow";
+import { useGameplayStore } from "../../../hooks/useGameplayStore";
 
-type TestCaseProps = {
-    activeIndex: number;
-    setActiveIndex: Dispatch<SetStateAction<number>>
-    testCases: TestCase[];
-    testCaseResults: TestCaseResult[];
-    informationMode: InformationMode;
-    setInformationMode: Dispatch<SetStateAction<InformationMode>>;
-}
+export default function TestCases() {
+    const [
+        activeIndex, 
+        setActiveIndex, 
+        informationMode, 
+        setInformationMode
+    ] = useGameplayController(
+        useShallow(state => [
+            state.activeIndex,
+            state.setActiveIndex,
+            state.informationMode,
+            state.setInformationMode,
+        ])
+    );
 
-export default function TestCases({ 
-    activeIndex,
-    setActiveIndex,
-    testCases,
-    testCaseResults,
-    informationMode,
-    setInformationMode
-} : TestCaseProps) {
+    const [testCases, testCaseResults] = useGameplayStore(
+        useShallow(state => [state.question.publicTestCases, state.testCaseResults])
+    );
+
     const testCaseSelectorsRef = useRef<HTMLLIElement[] | null[]>([]);
     const overlayRef = useRef<HTMLDivElement>(null);
     const testCasesRef = useRef<HTMLDivElement>(null);

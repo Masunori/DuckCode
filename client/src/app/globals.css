@@ -39,8 +39,8 @@
   --font-colour-hover: #777;
 
   /* Code output (and terminal in the future) */
-  --error-code-text-border-color: #FF4040;
-  --warn-code-text-border-color: #FF4D00;
+  --error-code-text-border-color: #CC2020;
+  --warn-code-text-border-color: #FF8D00;
   --success-code-text-border-color: #00FF00;
 
   /* Test case selector */
@@ -60,16 +60,25 @@
   --login-signup-overlay-z-index: 2;
   --login-signup-z-index: 3;
 
+  /* for GameMenu.tsx in home */
   --stylized-game-menu-button-z-index: 2;
   --stylized-game-menu-button-description-z-index: 1;
-
-  
   --game-menu-tab-overlay-z-index: 3;
   --game-menu-tab-z-index: 4;
 
+  /* the Monaco Editor minimap has z-index = 4. This value is just enough to allow an overlay over an editor during gameplay*/
+  
+  /* only for fullscreen editor */
   --gameplay-tab-overlay-z-index: 5;
   --gameplay-tab-z-index: 6; 
-  /* the Monaco Editor minimap has z-index = 4. This value is just enough to allow an overlay over an editor during gameplay*/
+
+  /* strategy board in multiplayer */
+  --strategy-board-overlay-z-index: 7;
+  --strategy-board-z-index: 8;
+
+  /* chatbox in multiplayer */
+  --chatbox-overlay-z-index: 9;
+  --chatbox-z-index: 10;
 
   --navbar-z-index: 15;
   --settings-z-index: 20;

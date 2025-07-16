@@ -1,60 +1,74 @@
 "use client";
 
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { InformationMode, instantiateEditorOnMount, Question, runCodeOutputModeClientSide, runTestCasesClientSide, submitCodeClientSide, TestCaseResult } from "../../gameplayUtils";
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, PROGRAMMING_LANGUAGES } from "@/app/components/settings/settingsUtils";
+import { useCallback, useEffect, useRef } from "react";
+import { instantiateEditorOnMount, runCodeOutputModeClientSide, runTestCasesClientSide, submitCodeClientSide } from "../../gameplayUtils";
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from "@/app/components/settings/settingsUtils";
 import { useUserStore } from "@/app/components/contexts/UserContext";
 import * as monaco from 'monaco-editor';
-import { OutputEntry } from "@/app/api/gameplay/RunCodeStatuses";
 import { usePopup } from "@/app/components/contexts/PopupContext";
-import { Lock } from "@/app/utils/lock";
-import GameplayNavbar from "../../components/GameplayNavbar";
 import QuestionDisplay from "./components/QuestionDisplay";
 import CodeEditor from "./components/CodeEditor";
 import TestCases from "./components/TestCases";
 import styles from "./page.module.css";
-import { GAMEPLAY_KEY_PRIORITY, GAMEPLAY_TAB_KEY_PRIORITY, keyboardManager } from "@/app/utils/keyboardManager";
+import { keyboardManager } from "@/app/utils/keyboardManager";
 import Output from "./components/Output";
+import { useGameplayController } from "../../hooks/useGameplayController";
+import { useShallow } from "zustand/shallow";
+import { useGameplayStore } from "../../hooks/useGameplayStore";
 
-export function FullscreenEditorLayout({ question }: {question: Question}) {
+export function FullscreenEditorLayout() {
     // for code editor
     const user = useUserStore(state => state.user);
-    const [codeContent, setCodeContent] = useState<string | undefined>(PROGRAMMING_LANGUAGES[user.userPreference.language].code_snippet);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
-    const lock: Lock = useMemo(() => new Lock(), []);
-    // eslint-disable-next-line
-    const setIsClusterLocked: Dispatch<SetStateAction<boolean>> = bool => {};
+
+    const [
+        lock,
+        setIsClusterLocked, 
+        informationMode, 
+        setInformationMode,
+        setActiveIndex
+    ] = useGameplayController(
+        useShallow(state => [
+            state.lock,
+            state.setIsClusterLocked,
+            state.informationMode,
+            state.setInformationMode,
+            state.setActiveIndex
+        ])
+    );
+
+    const [
+        question,
+        codeContent,
+        setCodeOutput,
+        setTestCaseResults
+    ] = useGameplayStore(
+        useShallow(
+            state => [
+                state.question,
+                state.codeContent,
+                state.setCodeOutput,
+                state.setTestCaseResults
+            ]
+        )
+    );
+
+    const setNextInformationMode = useCallback(() => {
+        setInformationMode(prev => (
+            prev === "question"
+                ? "testCases"
+                : prev === "testCases"
+                ? "output"
+                : prev === "output"
+                ? "-"
+                : "question"
+        ));
+    }, [setInformationMode]);
 
     const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
         instantiateEditorOnMount(editorRef, editor, monacoInstance, user);
     }
-
-    // this is used in the code output UI component
-    const [informationMode, setInformationMode] = useState<InformationMode>("-");
-    const setNextInformationMode = () => {
-        setInformationMode(prev => prev === "-"
-            ? "question"
-            : prev === "question"
-            ? "output"
-            : prev === "output"
-            ? "testCases"
-            : "-"
-        );
-    }
-
-    const [codeOutput, setCodeOutput] = useState<OutputEntry[]>(
-        [
-            {
-                type: "log",
-                content: ">> Your code will be displayed here...",
-            },
-        ]
-    );
-
-    // this is used for the test case selector and display panel UI component
-    const [testCaseResults, setTestCaseResults] = useState<TestCaseResult[]>([]);
-    const [activeIndex, setActiveIndex] = useState(0);
 
     const { openPopupWith } = usePopup();
 
@@ -74,7 +88,7 @@ export function FullscreenEditorLayout({ question }: {question: Question}) {
             openPopupWith,
             setInformationMode,
         );     
-    }, [codeContent, lock, openPopupWith, user.userPreference.language]);
+    }, [codeContent, lock, openPopupWith, setCodeOutput, setInformationMode, setIsClusterLocked, user.userPreference.language]);
 
     // submit code
     const submit = useCallback(async () => {
@@ -92,7 +106,7 @@ export function FullscreenEditorLayout({ question }: {question: Question}) {
             openPopupWith,
             setInformationMode
         );
-    }, [codeContent, lock, openPopupWith, user.userPreference.language, question]);
+    }, [codeContent, user.userPreference.language, question, lock, setIsClusterLocked, setCodeOutput, openPopupWith, setInformationMode]);
 
     // run code against all test cases
     // if all test cases passed, prompt to submit code
@@ -113,7 +127,7 @@ export function FullscreenEditorLayout({ question }: {question: Question}) {
             openPopupWith,
             setInformationMode
         );
-    }, [codeContent, lock, openPopupWith, question, user.userPreference.language]);
+    }, [codeContent, lock, openPopupWith, question, setActiveIndex, setCodeOutput, setInformationMode, setIsClusterLocked, setTestCaseResults, user.userPreference.language]);
 
     // this useEffect encapsulates all key bindings
     useEffect(() => {
@@ -171,14 +185,14 @@ export function FullscreenEditorLayout({ question }: {question: Question}) {
             return false;
         };
         
-        keyboardManager.register("gameplay", GAMEPLAY_KEY_PRIORITY, handleKeyDown);
-        keyboardManager.register("gameplayFullscreen", GAMEPLAY_TAB_KEY_PRIORITY, handleCloseTab);
+        keyboardManager.register("gameplay", "GAMEPLAY_KEY_PRIORITY", handleKeyDown);
+        keyboardManager.register("gameplayFullscreen", "GAMEPLAY_TAB_KEY_PRIORITY", handleCloseTab);
 
         return () => {
             keyboardManager.unregister("gameplay");
             keyboardManager.unregister("gameplayFullscreen");
         }
-    }, [runCodeOutputMode, runTestCases, submit, informationMode]);
+    }, [runCodeOutputMode, runTestCases, submit, informationMode, setNextInformationMode, setInformationMode]);
 
     useEffect(() => {
         console.log(informationMode);
@@ -186,30 +200,10 @@ export function FullscreenEditorLayout({ question }: {question: Question}) {
 
     return (
         <div ref={gameplayRef} tabIndex={0} className={styles.fullscreenEditorLayout}>
-            <GameplayNavbar />
-            <CodeEditor 
-                onMount={handleEditorDidMount}
-                codeContent={codeContent}
-                setCodeContent={setCodeContent}
-            />
-            <QuestionDisplay 
-                question={question}
-                informationMode={informationMode}
-                setInformationMode={setInformationMode}
-            />
-            <TestCases
-                activeIndex={activeIndex}
-                setActiveIndex={setActiveIndex}
-                testCases={question.publicTestCases}
-                testCaseResults={testCaseResults}
-                informationMode={informationMode}
-                setInformationMode={setInformationMode}
-            />
-            <Output
-                codeOutput={codeOutput}
-                informationMode={informationMode}
-                setInformationMode={setInformationMode}
-            />
+            <CodeEditor onMount={handleEditorDidMount} />
+            <QuestionDisplay />
+            <TestCases />
+            <Output />
         </div>
     );
 }
