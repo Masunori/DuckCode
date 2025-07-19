@@ -44,6 +44,7 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
         .then(response => {
             if (response.status === 401) {
                 setLoginError(LoginStatus.WRONG_EMAIL_OR_PASSWORD);
+                return;
             }
 
             setUser(response.data.user as User);
