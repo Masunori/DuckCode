@@ -1,4 +1,4 @@
-const LOGIN_API = "/api/portal/login";
+const LOGIN_API = "https://cb6d9715d8f8.ngrok-free.app/auth/login";
 const SIGNUP_API = "/api/portal/signup";
 const REST_PASSWORD_SEND_CODE_API = "/api/portal/resetPassword/sendVerificationCode";
 const REST_PASSWORD_VERIFY_CODE_API = "/api/portal/resetPassword/verifyOtp";
@@ -17,6 +17,7 @@ export async function login(email: string, password: string) {
     });
 
     const data = await response.json();
+    console.log(data);
 
     return {
         status: response.status,

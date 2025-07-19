@@ -15,5 +15,6 @@ COPY . .
 EXPOSE 3000
 
 # 5. Default to dev mode; you can override this in compose if you like
-CMD ["npm", "run", "dev", "--", "-H", "0.0.0.0", "-p", "3000"]
+# CMD ["npm", "run", "dev", "--", "-H", "0.0.0.0", "-p", "3000"]
+CMD ["npm", "run", "dev"]
 
