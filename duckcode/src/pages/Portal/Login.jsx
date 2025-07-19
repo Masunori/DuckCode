@@ -39,8 +39,8 @@ export default function Login({ isLogin, setIsLogin, setIsResetPassword }) {
                             <span></span>
                         </div>
                         <section className="login-signup-alternative-options">
-                            <button>Google</button>
-                            <button>GitHub</button>
+                            <button onClick={() => window.location.href = "http://54.253.72.184/auth/google"}>Google</button>
+                            <button onClick={() => window.location.href = "http://54.253.72.184/auth/github"}>GitHub</button>
                             <button>Facebook</button>
                         </section>
                     </form>
