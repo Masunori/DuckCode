@@ -19,6 +19,8 @@ type GameplayStoreProps = {
     question: Question;
     /** Sets the question */
     setQuestion: SetState<Question>;
+    initialTime: number;
+    setInitialTime: SetState<number>;
 };
 
 /**
@@ -41,6 +43,7 @@ export const useGameplayStore = create<GameplayStoreProps>((set) => ({
     codeContent: "",
     testCaseResults: [],
     codeOutput: [{ type: "log", content: ">> Your code results will be displayed here..." }],
+    initialTime: 60,
 
     setCodeContent: (code) =>
         set((state) => ({
@@ -66,4 +69,10 @@ export const useGameplayStore = create<GameplayStoreProps>((set) => ({
                 ? question(state.question)
                 : question
         })),
+    setInitialTime: (time) => 
+        set((state) => ({
+            initialTime: typeof time === "function"
+                ? time(state.initialTime)
+                : time
+        }))
 }))

@@ -35,13 +35,32 @@
     height: 4.5rem;
     background-color: var(--third-layer-background-color);
     display: grid;
-    grid-template-columns: 15rem 2fr 1fr 4.5rem;
+    grid-template-columns: 15rem 1fr 10.5rem 4.5rem;
     gap: 1rem;
     align-items: center;
 }
 
 .navbar img {
     filter: brightness(0) saturate(100%) invert(1) sepia(1) hue-rotate(200deg) saturate(5) brightness(1.2);
+}
+
+.navbar .matchInformation {
+    justify-self: center;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar .matchInformation .teamAvatars, .navbar .matchInformation .opponentAvatars {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.navbar .matchInformation .avatar {
+    width: 3rem;
+    height: 3rem;
+    border: 0.2rem solid #888;
 }
 
 .navbar .programmingLanguage {

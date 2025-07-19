@@ -29,7 +29,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.editor}>Code Editor</div>
                 <div className={styles.testCases}>Test Cases</div>
             </div>,
-        implementation: (question: Question) => (<DefaultLayout question={question} />)
+        implementation: (question) => <DefaultLayout question={question} />
     },
     "Inverted": {
         miniPreview: 
@@ -39,7 +39,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.editor}>Code Editor</div>
                 <div className={styles.testCases}>Test Cases</div>
             </div>,
-            implementation: (question: Question) => (<DefaultLayout question={question} />)
+            implementation: (question) => <DefaultLayout question={question} />
         // implementation: (question: Question) => (<InvertedLayout question={question} />)
     },
     "Two Tabs": {
@@ -49,7 +49,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.question}>Question + Test Cases (Toggle)</div>
                 <div className={styles.editor}>Code Editor</div>
             </div>,
-        implementation: (question: Question) => (<DefaultLayout question={question} />)
+        implementation: (question) => <DefaultLayout question={question} />
         // implementation: (question: Question) => (<TwoTabsLayout question={question} />)
     },
     "Two Tabs Inverted": {
@@ -59,7 +59,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.question}>Question + Test Cases (Toggle)</div>
                 <div className={styles.editor}>Code Editor</div>
             </div>,
-        implementation: (question: Question) => (<DefaultLayout question={question} />)
+        implementation: (question) => <DefaultLayout question={question} />
         // implementation: (question: Question) => (<TwoTabsInvertedLayout question={question} />)
     },
     "Fullscreen Editor": {
@@ -72,7 +72,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.testCases}>Test Cases + Output (toggle)</div>
                 <div className={styles.editor}>Code Editor</div>
             </div>,
-        implementation: (question: Question) => (<DefaultLayout question={question} />)
+        implementation: (question) => <DefaultLayout question={question} />
         // implementation: (question: Question) => (<FullscreenEditorLayout question={question} />)
     },
 }

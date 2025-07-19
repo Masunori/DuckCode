@@ -3,17 +3,18 @@
 import { useUserStore } from"@/app/components/contexts/UserContext";
 import { Question } from "./gameplayUtils";
 import { LAYOUTS } from "./layout/layoutUtils";
-import { useGameplayStore } from "./hooks/useGameplayStore";
 import { useGameplayController } from "./hooks/useGameplayController";
 import { useEffect } from "react";
 
-export default function GameplayClient({ question }: { question: Question }) {
-    const user = useUserStore(state => state.user);
+type GameplayClientProps = {
+    initialServerData: {
+        question: Question,
+        initialTime: number
+    }
+}
 
-    // load the question into the gameplay controller
-    useEffect(() => {
-        useGameplayStore.getState().setQuestion(question);
-    }, [question]);
+export default function GameplayClient({ initialServerData }: GameplayClientProps) {
+    const user = useUserStore(state => state.user);
 
     // set the information mode for respective layouts
     const layout = user.userPreference.gameplayLayout;
@@ -30,6 +31,6 @@ export default function GameplayClient({ question }: { question: Question }) {
     }, [layout]);
 
     return (
-        LAYOUTS[layout].implementation
+        LAYOUTS[layout].implementation(initialServerData.question)
     );
 }

@@ -14,8 +14,9 @@ import MultiplayerNavbar from "./components/MultiplayerNavbar";
 import Chatbox from "./components/Chatbox";
 
 type MultiplayerClientProps = {
-    question: Question;
     initialServerData: {
+        question: Question;
+        initialTime: number;
         activeTab: string;        
         codeByUser: {
             [userId: string]: string;
@@ -28,7 +29,7 @@ type MultiplayerClientProps = {
     }
 }
 
-export default function MultiplayerClient({ question, initialServerData }: MultiplayerClientProps) {
+export default function MultiplayerClient({ initialServerData }: MultiplayerClientProps) {
     const user = useUserStore(state => state.user);
     const isAlreadyInitialized = useRef(false);
 
@@ -49,17 +50,17 @@ export default function MultiplayerClient({ question, initialServerData }: Multi
         }
 
         for (const userId of Object.keys(initialServerData.codeByUser)) {
-            useCodeExecutionStore.getState().setTestCaseResults(userId, new Array<TestCaseResult>(question.publicTestCases.length));
+            useCodeExecutionStore.getState().setTestCaseResults(userId, new Array<TestCaseResult>(initialServerData.question.publicTestCases.length));
             useCodeExecutionStore.getState().setOutput(userId, [{ type: "log", content: ">> Code results will be shown here..." }])
         }
     }
     
     return (
         <>
-            <MultiplayerNavbar />
+            <MultiplayerNavbar initialTime={initialServerData.initialTime} />
             <StrategyBoard />
             <Chatbox />
-            {LAYOUTS[user.userPreference.gameplayLayout].implementation(question)}
+            {LAYOUTS[user.userPreference.gameplayLayout].implementation(initialServerData.question)}
         </>
     );
 }

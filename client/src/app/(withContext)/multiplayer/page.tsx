@@ -97,6 +97,8 @@ export default async function Page() {
     };
 
     const initialServerData = {
+        question: question,
+        initialTime: 900,
         activeTab: "duckcode",
         codeByUser: {
             "Team": "// Shared JavaScript\n",
@@ -116,7 +118,7 @@ export default async function Page() {
     
     return (
         <div className={styles.container}>
-            <MultiplayerClient question={question} initialServerData={initialServerData} />
+            <MultiplayerClient initialServerData={initialServerData} />
         </div>
     )
 }

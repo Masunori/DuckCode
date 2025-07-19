@@ -7,8 +7,9 @@ import { motion, AnimatePresence } from "motion/react";
 import { useGameplayController } from "../../../hooks/useGameplayController";
 import { useShallow } from "zustand/shallow";
 import { useGameplayStore } from "../../../hooks/useGameplayStore";
+import { TestCase } from "../../../gameplayUtils";
 
-export default function TestCases() {
+export default function TestCases({ testCases }: { testCases: TestCase[] }) {
     const [
         activeIndex, 
         setActiveIndex, 
@@ -23,9 +24,7 @@ export default function TestCases() {
         ])
     );
 
-    const [testCases, testCaseResults] = useGameplayStore(
-        useShallow(state => [state.question.publicTestCases, state.testCaseResults])
-    );
+    const testCaseResults = useGameplayStore(state => state.testCaseResults);
 
     const testCaseSelectorsRef = useRef<HTMLLIElement[] | null[]>([]);
     const overlayRef = useRef<HTMLDivElement>(null);

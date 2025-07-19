@@ -1,9 +1,7 @@
-import { useGameplayStore } from "../hooks/useGameplayStore";
+import { Question } from "../gameplayUtils";
 import styles from "../page.module.css";
 
-export default function QuestionDisplay() {
-    const question = useGameplayStore(state => state.question);
-
+export default function QuestionDisplay({ question }: { question: Question }) {
     return (
         <div className={styles.question}>
             <h1>{question.title}</h1>

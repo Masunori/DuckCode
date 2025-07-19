@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import { instantiateEditorOnMount, runCodeOutputModeClientSide, runTestCasesClientSide, submitCodeClientSide } from "../../gameplayUtils";
+import { instantiateEditorOnMount, Question, runCodeOutputModeClientSide, runTestCasesClientSide, submitCodeClientSide } from "../../gameplayUtils";
 import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from "@/app/components/settings/settingsUtils";
 import { useUserStore } from "@/app/components/contexts/UserContext";
 import * as monaco from 'monaco-editor';
@@ -16,7 +16,7 @@ import { useGameplayController } from "../../hooks/useGameplayController";
 import { useShallow } from "zustand/shallow";
 import { useGameplayStore } from "../../hooks/useGameplayStore";
 
-export function DefaultLayout() {
+export function DefaultLayout({ question }: { question: Question }) {
     // for code editor
     const user = useUserStore(state => state.user);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
@@ -39,14 +39,12 @@ export function DefaultLayout() {
     );
 
     const [
-        question,
         codeContent,
         setCodeOutput,
         setTestCaseResults
     ] = useGameplayStore(
         useShallow(
             state => [
-                state.question,
                 state.codeContent,
                 state.setCodeOutput,
                 state.setTestCaseResults
@@ -165,7 +163,7 @@ export function DefaultLayout() {
         <div ref={gameplayRef} tabIndex={0}>
             <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
                 <Panel defaultSize={40} minSize={2}>
-                    <QuestionDisplay />
+                    <QuestionDisplay question={question} />
                 </Panel>
                 <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
                 <Panel defaultSize={60} minSize={2} className={styles.codePanel}>
@@ -173,6 +171,7 @@ export function DefaultLayout() {
                         onMount={handleEditorDidMount}
                     />
                     <TestCases
+                        testCases={question.publicTestCases}
                         runCode={runCodeOutputMode}
                         runTestCases={runTestCases}
                         submitCode={submit}
