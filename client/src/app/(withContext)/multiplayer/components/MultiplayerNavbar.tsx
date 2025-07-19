@@ -11,10 +11,50 @@ import { useChatController } from "../hooks/useChatController";
 import { useBoardController } from "../hooks/useBoardController";
 
 type MultiplayerNavbarProps = {
+    initialTime: number;
     forceSubmitOnCountdownEnds?: () => void;
 }
 
-export default function MultiplayerNavbar({ forceSubmitOnCountdownEnds = () => {} }: MultiplayerNavbarProps) {
+function MatchInformation({ initialTime, forceSubmitOnCountdownEnds }: MultiplayerNavbarProps) {
+    return (
+        <div className={styles.matchInformation}>
+            <div className={styles.teamAvatars}>
+                <div className={styles.avatar}>
+
+                </div>
+                <div className={styles.avatar}>
+
+                </div>
+                <div className={styles.avatar}>
+
+                </div>
+            </div>
+            <div className={styles.matchTimerAndProgress}>
+                <CountdownTimer
+                    initialTime={initialTime}
+                    onCountdownEnds={forceSubmitOnCountdownEnds}
+                />
+                <div className={styles.matchProgress}>
+                    <p>60%</p>
+                    <p>40%</p>
+                </div>
+            </div>
+            <div className={styles.opponentAvatars}>
+                <div className={styles.avatar}>
+
+                </div>
+                <div className={styles.avatar}>
+
+                </div>
+                <div className={styles.avatar}>
+
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default function MultiplayerNavbar({ initialTime, forceSubmitOnCountdownEnds = () => {} }: MultiplayerNavbarProps) {
     const { openSettings } = useSettings();
     const user = useUserStore(state => state.user);
     const setIsChatboxOpen = useChatController(state => state.setIsChatboxOpen);
@@ -59,9 +99,9 @@ export default function MultiplayerNavbar({ forceSubmitOnCountdownEnds = () => {
                     </p>
                 </button>
             </div>
-            <CountdownTimer 
-                initialTime={900} 
-                onCountdownEnds={forceSubmitOnCountdownEnds}
+            <MatchInformation 
+                initialTime={initialTime}
+                forceSubmitOnCountdownEnds={forceSubmitOnCountdownEnds}
             />
             <div className={styles.programmingLanguage}>
                 Programming Language: {user.userPreference.language}

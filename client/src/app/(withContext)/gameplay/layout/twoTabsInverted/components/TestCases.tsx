@@ -6,15 +6,14 @@ import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeS
 import { useGameplayController } from "../../../hooks/useGameplayController";
 import { useShallow } from "zustand/shallow";
 import { useGameplayStore } from "../../../hooks/useGameplayStore";
+import { TestCase } from "../../../gameplayUtils";
 
-export default function TestCases() {
+export default function TestCases({ testCases }: { testCases: TestCase[] }) {
     const [activeIndex, setActiveIndex] = useGameplayController(
         useShallow(state => [state.activeIndex, state.setActiveIndex])
     );
 
-    const [testCases, testCaseResults] = useGameplayStore(
-        useShallow(state => [state.question.publicTestCases, state.testCaseResults])
-    );
+    const testCaseResults = useGameplayStore(state => state.testCaseResults);
 
     const testCaseSelectorsRef = useRef<HTMLLIElement[] | null[]>([]);
 

@@ -32,6 +32,30 @@ export type Question = {
     publicTestCases: TestCase[];
 }
 
+export const placeholderQuestion: Question = {
+    qid: -1,
+    title: "",
+    difficulty: -1,
+    description: [],
+    input: [],
+    output: [],
+    examples: [
+        {
+            input: [],
+            output: [],
+            explanation: ""
+        }
+    ],
+    constraints: [],
+    publicTestCases: [
+        {
+            tid: -1,
+            input: "",
+            expectedOutput: "",
+        }
+    ]
+}
+
 export const dummyQuestion: Question = {
     qid: 10000000, // int
     title: 'Two Sum', // string

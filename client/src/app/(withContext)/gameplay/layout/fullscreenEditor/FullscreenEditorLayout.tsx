@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import { instantiateEditorOnMount, runCodeOutputModeClientSide, runTestCasesClientSide, submitCodeClientSide } from "../../gameplayUtils";
+import { instantiateEditorOnMount, Question, runCodeOutputModeClientSide, runTestCasesClientSide, submitCodeClientSide } from "../../gameplayUtils";
 import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from "@/app/components/settings/settingsUtils";
 import { useUserStore } from "@/app/components/contexts/UserContext";
 import * as monaco from 'monaco-editor';
@@ -16,7 +16,7 @@ import { useGameplayController } from "../../hooks/useGameplayController";
 import { useShallow } from "zustand/shallow";
 import { useGameplayStore } from "../../hooks/useGameplayStore";
 
-export function FullscreenEditorLayout() {
+export function FullscreenEditorLayout({ question }: { question: Question }) {
     // for code editor
     const user = useUserStore(state => state.user);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
@@ -39,14 +39,12 @@ export function FullscreenEditorLayout() {
     );
 
     const [
-        question,
         codeContent,
         setCodeOutput,
         setTestCaseResults
     ] = useGameplayStore(
         useShallow(
             state => [
-                state.question,
                 state.codeContent,
                 state.setCodeOutput,
                 state.setTestCaseResults
@@ -201,8 +199,8 @@ export function FullscreenEditorLayout() {
     return (
         <div ref={gameplayRef} tabIndex={0} className={styles.fullscreenEditorLayout}>
             <CodeEditor onMount={handleEditorDidMount} />
-            <QuestionDisplay />
-            <TestCases />
+            <QuestionDisplay question={question} />
+            <TestCases testCases={question.publicTestCases}/>
             <Output />
         </div>
     );

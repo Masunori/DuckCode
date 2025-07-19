@@ -12,10 +12,11 @@ import { UserPreference } from "../../../userPrefs/userPrefsUtils";
 import { useRouter } from "next/navigation";
 
 type GameplayNavbarProps = {
+    initialTime: number;
     forceSubmitOnCountdownEnds?: () => void;
 }
 
-export default function GameplayNavbar({ forceSubmitOnCountdownEnds = () => {} }: GameplayNavbarProps) {
+export default function GameplayNavbar({ initialTime, forceSubmitOnCountdownEnds = () => {} }: GameplayNavbarProps) {
     const { openSettings } = useSettings();
     const user = useUserStore(state => state.user);
     const setUserField = useUserStore(state => state.setUserField);
@@ -56,7 +57,7 @@ export default function GameplayNavbar({ forceSubmitOnCountdownEnds = () => {} }
                 />
             </button>
             <CountdownTimer 
-                initialTime={10} 
+                initialTime={initialTime} 
                 onCountdownEnds={forceSubmitOnCountdownEnds}
             />
             <DropdownInput

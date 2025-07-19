@@ -3,15 +3,14 @@
 import { useEffect, useRef } from "react";
 import styles from "../page.module.css";
 import { motion, AnimatePresence } from "motion/react";
-import { useGameplayStore } from "../../../hooks/useGameplayStore";
 import { useGameplayController } from "../../../hooks/useGameplayController";
 import { useShallow } from "zustand/shallow";
+import { Question } from "../../../gameplayUtils";
 
-export default function QuestionDisplay() {
+export default function QuestionDisplay({ question }: { question: Question }) {
     const overlayRef = useRef<HTMLDivElement>(null);
     const questionRef = useRef<HTMLDivElement>(null);
 
-    const question = useGameplayStore(state => state.question);
     const [informationMode, setInformationMode] = useGameplayController(
         useShallow(state => [state.informationMode, state.setInformationMode])
     );

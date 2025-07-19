@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import { instantiateEditorOnMount, runCodeOutputModeClientSide, runTestCasesClientSide, submitCodeClientSide } from "../../gameplayUtils";
+import { instantiateEditorOnMount, Question, runCodeOutputModeClientSide, runTestCasesClientSide, submitCodeClientSide } from "../../gameplayUtils";
 import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from "@/app/components/settings/settingsUtils";
 import { useUserStore } from"@/app/components/contexts/UserContext";
 import * as monaco from 'monaco-editor';
@@ -19,7 +19,7 @@ import { useGameplayStore } from "../../hooks/useGameplayStore";
 import Output from "./components/Output";
 import TestCases from "./components/TestCases";
 
-export function TwoTabsInvertedLayout() {
+export function TwoTabsInvertedLayout({ question }: { question: Question }) {
     // for code editor
     const user = useUserStore(state => state.user)
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
@@ -42,14 +42,12 @@ export function TwoTabsInvertedLayout() {
     );
 
     const [
-        question,
         codeContent,
         setCodeOutput,
         setTestCaseResults
     ] = useGameplayStore(
         useShallow(
             state => [
-                state.question,
                 state.codeContent,
                 state.setCodeOutput,
                 state.setTestCaseResults
@@ -166,7 +164,7 @@ export function TwoTabsInvertedLayout() {
         return () => {
             keyboardManager.unregister("gameplay");
         }
-    }, [runCodeOutputMode, runTestCases, submit]);
+    }, [runCodeOutputMode, runTestCases, setInformationMode, submit]);
 
 
     return (
@@ -181,11 +179,11 @@ export function TwoTabsInvertedLayout() {
                 <Panel defaultSize={50} minSize={2} className={styles.informationPanel}>
                     <InformationPanelButtons />
                     {informationMode === "question" 
-                        ? <QuestionDisplay />
+                        ? <QuestionDisplay question={question} />
                         : informationMode === "output"
                         ? <Output />
                         : informationMode === "testCases"
-                        ? <TestCases />
+                        ? <TestCases testCases={question.publicTestCases} />
                         : <></>
                     }
                     <div className={styles.twoTabsInvertedCodeHandlerButtons}>

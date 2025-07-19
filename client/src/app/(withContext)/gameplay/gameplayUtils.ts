@@ -34,24 +34,24 @@ export type Question = {
 
 export const placeholderQuestion: Question = {
     qid: -1,
-    title: "Loading...",
+    title: "",
     difficulty: -1,
-    description: ["Loading"],
-    input: ["Loading..."],
-    output: ["Loading..."],
+    description: [],
+    input: [],
+    output: [],
     examples: [
         {
-            input: ["Loading..."],
-            output: ["Loading..."],
-            explanation: "Loading..."
+            input: [],
+            output: [],
+            explanation: ""
         }
     ],
-    constraints: ["Loading..."],
+    constraints: [],
     publicTestCases: [
         {
             tid: -1,
-            input: "Loading...",
-            expectedOutput: "Loading...",
+            input: "",
+            expectedOutput: "",
         }
     ]
 }

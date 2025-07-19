@@ -6,20 +6,21 @@ import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeS
 import { useGameplayController } from "../../../hooks/useGameplayController";
 import { useShallow } from "zustand/shallow";
 import { useGameplayStore } from "../../../hooks/useGameplayStore";
+import { TestCase } from "../../../gameplayUtils";
 
 type TestCaseProps = {
+    testCases: TestCase[];
     runCode: () => void;
     runTestCases: () => void;
     submitCode: () => void;
 }
 
 export default function TestCases({
+    testCases,
     runCode,
     runTestCases,
     submitCode,
 } : TestCaseProps) {
-    const testCases = useGameplayStore(state => state.question).publicTestCases;
-
     const [
         activeIndex,
         setActiveIndex,
