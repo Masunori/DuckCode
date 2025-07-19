@@ -17,7 +17,6 @@ export async function login(email: string, password: string) {
     });
 
     const data = await response.json();
-    console.log(data);
 
     return {
         status: response.status,
