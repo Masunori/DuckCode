@@ -1,4 +1,5 @@
-import { pool } from '../config/db.js';
+import db from '../models/index.js';
+import { Op } from 'sequelize';
 
 export async function getQuestion(cur_point) {
     let point = parseInt(cur_point, 10);
@@ -7,11 +8,15 @@ export async function getQuestion(cur_point) {
         throw new Error('Invalid cur_point value');
     }
 
-    const query = `SELECT * FROM question.question WHERE difficulty <= $1`;
-    
     try {
-        const result = await pool.query(query, [new_point]);
-        const questions = result.rows;
+        const questions = await db.Question.findAll({
+            where: {
+                difficulty: {
+                    [Op.lte]: new_point
+                }
+            }
+        });
+        
         if (!questions.length) {
             throw new Error('No questions found');
         } else {
@@ -68,26 +73,27 @@ function splitFields(data) {
 }
 
 export async function getTestCaseFromQuestion(questionid, ispublic) {
-    let query;
-    if (ispublic === false) {
-        query = `SELECT testcaseid, input, expected_output FROM question.testcase WHERE questionid = $1`;
-    } else {
-        query = `SELECT testcaseid, input, expected_output FROM question.testcase WHERE questionid = $1 AND ispublic = true`;
-    }
-
     try {
-        const result = await pool.query(query, [questionid]);
+        const whereClause = { questionid: questionid };
+        if (ispublic === true) {
+            whereClause.ispublic = true;
+        }
 
-        // Ensure result.rows is an array
-        if (!Array.isArray(result.rows)) {
+        const testCases = await db.Testcase.findAll({
+            where: whereClause,
+            attributes: ['testcaseid', 'input', 'expected_output']
+        });
+
+        // Ensure testCases is an array
+        if (!Array.isArray(testCases)) {
             throw new Error('Expected an array of testcases, but got something else.');
         }
 
         // Map the results to the desired format
-        const filted_results = result.rows.map(({input, expected_output}) => {
+        const filted_results = testCases.map((testCase) => {
             return {
-                input: input,
-                expectedOutput: expected_output,
+                input: testCase.input,
+                expectedOutput: testCase.expected_output,
             };
         });
 

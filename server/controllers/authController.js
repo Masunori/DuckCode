@@ -1,4 +1,4 @@
-import {logIn as logInService, register as registerService} from '../services/userAuthen.js';
+import {logIn as logInService, register as registerService } from '../services/userAuthen.js';
 import { sendOTPForEmail as sendOTPService, verifyOTPForEmail as verifyOTPService  } from '../services/otpService.js';
 export const logIn = async (req, res) => {
     try {
