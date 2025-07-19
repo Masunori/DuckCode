@@ -1,23 +1,21 @@
 "use client";
 
-import { CSSProperties, Dispatch, SetStateAction, useRef } from "react";
+import { CSSProperties, useRef } from "react";
 import styles from "../page.module.css";
 import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeStatuses";
-import { TestCase, TestCaseResult } from "../../../gameplayUtils";
+import { useGameplayController } from "../../../hooks/useGameplayController";
+import { useShallow } from "zustand/shallow";
+import { useGameplayStore } from "../../../hooks/useGameplayStore";
 
-type TestCaseProps = {
-    activeIndex: number;
-    setActiveIndex: Dispatch<SetStateAction<number>>
-    testCases: TestCase[];
-    testCaseResults: TestCaseResult[];
-}
+export default function TestCases() {
+    const [activeIndex, setActiveIndex] = useGameplayController(
+        useShallow(state => [state.activeIndex, state.setActiveIndex])
+    );
 
-export default function TestCases({ 
-    activeIndex,
-    setActiveIndex,
-    testCases,
-    testCaseResults
-} : TestCaseProps) {
+    const [testCases, testCaseResults] = useGameplayStore(
+        useShallow(state => [state.question.publicTestCases, state.testCaseResults])
+    );
+
     const testCaseSelectorsRef = useRef<HTMLLIElement[] | null[]>([]);
 
     const CODE_FAIL_BORDER_COLOR = 'var(--error-code-text-border-color)';

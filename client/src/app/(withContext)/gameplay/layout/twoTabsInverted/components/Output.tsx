@@ -1,13 +1,11 @@
 "use client";
 
+import { useGameplayStore } from "../../../hooks/useGameplayStore";
 import styles from "../page.module.css";
-import { OutputEntry } from "@/app/api/gameplay/RunCodeStatuses";
 
-type TestCaseProps = {
-    codeOutput: OutputEntry[];
-}
+export default function Output() {
+    const codeOutput = useGameplayStore(state => state.codeOutput);
 
-export default function Output({ codeOutput } : TestCaseProps) {
     const CODE_FAIL_BORDER_COLOR = 'var(--error-code-text-border-color)';
     const CODE_WARNING_COLOR = 'var(--warn-code-text-border-color)';
 

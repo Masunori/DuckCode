@@ -54,7 +54,7 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
     return (
         <div className={`${styles.settingsOptionDisplay} ${styles.accountSettingsDisplay}`}>
             {/* User Profile Section */}
-            <div className={styles.settingsContentChunk}>
+            <section className={styles.settingsContentChunk}>
                 <h2>User Profile</h2>
                 <div className={styles.profileSection}>
                     <div
@@ -173,7 +173,7 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             {/* Rest of the component remains the same */}
             {/* Account Information Section */}

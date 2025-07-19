@@ -171,7 +171,7 @@
     font-size: 1rem;
 }
 
-.togglePanelButton, .runAllTestCasesButton {
+.togglePanelButton, .runAllTestCasesButton, .runCodeButton {
     background-color: var(--insignificant-button-color);
     border: none;
     transition-duration: 0.25s;
@@ -179,7 +179,7 @@
     font-weight: 600;
 }
 
-.togglePanelButton:hover, .runAllTestCasesButton:hover {
+.togglePanelButton:hover, .runAllTestCasesButton:hover, .runCodeButton:hover {
     background-color: var(--insignificant-button-hover-color);
 }
 

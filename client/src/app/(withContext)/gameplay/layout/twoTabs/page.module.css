@@ -85,61 +85,8 @@
     overflow: hidden;
 }
 
-.codeHandlerButtons {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    height: 3rem;
+.twoTabsCodeHandlerButtons {
     border-top: 1px solid #888;
-}
-
-.runCodeButton, .runAllTestCasesButton {
-    background-color: var(--insignificant-button-color);
-    border: none;
-    transition-duration: 0.25s;
-    padding: 0 10px;
-    font-weight: 600;
-}
-
-.runCodeButton:hover, .runAllTestCasesButton:hover {
-    background-color: var(--insignificant-button-hover-color);
-}
-
-.submitCodeButton {
-    background-color: var(--significant-button-color);
-    border: none;
-    transition-duration: 0.25s;
-    padding: 0 10px;
-    font-weight: 600;
-}
-
-.submitCodeButton:hover {
-    background-color: var(--significant-button-hover-color);
-}
-
-.informationPanelButtons {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    height: 3rem;
-}
-
-.informationPanelButtons button.unselected {
-    background-color: var(--first-layer-background-color);
-    border: none;
-    transition-duration: 0.25s;
-    padding: 0 10px;
-    font-weight: 600;
-}
-
-.informationPanelButtons button.selected {
-    background-color: var(--second-layer-background-color);
-    border: none;
-    transition-duration: 0.25s;
-    padding: 0 10px;
-    font-weight: 600;
-}
-
-.informationPanelButtons button:hover {
-    background-color: var(--second-layer-background-color);
 }
 
 /* Question */

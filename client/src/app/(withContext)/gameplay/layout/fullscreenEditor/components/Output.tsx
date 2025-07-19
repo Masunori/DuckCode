@@ -1,18 +1,18 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { InformationMode } from "../../../gameplayUtils";
+import { useEffect, useRef } from "react";
 import styles from "../page.module.css";
-import { OutputEntry } from "@/app/api/gameplay/RunCodeStatuses";
 import { motion, AnimatePresence } from "motion/react";
+import { useGameplayStore } from "../../../hooks/useGameplayStore";
+import { useGameplayController } from "../../../hooks/useGameplayController";
+import { useShallow } from "zustand/shallow";
 
-type TestCaseProps = {
-    codeOutput: OutputEntry[];
-    informationMode: InformationMode;
-    setInformationMode: Dispatch<SetStateAction<InformationMode>>;
-}
-
-export default function Output({ codeOutput, informationMode, setInformationMode } : TestCaseProps) {
+export default function Output() {
+    const codeOutput = useGameplayStore(state => state.codeOutput);
+    const [informationMode, setInformationMode] = useGameplayController(
+        useShallow(state => [state.informationMode, state.setInformationMode])
+    );
+    
     const CODE_FAIL_BORDER_COLOR = 'var(--error-code-text-border-color)';
     const CODE_WARNING_COLOR = 'var(--warn-code-text-border-color)';
 

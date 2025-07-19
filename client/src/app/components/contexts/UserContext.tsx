@@ -1,19 +1,20 @@
 "use client";
 
-import { LeafPath, PRISTINE_USER, User } from "@/app/userPrefs/userPrefsUtils";
+import { PRISTINE_USER, User } from "@/app/userPrefs/userPrefsUtils";
+import { Paths } from "@/app/utils/types";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
 type UserStore = {
     user: User;
-    setUserField: (path: LeafPath<User>, value: unknown) => void;
+    setUserField: (path: Paths<User>, value: unknown) => void;
     setUser: (user: User) => void;
 }
 
 export const useUserStore = create<UserStore>(
     combine({ user: structuredClone(PRISTINE_USER) }, (set) => {
         return {
-            setUserField: (path: LeafPath<User>, value: unknown) => {
+            setUserField: (path: Paths<User>, value: unknown) => {
                 set((state) => {
                     if (!path) {
                         return { user: state.user };

@@ -1,15 +1,29 @@
 type KeyHandler = (event: KeyboardEvent) => boolean;
 
-export const GENERAL_KEY_PRIORITY = 1;
-export const GAMEPLAY_KEY_PRIORITY = 2;
-export const GAMEPLAY_TAB_KEY_PRIORITY = 3;
-export const SETTINGS_KEY_PRIORITY = 4;
-export const POPUP_KEY_PRIORITY = 1000;
-export const INPUT_KEY_PRIORITY = 10;
+export type PriorityName = 
+    "GENERAL_KEY_PRIORITY"
+    | "GAMEPLAY_KEY_PRIORITY"
+    | "GAMEPLAY_TAB_KEY_PRIORITY"
+    | "CANVAS_KEY_PRIORITY"
+    | "CHAT_KEY_PRIORITY"
+    | "SETTINGS_KEY_PRIORITY"
+    | "POPUP_KEY_PRIORITY"
+    | "INPUT_KEY_PRIORITY"
+
+export const PRIORITY_INFO: Record<PriorityName, { priority: number, stopPropagation: boolean }> = {
+    GENERAL_KEY_PRIORITY: { priority: 1, stopPropagation: false, },
+    GAMEPLAY_KEY_PRIORITY: { priority: 2, stopPropagation: false, },
+    GAMEPLAY_TAB_KEY_PRIORITY: { priority: 3, stopPropagation: false, },
+    CANVAS_KEY_PRIORITY: { priority: 4, stopPropagation: true, },
+    CHAT_KEY_PRIORITY: { priority: 5, stopPropagation: true, },
+    SETTINGS_KEY_PRIORITY: { priority: 6, stopPropagation: false, },
+    POPUP_KEY_PRIORITY: { priority: 1000, stopPropagation: true, },
+    INPUT_KEY_PRIORITY: { priority: 10, stopPropagation: false }, // Input layers
+};
 
 interface Layer {
     id: string;
-    priority: number;
+    priority: PriorityName;
     handler: KeyHandler;
 }
 
@@ -23,14 +37,14 @@ class KeyboardManager {
         this.layers = [];
     }
 
-    register(id: string, priority: number, handler: KeyHandler): void {
+    register(id: string, priority: PriorityName, handler: KeyHandler): void {
         // Ensure no duplicate layer IDs
         if (this.layers.some(layer => layer.id === id)) {
             throw new Error(`Layer with ID ${id} is already registered.`);
         }
         
         this.layers.push({ id, priority, handler });
-        this.layers.sort((a, b) => b.priority - a.priority);
+        this.layers.sort((a, b) => PRIORITY_INFO[b.priority].priority - PRIORITY_INFO[a.priority].priority);
     }
 
     unregister(id: string): void {
@@ -40,6 +54,7 @@ class KeyboardManager {
     handleEvent(event: KeyboardEvent): void {
         for (let i = 0; i < this.layers.length; i++) {
             const layer = this.layers[i];
+
             if (layer.handler(event)) {
                 return;
             }

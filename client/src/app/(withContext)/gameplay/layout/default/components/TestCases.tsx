@@ -1,37 +1,47 @@
 "use client";
 
-import { CSSProperties, Dispatch, SetStateAction, useRef } from "react";
+import { CSSProperties, useRef } from "react";
 import styles from "../page.module.css";
-import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeStatuses";
-import { InformationMode, TestCase, TestCaseResult } from "../../../gameplayUtils";
+import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeStatuses";
+import { useGameplayController } from "../../../hooks/useGameplayController";
+import { useShallow } from "zustand/shallow";
+import { useGameplayStore } from "../../../hooks/useGameplayStore";
 
 type TestCaseProps = {
-    activeIndex: number;
-    setActiveIndex: Dispatch<SetStateAction<number>>
-    testCases: TestCase[];
-    informationMode: InformationMode;
-    setInformationMode: Dispatch<SetStateAction<InformationMode>>;
-    codeOutput: OutputEntry[];
     runCode: () => void;
     runTestCases: () => void;
     submitCode: () => void;
-    testCaseResults: TestCaseResult[];
-    isClusterLocked: boolean;
 }
 
-export default function TestCases({ 
-    activeIndex,
-    setActiveIndex,
-    testCases, 
-    informationMode, 
-    setInformationMode, 
-    codeOutput,
+export default function TestCases({
     runCode,
     runTestCases,
     submitCode,
-    testCaseResults, 
-    isClusterLocked
 } : TestCaseProps) {
+    const testCases = useGameplayStore(state => state.question).publicTestCases;
+
+    const [
+        activeIndex,
+        setActiveIndex,
+        informationMode,
+        setInformationMode,
+        isClusterLocked
+    ] = useGameplayController(
+        useShallow(
+            state => [
+                state.activeIndex,
+                state.setActiveIndex,
+                state.informationMode,
+                state.setInformationMode,
+                state.isClusterLocked
+            ]
+        )
+    )
+
+    const [codeOutput, testCaseResults] = useGameplayStore(
+        useShallow(state => [state.codeOutput, state.testCaseResults])
+    );
+
     const testCaseSelectorsRef = useRef<HTMLLIElement[] | null[]>([]);
 
     const CODE_FAIL_BORDER_COLOR = 'var(--error-code-text-border-color)';

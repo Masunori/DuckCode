@@ -34,9 +34,10 @@
 
 ---
 ## Documentation Revision History
-| Version | Date |
-| --- | --- |
-| 1.0 | 28 June, 2025 |
+| Version | Date | Content |
+| --- | --- | --- |
+| 0.1.0 | 28 June, 2025 | UI skeleton for `gameplay`, `landing`, `portal`, `home`, and `playground` |
+| 0.2.0 | 16 July, 2025 | Refactored `gameplay` UI logic, added UI skeleton for `multiplayer` |
 ---
 
 ## Setting Up and Getting Started
@@ -55,7 +56,7 @@ When the user first clicks on the link to the website, this will be the first pa
 
 The important part of the landing page is the components in the [`/components`](../client/src/app//landing/components/) directory, which contains the components whose dimensions are exactly `100vw * 100vh`, that is, each component will span the entire user's screen.
 
-As of version 1.0, the landing component contains the JSON string
+As of version 0.1.0, the landing component contains the JSON string
 ```ts
 const SECTIONS = {
     home: {
@@ -107,7 +108,7 @@ API URL:
 GET - /api/landing
 ```
 
-As of 28 June, 2025, the structure of an article is as follows:
+As of version 0.1.0, the structure of an article is as follows:
 ```ts
 export type Content = {
     paragraph: { 
@@ -158,7 +159,7 @@ const [portalMode, setPortalMode] = useState<PortalMode>(PortalMode.None);
 
 All of the popups listed above use the same [`PopupOverlay`](../client//src/app/portal/components/PopupOverlay.tsx), which controls its appearance on the screen based on the current React state portal mode and a referenced portal mode.
 
-As of 28 June, 2025, the `display` CSS attribute is responsible for this appearance. In the future, this will change to conditional rendering.
+As of version 0.1.0, the `display` CSS attribute is responsible for this appearance. In the future, this will change to conditional rendering.
 
 #### `Login.tsx`
 
@@ -388,7 +389,7 @@ This is the component where the user can view current events in DuckCode in a mo
 
 This carousel is coded from scratch, and here is how the effect is achieved.
 
-1. The news content is given as an array. Because the news format has not been decided as of 28 June, 2025, we refrain from giving any specific information.
+1. The news content is given as an array. Because the news format has not been decided As of version 0.1.0, we refrain from giving any specific information.
 <br>
 2. The news array is augmented in an immutable way: The first news piece is duplicated and added to the end of the list, while the last news piece is also duplicated and added to the start of the list.
     ```ts
@@ -528,6 +529,7 @@ GET - /api/gameplay/getQuestion
 ```ts
 return (
     <div className={styles.container}>
+        <GameplayNavbar />
         <GameplayClient question={question} />
     </div>
 )
@@ -564,14 +566,13 @@ export type Question = {
 #### [`GameplayClient.tsx`](../client/src/app/(withContext)/gameplay/GameplayClient.tsx)
 
 This component is the client part of the gameplay UI which takes in the relevant question/information to render and enable intractivity.
-
 Because the gameplay layout is customisable, the `GameplayClient` is again, a wrapper over the user-chosen layout.
 
 ```ts
 // gameplay/layout/layoutUtils.tsx
 export type LayoutInfo = {
     miniPreview: React.JSX.Element;
-    implementation: (question: Question) => React.JSX.Element;
+    implementation: React.JSX.Element;
 }
 
 export const LAYOUTS: Record<string, LayoutInfo> = {
@@ -580,7 +581,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
 
 // gameplay/GameplayClient.tsx
 return (
-    LAYOUTS[user.userPreference.gameplayLayout].implementation(question)
+    LAYOUTS[user.userPreference.gameplayLayout].implementation
 );
 ```
 
@@ -856,6 +857,8 @@ These preview are also available in the Settings UI. Here, we will talk more abo
 To allow certain component(s) to be resizable, we use the library React Resizable Panels.
 - [`react-resizable-panels` library](https://www.npmjs.com/package/react-resizable-panels)
 
+Most importantly, the GameplayClient will set relevant gameplay stores and state logic. Refer to them at [centralizing gameplay UI logic](#centralizing-gameplay-ui-logic) and [centralizing gameplay storage](#centralizing-gameplay-storage).
+
 
 #### [`GameplayNavbar.tsx`](../client/src/app/(withContext)/gameplay/components/GameplayNavbar.tsx)
 
@@ -909,7 +912,7 @@ While designs may change, the test case UI must satisfy the conditions:
 - The user should be able to select any public test cases, and they can view the status of all public test cases (unattempted, failed, passed).
 - If the user selects a public test case, the user should be able to see the input, expected output, actual output, and the message.
 
-**NOTE**: As of 28 June, 2025, in the default and inverted settings, the test case UI is merged with the output UI and code execution buttons. In other settings, the test case UI purely displays test cases. This will change in future iterations.
+**NOTE**: As of version 0.1.0, in the default and inverted settings, the test case UI is merged with the output UI and code execution buttons. In other settings, the test case UI purely displays test cases. This will change in future iterations.
 
 #### [`CodeHandlerButtions.tsx`](../client/src/app/(withContext)/gameplay/components/CodeHandlerButtons.tsx)
 
@@ -940,8 +943,6 @@ Also, each layout will define their own React states and call the following thre
 - Running code against all public test cases will invoke the `runTestCasesClientSide` function.
 - Running code against all test cases (also called submission) will invoke the `submitCodeClientSide` function.
 
-**NOTE**: As of 28 June, 2025, the default and inverted layout do not use this. For the sake of consistency with other layouts, this will be changed in future iterations.
-
 #### [`InformationPanelButtons.tsx`](../client/src/app/(withContext)/gameplay/components/InformationPanelButtons.tsx)
 
 This component is exclusive for two tabs and two tabs inverted layout. Because there are two tabs, the user will have to toggle questions, test cases and output mode within the same tab. Hence, the layout that uses the information panel buttons will define their own React states and pass them as props to this component:
@@ -949,23 +950,276 @@ This component is exclusive for two tabs and two tabs inverted layout. Because t
 ```ts
 // gameplayUtils.ts
 export type InformationMode = "question" | "testCases" | "output" | "-";
-
-// implementing layout for two tabs/two tabs inverted
-const [informationMode, setInformationMode] = useState<InformationMode>("question");
-// ...
-<InformationPanelButtons 
-    informationMode={informationMode} 
-    setInformationMode={setInformationMode}
-/>
-// ...
 ```
 
 #### [`Output.tsx`](../client/src/app/(withContext)/gameplay/layout/twoTabs/components/Output.tsx)
 
 This is an exclusive UI component to two tabs (and inverted) and fullscreen editor layout. While designs for different layouts will vary, it renders compiler/interpreter output when the user runs code, as well as submission output when the user submits the code.
 
-**NOTE**: As of 28 June, 2025, the default and inverted layout do not use this. For the sake of consistency with other layouts, this will be changed in future iterations.
+**NOTE**: As of version 0.1.0, the default and inverted layout do not use this. For the sake of consistency with other layouts, this will be changed in future iterations.
 
+#### Centralizing gameplay UI logic 
+
+As of version 0.2.0, all gameplay UI logic will be controlled by a Zustand UI controller hook, located [here](../client/src/app/(withContext)/gameplay/hooks/useGameController.ts).
+
+```ts
+// gameplay/hooks/useGameController.ts
+
+type GameplayControllerProps = {
+    activeIndex: number;
+    setActiveIndex: SetState<number>;
+    informationMode: InformationMode;
+    setInformationMode: SetState<InformationMode>;
+    lock: Lock;
+    isClusterLocked: boolean;
+    setIsClusterLocked: SetState<boolean>;
+};
+```
+- `activeIndex`: the index of the public test case currently rendered in the test case panel, thus "active". The test case UI component will consume this.
+- `setActiveIndex`: sets the index of the active test case. The test case UI component will consume this.
+- `informationMode`: in certain layouts, different information compete for the same UI component space. Consuming components can use this to decide which information gets displayed.
+  - In default and inverted layout, only `output` and `testCases` compete for the same space, do not set the information mode to `question` or `-`.
+  - In two tabs and two tabs inverted layout, the `question` mode also compete for the same space with `output` and `testCases`.
+  - In fullscreen editor mode, only the editor is persistent and all other information can be toggled, so `-` means that nothing is being toggled on.
+- `setInformationMode`: sets the information mode. Take note of which layout uses which information mode.
+- `lock`: Locks code execution functions that should not be called concurrently. Refer to [code handler buttons UI](#codehandlerbuttionstsx) for more details.
+- `isClusterLocked`: When one of the functions in the code execution function cluster is executed but not returning yet, this will help consuming UI components to disable UI interactions with themselves.
+- `setIsClusterLocked`: Sets the locked state of the function cluster.
+
+The hook's name is `useGameController`, and it can be called by components that consume its data.
+
+When GameplayClient mounts, it will set corresponding information modes.
+
+```ts
+// gameplay/GameplayClient.tsx
+
+const layout = user.userPreference.gameplayLayout;
+
+// set information mode based on layout
+useEffect(() => {
+    useGameplayController.getState().setInformationMode(
+        ["Default", "Inverted"].includes(layout)
+            ? "testCases"
+            : ["Two Tabs", "Two Tabs Inverted"].includes(layout)
+            ? "question"
+            : "-"
+    );
+}, [layout]);
+```
+
+#### Centralizing gameplay storage
+
+As of version 0.2.0, all gameplay data will be stored in a Zustand store hook, which can be found [here](../client/src/app/(withContext)/gameplay/hook/useGameplayStore.ts).
+
+```ts
+type GameplayStoreProps = {
+    codeContent: string;
+    setCodeContent: SetState<string>;
+    testCaseResults: TestCaseResult[];
+    setTestCaseResults: SetState<TestCaseResult[]>;
+    codeOutput: OutputEntry[];
+    setCodeOutput: SetState<OutputEntry[]>;
+    question: Question;
+    setQuestion: SetState<Question>;
+};
+```
+
+- `codeContent`: User's code in the code editor.
+- `setCodeContent`: Sets user's code content.
+- `testCaseResults`: The results after the user runs their code against test cases.
+- `setTestCaseResults`: Sets the test case results.
+- `codeOutput`: The results after the user runs code normally, and will be rendered in the terminal-like UI component.
+- `setCodeOutput`: Sets the code output.
+- `question`: The problem to solve in the current gameplay session.
+- `setQuestion`: Sets the question. Only the GameplayClient component should use this exactly once, and the question will be persistent.
+
+When GameplayClient mounts, it will set the relevant stores.
+
+```ts
+// gameplay/GameplayClient.tsx
+
+useEffect(() => {
+    useGameplayStore.getState().setQuestion(question);
+}, [question]);
+```
+---
+
+### [`/multiplayer`](../client/src/app/(withContext)/multiplayer)
+The multiplayer component mostly resembles the gameplay UI, with certain changes to factor in the multiplayer aspect. This section will only mention the deviations from the gameplay UI component.
+
+#### [`CodeEditor.tsx`](../client/src/app/(withContext)/multiplayer/components/CodeEditor.tsx)
+In multiplayer, players can look at the team's code and other players' code. At the same time, each user must know the execution status of others. Thus, the code editor UI not only renders the code editor part, but also a way for users to select which code editor tab they want to view.
+
+```ts
+// multiplayer/components/CodeEditor.tsx
+
+// ...
+return (
+    // ...
+    <ul className={styles.codeEditorTabs}> // an unordered list of all players' names
+        {Object.keys(codeByUser).map((user, index) => (
+            <li 
+                key={index} 
+                onClick={() => { setActiveTab(user); }} // clicking on a tab will display the code content of that tab
+                className={ activeTab === user ? styles.selected : "" }
+                style={{ color: EXECUTION_STATUS_INFORMATION[executionStatusByUser[user]].color }}
+            >
+                <div>{user}</div>
+                <span 
+                    title={EXECUTION_STATUS_INFORMATION[executionStatusByUser[user]].desc}
+                >
+                    {EXECUTION_STATUS_INFORMATION[executionStatusByUser[user]].abbr} // the execution status of each tab
+                </span>
+            </li>
+        ))}
+    </ul>
+    // ...
+)
+//...
+```
+
+Also, in multiplayer,
+- Any player can read and write onto the shared code editor tab.
+- Each player has a personal code editor tab, which they have read and write access to. However, they can only read from others' code editor tab.
+
+The code editor UI will disable the code editor for tabs that the user has no write access.
+
+#### [`TestCases.tsx`](../client/src/app/(withContext)/multiplayer/components/TestCases.tsx)
+While different layouts may implement this differently, the same principle is that the test case results and code output should always match the code editor tab displayed. This is the only difference from the gameplay UI's implementation of test cases UI.
+
+#### [`CodeHandlerButtons.tsx`](../client/src/app/(withContext)/gameplay/components/CodeHandlerButtons.tsx)
+In multiplayer, 
+- Anyone can run the code normally, run the code against test cases and submit the code in the team's shared tab.
+- A player can run the code normally and run the code against test cases for their own tab.
+- A player cannot execute code from another player's tab.
+- In the shared team tab, one person executing code will block all users from executing the team code until the current execution finishes.
+- Code execution in different tabs do not affect each other.
+
+The code handler buttons UI component will disable relevant buttons when corresponding code editor tabs are displayed.
+
+#### [`Chatbox.tsx`](../client/src/app/(withContext)/multiplayer/components/Chatbox.tsx)
+To facilitate communication, the chatbox UI allows players to communicate with each other in real time using text.
+
+#### [`StrategyBoard.tsx`](../client/src/app/(withContext)/multiplayer/components/StrategyBoard.tsx)
+For visual communication, the strategy board UI provides a resizable and draggable canvas with basic drawing tools where players can use to communicate more abstract concepts.
+
+The resizable and draggable feature is enabled using the React Rnd package
+- [`react-rnd` library](https://www.npmjs.com/package/react-rnd)
+
+The canvas uses the Excalidraw library underneath. We may change to a custom canvas in the future.
+- [Excalidraw](https://docs.excalidraw.com/)
+- [`@excalidraw/excalidraw` library](https://www.npmjs.com/package/@excalidraw/excalidraw)
+
+#### [`MultiplayerNavbar.tsx`](../client/src/app/(withContext)/multiplayer/components/MultiplayerNavbar.tsx)
+The multiplayer navbar display extra information, such as buttons to access communication tools, team information and match progress information.
+
+#### Handling the chatbox logic
+The chatbox is controlled using a Zustand UI controller hook ([here](../client/src/app/(withContext)/multiplayer/hooks/useChatController.ts)).
+
+```ts
+// multiplayer/hooks/useChatController.ts
+
+type ChatControllerProps = {
+    isChatboxOpen: boolean;
+    setIsChatboxOpen: (bool: boolean | ((prev: boolean) => boolean)) => void;
+    message: string;
+    setMessage: (message: string) => void;
+    sendMessage: () => void;
+}
+```
+- `isChatboxOpen`: Whether the chatbox UI is open.
+- `setIsChatboxOpen`: Sets the open state of the chatbox UI.
+- `message`: The content currently in the user's input field.
+- `setMessage`: Sets the message.
+- `sendMessage`: Sends the message in the user's input field to the message dialogue.
+
+All message data is stored using a Zustand store hook ([here](../client/src/app/(withContext)/multiplayer/stores/chatStore.tsx)).
+
+```ts
+// multiplayer/stores/chatStore.ts
+
+type ChatState = {
+    messages: ChatboxMessage[];
+    addMessage: (message: ChatboxMessage) => void;
+}
+```
+- `messages`: The list of messages from all users, which is used to render the chat dialogue UI.
+- `addMessage`: Adds a new message to the list of messages.
+
+#### Handling code editor content for multiple users
+Code editor content of multiple users are stored using a Zustand store hook, which can be found [here](../client/src/app/(withContext)/multiplayer/stores/codeEditorStores.ts).
+
+```ts
+// multiplayer/stores/codeEditorStores.ts
+type CodeByUser = {
+    [userId: string]: string;
+}
+
+type CodeEditorState = {
+    codeByUser: CodeByUser;
+    readOnlyTabs: string[];
+    programmingLanguage: PLKeys;
+
+    setCodeForUser: (userId: string, code: string) => void;
+    setReadOnlyTabs: (tabs: string[]) => void;
+    setProgrammingLanguage: (language: PLKeys) => void;
+}
+```
+
+- `codeByUser`: The code content for each tab.
+- `setCodeForUser`: Sets the code content for a specified tab.
+- `readOnlyTabs`: The tabs that the current user only has read access to.
+- `setReadOnlyTabs`: Sets the read-only tabs. This should only be invoked once.
+- `programmingLanguage`: The programming language used for the current session. In a multiplayer session, the programming language is locked.
+- `setProgrammingLanguage`: Sets the permitted programming language. This should only be invoked once.
+
+#### Handling test case results and code output
+Code execution results of multiple users are stored using a Zustand store hook, which can be found [here](../client/src/app/(withContext)/multiplayer/stores/codeExecutionStore.ts).
+
+```ts
+type OutputByUser = {
+    [userId: string]: OutputEntry[];
+}
+
+type TestCaseResultsByUser = {
+    [userId: string]: TestCaseResult[];
+}
+
+type ExecutionStatusByUser = {
+    [userId: string]: ExecutionStatus;
+}
+
+type CodeExecutionState = {
+    outputsByUser: OutputByUser;
+    testCasesResultsByUser: TestCaseResultsByUser;
+    executionStatusByUser: ExecutionStatusByUser;
+
+    setOutput: (userId: string, output: OutputEntry[]) => void;
+    setExecutionStatus: (userId: string, status: ExecutionStatus) => void;
+    setTestCaseResults: (userId: string, testCaseResults: TestCaseResult[]) => void;
+}
+```
+
+- `outputsByUser`: Code output for each player.
+- `setOutput`: Sets the code output for a specified player.
+- `testCasesResultsByUser`: Test case results for each player.
+- `settestCaseResults`: Sets the test case results for a specified player.
+- `executionStatusByUser`: The code execution state of each player, can be idle, running, code compiled and run successfully/with error, pass/fail public test cases.
+- `setExecutionStatus`: Sets the code execution state for a specified player.
+
+#### Handling the strategy board
+The strategy board UI is controlled by a Zustand UI controller hook, which can be found [here](../client/src/app/(withContext)/multiplayer/hooks/useBoardController.ts).
+
+```ts
+// multiplayer/hooks/useBoardController.ts
+type BoardControllerProps = {
+    isBoardOpen: boolean;
+    setIsBoardOpen: (value: boolean | ((prev: boolean) => boolean)) => void;
+}
+```
+
+- `isBoardOpen`: Whether the strategy board UI is open.
+- `setIsBoardOpen`: Sets the open status of the board UI.
 ---
 
 ### [`/playground`](../client/src/app/(withContext)/playground/page.tsx)
@@ -984,7 +1238,7 @@ All reusable components are located [here](../client/src/app/components).
 This defines backgrounds that can be used in the layout of certain routes. By convention, each background should take in a `children` of type `ReactNode`, and write HTML code to wrap over the children. 
 
 We will use the given [Starry Background](../client/src/app/components/backgrounds/StarryBackground.tsx) as an example, which sets the background as black and inserts flickering stars at random points on the background. Then, for any route, you can do
-```ts
+```tsx
 // layout.tsx
 import StarryBackground from "@app/components/backgrounds/StarryBackground";
 
@@ -1005,7 +1259,7 @@ export default function Layout({
 
 ### [Contexts](../client/src/app/components/contexts)
 
-To avoid prop drilling, contexts allow components to directly access certain attributes and variables without receiving them as a prop. As of 28 June, 2025, there are three contexts to be noted of.
+To avoid prop drilling, contexts allow components to directly access certain attributes and variables without receiving them as a prop. As of version 0.1.0, there are three contexts to be noted of.
 
 #### [Popup Context](../client/src/app/components/contexts/PopupContext.tsx)
 
@@ -1084,13 +1338,13 @@ Because the user context is big and not every component subscribes to all contex
 
 - `user: User`: The user object
 - `setUser: (user: User) => void`: A function that sets the entire user object to this new user object
-- `setUserField: (path: Path<User>, value: unknown) => void`: A function that sets the specified field of the user object to the specified value. The path to the field has a type that is restricted to only the available fields of a `User` object, called `Path<User>`.
+- `setUserField: (path: Paths<User>, value: unknown) => void`: A function that sets the specified field of the user object to the specified value. The path to the field has a type that is restricted to only the available fields of a `User` object, called `Paths<User>`.
 
 ```ts
-// app/userPrefs/userPrefUtils.tsx
-export type LeafPath<T, Prev extends string = ""> = {
+// app/utils/types.ts
+export type Paths<T, Prev extends string = ""> = {
     [K in keyof T]: T[K] extends object
-        ? `${Prev}${Extract<K, string>}` | LeafPath<T[K], `${Prev}${Extract<K, string>}.`>
+        ? `${Prev}${Extract<K, string>}` | Paths<T[K], `${Prev}${Extract<K, string>}.`>
         : `${Prev}${Extract<K, string>}`;
 }[keyof T];
 ```
@@ -1149,6 +1403,8 @@ export type User = {
 The countdown timer is currently used in Multiplayer and Arcade mode.
 
 **NOTE**: The server will keep track of the time to avoid users manipulating the countdown timer using DevTools. This will be discussed in future iterations.
+
+**NOTE**: The countdown timer is being resetted with each layout change. Fix.
 
 ---
 
@@ -1372,7 +1628,7 @@ return (
 );
 ```
 
-**NOTE**: As of 28 June, 2025, only default themes provided by Monaco Editor are stored. More themes will be added in the future.
+**NOTE**: As of version 0.1.0, only default themes provided by Monaco Editor are stored. More themes will be added in the future.
 
 ---
 
@@ -1676,6 +1932,57 @@ greetAfterOneSecond();
 
 This will log "Hello, world!" to the console after 1000ms, or one second.
 
+### [Utility Types](../client/src/app/utils/types.ts)
+We define some generic utility types that may be used by more than one component in more than one place.
+
+- `SetState` mimics React's setter function in a `useState`.
+```ts
+export type SetState<T> = (arg: T | ((prev: T) => T)) => void;
+```
+
+- `Paths` will list all path in an object literal. 
+```ts
+export type Paths<T, Prev extends string = ""> = {
+    [K in keyof T]: T[K] extends object
+        ? `${Prev}${Extract<K, string>}` | Paths<T[K], `${Prev}${Extract<K, string>}.`>
+        : `${Prev}${Extract<K, string>}`;
+}[keyof T];
+
+// Usage:
+type MyObject = {
+    name: string;
+    age: number;
+    preferences: {
+        food: string;
+        color: string;
+    }
+}
+
+// expect: name | age | preferences | preferences.food | preferences.color
+type MyObjectPaths = Paths<MyObject>; 
+```
+
+- `LeafPaths` will list all paths in an object literal whose value is NOT an object literal (thus the "leaf").
+```ts
+export type LeafPaths<T, Prev extends string = ""> = {
+    [K in keyof T]: T[K] extends object
+        ? LeafPaths<T[K], `${Prev}${Extract<K, string>}.`>
+        : `${Prev}${Extract<K, string>}`;
+}[keyof T];
+
+// Usage:
+type MyObject = {
+    name: string;
+    age: number;
+    preferences: {
+        food: string;
+        color: string;
+    }
+}
+
+// expect: name | age | preferences.food | preferences.color
+type MyObjectPaths = LeafPaths<MyObject>; 
+```
 ---
 
 ## Future Improvements

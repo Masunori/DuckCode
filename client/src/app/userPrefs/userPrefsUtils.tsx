@@ -91,19 +91,6 @@ export const PRISTINE_USER: User = {
     profilePicture: "/default-profile.png", // Update with a default profile picture path
 }
 
-/**
-    The list of all paths in the user object.
-    Type 'T' is the type of the object to extract all types.
-*/
-export type LeafPath<T, Prev extends string = ""> = {
-    [K in keyof T]: T[K] extends object
-        ? `${Prev}${Extract<K, string>}` | LeafPath<T[K], `${Prev}${Extract<K, string>}.`>
-        : `${Prev}${Extract<K, string>}`;
-}[keyof T];
-
-// uncomment the following line, and type quotation marks to see all available hinted values:
-// const userPath: LeafPath<User> = <delete this and type quotation marks ("") here>
-
 /*
     Settings to consider:
 

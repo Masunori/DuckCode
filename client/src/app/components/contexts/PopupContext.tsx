@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState } from "react";
+import { GENERAL_KEY_BINDINGS, isKeyCombo } from "../settings/settingsUtils";
 
 type PopupContextType = {
     isPopupOpen: boolean;
@@ -19,6 +20,7 @@ type PopupContextType = {
     cancelMessage: string | null;
     confirmFn: () => void;
     cancelFn: () => void;
+    handleKeyBinding: (e: KeyboardEvent) => boolean;
 }
 
 const PopupContext = createContext<PopupContextType | null>(null);
@@ -72,6 +74,24 @@ export function PopupProvider({ children }: { children: React.ReactNode }) {
         openPopup();
     }
 
+    function handleKeyDown(event: KeyboardEvent) {
+        if (isKeyCombo(event, GENERAL_KEY_BINDINGS["CONFIRM_POPUP"].combo)) {
+            event.preventDefault();
+            onConfirm();
+            return true;
+        } else if (isKeyCombo(event, GENERAL_KEY_BINDINGS["CANCEL_POPUP"].combo)) {
+            event.preventDefault();
+            if (cancelMessage !== null) {
+                onCancel();
+                return true;
+            }
+            return false;
+        }
+
+        return false;
+    }
+    
+
     return (
         <PopupContext.Provider value={{
             isPopupOpen: isPopupOpen,
@@ -83,6 +103,7 @@ export function PopupProvider({ children }: { children: React.ReactNode }) {
             cancelMessage: cancelMessage,
             confirmFn: onConfirm,
             cancelFn: onCancel,
+            handleKeyBinding: handleKeyDown
         }}>
             {children}
         </PopupContext.Provider>

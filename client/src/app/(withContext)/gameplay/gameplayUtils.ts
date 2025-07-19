@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, RefObject, SetStateAction } from "react";
+import { RefObject } from "react";
 import * as monaco from 'monaco-editor';
 import { PRESET_THEMES } from "@/app/components/themes/themes";
 import { User } from "@/app/userPrefs/userPrefsUtils";
@@ -30,6 +30,30 @@ export type Question = {
     examples: Example[];
     constraints: string[];
     publicTestCases: TestCase[];
+}
+
+export const placeholderQuestion: Question = {
+    qid: -1,
+    title: "Loading...",
+    difficulty: -1,
+    description: ["Loading"],
+    input: ["Loading..."],
+    output: ["Loading..."],
+    examples: [
+        {
+            input: ["Loading..."],
+            output: ["Loading..."],
+            explanation: "Loading..."
+        }
+    ],
+    constraints: ["Loading..."],
+    publicTestCases: [
+        {
+            tid: -1,
+            input: "Loading...",
+            expectedOutput: "Loading...",
+        }
+    ]
 }
 
 export const dummyQuestion: Question = {
@@ -219,10 +243,10 @@ export async function runCodeOutputModeClientSide(
     codeContent: string,
     programmingLanguage: string,
     lock: Lock,
-    setIsClusterLocked: Dispatch<SetStateAction<boolean>>,
-    setCodeOutput: Dispatch<SetStateAction<OutputEntry[]>>,
+    setIsClusterLocked: (bool: boolean) => void,
+    setCodeOutput: (output: OutputEntry[]) => void,
     openPopupWith: (popupMessage: string, confirmMessage: string, cancelMessage: string | null, confirm: () => void, cancelFn: () => void) => void,
-    setInformationMode?: Dispatch<SetStateAction<InformationMode>>,
+    setInformationMode?: (mode: InformationMode) => void,
 ) {
     try {
         setIsClusterLocked(true);
@@ -279,12 +303,12 @@ export async function runTestCasesClientSide(
     programmingLanguage: string,
     question: Question,
     lock: Lock,
-    setIsClusterLocked: Dispatch<SetStateAction<boolean>>,
-    setCodeOutput: Dispatch<SetStateAction<OutputEntry[]>>,
-    setTestCaseResults: Dispatch<SetStateAction<TestCaseResult[]>>,
-    setActiveIndex: Dispatch<SetStateAction<number>>,
+    setIsClusterLocked: (bool: boolean) => void,
+    setCodeOutput: (output: OutputEntry[]) => void,
+    setTestCaseResults: (results: TestCaseResult[]) => void,
+    setActiveIndex: (index: number) => void,
     openPopupWith: (popupMessage: string, confirmMessage: string, cancelMessage: string | null, confirm: () => void, cancelFn: () => void) => void,
-    setInformationMode?: Dispatch<SetStateAction<InformationMode>>,
+    setInformationMode?: (mode: InformationMode) => void,
 ) {
     try {
         setIsClusterLocked(true);
@@ -356,10 +380,10 @@ export async function submitCodeClientSide(
     programmingLanguage: string,
     question: Question,
     lock: Lock,
-    setIsClusterLocked: Dispatch<SetStateAction<boolean>>,
-    setCodeOutput: Dispatch<SetStateAction<OutputEntry[]>>,
+    setIsClusterLocked: (bool: boolean) => void,
+    setCodeOutput: (output: OutputEntry[]) => void,
     openPopupWith: (popupMessage: string, confirmMessage: string, cancelMessage: string | null, confirm: () => void, cancelFn: () => void) => void,
-    setInformationMode?: Dispatch<SetStateAction<InformationMode>>,
+    setInformationMode?: (mode: InformationMode) => void,
 ) {
     try {
         setIsClusterLocked(true);
