@@ -1,0 +1,40 @@
+.stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100vw);
+    height: calc(100vh);
+    overflow: hidden;
+    background-image: radial-gradient(circle at bottom, #424242, #000000);
+    z-index: var(--styled-background-index); /* Place it behind other content */
+}
+
+.canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100vw);
+    height: calc(100vh);
+    pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* Individual star */
+.star {
+    position: absolute;
+    background-color: white;
+    border-radius: 100%;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.8); /* Glow effect */
+    animation: twinkle 2s infinite ease-in-out;
+}
+  
+/* Twinkling effect */
+@keyframes twinkle {
+    0%, 100% {
+        opacity: 0.6;
+        transform: scale(0.5);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

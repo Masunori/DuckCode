@@ -57,7 +57,7 @@ const SUBMISSION_REQUEST = {
 const RUN_TEST_CASE_RESPONSE = [ // JSON object array
     {
         tid: 12345678, // int
-        actualOutput: [], // string array
+        actualOutput: '', // string with \n as delimiter
         statusId: 1, // int
         message: 'something...', // string if there is compile/runtime error, else null
     }
@@ -267,6 +267,7 @@ const USER_LOGIN_REQUEST = {
 const USER_SIGNUP_REQUEST = {
     username: "duck", // string
     password: "duck", // string
+    confirmPassword: "duck",
     email: "", // string
 }
 
