@@ -12,6 +12,9 @@ module.exports = {
       title: {
         type: Sequelize.STRING
       },
+      difficulty: {
+        type: Sequelize.INTEGER
+      },
       description: {
         type: Sequelize.TEXT
       },

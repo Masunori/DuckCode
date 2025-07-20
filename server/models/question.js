@@ -26,6 +26,7 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
     },
     title: DataTypes.STRING,
+    difficulty: DataTypes.INTEGER,
     description: DataTypes.TEXT,
     input_type: DataTypes.TEXT,
     output_type: DataTypes.TEXT,
