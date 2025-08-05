@@ -42,13 +42,17 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
 
         await login(email, password)
         .then(response => {
-            if (response.status === 401) {
-                setLoginError(LoginStatus.WRONG_EMAIL_OR_PASSWORD);
-                return;
+            switch (response.status) {
+                case 200:
+                    setUser(response.data.user as User);
+                    router.push('/home');
+                    break
+                case 401:
+                    setLoginError(LoginStatus.WRONG_EMAIL_OR_PASSWORD);
+                    break;
+                default:
+                    console.error(`Unexpected response status: ${response.status}`);
             }
-
-            setUser(response.data.user as User);
-            router.push('/home');
         })
         .catch(error => {
             console.error(`An unexpected error occurred: ${error}`)

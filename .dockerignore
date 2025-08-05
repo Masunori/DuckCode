@@ -1,0 +1,4 @@
+/client/node_modules
+docker-compose.yaml
+/client/.next
+/client/Dockerfile

@@ -1,4 +1,9 @@
-const LOGIN_API = "https://11fd4293ce4b.ngrok-free.app/auth/login";
+import { decodeUserPrefs, encodeUserPrefs } from "@/app/userPrefs/userPrefSerializer";
+import { UserPreference } from "@/app/userPrefs/userPrefsUtils";
+
+const BASE_URL = "https://f90b7d86a21b.ngrok-free.app/"
+
+const LOGIN_API = BASE_URL + "auth/login";
 const SIGNUP_API = "/api/portal/signup";
 const REST_PASSWORD_SEND_CODE_API = "/api/portal/resetPassword/sendVerificationCode";
 const REST_PASSWORD_VERIFY_CODE_API = "/api/portal/resetPassword/verifyOtp";
@@ -17,8 +22,6 @@ export async function login(email: string, password: string) {
     });
 
     const data = await response.json();
-    console.log(response.status);
-    console.log(response.json());
 
     return {
         status: response.status,
@@ -115,4 +118,39 @@ export async function verifyNewPassword(
         status: response.status,
         data
     };
+}
+
+export async function getProfile() {
+    const response = await fetch(BASE_URL + "user/profile", {
+        method: 'GET',
+        credentials: 'include',
+    });
+
+    const data = await response.json();
+    data.userPreference = decodeUserPrefs(data.userPreference as string);
+
+    return {
+        status: response.status,
+        data
+    };
+}
+
+export async function updateSettings(userPreference: UserPreference) {
+    const encoded = encodeUserPrefs(userPreference);
+
+    const response = await fetch(BASE_URL + "user/updateSettings", {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            userPreference: encoded,
+        })
+    });
+
+    return {
+        status: response.status,
+        data: null
+    }
 }
