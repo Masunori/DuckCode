@@ -102,7 +102,7 @@ const USER_RESPONSE = {
     userId: '12345678',
     username: 'duck_administrator_420',
     email: 'iloveduckcode@duckcode.org',
-    rankPoints: 1000,
+    rankPoint: 1000,
     profile: {
         // avatar: 'https://i.pinimg.com/736x/55/1e/9a/551e9ad6616917d8335fe46db64688b9.jpg',
         level: 38,

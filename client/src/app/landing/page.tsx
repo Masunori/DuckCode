@@ -4,7 +4,6 @@ import { JSX, useCallback, useEffect, useRef, useState } from 'react';
 import Home from './components/Home';
 import News from './components/News';
 import styles from './page.module.css';
-import Link from 'next/link';
 
 type Section = {
     name: string;
@@ -90,9 +89,6 @@ export default function Page() {
                             >{value.name}</li>
                         ))}
                     </ul>
-                    <div className={`${styles.playDuckcodeButtonWrapper}`}>
-                        <Link href='/portal' className={`${styles.playDuckcodeButton}`}>Play DuckCode</Link>
-                    </div>
                 </nav>
             </header>
             <main>
@@ -117,7 +113,7 @@ export default function Page() {
                         <a href={dummyLink}>Help Centre</a>
                     </li>
                 </ul>
-                <p>&copy; {new Date().getFullYear()} DuckCode Project. All rights reserved.</p>
+                {/* <p>&copy; {new Date().getFullYear()} DuckCode Project. All rights reserved.</p> */}
             </footer>
         </div>
     )

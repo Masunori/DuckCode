@@ -11,7 +11,7 @@ export type EditorOptions = {
     wordWrapColumn: number;
 }
 
-export type UserPreference = {
+export type userPreference = {
     fontSize: number;
     language: PLKeys;
     significantButtonColor: string;
@@ -27,13 +27,13 @@ export type User = {
     password: string;
     level: number;
     exp: number;
-    rank: string;
-    rankPoints: number;
-    userPreference: UserPreference;
+    rank?: string;
+    rankPoint: number;
+    userPreference: userPreference;
     bio?: string;
     createdAt?: string;
-    isTwoFactorEnabled?: boolean;
-    profilePicture?: string;
+    isTwoFactored?: boolean;
+    profilePicture?: string;    
 }
 
 export const LINE_NUMBERS_OPTIONS: Record<string, monaco.editor.LineNumbersType> = {
@@ -58,7 +58,7 @@ export const WORD_WRAP_OPTIONS: Record<string, "on" | "off" | "wordWrapColumn" |
     "Bounded": "bounded"
 }
 
-export const PRISTINE_USER_PREFERENCE: UserPreference = {
+export const PRISTINE_USER_PREFERENCE: userPreference = {
     fontSize: 16,
     language: "JavaScript",
     significantButtonColor: '#007fff',
@@ -83,11 +83,11 @@ export const PRISTINE_USER: User = {
     level: 1,
     exp: 0,
     rank: "Rookie",
-    rankPoints: 1000,
+    rankPoint: 1000,
     userPreference: structuredClone(PRISTINE_USER_PREFERENCE),
     bio: "Welcome to my DuckCode profile!",
     createdAt: "2023-01-01T00:00:00Z",
-    isTwoFactorEnabled: false,
+    isTwoFactored: false,
     profilePicture: "/default-profile.png", // Update with a default profile picture path
 }
 

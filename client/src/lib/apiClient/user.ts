@@ -1,13 +1,15 @@
 import { decodeUserPrefs, encodeUserPrefs } from "@/app/userPrefs/userPrefSerializer";
-import { UserPreference } from "@/app/userPrefs/userPrefsUtils";
+import { PRISTINE_USER_PREFERENCE, User, userPreference } from "@/app/userPrefs/userPrefsUtils";
 
-const BASE_URL = "https://f90b7d86a21b.ngrok-free.app/"
+const BASE_URL = "https://6ce54a6328be.ngrok-free.app/"
 
 const LOGIN_API = BASE_URL + "auth/login";
-const SIGNUP_API = "/api/portal/signup";
-const REST_PASSWORD_SEND_CODE_API = "/api/portal/resetPassword/sendVerificationCode";
-const REST_PASSWORD_VERIFY_CODE_API = "/api/portal/resetPassword/verifyOtp";
-const REST_PASSWORD_VERIFY_NEW_PASSWORD_API = "/api/portal/resetPassword/verifyNewPassword";
+const SIGNUP_API = BASE_URL + "auth/register";
+const SIGNUP_SEND_CODE_API = BASE_URL + "auth/request-otp";
+const RESET_PASSWORD_SEND_CODE_API = BASE_URL + "auth/request-otp";
+const RESET_PASSWORD_VERIFY_CODE_API = BASE_URL + "auth/verify-otp";
+const RESET_PASSWORD_VERIFY_NEW_PASSWORD_API = "/api/portal/resetPassword/verifyNewPassword";
+const GET_PROFILE_API = BASE_URL + "auth/me";
 
 export async function login(email: string, password: string) {
     const response = await fetch(LOGIN_API, {
@@ -18,7 +20,8 @@ export async function login(email: string, password: string) {
         body: JSON.stringify({
             email: email,
             password: password,
-        })
+        }),
+        credentials: "include",
     });
 
     const data = await response.json();
@@ -41,14 +44,19 @@ export async function signUp(
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            username: username,
-            email: email,
-            password: password,
-            confirmPassword: confirmPassword,
-        })
+            userData: {
+                username: username,
+                email: email,
+                password: password,
+                confirmPassword: confirmPassword,
+            }
+        }),
+        credentials: "include",
     });
 
     const data = await response.json();
+
+    console.log(response.status, data);
 
     return {
         status: response.status,
@@ -57,14 +65,15 @@ export async function signUp(
 }
 
 export async function getVerificationCode(email: string) {
-    const response = await fetch(REST_PASSWORD_SEND_CODE_API, {
+    const response = await fetch(RESET_PASSWORD_SEND_CODE_API, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
             email: email,
-        })
+        }),
+        credentials: "include",
     });
 
     const data = await response.json();
@@ -75,19 +84,21 @@ export async function getVerificationCode(email: string) {
     };
 }
 
-export async function verifyCode(email: string, code: number) {
-    const response = await fetch(REST_PASSWORD_VERIFY_CODE_API, {
+export async function verifyCode(email: string, code: string) {
+    const response = await fetch(RESET_PASSWORD_VERIFY_CODE_API, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
             email: email,
-            code: code,
-        })
+            inputOTP: code,
+        }),
+        credentials: "include",
     });
 
     const data = await response.json();
+    console.log(data, response.status);
 
     return {
         status: response.status,
@@ -100,7 +111,7 @@ export async function verifyNewPassword(
     password: string,
     confirmPassword: string
 ) {
-    const response = await fetch(REST_PASSWORD_VERIFY_NEW_PASSWORD_API, {
+    const response = await fetch(RESET_PASSWORD_VERIFY_NEW_PASSWORD_API, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -109,7 +120,8 @@ export async function verifyNewPassword(
             email: email,
             password: password,
             confirmPassword: confirmPassword
-        })
+        }),
+        credentials: "include",
     });
 
     const data = await response.json();
@@ -121,21 +133,39 @@ export async function verifyNewPassword(
 }
 
 export async function getProfile() {
-    const response = await fetch(BASE_URL + "user/profile", {
-        method: 'GET',
+    const response = await fetch(GET_PROFILE_API, {
+        method: 'POST',
+        headers: {
+            'Content-Type': "application/json",
+        },
         credentials: 'include',
     });
 
+
+
+    // if (!response.ok) {
+    //     return {
+    //         status: response.status,
+    //         data: null,
+    //     }
+    // }
+
     const data = await response.json();
-    data.userPreference = decodeUserPrefs(data.userPreference as string);
+
+    console.log(data);
+
+    const user = data.data;
+    user.userPreference = user.userPreference === ""
+        ? structuredClone(PRISTINE_USER_PREFERENCE)
+        : decodeUserPrefs(user.userPreference as string);
 
     return {
         status: response.status,
-        data
-    };
+        data: user as User,
+    }
 }
 
-export async function updateSettings(userPreference: UserPreference) {
+export async function updateSettings(userPreference: userPreference) {
     const encoded = encodeUserPrefs(userPreference);
 
     const response = await fetch(BASE_URL + "user/updateSettings", {

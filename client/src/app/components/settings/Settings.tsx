@@ -8,7 +8,7 @@ import GeneralSettings from "./options/GeneralSettings";
 import CodeEditorSettings from "./options/CodeEditorSettings";
 import AccountSettings from "./options/AccountSettings";
 import { GENERAL_KEY_BINDINGS, isKeyCombo } from "./settingsUtils";
-import { PRISTINE_USER_PREFERENCE, User, UserPreference } from "@/app/userPrefs/userPrefsUtils";
+import { PRISTINE_USER_PREFERENCE, User, userPreference } from "@/app/userPrefs/userPrefsUtils";
 import { useUserStore } from "../contexts/UserContext";
 import { usePopup } from "../contexts/PopupContext";
 import equal from 'fast-deep-equal';
@@ -17,7 +17,7 @@ import sleep from "@/app/utils/delay";
 import { Paths } from "@/app/utils/types";
 
 type SettingsOptionNames = "General" | "Code Editor" | "Keyboard Shortcut Configuration" | "Account";
-export type TempAccountInfo = Pick<User, 'name' | 'email' | 'bio' | 'isTwoFactorEnabled'>;
+export type TempAccountInfo = Pick<User, 'name' | 'email' | 'bio' | 'isTwoFactored'>;
 
 export default function Settings() {
     const { isSettingsOpen, openSettings, closeSettings } = useSettings();
@@ -30,39 +30,39 @@ export default function Settings() {
 
     // Settings keep track of a previous user preference object and an editable future user preference object.
     // These only exist during the lifetime of Settings. Thus, all unsaved changes will be lost.
-    const [nextUserPreference, setNextUserPreference] = useState<UserPreference>(structuredClone(user.userPreference));
+    const [nextuserPreference, setNextuserPreference] = useState<userPreference>(structuredClone(user.userPreference));
     const [nextUserInfo, setNextUserInfo] = useState<TempAccountInfo>({
         name: user.name,
         email: user.email,
         bio: user.bio,
-        isTwoFactorEnabled: user.isTwoFactorEnabled,
+        isTwoFactored: user.isTwoFactored,
     });
       
     const handleAccountChange = (key: keyof TempAccountInfo, value: string) => {
         setNextUserInfo(prev => ({ ...prev, [key]: value }));
     };
 
-    function setUserPreference(userPreference: UserPreference) {
+    function setuserPreference(userPreference: userPreference) {
         setUserField("userPreference", userPreference);
     }
 
     useEffect(() => { // re-initializes whenever Settings is opened
-        setNextUserPreference(structuredClone(user.userPreference));
+        setNextuserPreference(structuredClone(user.userPreference));
     }, [user.userPreference]);
 
     // handle Settings's 4 big events: exit, revert, reset, save
     function handleExit() {
         // there is an await sleep(1) because for the code editor theme, an update to the theme will be reflected for all editors (somehow)
-        // React states are updated asynchronously, so even if closeSettings()  is called after setNextUserPreference(),
-        // the nextUserPreference will not be updated immediately, causing the gameplay code editor to reflect the hypothetical settings value instead of the current settings value.
-        // thus, we need to wait for the nextUserPreference to be updated before closing settings, by forcing a sleep of 1ms (a blocking call)
-        if (!equal(nextUserPreference, user.userPreference)) {
+        // React states are updated asynchronously, so even if closeSettings()  is called after setNextuserPreference(),
+        // the nextuserPreference will not be updated immediately, causing the gameplay code editor to reflect the hypothetical settings value instead of the current settings value.
+        // thus, we need to wait for the nextuserPreference to be updated before closing settings, by forcing a sleep of 1ms (a blocking call)
+        if (!equal(nextuserPreference, user.userPreference)) {
             openPopupWith(
                 "There are unsaved changes! Do you want to discard changes and close settings?",
                 "Discard changes and close settings",
                 "Go back to settings",
                 async () => {
-                    setNextUserPreference(structuredClone(user.userPreference));
+                    setNextuserPreference(structuredClone(user.userPreference));
                     await sleep(1);
                     closeSettings();
                 },
@@ -74,7 +74,7 @@ export default function Settings() {
     }
 
     function handleRevert() {
-        if (equal(nextUserPreference, user.userPreference)) {
+        if (equal(nextuserPreference, user.userPreference)) {
             openPopupWith(
                 "No changes to discard.",
                 "Go back to settings",
@@ -88,7 +88,7 @@ export default function Settings() {
                 "Discard",
                 "Keep the changes",
                 () => {
-                    setNextUserPreference(structuredClone(user.userPreference));
+                    setNextuserPreference(structuredClone(user.userPreference));
                 },
                 () => {}
             );
@@ -96,7 +96,7 @@ export default function Settings() {
     }
 
     function handleSave() {
-        if (equal(nextUserPreference, user.userPreference)) {
+        if (equal(nextuserPreference, user.userPreference)) {
             openPopupWith(
                 "No changes to save.",
                 "Go back to settings",
@@ -110,7 +110,7 @@ export default function Settings() {
                 "Save changes",
                 "Keep the current settings",
                 () => {
-                    setUserPreference(nextUserPreference);
+                    setuserPreference(nextuserPreference);
                     Object.entries(nextUserInfo).forEach(([key, value]) => {
                         setUserField(key as Paths<User>, value);
                     });
@@ -135,8 +135,8 @@ export default function Settings() {
                 "Reset settings to default",
                 "Keep the current settings",
                 () => {
-                    setUserPreference(PRISTINE_USER_PREFERENCE);
-                    setNextUserPreference(PRISTINE_USER_PREFERENCE);
+                    setuserPreference(PRISTINE_USER_PREFERENCE);
+                    setNextuserPreference(PRISTINE_USER_PREFERENCE);
                 },
                 () => {}
             );
@@ -147,10 +147,10 @@ export default function Settings() {
 
     const SETTINGS_OPTIONS: Record<SettingsOptionNames, { component: React.JSX.Element }> = {
         "General": {
-            component: <GeneralSettings nextUserPreference={nextUserPreference} setNextUserPreference={setNextUserPreference} />
+            component: <GeneralSettings nextuserPreference={nextuserPreference} setNextuserPreference={setNextuserPreference} />
         },
         "Code Editor": {
-            component: <CodeEditorSettings nextUserPreference={nextUserPreference} setNextUserPreference={setNextUserPreference} />
+            component: <CodeEditorSettings nextuserPreference={nextuserPreference} setNextuserPreference={setNextuserPreference} />
         },
         "Keyboard Shortcut Configuration": {
             component: <KeyboardShortcutSettings />

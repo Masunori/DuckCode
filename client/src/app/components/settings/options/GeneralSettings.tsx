@@ -1,4 +1,4 @@
-import { UserPreference } from "@/app/userPrefs/userPrefsUtils";
+import { userPreference } from "@/app/userPrefs/userPrefsUtils";
 import NumberInput from "../../inputs/NumberInput";
 import styles from "../settings.module.css";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
@@ -9,11 +9,11 @@ import RadioInput from "../../inputs/RadioInput";
 import { LAYOUTS } from "@/app/(withContext)/gameplay/layout/layoutUtils";
 
 type GeneralSettingsPrompt = {
-    nextUserPreference: UserPreference;
-    setNextUserPreference: Dispatch<SetStateAction<UserPreference>>;
+    nextuserPreference: userPreference;
+    setNextuserPreference: Dispatch<SetStateAction<userPreference>>;
 }
 
-export default function GeneralSettings({ nextUserPreference, setNextUserPreference }: GeneralSettingsPrompt) {
+export default function GeneralSettings({ nextuserPreference, setNextuserPreference }: GeneralSettingsPrompt) {
     // manage the color of the demo button in significant action button color controls
     const demoButtonRef = useRef<HTMLButtonElement | null>(null);
     function handleDemoButtonMouseEnter() {
@@ -21,9 +21,9 @@ export default function GeneralSettings({ nextUserPreference, setNextUserPrefere
             return;
         }
 
-        demoButtonRef.current.style.backgroundColor = nextUserPreference.significantButtonHoverColor;
-        demoButtonRef.current.style.borderColor = toGrayscale(nextUserPreference.significantButtonHoverColor) < 128 ? "white" : "black";
-        demoButtonRef.current.style.color = toGrayscale(nextUserPreference.significantButtonHoverColor) < 128 ? "white" : "black";
+        demoButtonRef.current.style.backgroundColor = nextuserPreference.significantButtonHoverColor;
+        demoButtonRef.current.style.borderColor = toGrayscale(nextuserPreference.significantButtonHoverColor) < 128 ? "white" : "black";
+        demoButtonRef.current.style.color = toGrayscale(nextuserPreference.significantButtonHoverColor) < 128 ? "white" : "black";
     }
 
     function handleDemoButtonMouseLeave() {
@@ -31,9 +31,9 @@ export default function GeneralSettings({ nextUserPreference, setNextUserPrefere
             return;
         }
 
-        demoButtonRef.current.style.backgroundColor = nextUserPreference.significantButtonColor;
-        demoButtonRef.current.style.borderColor = toGrayscale(nextUserPreference.significantButtonColor) < 128 ? "white" : "black";
-        demoButtonRef.current.style.color = toGrayscale(nextUserPreference.significantButtonColor) < 128 ? "white" : "black";
+        demoButtonRef.current.style.backgroundColor = nextuserPreference.significantButtonColor;
+        demoButtonRef.current.style.borderColor = toGrayscale(nextuserPreference.significantButtonColor) < 128 ? "white" : "black";
+        demoButtonRef.current.style.color = toGrayscale(nextuserPreference.significantButtonColor) < 128 ? "white" : "black";
     }
 
     // handles the automatic selection of hover colours based on original colours
@@ -44,17 +44,17 @@ export default function GeneralSettings({ nextUserPreference, setNextUserPrefere
     }
 
     // handles layout
-    const [layoutIndex, setLayoutIndex] = useState(Object.keys(LAYOUTS).indexOf(nextUserPreference.gameplayLayout));
+    const [layoutIndex, setLayoutIndex] = useState(Object.keys(LAYOUTS).indexOf(nextuserPreference.gameplayLayout));
 
     // in case of a discard, we want to set the layout index to the default option index
     useEffect(()=> {
-        setLayoutIndex(Object.keys(LAYOUTS).indexOf(nextUserPreference.gameplayLayout));
-    }, [nextUserPreference.gameplayLayout]);
+        setLayoutIndex(Object.keys(LAYOUTS).indexOf(nextuserPreference.gameplayLayout));
+    }, [nextuserPreference.gameplayLayout]);
     
     function handleChangeLayout(index: number) {
         setLayoutIndex(index);
-        setNextUserPreference({
-            ...nextUserPreference,
+        setNextuserPreference({
+            ...nextuserPreference,
             gameplayLayout: Object.keys(LAYOUTS)[index],
         });
     }
@@ -66,14 +66,14 @@ export default function GeneralSettings({ nextUserPreference, setNextUserPrefere
             <section className={styles.settingsContentChunk}>
                 <NumberInput 
                     inputId="font-size"
-                    defaultValue={nextUserPreference.fontSize}
+                    defaultValue={nextuserPreference.fontSize}
                     min={10}
                     max={32}
                     increment={5}
                     inputName="Font Size (also applicable to code editor)"
                     handleInputChange={option => {
-                        setNextUserPreference({
-                            ...nextUserPreference,
+                        setNextuserPreference({
+                            ...nextuserPreference,
                             fontSize: option,
                         })
                     }}
@@ -84,16 +84,16 @@ export default function GeneralSettings({ nextUserPreference, setNextUserPrefere
                     <div className={styles.significantButtonColor}>
                         <ColorInput 
                             inputId="significant-button-color"
-                            defaultValue={nextUserPreference.significantButtonColor}
+                            defaultValue={nextuserPreference.significantButtonColor}
                             inputName="Main Action Button Color"
                             handleOptionChange={(color: string) => {
-                                setNextUserPreference({
-                                    ...nextUserPreference,
+                                setNextuserPreference({
+                                    ...nextuserPreference,
                                     significantButtonColor: color,
                                     significantButtonHoverColor: 
                                         isAutoHoverColorSelection 
                                         ? computeHoverColour(color) 
-                                        : nextUserPreference.significantButtonHoverColor
+                                        : nextuserPreference.significantButtonHoverColor
                                 })
                             }}
                         />
@@ -101,14 +101,14 @@ export default function GeneralSettings({ nextUserPreference, setNextUserPrefere
                     <div className={styles.significantButtonColorHovered}>
                         <ColorInput 
                             inputId="significant-button-hover-color"
-                            defaultValue={nextUserPreference.significantButtonHoverColor}
+                            defaultValue={nextuserPreference.significantButtonHoverColor}
                             inputName="Main Action Button Color (Hovered)"
                             directInjectionValue={isAutoHoverColorSelection 
-                                ? nextUserPreference.significantButtonHoverColor
+                                ? nextuserPreference.significantButtonHoverColor
                                 : undefined}
                             handleOptionChange={(color: string) => {
-                                setNextUserPreference({
-                                    ...nextUserPreference,
+                                setNextuserPreference({
+                                    ...nextuserPreference,
                                     significantButtonHoverColor: color,
                                 })
                             }}
@@ -119,9 +119,9 @@ export default function GeneralSettings({ nextUserPreference, setNextUserPrefere
                         onMouseEnter={handleDemoButtonMouseEnter}
                         onMouseLeave={handleDemoButtonMouseLeave}
                         style={{
-                            backgroundColor: nextUserPreference.significantButtonColor,
-                            borderColor: toGrayscale(nextUserPreference.significantButtonColor) < 128 ? "white" : "black",
-                            color: toGrayscale(nextUserPreference.significantButtonColor) < 128 ? "white" : "black",
+                            backgroundColor: nextuserPreference.significantButtonColor,
+                            borderColor: toGrayscale(nextuserPreference.significantButtonColor) < 128 ? "white" : "black",
+                            color: toGrayscale(nextuserPreference.significantButtonColor) < 128 ? "white" : "black",
                         }}
                     >Live preview. Hover me!</button>
                     <div className={styles.autoSelectHoverColor}>

@@ -8,7 +8,7 @@ import { useUserStore } from"@/app/components/contexts/UserContext";
 import DropdownInput from "@/app/components/inputs/DropdownInput";
 import { PLKeys, PROGRAMMING_LANGUAGES } from "@/app/components/settings/settingsUtils";
 import { usePopup } from "@/app/components/contexts/PopupContext";
-import { UserPreference } from "../../../userPrefs/userPrefsUtils";
+import { userPreference } from "../../../userPrefs/userPrefsUtils";
 import { useRouter } from "next/navigation";
 
 type GameplayNavbarProps = {
@@ -27,7 +27,7 @@ export default function GameplayNavbar({ initialTime, forceSubmitOnCountdownEnds
     const options = Object.entries(PROGRAMMING_LANGUAGES).map(([plkey, value]) => `${plkey} (${value.version})`);
     const extractPLKey = (str: string) => str.split(" ")[0];
 
-    function setUserPreference(userPreference: UserPreference) {
+    function setuserPreference(userPreference: userPreference) {
         setUserField("userPreference", userPreference);
     }
 
@@ -37,7 +37,7 @@ export default function GameplayNavbar({ initialTime, forceSubmitOnCountdownEnds
             "Change language",
             "Keep the current language",
             () => {
-                setUserPreference({
+                setuserPreference({
                     ...user.userPreference,
                     language: extractPLKey(option) as PLKeys
                 })
