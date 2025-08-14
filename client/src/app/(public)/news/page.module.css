@@ -1,0 +1,118 @@
+.newsContainer {
+    width: calc(100vw);
+    height: calc(100vh);
+}
+
+.news {
+    position: relative;
+    margin: 30vh 15vw 0;
+}
+
+.news h1 {
+    font-size: 4rem;
+    margin: 2rem 0 2rem 4rem;
+}
+
+.news ul {
+    list-style-type: none;
+}
+
+@keyframes illuminating-border {
+    to {
+      --border-angle: 360deg;
+      --border-angle-2: 540deg;
+    }
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --border-angle-2 {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 180deg;
+}
+
+.news li {
+    margin: 1rem;
+    background-color: var(--second-layer-background-color);
+    opacity: 0.8;
+    transition-duration: 0.25s;
+
+    --border-angle: 0deg;
+    --border-angle-2: 180deg;
+    border-radius: 0.6rem;
+    color: var(--foreground);
+    display: grid;
+    background-color: var(--significant-button-hover-heavier-color);
+    background-image: conic-gradient(from var(--border-angle) at 50% 50%, 
+                                    transparent, 
+                                    var(--significant-button-color) 10%, 
+                                    transparent 30%, 
+                                    transparent),
+                      conic-gradient(from var(--border-angle-2) at 50% 50%, 
+                                    transparent, 
+                                    var(--significant-button-color) 10%, 
+                                    transparent 30%, 
+                                    transparent);
+    animation: illuminating-border 3s linear infinite;
+}
+
+.news li:hover {
+    padding: 0.3rem;
+}
+
+.articleBox {
+    padding: 2rem;
+    background-color: var(--second-layer-background-color);
+    border-radius: 0.4rem;
+}
+
+.articleBox time {
+    display: block;
+}
+
+.articleBox p {
+    margin-top: 1em;
+}
+
+.tagBoxes {
+    width: fit-content;
+    margin-bottom: 1rem;
+}
+
+.tagBox {
+    border: 2px solid var(--fourth-layer-background-color);
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+}
+
+.tagFilter {
+    width: inherit;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin: 1rem;
+}
+
+.tagFilter button {
+    font-size: 1.2rem;
+    padding: 1.2rem;
+    border: none;
+    border-radius: 0;
+    background-color: var(--first-layer-background-color);
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+
+.tagFilter button:hover {
+    background-color: var(--second-layer-background-color);
+    border-bottom: 0.1rem solid var(--significant-button-color);
+}
+
+.tagFilter button.active {
+    background-color: var(--second-layer-background-color);
+    font-weight: 600;
+}

@@ -1,0 +1,13 @@
+.article p {
+    margin: 2em 0;
+    text-indent: 1em;
+}
+
+.article ul {
+    margin: 1em;
+}
+
+.article p.signature {
+    text-align: right;
+    font-weight: 600;
+}

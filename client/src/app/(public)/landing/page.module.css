@@ -3,30 +3,6 @@
     height: calc(100vh);
 }
 
-.landing {
-    min-height: calc(100vh);
-    overflow-y: auto;
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-
-    background-image: radial-gradient(circle at top right, 
-                                    rgb(78, 78, 78) 0%, 
-                                    rgb(78, 78, 78) 1%,
-                                    rgb(72, 72, 72) 1%, 
-                                    rgb(72, 72, 72) 10%,
-                                    rgb(65, 65, 65) 10%,
-                                    rgb(65, 65, 65) 22%,
-                                    rgb(59, 59, 59) 22%, 
-                                    rgb(59, 59, 59) 23%,
-                                    rgb(53, 53, 53) 23%, 
-                                    rgb(53, 53, 53) 28%,
-                                    rgb(46, 46, 46) 28%, 
-                                    rgb(46, 46, 46) 37%,
-                                    rgb(40, 40, 40) 37%, 
-                                    rgb(40, 40, 40) 100%);
-}
-
 .landing nav {
     position: absolute;
     width: 100%;
@@ -35,7 +11,7 @@
     box-sizing: border-box;
     background-color: var(--first-layer-background-color);
     padding: 0 1rem;
-    box-shadow: 0 1rem 15rem 2remvar(--fourth-layer-background-color);
+    box-shadow: 0 1rem 15rem 2rem var(--fourth-layer-background-color);
     display: grid;
     grid-template-columns: 1fr 9fr 1fr;
     align-items: center;
@@ -44,46 +20,6 @@
 .landing nav h3 {
     margin: 0 1rem;
     height: inherit;
-}
-
-.landing nav .playDuckcodeButtonWrapper {
-    place-self: stretch;
-    position: relative;
-
-    --border-angle: 0deg;
-    --border-angle-2: 180deg;
-    color: var(--foreground);
-    display: flex;
-    background-color: var(--significant-button-hover-heavier-color);
-    background-image: conic-gradient(from var(--border-angle) at 50% 50%, 
-                                    transparent, 
-                                    var(--significant-button-color) 10%, 
-                                    transparent 30%, 
-                                    transparent),
-                      conic-gradient(from var(--border-angle-2) at 50% 50%, 
-                                    transparent, 
-                                    var(--significant-button-color) 10%, 
-                                    transparent 30%, 
-                                    transparent);
-    animation: illuminating-border 4s linear infinite;
-}
-
-.landing nav .playDuckcodeButton {
-    position: absolute;
-    inset: 3px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background-color: var(--first-layer-background-color);
-    border: none;
-    font-size: 1rem;
-    transition-duration: 0.25s;
-}
-
-.landing nav .playDuckcodeButtonWrapper:hover {
-    animation: illuminating-border 1s linear infinite;
 }
 
 .landing header ul {

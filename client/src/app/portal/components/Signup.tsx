@@ -1,13 +1,10 @@
-import React, { Dispatch, SetStateAction, useState, useRef, RefObject, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useState, useRef, RefObject } from "react";
 import { PortalMode } from "@/app/portal/PortalMode";
 import styles from '../page.module.css';
 import PopupOverlay from "./PopupOverlay";
 import { PASSWORD_CONDITIONS, USERNAME_CONDITIONS } from "./fieldConditions";
 import { SignupStatuses } from "@/app/api/portal/signup/SignupStatuses";
 import { signUp, verifyCode } from "@/lib/apiClient/user";
-import { useUserStore } from "@/app/components/contexts/UserContext";
-import { useRouter } from "next/navigation";
-import { User } from "@/app/userPrefs/userPrefsUtils";
 import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/app/components/progressBar/LinearProgressBar";
 
 type SignupProps = {
@@ -78,7 +75,6 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
     const SERVER_SIDE_ERROR_BG_COLOR = '#7C1212';
 
     // sign up phase
-    const [signupPhase, setSignupPhase] = useState<"register" | "otp">("otp");
     const [signupProgressSteps, setSignupProgressSteps] = useState<ProgressStep[]>([
         {
             id: "registration",
@@ -346,7 +342,6 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                     )
                     setOtp(new Array<string>(6).fill(''));
                     setOtpPointer(0);
-                    setSignupPhase("otp");
                     break;
                 default:
                     console.error(`Unexpected response status: ${response.status}`);

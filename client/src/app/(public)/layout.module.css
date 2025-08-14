@@ -1,0 +1,107 @@
+.publicLayout {
+    position: relative;
+    min-height: calc(100vh);
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+
+    background-image: radial-gradient(circle at top right, 
+                                    rgb(78, 78, 78) 0%, 
+                                    rgb(78, 78, 78) 1%,
+                                    rgb(72, 72, 72) 1%, 
+                                    rgb(72, 72, 72) 10%,
+                                    rgb(65, 65, 65) 10%,
+                                    rgb(65, 65, 65) 22%,
+                                    rgb(59, 59, 59) 22%, 
+                                    rgb(59, 59, 59) 23%,
+                                    rgb(53, 53, 53) 23%, 
+                                    rgb(53, 53, 53) 28%,
+                                    rgb(46, 46, 46) 28%, 
+                                    rgb(46, 46, 46) 37%,
+                                    rgb(40, 40, 40) 37%, 
+                                    rgb(40, 40, 40) 100%);
+}
+
+.publicNavbar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    height: 4rem;
+    box-sizing: border-box;
+    background-color: var(--first-layer-background-color);
+    padding: 0 1rem;
+    box-shadow: 0 1rem 15rem 2rem var(--second-layer-background-color);
+    display: grid;
+    grid-template-columns: 1fr 9fr ;
+    align-items: center;
+    z-index: var(--navbar-z-index);
+}
+
+.publicNavbar h2 {
+    margin: 0 1rem;
+    height: inherit;
+}
+
+.publicNavbar ul {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+    height: inherit;
+}
+
+.publicNavbar li {
+    height: inherit;
+    transition-duration: 0.25s;
+    display: grid;
+    cursor: pointer;
+}
+
+.publicNavbar li:hover {
+    background-color: var(--second-layer-background-color);
+    border-bottom: 2px solid var(--significant-button-hover-color);
+}
+
+.publicNavbar li.activeLink {
+    background-color: var(--second-layer-background-color);
+}
+
+.publicNavbar a {
+    align-self: center;
+    justify-self: center;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+    width: 100%;
+    height: 100%;
+}
+
+.publicLayout footer {
+    position: sticky;
+    top: 100%;
+}
+
+.publicLayout footer ul {
+    background-color: var(--first-layer-background-color);
+    list-style-type: none;
+    display: flex;
+    width: 100vw;
+    justify-content: center;
+    gap: 10rem;
+    padding: 2rem 0;
+}
+
+.publicLayout footer a {
+    transition-duration: 0.25s;
+}
+
+.publicLayout footer a:hover {
+    color: var(--font-colour-hover);
+}
+
+.publicLayout footer p {
+    text-align: center;
+}
