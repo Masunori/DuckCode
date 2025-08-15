@@ -34,7 +34,7 @@ export default function GameMenu() {
 
     return (
         <div className={styles.gameMenu}>
-            <StylizedGameMenuButton buttonName="Multiplayer" onClick={() => router.push("/gameplay")} buttonDescription="Code with or against other players, either casually or competitive." />
+            <StylizedGameMenuButton buttonName="Multiplayer" onClick={() => router.push("/multiplayer")} buttonDescription="Code with or against other players, either casually or competitive." />
             <StylizedGameMenuButton buttonName="Arcade" onClick={() => setTab("Arcade")} buttonDescription="Code by yourself, at your own pace. Most Multiplayer game modes have an Arcade version." />
             <StylizedGameMenuButton buttonName="Playground" onClick={() => router.push("/playground")} buttonDescription="DuckCode's sandbox code editor that you can fiddle with." />
             <StylizedGameMenuButton buttonName="Tutorial" onClick={undefined} buttonDescription="Beginners or seasoned programmers, there is something for you here..." />

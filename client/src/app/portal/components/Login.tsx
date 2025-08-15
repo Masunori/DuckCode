@@ -6,8 +6,9 @@ import styles from '../page.module.css';
 import { Dispatch, SetStateAction, useState } from "react";
 import { login } from "../../../lib/apiClient/user";
 import { useUserStore } from"@/app/components/contexts/UserContext";
-import { User } from "@/app/userPrefs/userPrefsUtils";
+import { PRISTINE_USER_PREFERENCE, User } from "@/app/userPrefs/userPrefsUtils";
 import { useRouter } from "next/navigation";
+import { decodeUserPrefs } from "@/app/userPrefs/userPrefSerializer";
 
 type LoginProps = {
     portalMode: PortalMode;
@@ -42,17 +43,27 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
 
         await login(email, password)
         .then(response => {
-            if (response.status === 401) {
-                setLoginError(LoginStatus.WRONG_EMAIL_OR_PASSWORD);
-                return;
-            }
+            console.log(response);
 
-            setUser(response.data.user as User);
-            router.push('/home');
+            switch (response.status) {
+                case 200:
+                    const user = response.data.data;
+                    user.userPreference = user.userPreference === ""
+                        ? structuredClone(PRISTINE_USER_PREFERENCE)
+                        : decodeUserPrefs(user.userPreference);
+                    setUser(user as User);
+                    router.push('/home');
+                    break
+                case 401:
+                    setLoginError(LoginStatus.WRONG_EMAIL_OR_PASSWORD);
+                    break;
+                default:
+                    console.error(`Unexpected response status: ${response.status}`);
+            }
         })
-        .catch(error => {
-            console.error(`An unexpected error occurred: ${error}`)
-        })
+        // .catch(error => {
+        //     console.error(`An unexpected error occurred: ${error}`)
+        // })
     }
 
     function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -67,64 +78,66 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
     
     const children = 
         <div className={styles.popupBorder}>
-            <div className={styles.popup}>
+            <div className={`${styles.popup} ${styles.loginPopup}`}>
                 <button className={styles.closePopup} onClick={() => setPortalMode(PortalMode.None)}>×</button>
 
-                <h2>Welcome back to DuckCode!</h2>
-                <h4>Please login to continue</h4>
-                <form onSubmit={handleLogin}>
-                    <label htmlFor="loginEmail">
-                        <p>Email</p>
-                        <input 
-                            id="loginEmail"
-                            type="email" 
-                            name="username"
-                            value={email}
-                            onChange={handleEmailChange}
-                        ></input>
-                    </label>
-                    <label htmlFor="loginPassword" className={styles.passwordLabel}>
-                        <p>Password</p>
-                        <input 
-                            id="loginPassword" 
-                            type={isPasswordVisible ? "text" : "password"} 
-                            name="password"
-                            value={password}
-                            onChange={handlePasswordChange}
-                        ></input>
-                        <button type="button" onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
-                            {isPasswordVisible ? 'Hide' : 'Show'}
-                        </button>
-                    </label>
-                    <ul>
-                        {loginError === LoginStatus.WRONG_EMAIL_OR_PASSWORD && 
-                            <li style={{ 
-                                color: ERROR_COLOR,
-                                fontWeight: 'bold', 
-                                margin: '0 0 1rem 0' }}
-                            >
-                                Username or password is incorrect!
-                        </li>}
-                        {loginError === LoginStatus.EMPTY_FIELDS && 
-                            <li style={{ 
-                                color: ERROR_COLOR,
-                                fontWeight: 'bold', 
-                                margin: '0 0 1rem 0' }}
-                            >
-                                Username and password cannot be empty!
-                        </li>}
-                    </ul>
+                <div className={styles.loginInfoForm}>
+                    <h2>Welcome back to DuckCode!</h2>
+                    <h4>Please login to continue</h4>
+                    <form onSubmit={handleLogin}>
+                        <label htmlFor="loginEmail">
+                            <p>Email</p>
+                            <input 
+                                id="loginEmail"
+                                type="email" 
+                                name="username"
+                                value={email}
+                                onChange={handleEmailChange}
+                            ></input>
+                        </label>
+                        <label htmlFor="loginPassword" className={styles.passwordLabel}>
+                            <p>Password</p>
+                            <input 
+                                id="loginPassword" 
+                                type={isPasswordVisible ? "text" : "password"} 
+                                name="password"
+                                value={password}
+                                onChange={handlePasswordChange}
+                            ></input>
+                            <button type="button" onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
+                                {isPasswordVisible ? 'Hide' : 'Show'}
+                            </button>
+                        </label>
+                        <ul>
+                            {loginError === LoginStatus.WRONG_EMAIL_OR_PASSWORD && 
+                                <li style={{ 
+                                    color: ERROR_COLOR,
+                                    fontWeight: 'bold', 
+                                    margin: '0 0 1rem 0' }}
+                                >
+                                    Username or password is incorrect!
+                            </li>}
+                            {loginError === LoginStatus.EMPTY_FIELDS && 
+                                <li style={{ 
+                                    color: ERROR_COLOR,
+                                    fontWeight: 'bold', 
+                                    margin: '0 0 1rem 0' }}
+                                >
+                                    Username and password cannot be empty!
+                            </li>}
+                        </ul>
 
-                    <p className={styles.forgotPassword} onClick={() => setPortalMode(PortalMode.ResetPassword)}>Forgot your password?</p>
+                        <p className={styles.forgotPassword} onClick={() => setPortalMode(PortalMode.ResetPassword)}>Forgot your password?</p>
 
-                    <button 
-                        type="submit"
-                        disabled={email === '' || password === ''}
-                        style={{
-                            cursor: email === '' || password === '' ? 'not-allowed' : 'pointer',
-                            opacity: email === '' || password === '' ? 0.5 : 1
-                        }}
-                    >Login</button>
+                        <button 
+                            type="submit"
+                            disabled={email === '' || password === ''}
+                            style={{
+                                cursor: email === '' || password === '' ? 'not-allowed' : 'pointer',
+                                opacity: email === '' || password === '' ? 0.5 : 1
+                            }}
+                        >Login</button>
+                    </form>
 
                     <div className={styles.or}>
                         <span></span>
@@ -136,7 +149,7 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
                         <button>Google</button>
                         <button>GitHub</button>
                     </section>
-                </form>
+                </div>
             </div>
         </div>
 

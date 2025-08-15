@@ -110,7 +110,7 @@ export class OAuthStrategy {
                 userId: user.account_id,
                 username: user.username,
                 email: user.email,
-                rankPoints: user.rankPoints || 0,
+                rankPoint: user.rankPoint || 0,
                 level: user.level || 1,
                 experiencePoint: user.exp || 0
             },

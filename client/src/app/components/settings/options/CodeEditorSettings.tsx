@@ -1,4 +1,4 @@
-import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, UserPreference, WORD_WRAP_OPTIONS } from "@/app/userPrefs/userPrefsUtils";
+import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, userPreference, WORD_WRAP_OPTIONS } from "@/app/userPrefs/userPrefsUtils";
 import DropdownInput from "../../inputs/DropdownInput";
 import styles from "../settings.module.css";
 import { CODE_EDITOR_LIVE_PREVIEW_TEXT, PLKeys, PROGRAMMING_LANGUAGES } from "../settingsUtils";
@@ -11,11 +11,11 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { PRESET_THEMES } from "../../themes/themes";
 
 type CodeEditorSettingsProps = {
-    nextUserPreference: UserPreference;
-    setNextUserPreference: Dispatch<SetStateAction<UserPreference>>;
+    nextuserPreference: userPreference;
+    setNextuserPreference: Dispatch<SetStateAction<userPreference>>;
 }
 
-export default function CodeEditorSettings({ nextUserPreference, setNextUserPreference }: CodeEditorSettingsProps) {
+export default function CodeEditorSettings({ nextuserPreference, setNextuserPreference }: CodeEditorSettingsProps) {
     const user = useUserStore(state => state.user);
     const userPreference = user.userPreference;
 
@@ -25,14 +25,14 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
     const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
         detectIndentation: false,
         fontSize: userPreference.fontSize,
-        lineNumbers: LINE_NUMBERS_OPTIONS[nextUserPreference.editorOptions.lineNumbers],
+        lineNumbers: LINE_NUMBERS_OPTIONS[nextuserPreference.editorOptions.lineNumbers],
         minimap: {
-            enabled: nextUserPreference.editorOptions.enableMinimap,
+            enabled: nextuserPreference.editorOptions.enableMinimap,
         },
-        renderWhitespace: RENDER_WHITESPACE_OPTIONS[nextUserPreference.editorOptions.renderWhiteSpace],
-        tabSize: nextUserPreference.editorOptions.tabSize,
-        wordWrap: WORD_WRAP_OPTIONS[nextUserPreference.editorOptions.wordWrap],
-        wordWrapColumn: nextUserPreference.editorOptions.wordWrapColumn,
+        renderWhitespace: RENDER_WHITESPACE_OPTIONS[nextuserPreference.editorOptions.renderWhiteSpace],
+        tabSize: nextuserPreference.editorOptions.tabSize,
+        wordWrap: WORD_WRAP_OPTIONS[nextuserPreference.editorOptions.wordWrap],
+        wordWrapColumn: nextuserPreference.editorOptions.wordWrapColumn,
     }
 
     return (
@@ -42,8 +42,8 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
                 <Editor
                     options={ editorOptions }
                     value={CODE_EDITOR_LIVE_PREVIEW_TEXT}
-                    theme={PRESET_THEMES[nextUserPreference.editorOptions.theme].monacoEditorAlias}
-                    language={PROGRAMMING_LANGUAGES[nextUserPreference.language].monaco_editor_alias}
+                    theme={PRESET_THEMES[nextuserPreference.editorOptions.theme].monacoEditorAlias}
+                    language={PROGRAMMING_LANGUAGES[nextuserPreference.language].monaco_editor_alias}
                 />
             </Panel>
             <PanelResizeHandle className={styles.resizeHandler} />
@@ -51,14 +51,14 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
                 <div className={styles.codeEditorSettingsOptions}>
                     <section className={styles.settingsContentChunk}>
                         <h2>Functional Settings</h2>
-                        {nextUserPreference && <DropdownInput
+                        {nextuserPreference && <DropdownInput
                             options={options}
-                            defaultOption={`${nextUserPreference.language} (${PROGRAMMING_LANGUAGES[nextUserPreference.language].version})`}
+                            defaultOption={`${nextuserPreference.language} (${PROGRAMMING_LANGUAGES[nextuserPreference.language].version})`}
                             inputId="programming-language-options"
                             dropdownName="Programming Language"
                             handleOptionChange={option => {
-                                setNextUserPreference({
-                                    ...nextUserPreference,
+                                setNextuserPreference({
+                                    ...nextuserPreference,
                                     language: extractPLKey(option) as PLKeys
                                 })
                             }}
@@ -66,97 +66,97 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
                     </section>
                     <section className={styles.settingsContentChunk}>
                         <h2>Visual Settings</h2>
-                        {nextUserPreference && <DropdownInput
+                        {nextuserPreference && <DropdownInput
                             options={Object.keys(PRESET_THEMES)}
-                            defaultOption={nextUserPreference.editorOptions.theme}
+                            defaultOption={nextuserPreference.editorOptions.theme}
                             inputId="editor-theme"
                             dropdownName="Theme"
                             handleOptionChange={option => {
-                                setNextUserPreference({
-                                    ...nextUserPreference,
+                                setNextuserPreference({
+                                    ...nextuserPreference,
                                     editorOptions: {
-                                        ...nextUserPreference.editorOptions,
+                                        ...nextuserPreference.editorOptions,
                                         theme: option
                                     }
                                 })
                             }}
                         />}
-                        {nextUserPreference && <DropdownInput
+                        {nextuserPreference && <DropdownInput
                             options={Object.keys(LINE_NUMBERS_OPTIONS)}
-                            defaultOption={nextUserPreference.editorOptions.lineNumbers}
+                            defaultOption={nextuserPreference.editorOptions.lineNumbers}
                             inputId="line-numbers"
                             dropdownName="Line Numbers"
                             handleOptionChange={option => {
-                                setNextUserPreference({
-                                    ...nextUserPreference,
+                                setNextuserPreference({
+                                    ...nextuserPreference,
                                     editorOptions: {
-                                        ...nextUserPreference.editorOptions,
+                                        ...nextuserPreference.editorOptions,
                                         lineNumbers: option
                                     }
                                 })
                             }}
                         />}
-                        {nextUserPreference && <DropdownInput
+                        {nextuserPreference && <DropdownInput
                             options={["True", "False"]}
-                            defaultOption={nextUserPreference.editorOptions.enableMinimap ? "True" : "False"}
+                            defaultOption={nextuserPreference.editorOptions.enableMinimap ? "True" : "False"}
                             inputId="enable-minimap"
                             dropdownName="Enable Minimap"
                             handleOptionChange={option => {
-                                setNextUserPreference({
-                                    ...nextUserPreference,
+                                setNextuserPreference({
+                                    ...nextuserPreference,
                                     editorOptions: {
-                                        ...nextUserPreference.editorOptions,
+                                        ...nextuserPreference.editorOptions,
                                         enableMinimap: option === "True"
                                     }
                                 })
                             }}
                         />}
-                        {nextUserPreference && <DropdownInput
+                        {nextuserPreference && <DropdownInput
                             options={Object.keys(RENDER_WHITESPACE_OPTIONS)}
-                            defaultOption={nextUserPreference.editorOptions.renderWhiteSpace}   
+                            defaultOption={nextuserPreference.editorOptions.renderWhiteSpace}   
                             inputId="render-whitespace"
                             dropdownName="Whitespace Rendering"
                             handleOptionChange={option => {
-                                setNextUserPreference({
-                                    ...nextUserPreference,
+                                setNextuserPreference({
+                                    ...nextuserPreference,
                                     editorOptions: {
-                                        ...nextUserPreference.editorOptions,
+                                        ...nextuserPreference.editorOptions,
                                         renderWhiteSpace: option
                                     }
                                 })
                             }}
                         />}
-                        {nextUserPreference && <DropdownInput
+                        {nextuserPreference && <DropdownInput
                             options={["2", "4", "8"]}
-                            defaultOption={nextUserPreference.editorOptions.tabSize.toString()}
+                            defaultOption={nextuserPreference.editorOptions.tabSize.toString()}
                             inputId="tab-size"
                             dropdownName="Tab size"
                             handleOptionChange={option => {
-                                setNextUserPreference({
-                                    ...nextUserPreference,
+                                setNextuserPreference({
+                                    ...nextuserPreference,
                                     editorOptions: {
-                                        ...nextUserPreference.editorOptions,
+                                        ...nextuserPreference.editorOptions,
                                         tabSize: Number(option)
                                     }
                                 })
                             }}
                         />}
-                        {nextUserPreference && <DropdownInput
+                        {nextuserPreference && <DropdownInput
                             options={Object.keys(WORD_WRAP_OPTIONS)}
-                            defaultOption={nextUserPreference.editorOptions.wordWrap}
+                            defaultOption={nextuserPreference.editorOptions.wordWrap}
                             inputId="word-wrap"
                             dropdownName="Word Wrap"
                             handleOptionChange={option => {
-                                setNextUserPreference({
-                                    ...nextUserPreference,
+                                setNextuserPreference({
+                                    ...nextuserPreference,
                                     editorOptions: {
-                                        ...nextUserPreference.editorOptions,
+                                        ...nextuserPreference.editorOptions,
                                         wordWrap: option
                                     }
                                 })
                             }}
                         />}
-                        {nextUserPreference && <NumberInput
+                        {nextuserPreference && <NumberInput
                             inputId="word-wrap-column"
                             defaultValue={userPreference.editorOptions.wordWrapColumn as number}
                             min={40}
@@ -164,10 +164,10 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
                             increment={10}
                             inputName="Word Wrap Column"
                             handleInputChange={num => {
-                                setNextUserPreference({
-                                    ...nextUserPreference,
+                                setNextuserPreference({
+                                    ...nextuserPreference,
                                     editorOptions: {
-                                        ...nextUserPreference.editorOptions,
+                                        ...nextuserPreference.editorOptions,
                                         wordWrapColumn: num
                                     }
                                 })

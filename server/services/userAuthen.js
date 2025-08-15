@@ -24,7 +24,7 @@ export async function logIn(req, res) {
         if(!isMatch) {
             return res.status(400).json({ error: 'Invalid username or password' });
         }
-        const token = jwt.sign({userId: user.account_id, username: user.username, email: user.email, rankPoints: user.rankpoints, level: user.level, experincePoint: user.exp}, process.env.JWT_SECRET, { expiresIn: '36h' }); 
+        const token = jwt.sign({userId: user.account_id, username: user.username, email: user.email, rankPoint: user.rankPoint, level: user.level, experincePoint: user.exp}, process.env.JWT_SECRET, { expiresIn: '36h' }); 
         //console.log(jwtDecode(token));
         res.json({ message: 'Login successful', token});
     } catch(error) {

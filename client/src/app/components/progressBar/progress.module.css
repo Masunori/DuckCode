@@ -1,0 +1,101 @@
+.progressBar {
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+.progressBar section {
+    width: 100%;
+}
+
+.progressStep button {
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    row-gap: 0.5rem;
+}
+
+.progressBar button * {
+    transition-duration: 0.5s;
+}
+
+.progressBar .stepIndex {
+    font-weight: 600;
+    justify-self: center;
+}
+
+.progressBar .stepButtonActive .stepIndex {
+    background-color: var(--significant-button-hover-color);
+    cursor: pointer;
+}
+
+.progressBar .stepButtonUnreached {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.progressBar .stepButtonUnreached .stepIndex {
+    background-color: var(--insignificant-button-color);
+    color: var(--font-colour);
+    cursor: not-allowed;
+}
+
+.progressBar .stepButtonCompletedUnnavigable {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.progressBar .stepButtonCompletedUnnavigable .stepIndex,
+.progressBar .stepButtonCompletedNavigable .stepIndex{
+    background-color: var(--font-colour);
+    color: var(--significant-button-color);
+}
+
+.progressBar .stepButtonCompletedNavigable {
+    cursor: pointer;
+}
+
+.progressBar .stepButtonCompletedNavigable:hover .stepIndex {
+    background-color: var(--significant-button-hover-color);
+    color: var(--font-colour);
+}
+
+.progressStep .stepIndex {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--insignificant-button-color);
+    color: var(--text-color);
+}
+
+.stepConnector {
+    width: auto;
+    height: 0.25rem;
+    align-self: center;
+    margin: 0 10px;
+    transition-duration: 0.5s;
+    position: relative;
+    background-color: var(--insignificant-button-color);
+}
+
+.completionBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: var(--significant-button-color);
+    transition-duration: 0.5s;
+}
+
+.progressStep .completed {
+    width: 100%;
+}
+
+.progressStep .unreached {
+    width: 0;
+}

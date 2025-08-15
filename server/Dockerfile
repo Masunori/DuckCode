@@ -38,4 +38,4 @@ EXPOSE 8080
 # Define the command to run your application
 # This assumes your package.json has a "start" script
 # e.g., "start": "node index.js"
-CMD ["npm", "start"]
+# CMD ["npm", "start"]

@@ -12,7 +12,7 @@ type AccountSettingsProps = {
     handleAccountChange: (key: keyof TempAccountInfo, value: string) => void;
 }
 
-type TempAccountInfo = Pick<User, 'name' | 'email' | 'bio' | 'isTwoFactorEnabled'>;
+type TempAccountInfo = Pick<User, 'name' | 'email' | 'bio' | 'isTwoFactored'>;
 
 export default function AccountSettings({ nextUserInfo, handleAccountChange }: AccountSettingsProps) {
     const user = useUserStore(state => state.user);
@@ -284,7 +284,7 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
                     <CheckboxInput
                         inputId="two-factor-auth"
                         inputName="Enable Two-Factor Authentication"
-                        defaultChecked={user.isTwoFactorEnabled || false}
+                        defaultChecked={user.isTwoFactored || false}
                         handleOptionChange={(checked) => {
                             setNextUserFA();
                         }}

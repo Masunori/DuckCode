@@ -309,6 +309,24 @@ export const PROGRAMMING_LANGUAGES: Record<PLKeys, ProgrammingLanguage> = {
     },
 }
 
+export const ID_TO_PLKEY: Record<number, PLKeys> = {
+    50: 'C',
+    51: 'C#',
+    54: 'C++',
+    57: 'Elixir',
+    60: 'Go',
+    62: 'Java',
+    63: 'JavaScript',
+    68: 'PHP',
+    71: 'Python',
+    72: 'Ruby',
+    73: 'Rust',
+    74: 'TypeScript',
+    78: 'Kotlin',
+    81: 'Scala',
+    83: 'Swift'
+};
+
 export const CODE_EDITOR_LIVE_PREVIEW_TEXT = 
 `This live preview demonstrates changes to your code editor visual settings! 
 

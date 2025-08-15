@@ -1,0 +1,32 @@
+.articleHeader {
+    position: relative;
+    height: 65vh;
+    margin: 0 20vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.articleHeader h1 {
+    font-size: 4rem;
+    text-align: center;
+}
+
+.tagBoxes {
+    width: fit-content;
+    margin: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tagBox {
+    border: 2px solid var(--fourth-layer-background-color);
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+}
+
+.articleContent {
+    margin: 2rem 30vw 0;
+}

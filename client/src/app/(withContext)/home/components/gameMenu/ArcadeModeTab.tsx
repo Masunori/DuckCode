@@ -72,8 +72,8 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                                 <DoubleThumbRangeInput
                                     inputId="difficulty-slider"
                                     inputName="Difficulty"
-                                    defaultMinThumbValue={Math.min(Math.max(user.rankPoints, 0), 5000)}
-                                    defaultMaxThumbValue={Math.min(Math.max(user.rankPoints, 0), 5000)}
+                                    defaultMinThumbValue={Math.min(Math.max(user.rankPoint, 0), 5000)}
+                                    defaultMaxThumbValue={Math.min(Math.max(user.rankPoint, 0), 5000)}
                                     min={0}
                                     max={5000}
                                     step={25}

@@ -6,27 +6,19 @@ services:
       context: ./client # Path to the client Dockerfile directory
       dockerfile: Dockerfile
       args:
-        # You can pass build-time arguments here if needed
-        # Example: NEXT_PUBLIC_API_URL: http://localhost:5001/api # For local build, but better to set at runtime
         NEXT_PUBLIC_API_URL: http://server:8080/api # For container-to-container communication
     ports:
       - "5000:3000" # Map host port 5000 to container port 3000 (Next.js default)
     environment:
-      # HOSTNAME: 0.0.0.0 # Already set in Dockerfile, but can be overridden
-      # PORT: 3000 # Already set in Dockerfile
       NEXT_PUBLIC_API_URL: http://server:8080/api # Runtime URL for client to reach backend
-      # Add any other Next.js specific runtime environment variables here
-      # e.g. NEXT_PUBLIC_SOME_KEY: your_value
     depends_on:
       - server # Ensures server starts before client (optional, but good practice)
     networks:
       - app-network
-    # For development, you might want to add volume mounts for live reloading
-    # Be cautious with Next.js and node_modules in volumes
-    # volumes:
-    #   - ./client:/app/client
-    #   - /app/client/node_modules # Exclude node_modules from being overwritten by host
-    #   - /app/client/.next # Exclude .next from being overwritten
+    volumes:
+      - ./client:/app
+      - /client/node_modules # Exclude node_modules from being overwritten by host
+      - /client/.next # Exclude .next from being overwritten
 
   server: # Backend Node.js service
     build:
