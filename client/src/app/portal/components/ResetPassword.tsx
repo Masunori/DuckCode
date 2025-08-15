@@ -5,7 +5,7 @@ import styles from '../page.module.css';
 import { PASSWORD_CONDITIONS } from "./fieldConditions";
 import { ResetPasswordStatuses } from "@/app/api/portal/resetPassword/resetPasswordStatuses";
 import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/app/components/progressBar/LinearProgressBar";
-import { getVerificationCode, verifyCode } from "@/lib/apiClient/user";
+import { getVerificationCode, verifyCode, verifyNewPassword } from "@/lib/apiClient/user";
 
 type ResetPasswordProps = {
     portalMode: PortalMode;
@@ -192,12 +192,6 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
             : FieldState.INVALID);
     }
 
-    // there are 3 stages in the reset password process (0-indexed)
-    // 0. email verification
-    // 1. otp verification
-    // 2. reset password
-    const [stage, setStage] = useState(0);
-
     function closePopup() {
         setPortalMode(PortalMode.None);
         setResetPasswordStatus(null);
@@ -242,9 +236,6 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
 
         setOtp(new Array<string>(6).fill(''));
     }
-
-    const verifyOtpAPILink = '/api/portal/resetPassword/verifyOtp';
-    const resetPasswordAPILink = '/api/portal/resetPassword/verifyNewPassword';
 
     async function getOTP() {
         console.log("Getting verification code...");
@@ -322,32 +313,23 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
             return;
         }
 
-        await fetch(resetPasswordAPILink, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password, confirmPassword }),
-        })
-        .then(response => {
-            response.json().then(data => {
-                setResetPasswordStatus(data.code);
-
-                if (data.code === ResetPasswordStatuses.SAME_PASSWORD) {
-                    setPasswordInputState(FieldState.SERVER_SIDE_INVALID);
-                    setConfirmPasswordInputState(FieldState.SERVER_SIDE_INVALID);
+        await verifyNewPassword(email, password, confirmPassword)
+            .then(response => {
+                switch (response.status) {
+                    case 200:
+                        console.log("Reset password successful!");
+                        setResetPasswordProgressSteps(prevSteps => {
+                            const newSteps = [...prevSteps];
+                            newSteps[2].status = 'completed';
+                            newSteps[3].status = 'active';
+                            return newSteps;
+                        });
+                    case 400:
+                        console.log("Invalid password!");
+                    default:
+                        console.log("Internal server error!");
                 }
-            });
-
-            if (response.status === 200) {
-                setResetPasswordProgressSteps(prevSteps => {
-                    const newSteps = [...prevSteps];
-                    newSteps[2].status = 'completed';
-                    newSteps[3].status = 'active';
-                    return newSteps;
-                });
-            }
-        });
+            })
     }
 
     function toLogin() {

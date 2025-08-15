@@ -5,7 +5,7 @@ const BASE_URL = "https://6ce54a6328be.ngrok-free.app/"
 
 const LOGIN_API = BASE_URL + "auth/login";
 const SIGNUP_API = BASE_URL + "auth/register";
-const SIGNUP_SEND_CODE_API = BASE_URL + "auth/request-otp";
+// const SIGNUP_SEND_CODE_API = BASE_URL + "auth/request-otp";
 const RESET_PASSWORD_SEND_CODE_API = BASE_URL + "auth/request-otp";
 const RESET_PASSWORD_VERIFY_CODE_API = BASE_URL + "auth/verify-otp";
 const RESET_PASSWORD_VERIFY_NEW_PASSWORD_API = "/api/portal/resetPassword/verifyNewPassword";
