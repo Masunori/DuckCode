@@ -18,7 +18,7 @@ export default function HomeClient({ user }: { user: User }) {
 
     return (
         <div className={styles.home}>
-            <HomeNavbar user={user} />
+            <HomeNavbar user={PRISTINE_USER} />
             <EventMenu />
             <NewsCarousel />
             <GameMenu />
