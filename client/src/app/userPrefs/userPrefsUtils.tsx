@@ -27,13 +27,13 @@ export type User = {
     password: string;
     level: number;
     exp: number;
-    rank?: string;
+    rank: string;
     rankPoint: number;
     userPreference: userPreference;
-    bio?: string;
-    createdAt?: string;
-    isTwoFactored?: boolean;
-    profilePicture?: string;    
+    bio: string;
+    createdAt: string;
+    isTwoFactored: boolean;
+    profilePicture: string;    
 }
 
 export const LINE_NUMBERS_OPTIONS: Record<string, monaco.editor.LineNumbersType> = {
