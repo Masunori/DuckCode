@@ -12,6 +12,9 @@
 
 :root {
   /* --normal-text-font: 'PF Din Text Pro', 'sans-serif'; */
+  /* Public layout variables */
+  --public-background-opacity: 1;
+
   
   /* General game theme color */
   --background-color: #121212;

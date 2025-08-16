@@ -2,13 +2,14 @@ import PublicNavbar from "./PublicNavbar";
 import styles from "./layout.module.css";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-    const dummyLink = "https://youtu.be/dQw4w9WgXcQ?si=pbHjWVWDclnIJgTS";
+    // const dummyLink = "https://youtu.be/dQw4w9WgXcQ?si=pbHjWVWDclnIJgTS";
 
     return (
         <div className={styles.publicLayout}>
             <PublicNavbar />
             {children}
-            <footer>
+
+            {/* <footer>
                 <ul>
                     <li>
                         <a href={dummyLink}>Privacy Policy</a>
@@ -23,8 +24,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         <a href={dummyLink}>Help Centre</a>
                     </li>
                 </ul>
-                {/* <p>&copy; {new Date().getFullYear()} DuckCode Project. All rights reserved.</p> */}
-            </footer>
+            </footer> */}
         </div>
     )
 }
+
+// {/* <p>&copy; {new Date().getFullYear()} DuckCode Project. All rights reserved.</p> */}
