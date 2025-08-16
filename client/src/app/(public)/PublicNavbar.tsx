@@ -7,6 +7,7 @@ import styles from "./layout.module.css";
 const links = [
     { href: "/landing", label: "Home" },
     { href: "/news", label: "News" },
+    { href: "/dev", label: "[IMPORTANT!] Development Notice"},
 ];
 
 export default function PublicNavbar() {

@@ -92,9 +92,18 @@
 
 .tagFilter {
     width: inherit;
+    overflow-x: auto;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     margin: 1rem;
+}
+
+.tagFilter::-webkit-scrollbar {
+    height: 0.2rem;
+}
+
+.tagFilter::-webkit-scrollbar-thumb {
+    background-color: #888;
 }
 
 .tagFilter button {

@@ -11,12 +11,12 @@ export type Tag =
     "Introduction"; // welcome content for onboarding players
 
 export const articleTags: Tag[] = [
+    "Introduction",
     "Updates",
     "Dev Notes",
     "Announcement",
     "Guides",
     "Community",
-    "Introduction"
 ]
 
 type Article = {

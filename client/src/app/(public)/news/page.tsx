@@ -56,14 +56,14 @@ export default function Page() {
                         className={filter === "All" ? styles.active : ""}
                         value={"All"} 
                         onClick={() => setFilter("All")}
-                    >ALL</button>
+                    >All</button>
                     {articleTags.map((tag, index) => (
                         <button 
                             className={filter === tag ? styles.active : ""}
                             key={index} 
                             value={tag}
                             onClick={() => setFilter(tag)}
-                        >{tag.toUpperCase()}</button>
+                        >{tag}</button>
                     ))}
                 </div>
                 <ul>
