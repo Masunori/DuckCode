@@ -5,7 +5,7 @@ import { useUserStore } from"@/app/components/contexts/UserContext";
 import DropdownInput from "@/app/components/inputs/DropdownInput";
 import { PLKeys, PROGRAMMING_LANGUAGES } from "@/app/components/settings/settingsUtils";
 import { usePopup } from "@/app/components/contexts/PopupContext";
-import { userPreference } from "../../../userPrefs/userPrefsUtils";
+import { UserPreference } from "../../../userPrefs/userPrefsUtils";
 import { useRouter } from "next/navigation";
 
 export default function GameplayNavbar() {
@@ -19,7 +19,7 @@ export default function GameplayNavbar() {
     const options = Object.entries(PROGRAMMING_LANGUAGES).map(([plkey, value]) => `${plkey} (${value.version})`);
     const extractPLKey = (str: string) => str.split(" ")[0];
 
-    function setuserPreference(userPreference: userPreference) {
+    function setuserPreference(userPreference: UserPreference) {
         setUserField("userPreference", userPreference);
     }
 

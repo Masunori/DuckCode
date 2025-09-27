@@ -3,7 +3,7 @@
 import { CSSProperties, Dispatch, SetStateAction, useRef } from "react";
 import { TestCase, TestCaseResult } from "../gameplayUtils";
 import styles from "../page.module.css";
-import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeStatuses";
+import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
 
 // ignore this
 

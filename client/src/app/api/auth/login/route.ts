@@ -1,0 +1,54 @@
+import { NextResponse } from "next/server";
+
+export async function POST(req: Request) {
+    try {
+        const body = await req.json();
+        
+        const response = await fetch (process.env.NEXT_PUBLIC_API_URL + "auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (!response.ok) {
+            const err = await response.json().catch(() => ({}));
+            return NextResponse.json(
+                { ok: false, message: err.message || 'Login failed' },
+                { status: response.status }
+            );
+        }
+
+        const loginData = await response.json();
+
+        console.log(loginData);
+
+        const res = NextResponse.json({ ok: true });
+
+        res.cookies.set('accessToken', loginData.data.accessToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'lax', // or 'None' if cross-site redirect needed
+            path: '/',
+            maxAge: 7 * 24 * 60 * 60, // 1 week
+        });
+
+        res.cookies.set('refreshToken', loginData.data.refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'lax', // or 'None' if cross-site redirect needed
+            path: '/',
+            maxAge: 7 * 24 * 60 * 60, // 1 week
+        });
+
+        return res;
+    } catch (err) {
+        console.log(err);
+
+        return NextResponse.json(
+            { ok: false, message: `Internal server error: ${err}` },
+            { status: 500 }
+        )
+    }
+}

@@ -1,4 +1,4 @@
-import { userPreference } from "@/app/userPrefs/userPrefsUtils";
+import { UserPreference } from "@/app/userPrefs/userPrefsUtils";
 import NumberInput from "../../inputs/NumberInput";
 import styles from "../settings.module.css";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
@@ -9,8 +9,8 @@ import RadioInput from "../../inputs/RadioInput";
 import { LAYOUTS } from "@/app/(withContext)/gameplay/layout/layoutUtils";
 
 type GeneralSettingsPrompt = {
-    nextuserPreference: userPreference;
-    setNextuserPreference: Dispatch<SetStateAction<userPreference>>;
+    nextuserPreference: UserPreference;
+    setNextuserPreference: Dispatch<SetStateAction<UserPreference>>;
 }
 
 export default function GeneralSettings({ nextuserPreference, setNextuserPreference }: GeneralSettingsPrompt) {

@@ -1,4 +1,4 @@
-import { OutputEntry } from "@/app/api/gameplay/RunCodeStatuses"
+import { OutputEntry } from "@/lib/apiClient/runCodeStatuses"
 import { ExecutionStatus, TestCaseResult } from "../multiplayerUtils";
 import { create } from "zustand";
 

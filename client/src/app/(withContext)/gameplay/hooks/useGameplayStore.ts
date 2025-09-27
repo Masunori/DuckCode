@@ -1,4 +1,4 @@
-import { OutputEntry } from "@/app/api/gameplay/RunCodeStatuses";
+import { OutputEntry } from "@/lib/apiClient/runCodeStatuses";
 import { placeholderQuestion, Question, TestCaseResult } from "../gameplayUtils";
 import { create } from "zustand";
 import { SetState } from "@/app/utils/types";

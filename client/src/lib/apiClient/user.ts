@@ -1,18 +1,8 @@
-import { decodeUserPrefs, encodeUserPrefs } from "@/app/userPrefs/userPrefSerializer";
-import { PRISTINE_USER_PREFERENCE, User, userPreference } from "@/app/userPrefs/userPrefsUtils";
-
-const BASE_URL = "https://6ce54a6328be.ngrok-free.app/"
-
-const LOGIN_API = BASE_URL + "auth/login";
-const SIGNUP_API = BASE_URL + "auth/register";
-// const SIGNUP_SEND_CODE_API = BASE_URL + "auth/request-otp";
-const RESET_PASSWORD_SEND_CODE_API = BASE_URL + "auth/request-otp";
-const RESET_PASSWORD_VERIFY_CODE_API = BASE_URL + "auth/verify-otp";
-const RESET_PASSWORD_VERIFY_NEW_PASSWORD_API = "/api/portal/resetPassword/verifyNewPassword";
-const GET_PROFILE_API = BASE_URL + "auth/me";
+import { encodeUserPrefs } from "@/app/userPrefs/userPrefSerializer";
+import { UserPreference } from "@/app/userPrefs/userPrefsUtils";
 
 export async function login(email: string, password: string) {
-    const response = await fetch(LOGIN_API, {
+    const response = await fetch("/api/auth/login", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -21,10 +11,18 @@ export async function login(email: string, password: string) {
             email: email,
             password: password,
         }),
-        credentials: "include",
+        // credentials: "include",
     });
 
-    const data = await response.json();
+    type Response = {
+        data: {
+            accessToken: string;
+            refreshToken: string;
+        },
+        message: string;
+    }
+
+    const data: Response = await response.json();
 
     return {
         status: response.status,
@@ -38,7 +36,7 @@ export async function signUp(
     password: string,
     confirmPassword: string
 ) {
-    const response = await fetch(SIGNUP_API, {
+    const response = await fetch("/api/auth/register", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -56,8 +54,6 @@ export async function signUp(
 
     const data = await response.json();
 
-    console.log(response.status, data);
-
     return {
         status: response.status,
         data
@@ -65,7 +61,7 @@ export async function signUp(
 }
 
 export async function getVerificationCode(email: string) {
-    const response = await fetch(RESET_PASSWORD_SEND_CODE_API, {
+    const response = await fetch("api/auth/request-otp", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -85,7 +81,7 @@ export async function getVerificationCode(email: string) {
 }
 
 export async function verifyCode(email: string, code: string) {
-    const response = await fetch(RESET_PASSWORD_VERIFY_CODE_API, {
+    const response = await fetch("/api/auth/verify-otp", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -98,7 +94,6 @@ export async function verifyCode(email: string, code: string) {
     });
 
     const data = await response.json();
-    console.log(data, response.status);
 
     return {
         status: response.status,
@@ -111,20 +106,23 @@ export async function verifyNewPassword(
     password: string,
     confirmPassword: string
 ) {
-    const response = await fetch(RESET_PASSWORD_VERIFY_NEW_PASSWORD_API, {
+    console.log(email, password, confirmPassword);
+    const response = await fetch("/api/auth/reset-password", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
             email: email,
-            password: password,
-            confirmPassword: confirmPassword
+            newPassword: password,
+            newConfirmedPassword: confirmPassword
         }),
         credentials: "include",
     });
 
     const data = await response.json();
+
+    console.log(data);
 
     return {
         status: response.status,
@@ -132,43 +130,10 @@ export async function verifyNewPassword(
     };
 }
 
-export async function getProfile() {
-    const response = await fetch(GET_PROFILE_API, {
-        method: 'POST',
-        headers: {
-            'Content-Type': "application/json",
-        },
-        credentials: 'include',
-    });
-
-
-
-    // if (!response.ok) {
-    //     return {
-    //         status: response.status,
-    //         data: null,
-    //     }
-    // }
-
-    const data = await response.json();
-
-    console.log(data);
-
-    const user = data.data;
-    user.userPreference = user.userPreference === ""
-        ? structuredClone(PRISTINE_USER_PREFERENCE)
-        : decodeUserPrefs(user.userPreference as string);
-
-    return {
-        status: response.status,
-        data: user as User,
-    }
-}
-
-export async function updateSettings(userPreference: userPreference) {
+export async function updateSettings(userPreference: UserPreference) {
     const encoded = encodeUserPrefs(userPreference);
 
-    const response = await fetch(BASE_URL + "user/updateSettings", {
+    const response = await fetch("user/updateSettings", {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

@@ -1,15 +1,33 @@
 import { CodeSubmissionResponse, Question, TestCaseResult } from '@/app/(withContext)/gameplay/gameplayUtils';
-import { OutputEntry } from '@/app/api/gameplay/RunCodeStatuses';
+import { OutputEntry } from '@/lib/apiClient/runCodeStatuses';
 import { PLKeys, PROGRAMMING_LANGUAGES } from '@/app/components/settings/settingsUtils';
 import sleep from '@/app/utils/delay';
 
-const BASE = "http://localhost:3000";
+const BASE = "https://min-nondetrimental-lillia.ngrok-free.app/";
 const getQuestionApi = (difficulty: number) => BASE + `/api/gameplay/getQuestion?cur_point=${difficulty}`;
+const GET_QUESTION_BY_DIFFICULTY_API = BASE + "/question/get_question_by_difficulty";
 const RUN_CODE_API = BASE + '/api/gameplay/runCode';
 const RUN_TEST_CASES_API = BASE + '/api/gameplay/runAllTestCases';
 
 function consume(item: unknown) {
     return item;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function getQuestionByDifficulty(difficulty: number, accessToken: string, refreshToken: string) {
+    const response = await fetch(GET_QUESTION_BY_DIFFICULTY_API + `?difficulty=${difficulty}`, {
+        method: "GET",
+        headers: {
+            'Authorization': accessToken,
+        },
+    });
+
+    const data = await response.json();
+
+    return {
+        status: response.status,
+        data
+    };
 }
 
 export async function getQuestion(difficulty: number): Promise<Question> {

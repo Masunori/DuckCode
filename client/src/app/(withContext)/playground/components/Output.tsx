@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "../page.module.css";
-import { OutputEntry } from "@/app/api/gameplay/RunCodeStatuses";
+import { OutputEntry } from "@/lib/apiClient/runCodeStatuses";
 
 type OutputProps = {
     codeOutput: OutputEntry[];

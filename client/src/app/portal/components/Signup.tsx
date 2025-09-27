@@ -1,11 +1,11 @@
-import React, { Dispatch, SetStateAction, useState, useRef, RefObject } from "react";
+import React, { Dispatch, SetStateAction, useState, useRef, RefObject, useEffect } from "react";
 import { PortalMode } from "@/app/portal/PortalMode";
 import styles from '../page.module.css';
 import PopupOverlay from "./PopupOverlay";
 import { PASSWORD_CONDITIONS, USERNAME_CONDITIONS } from "./fieldConditions";
-import { SignupStatuses } from "@/app/api/portal/signup/SignupStatuses";
-import { signUp, verifyCode } from "@/lib/apiClient/user";
+import { getVerificationCode, signUp, verifyCode } from "@/lib/apiClient/user";
 import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/app/components/progressBar/LinearProgressBar";
+import { SignupStatuses } from "@/lib/apiClient/portalStatuses";
 
 type SignupProps = {
     portalMode: PortalMode;
@@ -17,6 +17,35 @@ enum FieldState {
     VALID,
     INVALID,
     SERVER_SIDE_INVALID
+}
+
+function ResendOTPButton({ email }: { email: string }) {
+    const [seconds, setSeconds] = useState(60);
+
+    useEffect(() => {
+        if (seconds > 0) {
+            const t = setTimeout(() => setSeconds(prev => prev - 1), 1000);
+            return () => clearTimeout(t);
+        }
+    }, [seconds]);
+
+    const handleResend = async () => {
+        getVerificationCode(email);
+        setSeconds(60);
+    }
+
+    return (
+        <button 
+            onClick={handleResend} 
+            disabled={seconds > 0}
+            style={{
+                cursor: seconds > 0 ? "not-allowed" : "pointer",
+                opacity: seconds > 0 ? 0.5 : 1
+            }}
+        >
+            {seconds > 0 ? `Resend in ${seconds}s` : "Resend OTP"}
+        </button>
+    )
 }
 
 function UsernameGuideTooltip({ usernameConditionsRef, focusedField }: { 
@@ -95,6 +124,29 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
             isBackwardNavigable: false
         }
     ]);
+
+    // const [signupProgressSteps, setSignupProgressSteps] = useState<ProgressStep[]>([
+    //     {
+    //         id: "registration",
+    //         label: "Registration",
+    //         status: "completed",
+    //         isBackwardNavigable: true
+    //     },
+    //     {
+    //         id: "otp",
+    //         label: "OTP",
+    //         status: "active",
+    //         isBackwardNavigable: true
+    //     },
+    //     {
+    //         id: "success",
+    //         label: "Success",
+    //         status: "unreached",
+    //         isBackwardNavigable: false
+    //     }
+    // ]);
+
+
 
     const handleStepClick = (step: number) => {
         setSignupProgressSteps(prevSteps => {
@@ -351,6 +403,7 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
             console.error('Unexpected error:', error);
         });
     }
+
     async function registerVerifyOtp() {
         if (otp.some(value => value === '')) {
             setSignupStatus([SignupStatuses.INVALID_CLIENT_SIDE_CREDENTIALS]);
@@ -554,7 +607,10 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                     className={styles.registerOtp}
                     style={{ overflow: "hidden" }}
                 >
-                    <p>We have sent a verification code to your email.</p>
+                    <div>
+                        <p>{`We have sent a verification code to:`}</p>
+                        <p>{email}</p>
+                    </div>
                     <div className={styles.otpInputContainer}>
                         <div 
                             className={styles.otpInputOverlay}
@@ -577,7 +633,8 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                             ))}
                         </div>
                     </div>
-                    <button 
+                    <ResendOTPButton email={email} />
+                    <button className={styles.registerVerifyOtp}
                         onClick={registerVerifyOtp}
                         disabled={otp.some(value => value === '')}
                         style={{
@@ -622,28 +679,30 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                 {signupProgressSteps[2].status === "active" &&
                     <div>
                         <h4>Registration successful!</h4>
-                        <button onClick={() => {
-                            setPortalMode(PortalMode.Login);
-                            setSignupProgressSteps([
-                                {
-                                    id: "registration",
-                                    label: "Registration",
-                                    status: "active",
-                                    isBackwardNavigable: true
-                                },
-                                {
-                                    id: "otp",
-                                    label: "OTP",
-                                    status: "unreached",
-                                    isBackwardNavigable: true
-                                },
-                                {
-                                    id: "success",
-                                    label: "Success",
-                                    status: "unreached",
-                                    isBackwardNavigable: false
-                                }
-                            ])
+                        <button 
+                            className={styles.loginButton}
+                            onClick={() => {
+                                setPortalMode(PortalMode.Login);
+                                setSignupProgressSteps([
+                                    {
+                                        id: "registration",
+                                        label: "Registration",
+                                        status: "active",
+                                        isBackwardNavigable: true
+                                    },
+                                    {
+                                        id: "otp",
+                                        label: "OTP",
+                                        status: "unreached",
+                                        isBackwardNavigable: true
+                                    },
+                                    {
+                                        id: "success",
+                                        label: "Success",
+                                        status: "unreached",
+                                        isBackwardNavigable: false
+                                    }
+                                ])
                         }}>
                             Log In
                         </button>

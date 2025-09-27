@@ -344,7 +344,8 @@
     margin: 2em 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
+    gap: 1.5rem;
     flex: 1;
 }
 
@@ -367,6 +368,14 @@
 
 .registerOtp button:hover {
     background-color: var(--insignificant-button-hover-color);
+}
+
+.registerOtp .registerVerifyOtp {
+    background-color: var(--significant-button-color);
+}
+
+.registerOtp .registerVerifyOtp:hover {
+    background-color: var(--significant-button-hover-color);
 }
 
 /* the separator between traditional login and third-party login */
@@ -430,6 +439,7 @@
 
 .otpInputContainer {
     position: relative;
+    padding: 1.5rem 0;
 }
 
 .otpInput {

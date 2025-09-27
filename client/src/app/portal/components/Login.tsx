@@ -5,10 +5,10 @@ import { PortalMode } from "@/app/portal/PortalMode";
 import styles from '../page.module.css';
 import { Dispatch, SetStateAction, useState } from "react";
 import { login } from "../../../lib/apiClient/user";
-import { useUserStore } from"@/app/components/contexts/UserContext";
-import { PRISTINE_USER_PREFERENCE, User } from "@/app/userPrefs/userPrefsUtils";
-import { useRouter } from "next/navigation";
-import { decodeUserPrefs } from "@/app/userPrefs/userPrefSerializer";
+// import { useUserStore } from"@/app/components/contexts/UserContext";
+// import { PRISTINE_USER_PREFERENCE, User } from "@/app/userPrefs/userPrefsUtils";
+// import { decodeUserPrefs } from "@/app/userPrefs/userPrefSerializer";
+// import { useRouter } from "next/navigation";
 
 type LoginProps = {
     portalMode: PortalMode;
@@ -29,9 +29,8 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
     const [loginError, setLoginError] = useState(LoginStatus.NONE);
     const ERROR_COLOR = '#FF5C00';
 
-    const setUser = useUserStore(state => state.setUser);
-
-    const router = useRouter();
+    // const setUser = useUserStore(state => state.setUser);
+    // const router = useRouter();
 
     async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -47,12 +46,9 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
 
             switch (response.status) {
                 case 200:
-                    const user = response.data.data;
-                    user.userPreference = user.userPreference === ""
-                        ? structuredClone(PRISTINE_USER_PREFERENCE)
-                        : decodeUserPrefs(user.userPreference);
-                    setUser(user as User);
-                    router.push('/home');
+                case 302:
+                    window.location.href = "/home";
+                    
                     break
                 case 401:
                     setLoginError(LoginStatus.WRONG_EMAIL_OR_PASSWORD);
@@ -61,9 +57,9 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
                     console.error(`Unexpected response status: ${response.status}`);
             }
         })
-        // .catch(error => {
-        //     console.error(`An unexpected error occurred: ${error}`)
-        // })
+        .catch(error => {
+            console.error(`An unexpected error occurred: ${error}`)
+        })
     }
 
     function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -75,6 +71,8 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
         const value = event.target.value;
         setPassword(value);
     }
+
+    // const SERVER_URL = process.env.NEXT_PUBLIC_API_URL;
     
     const children = 
         <div className={styles.popupBorder}>
@@ -85,13 +83,15 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
                     <h2>Welcome back to DuckCode!</h2>
                     <h4>Please login to continue</h4>
                     <form onSubmit={handleLogin}>
+                    {/* <form action={`${SERVER_URL}/auth/login`} method="POST"> */}
                         <label htmlFor="loginEmail">
                             <p>Email</p>
                             <input 
                                 id="loginEmail"
                                 type="email" 
-                                name="username"
+                                name="email"
                                 value={email}
+                                required
                                 onChange={handleEmailChange}
                             ></input>
                         </label>
@@ -102,6 +102,7 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
                                 type={isPasswordVisible ? "text" : "password"} 
                                 name="password"
                                 value={password}
+                                required
                                 onChange={handlePasswordChange}
                             ></input>
                             <button type="button" onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
