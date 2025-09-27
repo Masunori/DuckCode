@@ -16,7 +16,7 @@ import { useCodeEditorStore } from "../../stores/codeEditorStores";
 import { useGameplayController } from "../../hooks/useGameplayController";
 import { useShallow } from "zustand/shallow";
 import { useCodeExecutionStore } from "../../stores/codeExecutionStore";
-import { OutputEntry } from "@/app/api/gameplay/RunCodeStatuses";
+import { OutputEntry } from "@/lib/apiClient/runCodeStatuses";
 
 export function DefaultLayout({ question }: { question: Question }) {
     const [monaco, setMonaco] = useState<typeof import('monaco-editor') | null>(null);

@@ -1,4 +1,4 @@
-import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, userPreference, WORD_WRAP_OPTIONS } from "@/app/userPrefs/userPrefsUtils";
+import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, UserPreference, WORD_WRAP_OPTIONS } from "@/app/userPrefs/userPrefsUtils";
 import DropdownInput from "../../inputs/DropdownInput";
 import styles from "../settings.module.css";
 import { CODE_EDITOR_LIVE_PREVIEW_TEXT, PLKeys, PROGRAMMING_LANGUAGES } from "../settingsUtils";
@@ -11,8 +11,8 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { PRESET_THEMES } from "../../themes/themes";
 
 type CodeEditorSettingsProps = {
-    nextuserPreference: userPreference;
-    setNextuserPreference: Dispatch<SetStateAction<userPreference>>;
+    nextuserPreference: UserPreference;
+    setNextuserPreference: Dispatch<SetStateAction<UserPreference>>;
 }
 
 export default function CodeEditorSettings({ nextuserPreference, setNextuserPreference }: CodeEditorSettingsProps) {

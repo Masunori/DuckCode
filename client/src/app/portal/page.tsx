@@ -2,7 +2,7 @@ import styles from './page.module.css';
 import Link from "next/link";
 import PortalClient from './PortalClient';
 
-export default function Page() {
+export default async function Page() {
     return (
         <div className={styles.container}>  
             <Link href='/' className={styles.toLanding}>About Us</Link>

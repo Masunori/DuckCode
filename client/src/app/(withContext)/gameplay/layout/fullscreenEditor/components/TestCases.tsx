@@ -2,7 +2,7 @@
 
 import { CSSProperties, useEffect, useRef } from "react";
 import styles from "../page.module.css";
-import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeStatuses";
+import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
 import { motion, AnimatePresence } from "motion/react";
 import { useGameplayController } from "../../../hooks/useGameplayController";
 import { useShallow } from "zustand/shallow";

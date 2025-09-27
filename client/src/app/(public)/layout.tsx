@@ -4,6 +4,7 @@ import styles from "./layout.module.css";
 export default function Layout({ children }: { children: React.ReactNode }) {
     // const dummyLink = "https://youtu.be/dQw4w9WgXcQ?si=pbHjWVWDclnIJgTS";
 
+
     return (
         <div className={styles.publicLayout}>
             <PublicNavbar />

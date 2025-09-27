@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, PROGRAMMING_LANGUAGES } from "@/app/components/settings/settingsUtils";
 import { useUserStore } from"@/app/components/contexts/UserContext";
 import * as monaco from 'monaco-editor';
-import { OutputEntry } from "@/app/api/gameplay/RunCodeStatuses";
+import { OutputEntry } from "@/lib/apiClient/runCodeStatuses";
 import { usePopup } from "@/app/components/contexts/PopupContext";
 import { Lock, LockUnavailableError } from "@/app/utils/lock";
 import { runCode } from "@/lib/apiClient/gameplay";

@@ -1,5 +1,5 @@
 import { ID_TO_PLKEY, PROGRAMMING_LANGUAGES } from "../components/settings/settingsUtils";
-import { userPreference } from "./userPrefsUtils";
+import { UserPreference } from "./userPrefsUtils";
 
 const VERSION = "1.0.0";
 
@@ -105,7 +105,7 @@ function compareVersions(version1: string, version2: string): number {
  * @param userPref userPreference object to encode
  * @returns The encoded string representation of the user preferences.
  */
-export function encodeUserPrefs(userPref: userPreference): string {
+export function encodeUserPrefs(userPref: UserPreference): string {
     return [
         VERSION,
         userPref.fontSize,
@@ -129,7 +129,7 @@ export function encodeUserPrefs(userPref: userPreference): string {
  * @returns The decoded userPreference object.
  * @throws Will throw an error if the encoded string is invalid or unsupported.
  */
-export function decodeUserPrefs(encodedPrefs: string): userPreference {
+export function decodeUserPrefs(encodedPrefs: string): UserPreference {
     const parts = encodedPrefs.split(",");
     if (parts.length < 12) {
         throw new Error("Invalid user preference encoding.");

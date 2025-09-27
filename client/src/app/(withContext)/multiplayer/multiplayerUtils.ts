@@ -6,7 +6,7 @@ import { PRESET_THEMES } from "@/app/components/themes/themes";
 import { User } from "@/app/userPrefs/userPrefsUtils";
 import { Lock, LockUnavailableError } from "@/app/utils/lock";
 import { runAllTestCases, runCode, submitCode } from "@/lib/apiClient/gameplay";
-import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/app/api/gameplay/RunCodeStatuses";
+import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
 
 export type TestCase = {
     tid: number;

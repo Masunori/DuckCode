@@ -11,7 +11,7 @@ export type EditorOptions = {
     wordWrapColumn: number;
 }
 
-export type userPreference = {
+export type UserPreference = {
     fontSize: number;
     language: PLKeys;
     significantButtonColor: string;
@@ -29,7 +29,7 @@ export type User = {
     exp: number;
     rank: string;
     rankPoint: number;
-    userPreference: userPreference;
+    userPreference: UserPreference;
     bio: string;
     createdAt: string;
     isTwoFactored: boolean;
@@ -58,7 +58,7 @@ export const WORD_WRAP_OPTIONS: Record<string, "on" | "off" | "wordWrapColumn" |
     "Bounded": "bounded"
 }
 
-export const PRISTINE_USER_PREFERENCE: userPreference = {
+export const PRISTINE_USER_PREFERENCE: UserPreference = {
     fontSize: 16,
     language: "JavaScript",
     significantButtonColor: '#007fff',

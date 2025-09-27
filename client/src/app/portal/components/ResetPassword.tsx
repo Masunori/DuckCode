@@ -3,9 +3,9 @@ import { PortalMode } from "@/app/portal/PortalMode";
 import PopupOverlay from "./PopupOverlay";
 import styles from '../page.module.css';
 import { PASSWORD_CONDITIONS } from "./fieldConditions";
-import { ResetPasswordStatuses } from "@/app/api/portal/resetPassword/resetPasswordStatuses";
 import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/app/components/progressBar/LinearProgressBar";
 import { getVerificationCode, verifyCode, verifyNewPassword } from "@/lib/apiClient/user";
+import { ResetPasswordStatuses } from "@/lib/apiClient/portalStatuses";
 
 type ResetPasswordProps = {
     portalMode: PortalMode;
@@ -325,9 +325,9 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                             return newSteps;
                         });
                     case 400:
-                        console.log("Invalid password!");
+                        setResetPasswordStatus(ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS);
                     default:
-                        console.log("Internal server error!");
+                        setResetPasswordStatus(ResetPasswordStatuses.INTERNAL_SERVER_ERROR);
                 }
             })
     }
@@ -570,16 +570,6 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                                         margin: '0 0 1rem 0'
                                     }}>
                                         Someone is trying to bypass client-side validation... Request blocked!
-                                    </li>
-                                }
-                                {resetPasswordStatus === ResetPasswordStatuses.SAME_PASSWORD
-                                && 
-                                    <li style={{
-                                        color: SERVER_SIDE_ERROR_BORDER_COLOR, 
-                                        fontWeight: 'bold', 
-                                        margin: '0 0 1rem 0'
-                                    }}>
-                                        New password cannot be the same as the old password! Please key in a new password.
                                     </li>
                                 }
                             </ul>

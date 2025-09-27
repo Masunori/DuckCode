@@ -72,6 +72,16 @@ export default function LinearProgressBar({
                     style={{
                         display: "grid",
                         gridTemplateColumns: index < progressSteps.length - 1 ? "repeat(2, 1fr)" : "1fr",
+                        gridTemplateRows: "repeat(2, 1fr)",
+                        gridTemplateAreas: index < progressSteps.length - 1 
+                            ? `
+                                "step bar"
+                                "step _"
+                            `
+                            : `
+                                "step"
+                                "step"
+                            `
                     }}
                 >
                     <button
@@ -89,6 +99,9 @@ export default function LinearProgressBar({
                             cursor: step.isBackwardNavigable && index <= activeIndex
                                 ? "pointer" 
                                 : "not-allowed",
+                            gridArea: "step",
+                            display: "grid",
+                            gridTemplateRows: "repeat(2, 1fr)"
                         }}
                         disabled={step.status === "unreached" || (step.status === "completed" && !step.isBackwardNavigable)}
                     >
@@ -98,7 +111,7 @@ export default function LinearProgressBar({
                         <div>{step.label}</div>
                     </button>
                     {index < progressSteps.length - 1 && (
-                        <div className={styles.stepConnector}>
+                        <div className={styles.stepConnector} style={{ gridArea: "bar" }}>
                             <div 
                                 className={`${styles.completionBar} ${step.status === "completed" ? styles.completed : styles.unreached}`}
                             ></div>
