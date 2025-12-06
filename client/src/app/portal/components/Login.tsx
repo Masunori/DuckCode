@@ -5,10 +5,6 @@ import { PortalMode } from "@/app/portal/PortalMode";
 import styles from '../page.module.css';
 import { Dispatch, SetStateAction, useState } from "react";
 import { login } from "../../../lib/apiClient/user";
-// import { useUserStore } from"@/app/components/contexts/UserContext";
-// import { PRISTINE_USER_PREFERENCE, User } from "@/app/userPrefs/userPrefsUtils";
-// import { decodeUserPrefs } from "@/app/userPrefs/userPrefSerializer";
-// import { useRouter } from "next/navigation";
 
 type LoginProps = {
     portalMode: PortalMode;
@@ -28,9 +24,6 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
 
     const [loginError, setLoginError] = useState(LoginStatus.NONE);
     const ERROR_COLOR = '#FF5C00';
-
-    // const setUser = useUserStore(state => state.setUser);
-    // const router = useRouter();
 
     async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -72,7 +65,9 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
         setPassword(value);
     }
 
-    // const SERVER_URL = process.env.NEXT_PUBLIC_API_URL;
+    const signUpOAuthWith = (provider: string) => {
+        window.location.href = `${process.env.NEXT_PUBLIC_API_URL}auth/oauth/${provider}`;
+    }
     
     const children = 
         <div className={styles.popupBorder}>
@@ -147,8 +142,8 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
                     </div>
 
                     <section className={styles.alternativeOptions}>
-                        <button>Google</button>
-                        <button>GitHub</button>
+                        <button onClick={() => signUpOAuthWith("google")}>Google</button>
+                        <button onClick={() => signUpOAuthWith("github")}>GitHub</button>
                     </section>
                 </div>
             </div>

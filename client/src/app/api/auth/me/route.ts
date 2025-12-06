@@ -3,20 +3,20 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
     try {
         const tokens = request.headers.get('Cookie');
-
+        
         if (!tokens) {
             return NextResponse.json(
                 { ok: false, message: "Not authenticated" },
-                { status: 401, headers: { 'Cache-Control': 'no-store' } },
+                { status: 401 }
             );
         }
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/me`, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
-                "Cookie": tokens,
-            },
+                'Content-Type': 'application/json',
+                'Cookie': tokens,
+            }
         });
 
         if (!response.ok) {

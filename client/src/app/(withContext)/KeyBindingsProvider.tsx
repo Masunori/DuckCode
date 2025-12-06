@@ -28,8 +28,8 @@ export default function KeyBindingsProvider({ children, user }: KeyBindingProvid
     const setUser = useUserStore(state => state.setUser);
     useEffect(() => {
         setUser(user);
-    })
-    
+    }, [user, setUser]);
+
     return (
         <>
             {children}

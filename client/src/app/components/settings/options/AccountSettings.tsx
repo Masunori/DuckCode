@@ -51,6 +51,11 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
         // No temporary password stored, immediately change for user object upon typing - to update
     }
 
+    const handleLogout = async () => {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        window.location.href = "/portal";
+    }
+
     return (
         <div className={`${styles.settingsOptionDisplay} ${styles.accountSettingsDisplay}`}>
             {/* User Profile Section */}
@@ -63,7 +68,7 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
                         onMouseLeave={() => setIsHoveringProfilePic(false)}
                     >
                         <Image
-                            src={user.profilePicture || "/default-profile.png"}
+                            src={"/images/default_profile_pic.png"}
                             alt="Profile"
                             width={80}
                             height={80}
@@ -278,7 +283,6 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
                         Change Password
                     </button>
                 )}
-
 {/*}
                 <div className={styles.securityOptions}>
                     <CheckboxInput
@@ -291,6 +295,9 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
                     />
                 </div>
                                     */}
+            </div>
+            <div className={styles.settingsContentChunk}>
+                <button onClick={handleLogout}>Logout</button>
             </div>
         </div>
     );

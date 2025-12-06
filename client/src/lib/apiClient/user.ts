@@ -149,3 +149,17 @@ export async function updateSettings(userPreference: UserPreference) {
         data: null
     }
 }
+
+export async function getCookies() {
+    const response = await fetch("/api/cookies", {
+        method: "GET",
+        credentials: "include",
+    });
+
+    const data = await response.json();
+
+    return {
+        status: response.status,
+        data
+    };
+}

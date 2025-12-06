@@ -21,20 +21,22 @@ export async function POST(req: Request) {
         }
 
         const loginData = await response.json();
+        const accessToken = loginData.data.accessToken;
+        const refreshToken = loginData.data.refreshToken;
+        const res = NextResponse.json(
+            { ok: true }
+        );
 
-        console.log(loginData);
-
-        const res = NextResponse.json({ ok: true });
-
-        res.cookies.set('accessToken', loginData.data.accessToken, {
+        res.cookies.set('accessToken', accessToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'lax', // or 'None' if cross-site redirect needed
             path: '/',
             maxAge: 7 * 24 * 60 * 60, // 1 week
+            // maxAge: 60, // 1 minute
         });
 
-        res.cookies.set('refreshToken', loginData.data.refreshToken, {
+        res.cookies.set('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'lax', // or 'None' if cross-site redirect needed
