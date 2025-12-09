@@ -1,12 +1,14 @@
 #### Function 
-Resets a specified user's password.
+Sends an one-time password (OTP) to a specified user.
+
+**Note**: The OTP has a certain timeout, so it is expected that [`api/auth/verify-otp`](./POST_verify-otp.md) is called to use the OTP before it expires. 
 
 #### Method: 
 `POST`
 
 #### Source
 ```
-/api/auth/reset-password
+/api/auth/request-otp
 ```
 
 #### Body
@@ -19,8 +21,6 @@ Resets a specified user's password.
 | Field | Description | Type |
 | - | - | - |
 | email | The user's email | string |
-| newPassword | The user's new password | string |
-| newConfirmPassword | The user's retyped new password | string |
 
 #### Response
 ```ts
@@ -31,8 +31,8 @@ Resets a specified user's password.
 
 | Status | Description |
 | - | - |
-| 200 | Password reset is successful. |
-| 400 | Bad user input. This is due to failed client-side validation (email/newPassword do not conform to the specified format, newConfirmPassword does not match newPassword). |
+| 200 | An OTP has been sent to the user. |
+| 400 | Bad user input. This is due to failed client-side validation (email does not conform to the specified format). |
 | 500 | Internal Server Error |
 
 

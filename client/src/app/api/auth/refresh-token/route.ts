@@ -1,11 +1,12 @@
+import { printd } from "@/app/utils/debugUtils";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     try {
-        const tokens = request.headers.get('Cookie');
+        const tokens = request.headers.get('cookie')?.split('; ').filter(cookie => cookie.startsWith('refreshToken='))[0].split('=')[1];
 
         if (!tokens) {
-            console.log("No tokens found in cookies");
+            console.log("No refresh token found in cookies");
             return NextResponse.json(
                 { ok: false, message: "Not authenticated" },
                 { status: 401 }
@@ -16,7 +17,7 @@ export async function POST(request: Request) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Cookie": tokens,
+                "Cookie": JSON.stringify({ refreshToken: tokens }),
             },
         });
 
@@ -31,6 +32,7 @@ export async function POST(request: Request) {
         const refreshData = await response.json();
         const accessToken = refreshData.data.accessToken;
         const refreshToken = refreshData.data.refreshToken;
+
         const res = NextResponse.json(
             { ok: true, data: { accessToken, refreshToken } }
         );
@@ -40,8 +42,8 @@ export async function POST(request: Request) {
             secure: true,
             sameSite: 'lax', // or 'None' if cross-site redirect needed
             path: '/',
-            // maxAge: 7 * 24 * 60 * 60, // 1 week
-            maxAge: 60, // 1 minute
+            maxAge: 7 * 24 * 60 * 60, // 1 week
+            // maxAge: 60, // 1 minute
         });
 
         res.cookies.set('refreshToken', refreshToken, {

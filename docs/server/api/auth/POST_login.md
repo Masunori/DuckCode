@@ -35,7 +35,7 @@ Performs traditional login for the specified user.
 
 | Status | Description |
 | - | - |
-| 200, 302 | Login is successful. Returns the `accessToken` and `refreshToken`. Thr browser should perform a redirection. |
+| 200, 302 | Login is successful. Returns the `accessToken` and `refreshToken`. The browser should perform a redirection. |
 | 401 | Bad user input. This can mean no account associated with an email, or wrong password. For security reasons, the `message` field would not explicitly say which. |
 | 500 | Internal Server Error |
 

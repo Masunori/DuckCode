@@ -163,3 +163,21 @@ export async function getCookies() {
         data
     };
 }
+
+export async function refresh() {
+    try {
+        const response = await fetch(`/api/auth/refresh-token`, {
+            method: "POST",
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        
+
+        return response;
+    } catch (error) {
+        console.error('Error in refreshToken:', error);
+        throw error;
+    }
+}

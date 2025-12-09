@@ -9,36 +9,41 @@ import KeyBindingsProvider from "./KeyBindingsProvider";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { printd } from "../utils/debugUtils";
+import RefreshClient from "./RefreshClient";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
     const accessToken = (await cookies()).get("accessToken")?.value;
     const refreshToken = (await cookies()).get("refreshToken")?.value;
 
-    printd("@app/(withContext)/layout.tsx", "Fetching user profile...");
-    const response = await getProfile(accessToken, refreshToken);
-
-    if (response.status !== 200) {
-        printd("@app/(withContext)/layout.tsx", "Failed to fetch user profile");
-        redirect("/portal");
-        return;
+    if (!accessToken && !refreshToken) {
+        redirect("/dump");
     }
 
-    if (response.data === null) {
-        redirect("/portal");
-        return;
+    if (accessToken) {
+        printd("@app/(withContext)/layout.tsx", "Fetching user profile...");
+        const response = await getProfile();
+
+        if (response.status === 200 && response.data) {
+            const user = response.data;
+
+            return (
+                <KeyBindingsProvider user={user}>
+                    <PopupProvider>
+                        <Popup />
+                        <SettingsProvider>
+                            <Settings />
+                            {children}
+                        </SettingsProvider>
+                    </PopupProvider>
+                </KeyBindingsProvider>
+            );
+        }
     }
 
-    const user = response.data;
+    // The RefreshClient will handle token-refreshing so that cookies can be set on the client side
+    if (refreshToken) {
+        return <RefreshClient />
+    }
 
-    return (
-        <KeyBindingsProvider user={user}>
-            <PopupProvider>
-                <Popup />
-                <SettingsProvider>
-                    <Settings />
-                    {children}
-                </SettingsProvider>
-            </PopupProvider>
-        </KeyBindingsProvider>
-    );
+    redirect("/portal");
 }
