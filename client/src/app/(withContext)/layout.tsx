@@ -16,7 +16,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
     const refreshToken = (await cookies()).get("refreshToken")?.value;
 
     if (!accessToken && !refreshToken) {
-        redirect("/dump");
+        redirect("/portal");
     }
 
     if (accessToken) {
