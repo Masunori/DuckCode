@@ -1,0 +1,153 @@
+.gameplayPanels {
+    width: 100%;
+    height: 100%;
+    padding: 5.5rem 1rem 1rem;
+}
+
+.verticalGameplayPanelResizeHandler {
+    width: 3px;
+    margin: 0 2px;
+    transition-duration: 0.25s;
+}
+
+.verticalGameplayPanelResizeHandler:hover {
+    background-color: var(--significant-button-color);
+}
+
+/* Navigation bar */
+.navbar {
+    position: fixed;
+    z-index: var(--navbar-z-index);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 4.5rem;
+    background-color: var(--third-layer-background-color);
+    display: grid;
+    grid-template-columns: 4.5rem 2fr 1fr 4.5rem;
+    grid-template-areas: "settings _ prog-lang exit";
+    align-items: center;
+}
+
+.navbar img {
+    filter: brightness(0) saturate(100%) invert(1) sepia(1) hue-rotate(200deg) saturate(5) brightness(1.2);
+}
+
+.navbar button {
+    font-size: 1rem;
+}
+
+.toSettings {
+    background-color: var(--third-layer-background-color);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border: none;
+    padding: 0 1.5rem;
+    grid-area: settings;
+}
+
+.programmingLanguageDropdown {
+    grid-area: prog-lang;
+}
+
+.toHome {
+    background-color: var(--insignificant-button-color);
+    transition-duration: 0.25s;
+    border: none;
+    font-weight: 600;
+    grid-area: exit;
+}
+
+.toHome:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+
+.toSettings:hover img {
+    filter: brightness(0) saturate(100%) invert(0.8) sepia(1) saturate(0) brightness(0.8);
+}
+
+.navbar button {
+    height: 100%;
+}
+
+/* Code Editor */
+.codeEditor {
+    margin-bottom: 0px;
+    height: 100%;
+}
+
+/* Information Panel - Toggle between Question, Test Case and Output */
+.informationPanel {
+    display: grid;
+    grid-template-rows: 3rem 1fr;
+    height: 100%;
+    overflow: hidden;
+}
+
+.outputTab {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    height: 3rem;
+    border-bottom: 2px solid #888;
+}
+
+.outputText {
+    align-self: center;
+    padding-left: 1rem;
+    background-color: var(--insignificant-button-color);
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+.runCodeButton {
+    background-color: var(--significant-button-color);
+    border: none;
+    transition-duration: 0.25s;
+    padding: 0 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.runCodeButton:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+/* Output mode */
+.codeOutputContainer {
+    padding: 0.5rem;
+    background-color: var(--second-layer-background-color);
+}
+
+.codeOutput {
+    background-color: var(--terminal-like-background-color);
+    transition-duration: 0.5s;
+    padding: 0.5rem;
+    font-family: var(--code-fragment-font);
+    height: 100%;
+    overflow: auto;
+}
+
+.codeOutput::-webkit-scrollbar {
+    width: 3px;
+}
+
+.codeOutput::-webkit-scrollbar-thumb {
+    background-color: var(--second-layer-background-color);
+}
+
+.codeOutput code {
+    display: block;
+}
+
+.codeOutput::-webkit-scrollbar {
+    width: 3px;
+}
+
+.codeOutput::-webkit-scrollbar-thumb {
+    background-color: var(--second-layer-background-color);
+}

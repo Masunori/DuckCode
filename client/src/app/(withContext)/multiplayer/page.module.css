@@ -1,0 +1,606 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+}
+
+.gameplayPanels {
+    width: 100%;
+    height: 100%;
+    padding: 5.5rem 1rem 1rem;
+}
+
+.verticalGameplayPanelResizeHandler {
+    width: 3px;
+    margin: 0 2px;
+    transition-duration: 0.25s;
+}
+
+.horizontalGameplayPanelResizeHandler {
+    height: 3px;
+    margin: 2px 0;
+    transition-duration: 0.25s;
+}
+
+.verticalGameplayPanelResizeHandler:hover, .horizontalGameplayPanelResizeHandler:hover {
+    background-color: var(--significant-button-color);
+}
+
+/* Navigation bar */
+.navbar {
+    position: fixed;
+    z-index: var(--navbar-z-index);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 4.5rem;
+    background-color: var(--third-layer-background-color);
+    display: grid;
+    grid-template-columns: 15rem 1fr 10.5rem 4.5rem;
+    gap: 1rem;
+    align-items: center;
+}
+
+.navbar img {
+    filter: brightness(0) saturate(100%) invert(1) sepia(1) hue-rotate(200deg) saturate(5) brightness(1.2);
+}
+
+.navbar .matchInformation {
+    justify-self: center;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.navbar .matchInformation .teamAvatars, .navbar .matchInformation .opponentAvatars {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.navbar .matchInformation .avatar {
+    width: 3rem;
+    height: 3rem;
+    border: 0.2rem solid #888;
+}
+
+.navbar .matchProgress {
+    display: flex;
+    justify-content: space-around;
+}
+
+.navbar .programmingLanguage {
+    justify-self: right;
+    font-size: 1.2rem;
+}
+
+.navbarButtons {
+    display: flex;
+}
+
+.navbar button {
+    font-size: 1rem;
+    background-color: var(--third-layer-background-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+.navbar button p {
+    font-size: 0.85rem;
+}
+
+.navbar button:hover img {
+    filter: brightness(0) saturate(100%) invert(0.6) sepia(1) saturate(0) brightness(0.8);
+}
+
+.toHome {
+    background-color: var(--insignificant-button-color);
+    transition-duration: 0.25s;
+    border: none;
+    font-weight: 600;
+}
+
+.toHome:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+/* Question */
+.question {
+    background-color: var(--second-layer-background-color);
+    height: 100%;
+    overflow-y: auto;
+    padding: 1.5rem;
+    border-right: 1px solid var(--fourth-layer-background-color);
+}
+
+.question::-webkit-scrollbar {
+    width: 5px;
+}
+
+.question::-webkit-scrollbar-thumb {
+    background-color: #606060;
+    border-radius: 10px;
+}
+
+.question p, .question h1, .question h2, .question h3, .question h4 {
+    margin: 1rem 0;
+}
+
+.question li {
+    margin-left: 1rem;
+}
+
+.example {
+    background-color: var(--fourth-layer-background-color);
+    margin: 1px;
+    padding: 1px 15px;
+    margin: 10px 0;
+    display: grid;
+    grid-template-columns: 1fr 19fr;
+    grid-template-rows: 1fr 13fr 1fr;
+}
+
+.example .decoratorLine {
+    grid-column: 1;
+    grid-row: 2;
+    border: 2px solid #848484;
+    width: 0;
+    border-radius: 10px;
+}
+
+.example .exampleContent {
+    grid-column: 2;
+    grid-row: 1 / 3;
+}
+
+.example span {
+    font-family: var(--code-fragment-font);
+    background-color: var(--terminal-like-background-color);
+    padding: 3px;
+    font-weight: 400;
+    width: 100%;
+    display: block;
+}
+
+/* Code panel */
+.codePanel {
+    display: grid;
+    grid-template-rows: 5fr 2fr;
+}
+
+/* Code Editor */
+.codeEditor {
+    margin-bottom: 0px;
+    grid-row: 1;
+    height: 100%;
+    overflow: hidden;
+    position: inherit;
+
+    display: grid;
+    grid-template-rows: 2rem 1fr;
+}
+
+.codeEditorTabs {
+    display: flex;
+    justify-content: flex-start;
+    list-style-type: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.codeEditorTabs::-webkit-scrollbar {
+    height: 0.5rem;
+}
+
+.codeEditorTabs::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 1000px;
+    border: 1px solid var(--insignificant-button-color);
+}
+
+.codeEditorTabs li {
+    min-width: 10rem;
+    padding: 0.5rem;
+    background-color: var(--terminal-like-background-color);
+    transition-duration: 0.25s;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+}
+
+.codeEditorTabs li span {
+    width: 50%;
+    text-align: right;
+}
+
+.codeEditorTabs li.selected {
+    background-color: var(--second-layer-background-color);
+    border-top: 1px solid var(--significant-button-color);
+}
+
+.codeEditorTabs li:hover {
+    border-top: 1px solid var(--significant-button-color);
+}
+
+.editorOverlay {
+    height: 100%;
+}
+
+.editorOverlayReadonly {
+    height: 100%;
+    background-color: #000;
+    opacity: 0.65;
+}
+
+/* Test cases */
+.testCases {
+    height: 100%;
+    overflow: hidden;
+    grid-row: 2;
+    display: grid;
+    grid-template-rows: 3rem 1fr;
+}
+
+/* Code handler buttons */
+.codeHandlerButtons {
+    display: grid;
+    grid-row: 1;
+    grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid var(--fourth-layer-background-color);
+    height: 3rem;
+}
+
+.codeHandlerButtons button {
+    font-size: 1rem;
+}
+
+.togglePanelButton, .runAllTestCasesButton, .runCodeButton {
+    background-color: var(--insignificant-button-color);
+    border: none;
+    transition-duration: 0.25s;
+    padding: 0 10px;
+    font-weight: 600;
+}
+
+.togglePanelButton:hover, .runAllTestCasesButton:hover, .runCodeButton:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.submitCodeButton {
+    background-color: var(--significant-button-color);
+    border: none;
+    transition-duration: 0.25s;
+    padding: 0 10px;
+    font-weight: 600;
+}
+
+.submitCodeButton:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+/* Code results: Test Case Panel and Output */
+.codeResults {
+    grid-row: 2;
+    overflow: hidden;
+}
+
+/* Test case panel */
+.testCasePanel {
+    display: grid;
+    height: 100%;
+    grid-template-columns: 2fr 7fr;
+    grid-template-areas: "selector results";
+    transition-duration: 0.5s;
+}
+
+/* Test case selectors */
+
+.testCaseSelector {
+    grid-area: selector;
+    list-style-type: none;
+    height: calc(100%);
+    overflow: auto;
+    margin: 0;
+    padding: 0;
+}
+
+.testCaseSelector::-webkit-scrollbar {
+    width: 3px;
+}
+
+.testCaseSelector::-webkit-scrollbar-thumb {
+    background-color: var(--fourth-layer-background-color);
+}
+
+.testCaseSelector li {
+    padding: 10px;
+    transition-duration: 0.25s;
+    cursor: pointer;
+}
+
+/* Test case results */
+.testCaseResults {
+    background-color: var(--first-layer-background-color);
+    grid-area: results;
+    height: var(--test-case-panel-height);
+    overflow: auto;
+    padding: 0 10px;
+}
+
+.testCaseResults * {
+    transition-duration: 0.25s;
+}
+
+.testCaseResults::-webkit-scrollbar {
+    width: 3px;
+}
+
+.testCaseResults th {
+    font-weight: 400;
+    text-align: left;
+    width: 60px;
+    padding: 0px 7px 0px;
+}
+
+.testCaseResults table {
+    width: 100%;
+    padding: 5px 0;
+    border-spacing: 0 5px;
+    border-collapse: separate;
+}
+
+.testCaseResults p {
+    margin: 0;
+}
+
+.testCaseResults pre {
+    max-height: 5rem;
+    overflow: auto;
+}
+
+.testCaseResults pre::-webkit-scrollbar {
+    width: 2px;
+}
+
+.testCaseResults pre::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background-color: #606060;
+}
+
+.testCaseResults code {
+    display: block;
+    text-wrap: wrap;
+}
+
+.testCaseResults td {
+    padding: 2px 0 2px 5px;
+    background-color: var(--terminal-like-background-color);
+    border: 1px solid var(--second-layer-background-color);
+    border-radius: 3px;
+    height: 3rem;
+    box-sizing: border-box;
+    overflow: auto;
+    justify-self: stretch;
+}
+
+.testCaseResults td::-webkit-scrollbar {
+    width: 3px;
+}
+
+.testCaseResults td::-webkit-scrollbar-thumb {
+    background-color: var(--second-layer-background-color);
+}
+
+/* Output mode */
+.codeOutput {
+    background-color: var(--terminal-like-background-color);
+    transition-duration: 0.5s;
+    padding: 0.5rem;
+    font-family: var(--code-fragment-font);
+}
+
+.codeOutput code {
+    display: block;
+}
+
+.codeOutput::-webkit-scrollbar {
+    width: 3px;
+}
+
+.codeOutput::-webkit-scrollbar-thumb {
+    background-color: var(--second-layer-background-color);
+}
+
+/* Information panel buttons: Toggle between Question, Test Cases and Output */
+.informationPanel {
+    display: grid;
+    grid-template-rows: 3rem 1fr 3rem;
+    height: 100%;
+    overflow: hidden;
+}
+
+.informationPanelButtons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    height: 3rem;
+}
+
+.informationPanelButtons button.unselected {
+    background-color: var(--first-layer-background-color);
+    border: none;
+    transition-duration: 0.25s;
+    padding: 0 10px;
+    font-weight: 600;
+}
+
+.informationPanelButtons button.selected {
+    background-color: var(--second-layer-background-color);
+    border: none;
+    transition-duration: 0.25s;
+    padding: 0 10px;
+    font-weight: 600;
+}
+
+.informationPanelButtons button:hover {
+    background-color: var(--second-layer-background-color);
+}
+
+/* Chat box */
+.chatboxOverlay {
+    position: fixed;
+    z-index: var(--chatbox-overlay-z-index);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.chatbox {
+    position: fixed;
+    z-index: var(--chatbox-z-index);
+    bottom: 0;
+    right: left;
+    width: 30vw;
+    height: calc(100vh - 3.5rem);
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    display: grid;
+    grid-template-rows: 1fr auto 2.5rem;
+    gap: 1rem;
+}
+
+.chatboxCloseButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    cursor: pointer;
+    padding: 0 0.5rem;
+    border-radius: 1000px;
+}
+
+.scrollToBottomButton {
+    position: absolute;
+    bottom: 3rem;
+    right: 1rem;
+    font-size: 2rem;
+    background-color: transparent;
+    border: 1px solid #888;
+    background-color: black;
+    cursor: pointer;
+    padding: 0 0.5rem;
+    border-radius: 1000px;
+}
+
+.chatboxDialogueContainer {
+    margin: 1rem 0 1rem 1rem;
+    height: calc(100% - 2rem);
+    width: calc(100% - 1rem);
+
+    display: flex;
+    align-items: flex-end;
+    overflow-y: hidden;
+}
+
+.chatboxDialogue {
+    height: 100%;
+    width: calc(100% - 2rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    flex-shrink: 0;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.chatboxDialogue::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chatboxDialogue::-webkit-scrollbar-thumb {
+    background-color: var(--fourth-layer-background-color);
+}
+
+.chatboxMessage {
+    padding: 0.5rem;
+    flex-shrink: 0;
+    width: calc(100% - 2rem);
+}
+
+.chatboxInput {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 4rem;
+}
+
+.chatboxInput label {
+    width: 100%;
+    height: 100%;
+}
+
+.chatboxInput input {
+    width: 100%;
+    height: 100%;
+    padding-left: 0.5rem;
+    border: 1px solid var(--fourth-layer-background-color);
+    background-color: var(--terminal-like-background-color);
+    font-size: 1rem;
+    font-family: 'PF Din Text Pro', Helvetica, sans-serif;
+}
+
+.chatboxInput input:focus {
+    outline: none;
+}
+
+.chatboxInput button {
+    height: 100%;
+    background-color: var(--significant-button-color);
+    border: none;
+    transition-duration: 0.25s;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.chatboxInput button:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+/* Strategy board */
+.strategyBoardOverlay {
+    width: 100vw;
+    height: calc(100vh - 4.5rem);
+    position: fixed;
+    top: 4.5rem;
+    left: 0;
+    overflow: hidden;
+    z-index: var(--strategy-board-overlay-z-index);
+    pointer-events: none;
+}
+
+.strategyBoard {
+    border: 1px solid white;
+    background-color: #888;
+    position: absolute;
+    padding: 1rem;
+    pointer-events: auto;
+    box-sizing: border-box;
+}
+
+.excalidraw {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: var(--strategy-board-z-index);
+    pointer-events: fill;
+}

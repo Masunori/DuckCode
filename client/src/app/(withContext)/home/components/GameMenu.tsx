@@ -1,0 +1,54 @@
+"use client";
+
+import { MouseEventHandler, useState } from "react";
+import styles from "../page.module.css";
+import { useRouter } from "next/navigation";
+import ArcadeModeTab from "./gameMenu/ArcadeModeTab";
+import { GameMenuTab } from "../homeUtils";
+import { motion, AnimatePresence } from "motion/react";
+
+type StylizedGameMenuButtonProps = {
+    buttonName: string;
+    onClick: MouseEventHandler<HTMLButtonElement> | undefined;
+    buttonDescription: string;
+}
+
+function StylizedGameMenuButton({ buttonName, onClick, buttonDescription }: StylizedGameMenuButtonProps) {
+    return (
+        <div className={styles.stylizedGameMenuButton}>
+            <div className={styles.stylizedGameMenuButtonDescription}>
+                {buttonDescription}
+            </div>
+            <button onClick={onClick}>{buttonName}</button>
+            <div className={styles.stylizedGameMenuButtonOverlay}>
+                
+            </div>
+        </div>
+    )
+}
+
+export default function GameMenu() {
+    const router = useRouter();
+
+    const [tab, setTab] = useState<GameMenuTab>("");
+
+    return (
+        <div className={styles.gameMenu}>
+            <StylizedGameMenuButton buttonName="Multiplayer" onClick={() => router.push("/gameplay")} buttonDescription="Code with or against other players, either casually or competitive." />
+            <StylizedGameMenuButton buttonName="Arcade" onClick={() => setTab("Arcade")} buttonDescription="Code by yourself, at your own pace. Most Multiplayer game modes have an Arcade version." />
+            <StylizedGameMenuButton buttonName="Playground" onClick={() => router.push("/playground")} buttonDescription="DuckCode's sandbox code editor that you can fiddle with." />
+            <StylizedGameMenuButton buttonName="Tutorial" onClick={undefined} buttonDescription="Beginners or seasoned programmers, there is something for you here..." />
+            <StylizedGameMenuButton buttonName="Join/Host a Private Match" onClick={undefined} buttonDescription="Create custom games and play with friends." />
+            {/* <StylizedGameMenuButton buttonName="Inventory" onClick={undefined} buttonDescription="Every item you have earned is stored here!" />
+            <StylizedGameMenuButton buttonName="Clan" onClick={undefined} buttonDescription="Meet programmers with the same interest." /> */}
+
+            <AnimatePresence>
+                {tab === "Arcade" && (
+                    <motion.div>
+                        <ArcadeModeTab setTab={setTab} />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    )
+}
