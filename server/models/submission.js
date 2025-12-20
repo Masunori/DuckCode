@@ -26,6 +26,8 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
     },
     questionid: DataTypes.INTEGER,
+    languageid: DataTypes.INTEGER,
+    userid: DataTypes.INTEGER,
     codeText: DataTypes.TEXT,
     status: DataTypes.INTEGER
   }, {

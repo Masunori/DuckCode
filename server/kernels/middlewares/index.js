@@ -4,4 +4,4 @@ const middlewares = (middlewareArray) => {
     ]
 }
 
-module.exports = middlewares
+export default middlewares;

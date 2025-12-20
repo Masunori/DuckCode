@@ -1,0 +1,99 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "npm run db:migrate && npm run dev"
+
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      REDIS_URL: redis://redis:6379
+      JUDGE0_URL: http://judge0-server:2358/submissions
+      CHOKIDAR_USEPOLLING: "true"
+    depends_on:
+      - db
+      - redis
+      - judge0-server
+    volumes:
+      - .:/app/server
+      - server_node_modules:/app/server/node_modules
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      POSTGRES_DB: ${DATABASE_NAME:-DuckCode}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  judge0-server:
+    image: judge0/judge0:1.13.1
+    volumes:
+      - ./judge0.conf:/judge0.conf:ro
+    ports:
+      - "2358:2358"
+    privileged: true
+    restart: unless-stopped
+    depends_on:
+      - judge0-db
+      - judge0-redis
+
+  judge0-workers:
+    image: judge0/judge0:1.13.1
+    command: ["./scripts/workers"]
+    volumes:
+      - ./judge0.conf:/judge0.conf:ro
+    privileged: true
+    restart: unless-stopped
+    depends_on:
+      - judge0-db
+      - judge0-redis
+
+  judge0-db:
+    image: postgres:13.0
+    environment:
+      POSTGRES_PASSWORD: YourPassword123
+      POSTGRES_DB: judge0
+      POSTGRES_USER: judge0
+    volumes:
+      - judge0_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  judge0-redis:
+    image: redis:6.0
+    command:
+      [
+        "bash",
+        "-c",
+        'docker-entrypoint.sh --appendonly yes --requirepass "YourPassword123"'
+      ]
+    volumes:
+      - judge0_redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  redis_data:
+  server_node_modules:
+  judge0_db_data:
+  judge0_redis_data:

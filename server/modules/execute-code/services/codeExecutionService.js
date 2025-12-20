@@ -1,6 +1,7 @@
-import db from '../../database/models/index.js';    
+import db from '../../../models/index.js';
+const API_URL = process.env.JUDGE0_URL || 'http://judge0-server:2358/submissions';
+const decodeBase64 = (encoded) => encoded ? Uint8Array.from(atob(encoded), c => c.charCodeAt(0)) : null;
 
-const API_URL = 'http://localhost:2358/submissions';
 const codeExecutionService = {
     async executeCode(sourceCode, languageid) {
         const payload = {
@@ -34,25 +35,59 @@ const codeExecutionService = {
             };
         }
     },
-    async waitForResult(token) {
-        const API_URL = `http://localhost:2358/submissions/${token}?base64_encoded=false&fields=*`;
-        let result;
-        do {
-            const response = await fetch(API_URL);
+    async getSubmissionResult(token) {
+        const url = `${API_URL}/${token}?base64_encoded=true`; 
+        const HEADERS = {
+            'Content-Type': 'application/json',
+        };
+        const decoder = new TextDecoder('utf-8');
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: HEADERS,
+            });
+
             if (!response.ok) {
                 throw new Error(`Error fetching result: ${response.statusText}`);
             }
-            result = await response.json();
-            console.log('Current Result:', result);
-            if (result.status.id === 3 || result.status.id === 4) {
-                break; // Finished or Error
-            }
-            await new Promise(resolve => setTimeout(resolve, 500)); // Wait before next check
-        } while (true);
+
+            const result = await response.json();
+            const decodedResult = {
+                ...result,
+                message: decodeBase64(result.message) ? decoder.decode(decodeBase64(result.message)) : null,
+                compile_output: decodeBase64(result.compile_output) ? decoder.decode(decodeBase64(result.compile_output)) : null,
+                stdout: decodeBase64(result.stdout) ? decoder.decode(decodeBase64(result.stdout)) : null,
+                stderr: decodeBase64(result.stderr) ? decoder.decode(decodeBase64(result.stderr)) : null,
+            };
+
+            return decodedResult;
+        } catch (error) {
+            console.error('Error fetching submission result:', error.message);
+            throw error;
+        }
+    },
+    async waitForResult(token, timeout = 6000) {
+        const Status = {
+            PENDING: 'PENDING',
+            RUNNING: 'RUNNING',
+            COMPLETED: 'COMPLETED',
+        };
+        let result;
+        let status = Status.PENDING;
+        const start = Date.now();
+        while ((status === Status.PENDING || status === Status.RUNNING || status === 'Processing') && Date.now() - start < timeout) {
+            console.log('Waiting for submission result... Current status:', status);
+            await new Promise((resolve) => setTimeout(resolve, 6000)); 
+            result = await this.getSubmissionResult(token);
+            status = result.status.description;
+        }
+        if (status === Status.PENDING || status === Status.RUNNING || status === 'Processing') {
+            throw new Error('Timeout waiting for submission result');
+        }
         return result;
     },
     async executeCodeWithInput(sourceCode, stdin, expectedOutput, languageid) {
-        const API_URL = 'http://localhost:2358/submissions';
+        // const API_URL = 'http://localhost:2358/submissions';
         const payload = {
             source_code: sourceCode,
             stdin: stdin,
@@ -89,7 +124,7 @@ const codeExecutionService = {
                 {
                     model: db.Testcase,
                     as: 'testcases',
-                    where: { is_public: true }
+                    where: { ispublic: true }
                 }
             ]
         });
@@ -123,7 +158,17 @@ const codeExecutionService = {
         console.log('Filtered test case results:', filteredResults);
         return filteredResults;
     },
-    async submitCode(sourceCode, languageid, questionid) {
+    async submitCode(sourceCode, languageid, questionid, userid) {
+        console.log('Submitting code for question ID:', questionid, 'by user ID:', userid);
+        const user = await db.User.findByPk(userid, {
+            where: {
+                isAuthenticated: true,
+            }
+        });
+        console.log('User details:', user);
+        if (!user) {
+            throw new Error('User not found');
+        }
         const question = await db.Question.findByPk(questionid, {
             include: [
                 {
@@ -172,6 +217,16 @@ const codeExecutionService = {
         }
         console.log('Submission status: ', customId);
         console.log('Submission results:', results);
+        // Save submission to database
+        await db.Submission.create({
+            questionid: questionid,
+            languageid: languageid,
+            userid: userid,
+            codeText: sourceCode,
+            status: customId,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        });
         return { correct: correctCount, total: testCases.length, statusId: customId };
     }
 };

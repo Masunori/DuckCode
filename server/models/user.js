@@ -31,7 +31,8 @@ export default (sequelize, DataTypes) => {
     isAuthenticated: DataTypes.BOOLEAN,
     bio: DataTypes.TEXT,
     isTwoFactored: DataTypes.BOOLEAN,
-    profilePicture: DataTypes.STRING
+    profilePicture: DataTypes.STRING,
+    userPreferences: DataTypes.STRING, // Added userPreferences field
   }, {
     sequelize,
     modelName: 'User',

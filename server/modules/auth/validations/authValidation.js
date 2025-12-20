@@ -14,6 +14,13 @@ const authValidation = {
     verifyOTP: [
         new BodyWithLocale("inputOTP").notEmpty().isLength({ min: 6, max: 6 }).get(),
         new BodyWithLocale("email").notEmpty().isEmail().get()
+    ],
+    resetPassword: [
+        new BodyWithLocale("email").notEmpty().isEmail().get(),
+        new BodyWithLocale("newPassword").notEmpty().isLength({ min: 5 }).get()
+    ],
+    requestOTP: [
+        new BodyWithLocale("email").notEmpty().isEmail().get()
     ]
 };
 export default authValidation;
