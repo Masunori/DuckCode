@@ -1,9 +1,9 @@
+import { printd } from "@/app/utils/debugUtils";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
     try {
-        const body = await req.json();
-        
+        const body = await req.json();        
         const response = await fetch (process.env.NEXT_PUBLIC_API_URL + "auth/login", {
             method: "POST",
             headers: {
@@ -14,6 +14,9 @@ export async function POST(req: Request) {
 
         if (!response.ok) {
             const err = await response.json().catch(() => ({}));
+
+            printd("@app/api/auth/login/route.ts", "Login failed:", err);
+
             return NextResponse.json(
                 { ok: false, message: err.message || 'Login failed' },
                 { status: response.status }
@@ -32,7 +35,7 @@ export async function POST(req: Request) {
             secure: true,
             sameSite: 'lax', // or 'None' if cross-site redirect needed
             path: '/',
-            maxAge: 7 * 24 * 60 * 60, // 1 week
+            maxAge: 24 * 60 * 60, // 1 day
             // maxAge: 60, // 1 minute
         });
 

@@ -167,13 +167,9 @@ export function translateCombo(combo: { ctrl: boolean, shift: boolean, key: stri
 }
 
 // Programming language
-export type PLKeys = 'C' | 'C++' | 'C#' | "Elixir"
-    | 'Go' | 'Java' | 'JavaScript' | 'Kotlin'
-    | 'PHP' | 'Python' | 'Ruby' | 'Rust'
-    | 'Scala' | 'Swift' | 'TypeScript';
+export type PLKeys = 'C' | 'C++' | 'Java' | 'JavaScript' | 'Python';
 
 export type ProgrammingLanguage = {
-    id: number;
     aliases: string[];
     runtime: string;
     version: string;
@@ -182,149 +178,60 @@ export type ProgrammingLanguage = {
 };
 
 export const PROGRAMMING_LANGUAGES: Record<PLKeys, ProgrammingLanguage> = {
-    'C': {
-        id: 50,
-        aliases: ['gcc'], 
-        runtime: 'gcc', 
-        version: '9.2.0', 
-        monaco_editor_alias: 'cpp',
-        code_snippet: '// C code\n'
-    },
-    'C++': {
-        id: 54,
-        aliases: ['cpp', 'g++'], 
-        runtime: 'gcc', 
-        version: '9.2.0', 
-        monaco_editor_alias: 'cpp',
-        code_snippet: '// C++ code\n'
-    },
-    'C#': {
-        id: 51,
-        aliases: ['mono',
-                    'mono-csharp',
-                    'mono-c#',
-                    'mono-cs',
-                    'c#',
-                    'cs'],
-        runtime: 'mono',
-        version: '6.6.0.161',
-        monaco_editor_alias: 'csharp',
-        code_snippet: '// C# code\n'
-    },
-    'Elixir': {
-        id: 57,
-        aliases: ['elixir', 'exs'], 
-        runtime: '',
-        version: '1.9.4', 
-        monaco_editor_alias: 'elixir',
-        code_snippet: '# Elixir code\n'
-    },
-    'Go': {
-        id: 60,
-        aliases: ['go', 'golang'], 
-        runtime: '',
-        version: '1.13.5', 
-        monaco_editor_alias: 'go',
-        code_snippet: '// Go code\n'
-    },
-    'Java': {
-        id: 62,
-        aliases: [], 
-        runtime: '',
-        version: '13.0.1', 
-        monaco_editor_alias: 'java',
-        code_snippet: '// Java code\n'
-    },
-    'JavaScript': {
-        id: 63,
-        aliases: ['node-javascript', 'node-js', 'javascript', 'js'],
-        runtime: 'node',
-        version: '12.14.0',
-        monaco_editor_alias: 'javascript',
-        code_snippet: '// JavaScript code\n'
-    },
-    'Kotlin': {
-        id: 78,
-        aliases: ['kt'], 
-        runtime: '',
-        version: '1.3.70', 
-        monaco_editor_alias: 'kotlin',
-        code_snippet: '// Kotlin code\n'
-    },
-    'PHP': {
-        id: 68,
-        aliases: [], 
-        version: '7.4.1', 
-        runtime: '',
-        monaco_editor_alias: 'php',
-        code_snippet: '// PHP code\n'
-    },
-    'Python': {
-        id: 71,
-        aliases: ['py', 'py3', 'python3', 'python3.10'],
-        runtime: '',
-        version: '3.8.1',
-        monaco_editor_alias: 'python',
-        code_snippet: '# Python code\n'
-    },
-    'Ruby': {
-        id: 72,
-        aliases: ['ruby3', 'rb'], 
-        runtime: '',
-        version: '2.7.0', 
-        monaco_editor_alias: 'ruby',
-        code_snippet: '# Ruby code\n'
-    },
-    'Rust': {
-        id: 73,
-        aliases: ['rs'], 
-        runtime: '',
-        version: '1.40.0', 
-        monaco_editor_alias: 'rust',
-        code_snippet: '// Rust code\n'
-    },
-    'Scala': {
-        id: 81,
-        aliases: ['sc'], 
-        runtime: '',
-        version: '2.13.2', 
-        monaco_editor_alias: 'scala',
-        code_snippet: '// Scala code\n'
-    },
-    'Swift': {
-        id: 83,
-        aliases: ['swift'], 
-        runtime: '',
-        version: '5.2.3', 
-        monaco_editor_alias: 'swift',
-        code_snippet: '// Swift code\n'
-    },
-    'TypeScript': {
-        id: 74,
-        aliases: ['ts', 'node-ts', 'tsc', 'typescript5', 'ts5'],
-        runtime: '',
-        version: '3.7.4', 
-        monaco_editor_alias: 'typescript',
-        code_snippet: '// TypeScript code\n'
-    },
-}
+    C: {
+        aliases: ["gcc"],
+        runtime: "gcc",
+        version: "10.2.0",
+        monaco_editor_alias: "c",
+        code_snippet: `#include <stdio.h>
 
-export const ID_TO_PLKEY: Record<number, PLKeys> = {
-    50: 'C',
-    51: 'C#',
-    54: 'C++',
-    57: 'Elixir',
-    60: 'Go',
-    62: 'Java',
-    63: 'JavaScript',
-    68: 'PHP',
-    71: 'Python',
-    72: 'Ruby',
-    73: 'Rust',
-    74: 'TypeScript',
-    78: 'Kotlin',
-    81: 'Scala',
-    83: 'Swift'
+    int main() {
+        printf("Hello, World!");
+        return 0;
+    }`
+    },
+
+    "C++": {
+        aliases: ["cpp", "g++"],
+        runtime: "gcc",
+        version: "10.2.0",
+        monaco_editor_alias: "cpp",
+        code_snippet: `#include <iostream>
+    using namespace std;
+
+    int main() {
+        cout << "Hello, World!";
+        return 0;
+    }`
+    },
+
+    Java: {
+        aliases: [],
+        runtime: "jvm",
+        version: "15.0.2",
+        monaco_editor_alias: "java",
+        code_snippet: `public class Main {
+        public static void main(String[] args) {
+            System.out.println("Hello, World!");
+        }
+    }`
+    },
+
+    JavaScript: {
+        aliases: ["node-javascript", "node-js", "javascript", "js"],
+        runtime: "node",
+        version: "20.11.1",
+        monaco_editor_alias: "javascript",
+        code_snippet: `console.log("Hello, World!");`
+    },
+
+    Python: {
+        aliases: ["py", "py3", "python3", "python3.12"],
+        runtime: "python",
+        version: "3.12.0",
+        monaco_editor_alias: "python",
+        code_snippet: `print("Hello, World!")`
+    }
 };
 
 export const CODE_EDITOR_LIVE_PREVIEW_TEXT = 

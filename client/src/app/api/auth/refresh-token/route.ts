@@ -1,4 +1,3 @@
-import { printd } from "@/app/utils/debugUtils";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -42,8 +41,7 @@ export async function POST(request: Request) {
             secure: true,
             sameSite: 'lax', // or 'None' if cross-site redirect needed
             path: '/',
-            maxAge: 7 * 24 * 60 * 60, // 1 week
-            // maxAge: 60, // 1 minute
+            maxAge: 24 * 60 * 60, // 1 day
         });
 
         res.cookies.set('refreshToken', refreshToken, {

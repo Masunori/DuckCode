@@ -1,5 +1,3 @@
-// "use client";
-
 import { SettingsProvider } from "../components/contexts/SettingsContext";
 import Settings from "../components/settings/Settings";
 import { PopupProvider } from "../components/contexts/PopupContext";
@@ -10,6 +8,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { printd } from "../utils/debugUtils";
 import RefreshClient from "./RefreshClient";
+import { PRISTINE_USER } from "../userPrefs/userPrefsUtils";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
     const accessToken = (await cookies()).get("accessToken")?.value;
@@ -46,4 +45,16 @@ export default async function Layout({ children }: { children: React.ReactNode }
     }
 
     redirect("/portal");
+
+    // return (
+    //     <KeyBindingsProvider user={PRISTINE_USER}>
+    //         <PopupProvider>
+    //             <Popup />
+    //             <SettingsProvider>
+    //                 <Settings />
+    //                 {children}
+    //             </SettingsProvider>
+    //         </PopupProvider>
+    //     </KeyBindingsProvider>
+    // );
 }

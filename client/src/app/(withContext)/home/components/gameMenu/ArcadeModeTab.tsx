@@ -7,6 +7,8 @@ import { useUserStore } from "@/app/components/contexts/UserContext";
 import { motion } from 'motion/react';
 import DoubleThumbRangeInput from "@/app/components/inputs/DoubleThumbRangeInput";
 import { useRouter } from "next/navigation";
+import { getQuestionsInRange as getQnAPI } from "@/lib/apiClient/gameplay";
+import { printd } from "@/app/utils/debugUtils";
 
 type ArcadeModeTabProps = {
     setTab: Dispatch<SetStateAction<GameMenuTab>>;
@@ -19,6 +21,25 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
     // Handle closing the tab when clicking outside of it.
     const overlayRef = useRef<HTMLDivElement>(null);
     const arcadeModeTabRef = useRef<HTMLDivElement>(null);
+
+    async function getQuestionsInRange(minDifficulty: number, maxDifficulty: number): Promise<number> {
+        const qid = await getQnAPI(minDifficulty, maxDifficulty).
+        then(response => {
+            console.log(response);
+
+            switch (response.status) {
+                case 200:
+                    const qidArray: number[] = response.data.data.qid;
+                    printd("@app/(withContext)/home/components/gameMenu/ArcadeModeTab.tsx", `Received QIDs:`, qidArray);
+                    return qidArray.length === 0 ? 1 : qidArray[0];
+                default:
+                    console.error(`Unexpected response status: ${response.status}`);
+                    return 1;
+            }
+        });
+
+        return qid;
+    }
 
     
     useEffect(() => {
@@ -39,6 +60,7 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
     });
 
     const [mode, setMode] = useState<string>("classic");
+    const [difficultyRange, setDifficultyRange] = useState<[number, number]>([Math.min(Math.max(user.rankPoint, 0), 5000), Math.min(Math.max(user.rankPoint, 0), 5000)]);
 
     return (
         <>
@@ -77,7 +99,7 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                                     min={0}
                                     max={5000}
                                     step={25}
-                                    onChange={(lower, upper) => { console.log(lower + " " + upper) }}
+                                    onChange={(lower, upper) => { setDifficultyRange([lower, upper]); }}
                                 />
                             </div>
                         </div>
@@ -111,9 +133,10 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                         </div>
                         <div className={styles.arcadeModeActions}>
                             <button
-                                onClick={() => {
+                                onClick={async () => {
                                     if (mode === "classic") {
-                                        router.push("/gameplay");
+                                        const qid = await getQuestionsInRange(difficultyRange[0], difficultyRange[1]);
+                                        router.push("/arcade?qid=" + qid);
                                     }
                                 }}
                             >Confirm</button>

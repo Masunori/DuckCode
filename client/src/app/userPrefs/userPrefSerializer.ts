@@ -1,4 +1,4 @@
-import { ID_TO_PLKEY, PROGRAMMING_LANGUAGES } from "../components/settings/settingsUtils";
+import { PLKeys, PROGRAMMING_LANGUAGES } from "../components/settings/settingsUtils";
 import { UserPreference } from "./userPrefsUtils";
 
 const VERSION = "1.0.0";
@@ -109,7 +109,7 @@ export function encodeUserPrefs(userPref: UserPreference): string {
     return [
         VERSION,
         userPref.fontSize,
-        PROGRAMMING_LANGUAGES[userPref.language],
+        userPref.language,
         userPref.significantButtonColor,
         userPref.significantButtonHoverColor,
         gameplayLayoutsToEncoded[userPref.gameplayLayout],
@@ -142,7 +142,7 @@ export function decodeUserPrefs(encodedPrefs: string): UserPreference {
 
     return {
         fontSize: parseInt(parts[1], 10),
-        language: ID_TO_PLKEY[parseInt(parts[2], 10)],
+        language: parts[2] as PLKeys,
         significantButtonColor: parts[3],
         significantButtonHoverColor: parts[4],
         gameplayLayout: encodedToGameplayLayouts[parseInt(parts[5], 10)],
