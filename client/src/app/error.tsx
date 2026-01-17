@@ -7,9 +7,17 @@ type ErrorProps = {
 
 export default function GlobalError({ error, reset }: ErrorProps) { 
     return (
-        <div>
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "1rem",
+            height: "100vh",
+            textAlign: "center",
+        }}>
             <h1>Oops, something went wrong.</h1>
-            <p>{error.message}</p>
+            <p><b>Error</b>: {error.message}</p>
             <button onClick={() => reset()}>Retry</button>
         </div>
     )

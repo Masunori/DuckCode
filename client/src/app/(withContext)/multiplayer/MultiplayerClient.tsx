@@ -1,23 +1,23 @@
 "use client";
 
-import { useUserStore } from "@/app/components/contexts/UserContext";
-import { Question } from "../gameplay/gameplayUtils";
-import { LAYOUTS } from "./layout/layoutUtils";
-import { useCodeEditorStore } from "./stores/codeEditorStores";
-import { PLKeys } from "@/app/components/settings/settingsUtils";
-import { ExecutionStatus, TestCaseResult } from "./multiplayerUtils";
+import { PLKeys } from "@/components/settings/settingsUtils";
+import { useUserStore } from "@/contexts/UserContext";
 import { useRef } from "react";
-import { useGameplayController } from "./hooks/useGameplayController";
-import { useCodeExecutionStore } from "./stores/codeExecutionStore";
-import StrategyBoard from "./components/StrategyBoard";
-import MultiplayerNavbar from "./components/MultiplayerNavbar";
+import { Question } from "@/lib/gameplay/utils";
 import Chatbox from "./components/Chatbox";
+import MultiplayerNavbar from "./components/MultiplayerNavbar";
+import StrategyBoard from "./components/StrategyBoard";
+import { useGameplayController } from "./hooks/useGameplayController";
+import { LAYOUTS } from "./layout/layoutUtils";
+import { ExecutionStatus, TestCaseResult } from "./multiplayerUtils";
+import { useCodeEditorStore } from "./stores/codeEditorStores";
+import { useCodeExecutionStore } from "./stores/codeExecutionStore";
 
 type MultiplayerClientProps = {
     initialServerData: {
         question: Question;
         initialTime: number;
-        activeTab: string;        
+        activeTab: string;
         codeByUser: {
             [userId: string]: string;
         };
@@ -40,7 +40,7 @@ export default function MultiplayerClient({ initialServerData }: MultiplayerClie
         useGameplayController.getState().setActiveTab(initialServerData.activeTab);
         useGameplayController.getState().setReadOnlyTabs(initialServerData.readOnlyTabs);
         useCodeEditorStore.getState().setProgrammingLanguage(initialServerData.programmingLanguage as PLKeys);
-        
+
         for (const [userId, code] of Object.entries(initialServerData.codeByUser)) {
             useCodeEditorStore.getState().setCodeForUser(userId, code);
         }
@@ -54,7 +54,7 @@ export default function MultiplayerClient({ initialServerData }: MultiplayerClie
             useCodeExecutionStore.getState().setOutput(userId, [{ type: "log", content: ">> Code results will be shown here..." }])
         }
     }
-    
+
     return (
         <>
             <MultiplayerNavbar initialTime={initialServerData.initialTime} />

@@ -1,13 +1,13 @@
 "use client";
 
+import { isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from "@/components/settings/settingsUtils";
+import { keyboardManager } from "@/lib/utils/keyboardManager";
 import { AnimatePresence, motion } from "motion/react";
-import styles from "../page.module.css";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useChatStore } from "../stores/chatStore";
-import { isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from "@/app/components/settings/settingsUtils";
-import { keyboardManager } from "@/app/utils/keyboardManager";
-import { useChatController } from "../hooks/useChatController";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/shallow";
+import { useChatController } from "../hooks/useChatController";
+import styles from "../page.module.css";
+import { useChatStore } from "../stores/chatStore";
 
 export default function Chatbox() {
     const [isChatboxOpen, setIsChatboxOpen, message, setMessage, sendMessage] = useChatController(
@@ -42,7 +42,7 @@ export default function Chatbox() {
         };
     }, [setIsChatboxOpen]);
 
-    const messages =  useChatStore(state => state.messages);
+    const messages = useChatStore(state => state.messages);
     const addMessage = useChatStore(state => state.addMessage);
 
     // delete this later
@@ -96,7 +96,7 @@ export default function Chatbox() {
         const handleScroll = () => {
             const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 20;
             if (!userScrollingRef.current) return;
-            
+
             setAutoScroll(atBottom);
             scrollPositionRef.current = atBottom ? null : el.scrollTop;
         };
@@ -154,7 +154,7 @@ export default function Chatbox() {
                     setIsChatboxOpen(true);
                     return true;
                 }
-                
+
                 return false;
             }
 
@@ -183,8 +183,8 @@ export default function Chatbox() {
     return (
         <AnimatePresence>
             {isChatboxOpen && (
-                <>  
-                    <motion.div 
+                <>
+                    <motion.div
                         className={styles.chatboxOverlay}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -199,14 +199,14 @@ export default function Chatbox() {
                         transition={{ duration: 0.25 }}
                         ref={chatboxRef}
                     >
-                        <button 
-                            className={styles.chatboxCloseButton} 
+                        <button
+                            className={styles.chatboxCloseButton}
                             onClick={() => setIsChatboxOpen(false)}
                         >×</button>
                         {!autoScroll && (
-                            <button 
+                            <button
                                 className={styles.scrollToBottomButton}
-                                onClick={() => { 
+                                onClick={() => {
                                     if (chatboxDialogueRef.current) {
                                         chatboxDialogueRef.current.scrollTo({
                                             top: chatboxDialogueRef.current.scrollHeight,
@@ -241,7 +241,7 @@ export default function Chatbox() {
                             <label htmlFor="chatbox-input">
                                 <input
                                     id="chatbox-input"
-                                    type="text" 
+                                    type="text"
                                     placeholder="Type something..."
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}

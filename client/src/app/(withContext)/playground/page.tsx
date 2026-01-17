@@ -1,32 +1,38 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, PROGRAMMING_LANGUAGES } from "@/app/components/settings/settingsUtils";
-import { useUserStore } from"@/app/components/contexts/UserContext";
-import * as monaco from 'monaco-editor';
-import { OutputEntry } from "@/lib/apiClient/runCodeStatuses";
-import { usePopup } from "@/app/components/contexts/PopupContext";
-import { Lock, LockUnavailableError } from "@/app/utils/lock";
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { usePopup } from "@/contexts/PopupContext";
 import { runCode } from "@/lib/apiClient/gameplay";
-import GameplayNavbar from "./components/GameplayNavbar";
+import { OutputEntry } from "@/lib/apiClient/runCodeStatuses";
+import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { LockV2 } from "@/lib/utils/lock";
+import * as monaco from 'monaco-editor';
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import { instantiateEditorOnMount } from "@/lib/gameplay/utils";
 import CodeEditor from "./components/CodeEditor";
-import styles from "./page.module.css";
+import GameplayNavbar from "./components/GameplayNavbar";
 import Output from "./components/Output";
-import { keyboardManager } from "@/app/utils/keyboardManager";
-import { instantiateEditorOnMount } from "../gameplay/gameplayUtils";
+import styles from "./page.module.css";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 
 export default function Page() {
     // for code editor
-    const user = useUserStore(state => state.user);
-    const [codeContent, setCodeContent] = useState<string | undefined>(PROGRAMMING_LANGUAGES[user.userPreference.language].code_snippet);
+    const userPreference = useUserPreferenceStore(state => state.userPreference);
+    const [codeContent, setCodeContent] = useState<string | undefined>(PROGRAMMING_LANGUAGES[userPreference.language].codeSnippet);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
-    const lock: Lock = useMemo(() => new Lock(), []);
     const [isClusterLocked, setIsClusterLocked] = useState(false);
 
+    const lock: LockV2 = useMemo(() => new LockV2(), []);
+
+    useEffect(() => {
+        const unsubscribe = lock.subscribe(setIsClusterLocked);
+        return unsubscribe;
+    }, [lock]);
+
     const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
-        instantiateEditorOnMount(editorRef, editor, monacoInstance, user);
+        instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
     }
 
     // this is used in the information panel
@@ -44,41 +50,32 @@ export default function Page() {
     // for code handling
     // executing code normally
     const runCodeOutputMode = useCallback(async () => {
-        if (typeof(codeContent) === undefined) {
+        if (typeof (codeContent) === undefined) {
             return;
         }
-        
-        try {
-            setIsClusterLocked(true);
-            const response = await lock.call(() => runCode(0, codeContent as string, 'JavaScript'));
 
-            if (response.status != 200 || !response.output) {
-                throw new Error(`An error occurred. Error code: ${response.status}. Message: ${response.message}`);
+        try {
+            const response = await lock.call(() => runCode(codeContent as string, userPreference.language));
+
+            if (!response) {
+                throw new Error("Please wait for the code to run before attempting running the code again.");
             }
 
             setCodeOutput(response.output);
-        } catch (err) {
-            if (err instanceof LockUnavailableError) {
-                openPopupWith(
-                    "Please wait for the code to run before attempting running the code again, running test cases, or submitting the code.",
-                    "Understood",
-                    null,
-                    () => {},
-                    () => {}
-                )
-            } else {
-                openPopupWith(
-                    (err as Error).message,
-                    "Understood",
-                    null,
-                    () => {},
-                    () => {}
-                )
+
+            if (response.status != 200 || !response.output) {
+                throw new Error(`An error occurred. Message: ${response.codeStatus}`);
             }
-        } finally {
-            setIsClusterLocked(false);
+        } catch (err) {
+            openPopupWith(
+                (err as Error).message,
+                "Understood",
+                null,
+                () => { },
+                () => { }
+            )
         }
-        
+
     }, [codeContent, lock, openPopupWith]);
 
     // this useEffect encapsulates all key bindings
@@ -129,8 +126,8 @@ export default function Page() {
                             className={styles.runCodeButton}
                             onClick={runCodeOutputMode}
                             disabled={isClusterLocked}
-                            style={{ 
-                                pointerEvents: isClusterLocked ? "none" : "auto" 
+                            style={{
+                                pointerEvents: isClusterLocked ? "none" : "auto"
                             }}
                         >Run Code</button>
                     </div>
@@ -138,7 +135,7 @@ export default function Page() {
                 </Panel>
                 <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
                 <Panel defaultSize={50} minSize={2}>
-                    <CodeEditor 
+                    <CodeEditor
                         onMount={handleEditorDidMount}
                         codeContent={codeContent}
                         setCodeContent={setCodeContent}

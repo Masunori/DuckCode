@@ -1,9 +1,9 @@
 "use client";
 
-import { User } from "@/app/userPrefs/userPrefsUtils";
-import styles from "../page.module.css";
+import { User } from "@/app/userPrefs/userPrefsTypes";
+import { useSettings } from "@/contexts/SettingsContext";
 import Image from "next/image";
-import { useSettings } from "@/app/components/contexts/SettingsContext";
+import styles from "../page.module.css";
 
 export default function HomeNavbar({ user }: { user: User }) {
     const { openSettings } = useSettings();
@@ -20,18 +20,18 @@ export default function HomeNavbar({ user }: { user: User }) {
                     height={user.userPreference.fontSize * 3} 
                 /> */}
                 <div className={styles.img}>
-                    
+
                 </div>
                 <div className={styles.usernameLevelExp}>
                     <p>{user.name}</p>
                     <div className={styles.expBarWithLevel}>
                         <span>{user.level}</span>
                         <div className={styles.expBarTotal}>
-                            <div 
+                            <div
                                 className={styles.expBarAcquired}
                                 style={{
-                                    width: `${user.exp + 75}%`
-                            }}>
+                                    width: `${user.exp / (10 * Math.pow(1.1, user.level - 1))}%`
+                                }}>
                                 <div className={styles.expBarRunner}></div>
                             </div>
                         </div>
@@ -45,9 +45,9 @@ export default function HomeNavbar({ user }: { user: User }) {
             <button className={styles.inventory}>Inventory</button>
             <button className={styles.clan}>Clan</button>
             <button className={styles.toSettings} onClick={openSettings}>
-                <Image 
-                    src={'/icons/settings.png'} 
-                    alt="settings" 
+                <Image
+                    src={'/icons/settings.png'}
+                    alt="settings"
                     width={20}
                     height={20}
                 />

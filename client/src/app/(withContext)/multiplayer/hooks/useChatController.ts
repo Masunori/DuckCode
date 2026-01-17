@@ -1,6 +1,6 @@
-import { useChatStore } from "../stores/chatStore";
-import { useUserStore } from "@/app/components/contexts/UserContext";
+import { useUserStore } from "@/contexts/UserContext";
 import { create } from "zustand";
+import { useChatStore } from "../stores/chatStore";
 
 type ChatControllerProps = {
     /** Whether the chatbox is open */
@@ -28,7 +28,7 @@ type ChatControllerProps = {
  */
 export const useChatController = create<ChatControllerProps>((set, get) => ({
     isChatboxOpen: false,
-    setIsChatboxOpen: (bool) => 
+    setIsChatboxOpen: (bool) =>
         set((state) => ({
             isChatboxOpen: typeof bool === "function"
                 ? bool(state.isChatboxOpen)

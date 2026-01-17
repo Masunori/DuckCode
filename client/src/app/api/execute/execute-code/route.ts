@@ -3,8 +3,17 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
     try {
         const tokens = request.headers.get('cookie');
-        const accessToken = tokens?.split('; ').filter(cookie => cookie.startsWith('accessToken='))[0].split('=')[1];
-        const refreshToken = tokens?.split('; ').filter(cookie => cookie.startsWith('refreshToken='))[0].split('=')[1];
+        const accessToken =
+            tokens
+                ?.split('; ')
+                .find(c => c.startsWith('accessToken='))
+                ?.split('=')[1] ?? null;
+
+        const refreshToken =
+            tokens
+                ?.split('; ')
+                .find(c => c.startsWith('refreshToken='))
+                ?.split('=')[1] ?? null;
 
         const cookieHeader = {
             'accessToken': accessToken,
@@ -25,7 +34,7 @@ export async function POST(request: Request) {
         if (!response.ok) {
             const err = await response.json().catch(() => ({}));
             return NextResponse.json(
-                { ok: false, message: err.message || 'Failed to execute code' },
+                { ok: false, message: err.message || 'Failed to run code' },
                 { status: response.status }
             );
         }

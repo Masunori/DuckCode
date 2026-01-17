@@ -1,10 +1,9 @@
-import { printd } from "@/app/utils/debugUtils";
 import { cookies } from "next/headers";
 
-export async function getQuestionById(qid: number) {
+export async function getQuestionById(qid: string) {
     const accessToken = (await cookies()).get('accessToken')?.value;
     const refreshToken = (await cookies()).get('refreshToken')?.value;
-    
+
     const cookieHeader = JSON.stringify({
         accessToken: accessToken,
         refreshToken: refreshToken,
@@ -19,7 +18,7 @@ export async function getQuestionById(qid: number) {
     });
 
     const data = await response.json();
-    
+
     return {
         status: response.status,
         data: data.data,

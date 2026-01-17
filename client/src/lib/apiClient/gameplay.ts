@@ -1,18 +1,7 @@
-import { CodeSubmissionResponse, Question, TestCaseResult } from '@/app/(withContext)/gameplay/gameplayUtils';
+import { TestCaseResult } from '@/lib/gameplay/utils';
+import { PLKeys } from '@/components/settings/settingsUtils';
 import { OutputEntry } from '@/lib/apiClient/runCodeStatuses';
-import { PLKeys, PROGRAMMING_LANGUAGES } from '@/app/components/settings/settingsUtils';
-import sleep from '@/app/utils/delay';
-import { printd } from '@/app/utils/debugUtils';
-
-const BASE = "https://min-nondetrimental-lillia.ngrok-free.app/";
-const getQuestionApi = (difficulty: number) => BASE + `api/gameplay/getQuestion?cur_point=${difficulty}`;
-const GET_QUESTION_BY_DIFFICULTY_API = BASE + "question/get_question_by_difficulty";
-const RUN_CODE_API = BASE + 'api/gameplay/runCode';
-const RUN_TEST_CASES_API = BASE + 'api/gameplay/runAllTestCases';
-
-function consume(item: unknown) {
-    return item;
-}
+import { printd } from '@/lib/utils/debugUtils';
 
 export async function getQuestionsInRange(minDifficulty: number, maxDifficulty: number) {
     const response = await fetch(`/api/question/get_questions_in_range?min_difficulty=${minDifficulty}&max_difficulty=${maxDifficulty}`, {
@@ -33,17 +22,8 @@ export async function getQuestionsInRange(minDifficulty: number, maxDifficulty: 
     };
 }
 
-export async function getQuestion(difficulty: number): Promise<Question> {
-    const response = await fetch(getQuestionApi(difficulty), {
-        cache: "no-store",
-    });
-    
-    await sleep(1000);
-    const data = await response.json();
-    return data.question;
-}
-
 export async function runCode(sourceCode: string, language: string): Promise<{ status: number, codeStatus: string, output: OutputEntry[] }> {
+    printd("@apiClient/gameplay.ts", "Running code with language:", language);
     const response = await fetch("/api/execute/execute-code", {
         method: 'POST',
         headers: {
@@ -58,12 +38,20 @@ export async function runCode(sourceCode: string, language: string): Promise<{ s
 
     const data = await response.json();
 
-    printd("@apiClient/gameplay.ts", "Run code response:", data);
+    printd("@apiClient/gameplay.ts", `Run code status ${response.status}, response:`, data);
 
-    return {
-        status: response.status,
-        codeStatus: data.data.status,
-        output: (data.data.output as string).split('\n').map((line) => ({ type: data.data.status === 'success' ? 'log' : 'error', content: line }) ),
+    if (response.status === 200) {
+        return {
+            status: response.status,
+            codeStatus: data.data.status,
+            output: (data.data.output as string).split('\n').map((line) => ({ type: data.data.status === 'success' ? 'log' : 'error', content: line })),
+        }
+    } else {
+        return {
+            status: response.status,
+            codeStatus: 'error',
+            output: [{ type: 'error', content: data.message || 'An error occurred while executing the code.' }],
+        }
     }
 }
 
@@ -84,11 +72,20 @@ export async function runAllTestCases(qid: number, sourceCode: string, language:
 
     printd("@apiClient/gameplay.ts", "Run all test cases response:", data);
 
+    if (!data.ok) {
+        return {
+            status: response.status,
+            results: [],
+            message: (data.message as string) || 'An error occurred while running test cases.'
+        }
+    }
+
     const results: TestCaseResult[] = data.data;
 
     return {
         status: response.status,
-        results: results
+        results: results,
+        message: 'Test cases run successfully.'
     }
 }
 

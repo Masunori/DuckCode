@@ -1,7 +1,5 @@
-import { PLKeys, PROGRAMMING_LANGUAGES } from "../components/settings/settingsUtils";
-import { UserPreference } from "./userPrefsUtils";
-
-const VERSION = "1.0.0";
+import { UserPreference, Version } from "./userPrefsTypes";
+import { LATEST_VERSION, USER_PREF_SCHEMA } from "./userPrefRegistry";
 
 const themesToEncoded: Record<string, number> = {
     "Visual Studio - Dark": 0,
@@ -84,7 +82,7 @@ const encodedToGameplayLayouts: string[] = [
  * @param version2 The version string to compare against.
  * @returns A negative number if version1 < version2, a positive number if version1 > version2, or 0 if they are equal.
  */
-function compareVersions(version1: string, version2: string): number {
+export function compareVersions(version1: string, version2: string): number {
     const v1Parts = version1.split('.').map(Number);
     const v2Parts = version2.split('.').map(Number);
 
@@ -99,61 +97,36 @@ function compareVersions(version1: string, version2: string): number {
 }
 
 /**
- * Encodes a userPreference object into a lightweight string representation.
- * Encoding will always default to the latest version.
+ * Encodes the user preference using the latest schema into a JSON string.
  * 
- * @param userPref userPreference object to encode
- * @returns The encoded string representation of the user preferences.
+ * @param pref The user preference to encode.
+ * @returns The JSON string representation of the encoded user preference.
  */
-export function encodeUserPrefs(userPref: UserPreference): string {
-    return [
-        VERSION,
-        userPref.fontSize,
-        userPref.language,
-        userPref.significantButtonColor,
-        userPref.significantButtonHoverColor,
-        gameplayLayoutsToEncoded[userPref.gameplayLayout],
-        themesToEncoded[userPref.editorOptions.theme],
-        userPref.editorOptions.enableMinimap ? 1 : 0,
-        lineNumbersToEncoded[userPref.editorOptions.lineNumbers],
-        renderWhiteSpaceToEncoded[userPref.editorOptions.renderWhiteSpace],
-        userPref.editorOptions.tabSize,
-        wordWrapToEncoded[userPref.editorOptions.wordWrap],
-        userPref.editorOptions.wordWrapColumn,
-    ].join(",");
+export function encodeUserPreference(pref: UserPreference): string {
+    const payload = Object.assign(
+        {},
+        ...USER_PREF_SCHEMA.map(s => s.encode(pref))
+    );
+
+    return JSON.stringify({ version: LATEST_VERSION, data: payload });
 }
 
 /**
- * Decodes a lightweight string representation of user preferences into a userPreference object.
- * @param encodedPrefs The encoded string representation of user preferences.
- * @returns The decoded userPreference object.
- * @throws Will throw an error if the encoded string is invalid or unsupported.
+ * Decodes the user preference from a JSON string.
+ * 
+ * @param raw 
+ * @returns 
  */
-export function decodeUserPrefs(encodedPrefs: string): UserPreference {
-    const parts = encodedPrefs.split(",");
-    if (parts.length < 12) {
-        throw new Error("Invalid user preference encoding.");
+export function decodeUserPreference(raw: string): UserPreference {
+    const parsed = JSON.parse(raw) as { version: Version; data: any; };
+    const result: Partial<UserPreference> = {};
+    
+    for (const schema of USER_PREF_SCHEMA) {
+        Object.assign(
+            result,
+            schema.decode(parsed.data)
+        );
     }
 
-    const version = parts[0];
-    if (compareVersions(version, VERSION) > 0) {
-        throw new Error("Unsupported user preference version.");
-    }
-
-    return {
-        fontSize: parseInt(parts[1], 10),
-        language: parts[2] as PLKeys,
-        significantButtonColor: parts[3],
-        significantButtonHoverColor: parts[4],
-        gameplayLayout: encodedToGameplayLayouts[parseInt(parts[5], 10)],
-        editorOptions: {
-            theme: encodedToThemes[parseInt(parts[6], 10)],
-            enableMinimap: parts[7] === "1",
-            lineNumbers: encodedToLineNumbers[parseInt(parts[8], 10)],
-            renderWhiteSpace: encodedToRenderWhiteSpace[parseInt(parts[9], 10)],
-            tabSize: parseInt(parts[10], 10),
-            wordWrap: encodedToWordWrap[parseInt(parts[11], 10)],
-            wordWrapColumn: parseInt(parts[12], 10),
-        }
-    };
+    return result as UserPreference;
 }

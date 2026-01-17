@@ -1,11 +1,11 @@
-import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
 import { PortalMode } from "@/app/portal/PortalMode";
-import PopupOverlay from "./PopupOverlay";
+import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/components/progressBar/LinearProgressBar";
+import { ResetPasswordStatuses } from "@/lib/apiClient/portalStatuses";
+import { getVerificationCode, verifyCode, verifyNewPassword } from "@/lib/apiClient/user";
+import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
 import styles from '../page.module.css';
 import { PASSWORD_CONDITIONS } from "./fieldConditions";
-import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/app/components/progressBar/LinearProgressBar";
-import { getVerificationCode, verifyCode, verifyNewPassword } from "@/lib/apiClient/user";
-import { ResetPasswordStatuses } from "@/lib/apiClient/portalStatuses";
+import PopupOverlay from "./PopupOverlay";
 
 type ResetPasswordProps = {
     portalMode: PortalMode;
@@ -42,7 +42,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
     const [passwordInputState, setPasswordInputState] = useState(FieldState.EMPTY);
     const [confirmPasswordInputState, setConfirmPasswordInputState] = useState(FieldState.EMPTY);
 
-    const [resetPasswordStatus, setResetPasswordStatus] = useState<ResetPasswordStatuses| null>(null);
+    const [resetPasswordStatus, setResetPasswordStatus] = useState<ResetPasswordStatuses | null>(null);
 
     // renders the progress of the reset password process
     const [resetPasswordProgressSteps, setResetPasswordProgressSteps] = useState<ProgressStep[]>([
@@ -100,7 +100,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const passwordConditionsRef: RefObject<HTMLLIElement[] | null[]> = useRef([]);
-    
+
 
     const handleOtpChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
@@ -138,7 +138,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
         Object.entries(PASSWORD_CONDITIONS).forEach((condition, index) => {
             const el = passwordConditionsRef.current[index];
             if (el === null) return;
-            
+
             const value = condition[1];
 
             if (newPassword === "") {
@@ -154,11 +154,11 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
             }
         });
 
-        setPasswordInputState(newPassword === '' 
-            ? FieldState.EMPTY 
+        setPasswordInputState(newPassword === ''
+            ? FieldState.EMPTY
             : isPasswordValid
-            ? FieldState.VALID 
-            : FieldState.INVALID);
+                ? FieldState.VALID
+                : FieldState.INVALID);
 
         // this is so that the confirm password also updates accordingly if password is changed
         if (newPassword === confirmPassword && confirmPassword !== '') {
@@ -167,16 +167,16 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
             setConfirmPasswordInputState(FieldState.INVALID);
         }
     }
-    
+
     function handleConfirmPasswordChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newCfmPassword = event.target.value;
         setConfirmPassword(newCfmPassword);
 
         setConfirmPasswordInputState(newCfmPassword === '' || newCfmPassword.length < password.length
-            ? FieldState.EMPTY 
+            ? FieldState.EMPTY
             : newCfmPassword === password
-            ? FieldState.VALID 
-            : FieldState.INVALID);
+                ? FieldState.VALID
+                : FieldState.INVALID);
     }
 
     function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -185,11 +185,11 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
 
         setEmail(newEmail);
 
-        setEmailInputState(newEmail === '' 
-            ? FieldState.EMPTY 
+        setEmailInputState(newEmail === ''
+            ? FieldState.EMPTY
             : emailRegex.test(newEmail)
-            ? FieldState.VALID 
-            : FieldState.INVALID);
+                ? FieldState.VALID
+                : FieldState.INVALID);
     }
 
     function closePopup() {
@@ -267,7 +267,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                         break;
                     default:
                         console.error(`Internal server error: ${response.status}`);
-                    }
+                }
             });
     }
 
@@ -402,52 +402,52 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
     })
 
     const children = (
-        <div 
-            className={styles.popupBorder} 
+        <div
+            className={styles.popupBorder}
             style={{ display: portalMode === PortalMode.ResetPassword ? 'block' : 'none' }}
         >
             <div className={`${styles.popup} ${styles.resetPasswordPopup}`}>
                 <button className={styles.closePopup} onClick={closePopup}>×</button>
                 <div className={styles.progressBarContainer}>
-                    <LinearProgressBar 
+                    <LinearProgressBar
                         progressSteps={resetPasswordProgressSteps}
                         onStepClick={handleStepClick}
                     />
                 </div>
                 <div>
-                    {resetPasswordProgressSteps[0].status === 'active' && 
+                    {resetPasswordProgressSteps[0].status === 'active' &&
                         <div className={styles.emailVerification}>
                             <h2>Aw, mistakes happen...</h2>
                             <p className={styles.resetPasswordWarning}>
-                                <span style={{ fontWeight: 600 }}>Reminder</span>: This process does not allow you to navigate to previous sections. 
+                                <span style={{ fontWeight: 600 }}>Reminder</span>: This process does not allow you to navigate to previous sections.
                                 To restart the reset password process, close this popup.
                             </p>
                             <p>1. Tell us your email</p>
                             <label htmlFor="signupEmail">
-                                <input 
+                                <input
                                     style={{
-                                        borderColor: borderColors[emailInputState], 
+                                        borderColor: borderColors[emailInputState],
                                         backgroundColor: backgroundColors[emailInputState]
-                                    }} 
-                                    id="signupEmail" 
-                                    type="email" 
-                                    name="email" 
+                                    }}
+                                    id="signupEmail"
+                                    type="email"
+                                    name="email"
                                     value={email}
                                     onChange={handleEmailChange}
                                 ></input>
                             </label>
-                            {resetPasswordStatus === ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS 
-                            && 
+                            {resetPasswordStatus === ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS
+                                &&
                                 <p style={{
-                                    color: SERVER_SIDE_ERROR_BORDER_COLOR, 
-                                    fontWeight: 'bold', 
+                                    color: SERVER_SIDE_ERROR_BORDER_COLOR,
+                                    fontWeight: 'bold',
                                     margin: '0 0 1rem 0'
                                 }}>
-                                    Someone is trying to bypass client-side validation... 
+                                    Someone is trying to bypass client-side validation...
                                     Please make sure that your email follows the conventional email format.
                                 </p>
                             }
-                            <button 
+                            <button
                                 onClick={getOTP}
                                 disabled={emailInputState !== FieldState.VALID}
                                 style={{
@@ -461,9 +461,9 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                         <div className={styles.otp}>
                             <p>2. Key in the verification code here</p>
                             <div className={styles.otpInputContainer}>
-                                <div 
+                                <div
                                     className={styles.otpInputOverlay}
-                                    onClick={() => otpInputRefs.current[otpPointer]?.focus() }
+                                    onClick={() => otpInputRefs.current[otpPointer]?.focus()}
                                 ></div>
                                 <div className={styles.otpInput}>
                                     {otp.map((value, index) => (
@@ -482,7 +482,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                                     ))}
                                 </div>
                             </div>
-                            <button 
+                            <button
                                 onClick={verifyOtp}
                                 disabled={otp.some(value => value === '')}
                                 style={{
@@ -492,31 +492,31 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                             >Verify</button>
                             <ul>
                                 {resetPasswordStatus === ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS
-                                && 
+                                    &&
                                     <li style={{
-                                        color: SERVER_SIDE_ERROR_BORDER_COLOR, 
-                                        fontWeight: 'bold', 
+                                        color: SERVER_SIDE_ERROR_BORDER_COLOR,
+                                        fontWeight: 'bold',
                                         margin: '0 0 1rem 0'
                                     }}>
-                                        Someone is trying to bypass client-side validation... 
+                                        Someone is trying to bypass client-side validation...
                                         Please fill in the verification code properly!
                                     </li>
                                 }
                                 {resetPasswordStatus === ResetPasswordStatuses.WRONG_VERIFICATION_CODE
-                                && 
+                                    &&
                                     <li style={{
-                                        color: SERVER_SIDE_ERROR_BORDER_COLOR, 
-                                        fontWeight: 'bold', 
+                                        color: SERVER_SIDE_ERROR_BORDER_COLOR,
+                                        fontWeight: 'bold',
                                         margin: '0 0 1rem 0'
                                     }}>
                                         Wrong verification code!
                                     </li>
                                 }
                                 {resetPasswordStatus === ResetPasswordStatuses.INTERNAL_SERVER_ERROR
-                                && 
+                                    &&
                                     <li style={{
-                                        color: SERVER_SIDE_ERROR_BORDER_COLOR, 
-                                        fontWeight: 'bold', 
+                                        color: SERVER_SIDE_ERROR_BORDER_COLOR,
+                                        fontWeight: 'bold',
                                         margin: '0 0 1rem 0'
                                     }}>
                                         Internal server error. Please try again later.
@@ -529,13 +529,13 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                         <div className={styles.resetPassword}>
                             <label htmlFor="resetPasswordNewPassword" className={styles.passwordLabel}>
                                 <p>3. Tell us your new password</p>
-                                <input 
-                                    id="resetPasswordNewPassword" 
+                                <input
+                                    id="resetPasswordNewPassword"
                                     style={{
-                                        borderColor: borderColors[passwordInputState], 
+                                        borderColor: borderColors[passwordInputState],
                                         backgroundColor: backgroundColors[passwordInputState]
-                                    }} 
-                                    type={isPasswordVisible ? "text" : "password"} 
+                                    }}
+                                    type={isPasswordVisible ? "text" : "password"}
                                     name="password"
                                     value={password}
                                     onChange={handlePasswordChange}
@@ -546,13 +546,13 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                             </label>
                             <label htmlFor="resetPasswordNewConfirmedPasswordpConfirmPassword" className={styles.passwordLabel}>
                                 <p>Confirm the new password</p>
-                                <input 
-                                    id="resetPasswordNewConfirmedPassword" 
+                                <input
+                                    id="resetPasswordNewConfirmedPassword"
                                     style={{
-                                        borderColor: borderColors[confirmPasswordInputState], 
+                                        borderColor: borderColors[confirmPasswordInputState],
                                         backgroundColor: backgroundColors[confirmPasswordInputState]
-                                    }} 
-                                    type={isPasswordVisible ? "text" : "password"} 
+                                    }}
+                                    type={isPasswordVisible ? "text" : "password"}
                                     name="confirmPassword"
                                     value={confirmPassword}
                                     onChange={handleConfirmPasswordChange}
@@ -563,18 +563,18 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                             </label>
                             <ul>
                                 {resetPasswordStatus === ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS
-                                &&
+                                    &&
                                     <li style={{
-                                        color: SERVER_SIDE_ERROR_BORDER_COLOR, 
-                                        fontWeight: 'bold', 
+                                        color: SERVER_SIDE_ERROR_BORDER_COLOR,
+                                        fontWeight: 'bold',
                                         margin: '0 0 1rem 0'
                                     }}>
                                         Someone is trying to bypass client-side validation... Request blocked!
                                     </li>
                                 }
                             </ul>
-                            <button 
-                                className={styles.resetPasswordButton} 
+                            <button
+                                className={styles.resetPasswordButton}
                                 onClick={setNewPassword}
                                 disabled={passwordInputState !== FieldState.VALID || confirmPasswordInputState !== FieldState.VALID}
                                 style={{

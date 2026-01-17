@@ -1,10 +1,10 @@
-import { getQuestionById } from "@/lib/apiServer/gameplay";
-import GameplayClient from "./ArcadeClient";
-import { Question } from "./arcadeUtils";
-import GameplayNavbar from "./components/GameplayNavbar";
+import ArcadeClient from "./ArcadeClient";
+import GameplayNavbar from "@/components/gameplay/components/GameplayNavbar";
 import styles from "./page.module.css";
+import { dummyQuestion, placeholderQuestion, Question } from "@/lib/gameplay/utils";
+import { printd } from "@/lib/utils/debugUtils";
+import { getQuestionById } from "@/lib/apiServer/gameplay";
 import { redirect } from "next/navigation";
-import { printd } from "@/app/utils/debugUtils";
 
 export default async function Page({
 	searchParams,
@@ -15,7 +15,7 @@ export default async function Page({
 
 	printd("@app/(withContext)/arcade/page.tsx", `Loading question with QID: ${qid}`);
 
-	const response = await getQuestionById(parseInt(qid));
+	const response = await getQuestionById(qid);
 
 	if (response.status === 200) {
 		const q = response.data as Question; 
@@ -23,14 +23,14 @@ export default async function Page({
 		printd("@app/(withContext)/arcade/page.tsx", `Fetched question data:`, response.data.title);
 
 		const initialServerData = {
-			question: q,
+			questions: [q],
 			initialTime: 900,
 		}
 
 		return (
 			<div className={styles.container}>
 				<GameplayNavbar initialTime={initialServerData.initialTime} />
-				<GameplayClient initialServerData={initialServerData} />
+				<ArcadeClient initialServerData={initialServerData} />
 			</div>
 		)
 	}
@@ -40,4 +40,11 @@ export default async function Page({
 	}
 
 	throw new Error("Failed to load question data. HTTP Status: " + response.status);
+
+	// return (
+	// 	<div className={styles.container}>
+	// 		<GameplayNavbar initialTime={900} />
+	// 		<ArcadeClient initialServerData={{ questions: [dummyQuestion, placeholderQuestion], initialTime: 900 }} />
+	// 	</div>
+	// )
 }

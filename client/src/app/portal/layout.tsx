@@ -1,4 +1,4 @@
-import StarryBackground from "../components/backgrounds/StarryBackground";
+import StarryBackground from "@/components/backgrounds/StarryBackground";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 

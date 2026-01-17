@@ -1,0 +1,175 @@
+"use client";
+
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from "@/components/settings/settingsUtils";
+import { usePopup } from "@/contexts/PopupContext";
+import { instantiateEditorOnMount, Question } from "@/lib/gameplay/utils";
+import { keyboardManager } from "@/lib/utils/keyboardManager";
+import * as monaco from 'monaco-editor';
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef } from "react";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import { useShallow } from "zustand/shallow";
+import CodeEditor from "../../components/CodeEditor";
+import TestCases from "./components/TestCases";
+import styles from "./page.module.css";
+import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import QuestionTab from "../../components/QuestionTab";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+
+export function InvertedLayout({ questions }: { questions: Question[] }) {
+    // for code editor
+    const userPreference = useUserPreferenceStore(state => state.userPreference);
+    const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+    const gameplayRef = useRef<HTMLDivElement | null>(null);
+
+    const setInformationMode = useBaseGameplayStore(state => state.setInformationMode);
+    const activeQuestionIndex = useBaseGameplayStore(state => state.activeQuestionIndex);
+    const setActiveQuestionIndex = useBaseGameplayStore(state => state.setActiveQuestionIndex);
+
+    const question = questions[activeQuestionIndex];
+
+    const { openPopupWith } = usePopup();
+
+    const [
+        runCode,
+        runTestCases,
+        submitCode
+        ] = useBaseGameplayStore(
+        useShallow(
+            state => [
+                state.runCode,
+                state.runTestCases,
+                state.submitCode
+            ]
+        )
+    );
+
+    const runCodeClientSide = useCallback(async () => {
+        const response = await runCode();
+
+        if (!response) {
+            return;
+        }
+
+        openPopupWith(
+            response.message,
+            "Understood",
+            null,
+            () => {},
+            () => {}
+        );
+    }, [runCode, openPopupWith]);
+
+    const submitCodeClientSide = useCallback(async () => {
+        const response = await submitCode();
+
+        if (!response) {
+            return;
+        }
+
+        openPopupWith(
+            response.message,
+            "Understood",
+            null,
+            () => {},
+            () => {}
+        );  
+    }, [submitCode, openPopupWith]);
+
+    const runTestCasesClientSide = useCallback(async () => {
+        const response = await runTestCases();
+
+        if (!response) {
+            return;
+        }
+
+        const passed = response.message === "All public test cases passed successfully.";
+
+        openPopupWith(
+            response.message,
+            passed ? "Submit Code" : "Understood",
+            passed ? "Go back to code" : null,
+            () => passed ? submitCodeClientSide() : {},
+            () => {}
+        );
+    }, [runTestCases, openPopupWith, submitCodeClientSide]);
+
+    
+
+    const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
+        instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
+    }
+
+    // this useEffect encapsulates all key bindings
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            const editor = editorRef.current;
+            const active = document.activeElement;
+            const isFocusOnEditor = editor && editor.getDomNode()?.contains(active);
+
+            if (isFocusOnEditor) {
+                if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["DEFOCUS_EDITOR"].combo)) {
+                    gameplayRef.current?.focus();
+                    return true;
+                }
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)) {
+                e.preventDefault();
+                runCodeClientSide();
+                return true;
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["RUN_TEST_CASES"].combo)) {
+                e.preventDefault();
+                runTestCasesClientSide();
+                return true;
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["SUBMIT_CODE"].combo)) {
+                e.preventDefault();
+                submitCodeClientSide();
+                return true;
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["FOCUS_EDITOR"].combo) && editor) {
+                e.preventDefault(); // stop "i" from inserting text somewhere random
+                editor.focus();
+                return true;
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TEST_CASE_MODE"].combo)) {
+                e.preventDefault();
+                setInformationMode(prev => prev === "output" ? "testCases" : "output");
+                return true;
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["PREVIOUS_QUESTION"].combo)) {
+                e.preventDefault();
+                setActiveQuestionIndex(i => Math.max(i - 1, 0));
+                return true;
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["NEXT_QUESTION"].combo)) {
+                e.preventDefault();
+                setActiveQuestionIndex(i => Math.min(i + 1, questions.length - 1));
+                return true;
+            }
+
+            return false;
+        }
+
+        keyboardManager.register("gameplay", "GAMEPLAY_KEY_PRIORITY", handleKeyDown);
+        return () => {
+            keyboardManager.unregister("gameplay");
+        }
+    }, [runCodeClientSide, runTestCasesClientSide, submitCodeClientSide, setInformationMode]);
+
+    return (
+        <div ref={gameplayRef} tabIndex={0}>
+            <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
+                <Panel defaultSize={60} minSize={2} className={styles.codePanel}>
+                    <CodeEditor
+                        onMount={handleEditorDidMount}
+                    />
+                    <TestCases
+                        testCases={question.publicTestCases}
+                        runCode={runCodeClientSide}
+                        runTestCases={runTestCasesClientSide}
+                        submitCode={submitCodeClientSide}
+                    />
+                </Panel>
+                <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
+                <Panel defaultSize={40} minSize={2}>
+                    <QuestionTab questions={questions} />
+                </Panel>
+            </PanelGroup>
+        </div>
+    );
+}

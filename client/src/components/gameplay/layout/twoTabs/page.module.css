@@ -1,0 +1,242 @@
+.gameplayPanels {
+    width: 100%;
+    height: 100%;
+    padding: 5.5rem 1rem 1rem;
+}
+
+.verticalGameplayPanelResizeHandler {
+    width: 3px;
+    margin: 0 2px;
+    transition-duration: 0.25s;
+}
+
+.horizontalGameplayPanelResizeHandler {
+    height: 3px;
+    margin: 2px 0;
+    transition-duration: 0.25s;
+}
+
+.verticalGameplayPanelResizeHandler:hover, .horizontalGameplayPanelResizeHandler:hover {
+    background-color: var(--significant-button-color);
+}
+
+/* Navigation bar */
+.navbar {
+    position: fixed;
+    z-index: var(--navbar-z-index);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 4.5rem;
+    background-color: var(--third-layer-background-color);
+    display: grid;
+    grid-template-columns: 4.5rem 2fr 1fr 4.5rem;
+    align-items: center;
+}
+
+.navbar img {
+    filter: brightness(0) saturate(100%) invert(1) sepia(1) hue-rotate(200deg) saturate(5) brightness(1.2);
+}
+
+.navbar button {
+    font-size: 1rem;
+}
+
+.toSettings {
+    background-color: var(--third-layer-background-color);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border: none;
+    padding: 0 1.5rem;
+}
+
+.toHome {
+    background-color: var(--insignificant-button-color);
+    transition-duration: 0.25s;
+    border: none;
+    font-weight: 600;
+}
+
+.toHome:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+
+.toSettings:hover img {
+    filter: brightness(0) saturate(100%) invert(0.8) sepia(1) saturate(0) brightness(0.8);
+}
+
+.navbar button {
+    height: 100%;
+}
+
+/* Code Editor */
+.codeEditor {
+    margin-bottom: 0px;
+    height: 100%;
+}
+
+/* Information Panel - Toggle between Question, Test Case and Output */
+.informationPanel {
+    display: grid;
+    grid-template-rows: 3rem 1fr 3rem;
+    height: 100%;
+    overflow: hidden;
+}
+
+.twoTabsCodeHandlerButtons {
+    border-top: 1px solid #888;
+}
+
+/* Test cases */
+.testCases {
+    height: 100%;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 3rem 1fr;
+}
+
+/* Test case panel */
+.testCasePanel {
+    display: grid;
+    height: 100%;
+    grid-template-columns: 2fr 7fr;
+    grid-template-areas: "selector results";
+    transition-duration: 0.5s;
+    padding-top: 1rem;
+    background-color: var(--second-layer-background-color);
+}
+
+/* Test case selectors */
+
+.testCaseSelector {
+    grid-area: selector;
+    list-style-type: none;
+    height: calc(100%);
+    overflow: auto;
+    margin: 0;
+    padding: 0;
+}
+
+.testCaseSelector::-webkit-scrollbar {
+    width: 3px;
+}
+
+.testCaseSelector::-webkit-scrollbar-thumb {
+    background-color: var(--fourth-layer-background-color);
+}
+
+.testCaseSelector li {
+    padding: 10px;
+    transition-duration: 0.25s;
+    cursor: pointer;
+}
+
+/* Test case results */
+.testCaseResults {
+    background-color: var(--first-layer-background-color);
+    grid-area: results;
+    height: var(--test-case-panel-height);
+    overflow: auto;
+    padding: 0 10px;
+}
+
+.testCaseResults * {
+    transition-duration: 0.25s;
+}
+
+.testCaseResults::-webkit-scrollbar {
+    width: 3px;
+}
+
+.testCaseResults th {
+    font-weight: 400;
+    text-align: left;
+    width: 60px;
+    padding: 0px 7px 0px;
+}
+
+.testCaseResults table {
+    width: 100%;
+    padding: 5px 0;
+    border-spacing: 0 5px;
+    border-collapse: separate;
+}
+
+.testCaseResults p {
+    margin: 0;
+}
+
+.testCaseResults pre {
+    max-height: 15rem;
+    overflow: auto;
+}
+
+.testCaseResults pre::-webkit-scrollbar {
+    width: 2px;
+}
+
+.testCaseResults pre::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background-color: #606060;
+}
+
+.testCaseResults code {
+    display: block;
+    text-wrap: wrap;
+}
+
+.testCaseResults td {
+    padding: 2px 0 2px 5px;
+    background-color: var(--terminal-like-background-color);
+    border: 1px solid var(--second-layer-background-color);
+    border-radius: 3px;
+    height: 3rem;
+    box-sizing: border-box;
+    overflow: auto;
+    justify-self: stretch;
+}
+
+.testCaseResults td::-webkit-scrollbar {
+    width: 3px;
+}
+
+.testCaseResults td::-webkit-scrollbar-thumb {
+    background-color: var(--second-layer-background-color);
+}
+
+/* Output mode */
+.codeOutputContainer {
+    padding: 0.5rem;
+    background-color: var(--second-layer-background-color);
+}
+
+.codeOutput {
+    background-color: var(--terminal-like-background-color);
+    transition-duration: 0.5s;
+    padding: 0.5rem;
+    font-family: var(--code-fragment-font);
+    height: 100%;
+    overflow: auto;
+}
+
+.codeOutput::-webkit-scrollbar {
+    width: 3px;
+}
+
+.codeOutput::-webkit-scrollbar-thumb {
+    background-color: var(--second-layer-background-color);
+}
+
+.codeOutput code {
+    display: block;
+}
+
+.codeOutput::-webkit-scrollbar {
+    width: 3px;
+}
+
+.codeOutput::-webkit-scrollbar-thumb {
+    background-color: var(--second-layer-background-color);
+}

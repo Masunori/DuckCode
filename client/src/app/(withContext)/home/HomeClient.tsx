@@ -1,11 +1,11 @@
 "use client";
 
-import { useUserStore } from "@/app/components/contexts/UserContext";
-import HomeNavbar from "./components/HomeNavbar";
-import EventMenu from "./components/EventMenu";
-import NewsCarousel from "./components/NewsCarousel";
-import GameMenu from "./components/GameMenu";
+import { useUserStore } from "@/contexts/UserContext";
 import ChatPanel from "./components/ChatPanel";
+import EventMenu from "./components/EventMenu";
+import GameMenu from "./components/GameMenu";
+import HomeNavbar from "./components/HomeNavbar";
+import NewsCarousel from "./components/NewsCarousel";
 import styles from "./page.module.css";
 
 export default function HomeClient() {

@@ -1,13 +1,13 @@
 "use client";
 
-import { CSSProperties, useRef } from "react";
-import styles from "../page.module.css";
+import { GAMEPLAY_KEY_BINDINGS, translateCombo } from "@/components/settings/settingsUtils";
 import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
-import { TestCase } from "../../../multiplayerUtils";
-import { useGameplayController } from "../../../hooks/useGameplayController";
-import { useCodeExecutionStore } from "../../../stores/codeExecutionStore";
+import { CSSProperties, useRef } from "react";
 import { useShallow } from "zustand/shallow";
-import { GAMEPLAY_KEY_BINDINGS, translateCombo } from "@/app/components/settings/settingsUtils";
+import { useGameplayController } from "../../../hooks/useGameplayController";
+import { TestCase } from "../../../multiplayerUtils";
+import { useCodeExecutionStore } from "../../../stores/codeExecutionStore";
+import styles from "../page.module.css";
 
 type TestCaseProps = {
     testCases: TestCase[];
@@ -27,8 +27,8 @@ export default function TestCases({ testCases, runCode, runTestCases, submitCode
         isClusterLocked,
     } = useGameplayController(
         useShallow((state) => ({
-            activeIndex: state.activeIndex,
-            setActiveIndex: state.setActiveIndex,
+            activeIndex: state.activeTestCaseIndex,
+            setActiveIndex: state.setActiveTestCaseIndex,
             informationMode: state.informationMode,
             setInformationMode: state.setInformationMode,
             activeTab: state.activeTab,
@@ -61,13 +61,13 @@ export default function TestCases({ testCases, runCode, runTestCases, submitCode
         backgroundColor: !testCaseResults[activeIndex]
             ? "var(--terminal-like-background-color)"
             : RUN_CODE_RESPONSES[testCaseResults[activeIndex].statusId] === RunCodeStatuses.ACCEPTED
-            ? CODE_SUCCEED_BG_COLOR
-            : CODE_FAIL_BG_COLOR,
+                ? CODE_SUCCEED_BG_COLOR
+                : CODE_FAIL_BG_COLOR,
         borderColor: !testCaseResults[activeIndex]
             ? "var(--second-layer-background-color)"
             : RUN_CODE_RESPONSES[testCaseResults[activeIndex].statusId] === RunCodeStatuses.ACCEPTED
-            ? CODE_SUCCEED_BORDER_COLOR
-            : CODE_FAIL_BORDER_COLOR,
+                ? CODE_SUCCEED_BORDER_COLOR
+                : CODE_FAIL_BORDER_COLOR,
     }
 
     // handle test case selector hovering
@@ -75,36 +75,36 @@ export default function TestCases({ testCases, runCode, runTestCases, submitCode
         if (!testCaseSelectorsRef.current[index]) {
             return;
         }
-        
+
         testCaseSelectorsRef.current[index].style.backgroundColor = !testCaseResults[index]
             ? "var(--first-layer-background-color)"
             : RUN_CODE_RESPONSES[testCaseResults[index].statusId] === RunCodeStatuses.ACCEPTED
-            ? CODE_SUCCEED_BG_COLOR_HOVER
-            : CODE_FAIL_BG_COLOR_HOVER
+                ? CODE_SUCCEED_BG_COLOR_HOVER
+                : CODE_FAIL_BG_COLOR_HOVER
     }
 
     function handleOnMouseLeave(index: number) {
         if (!testCaseSelectorsRef.current[index] || index === activeIndex) {
             return;
         }
-        
+
         testCaseSelectorsRef.current[index].style.backgroundColor = !testCaseResults[index]
             ? "var(--second-layer-background-color)"
             : RUN_CODE_RESPONSES[testCaseResults[index].statusId] === RunCodeStatuses.ACCEPTED
-            ? CODE_SUCCEED_BG_COLOR
-            : CODE_FAIL_BG_COLOR
+                ? CODE_SUCCEED_BG_COLOR
+                : CODE_FAIL_BG_COLOR
     }
 
     return (
         <div className={styles.testCases}>
             <div className={styles.codeHandlerButtons}>
-                <button 
+                <button
                     className={styles.togglePanelButton}
                     onClick={() => setInformationMode(informationMode === "output" ? "testCases" : "output")}
                 >
                     <p>{informationMode === "output" ? "Switch to Test Cases Mode" : "Switch to Output Mode"} [{translateCombo(GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TEST_CASE_MODE"].combo)}]</p>
                 </button>
-                <button 
+                <button
                     className={styles.runAllTestCasesButton}
                     onClick={informationMode === "output" ? runCode : runTestCases}
                     disabled={isClusterLocked || readOnlyTabs.includes(activeTab)}
@@ -112,13 +112,13 @@ export default function TestCases({ testCases, runCode, runTestCases, submitCode
                         pointerEvents: isClusterLocked || readOnlyTabs.includes(activeTab) ? "none" : "auto",
                     }}
                 >
-                    {informationMode === "output" 
+                    {informationMode === "output"
                         ? <p>Run Code [{translateCombo(GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)}]</p>
                         : <p>Run All Test Cases [{translateCombo(GAMEPLAY_KEY_BINDINGS["RUN_TEST_CASES"].combo)}]</p>
-                    }  
+                    }
                 </button>
-                <button 
-                    className={styles.submitCodeButton} 
+                <button
+                    className={styles.submitCodeButton}
                     onClick={submitCode}
                     disabled={isClusterLocked || activeTab !== "Team"}
                     style={{
@@ -129,7 +129,7 @@ export default function TestCases({ testCases, runCode, runTestCases, submitCode
                 </button>
             </div>
             <div className={styles.codeResults}>
-                <div 
+                <div
                     className={styles.testCasePanel}
                     style={{
                         height: informationMode === "output" ? "0" : "100%",
@@ -138,7 +138,7 @@ export default function TestCases({ testCases, runCode, runTestCases, submitCode
                 >
                     <ul className={styles.testCaseSelector}>
                         {testCases.map((_, index) => (
-                            <li 
+                            <li
                                 key={index}
                                 ref={el => { testCaseSelectorsRef.current[index] = el; }}
                                 onClick={() => setActiveIndex(index)}
@@ -146,8 +146,8 @@ export default function TestCases({ testCases, runCode, runTestCases, submitCode
                                     backgroundColor: !testCaseResults[activeIndex]
                                         ? (index === activeIndex ? "var(--first-layer-background-color" : "var(--second-layer-background-color)")
                                         : RUN_CODE_RESPONSES[testCaseResults[index].statusId] === RunCodeStatuses.ACCEPTED
-                                        ? (index === activeIndex ? CODE_SUCCEED_BG_COLOR_HOVER : CODE_SUCCEED_BG_COLOR) 
-                                        : (index === activeIndex ? CODE_FAIL_BG_COLOR_HOVER : CODE_FAIL_BG_COLOR),
+                                            ? (index === activeIndex ? CODE_SUCCEED_BG_COLOR_HOVER : CODE_SUCCEED_BG_COLOR)
+                                            : (index === activeIndex ? CODE_FAIL_BG_COLOR_HOVER : CODE_FAIL_BG_COLOR),
 
                                     fontWeight: testCaseResults[activeIndex] && RUN_CODE_RESPONSES[testCaseResults[index].statusId] !== RunCodeStatuses.ACCEPTED
                                         ? 600
@@ -187,7 +187,7 @@ export default function TestCases({ testCases, runCode, runTestCases, submitCode
                                     <th scope="row">Actual</th>
                                     <td style={tdStyle}>
                                         <pre>
-                                            <code>{ testCaseResults[activeIndex]?.actualOutput ?? "Nothing yet"}</code>
+                                            <code>{testCaseResults[activeIndex]?.actualOutput ?? "Nothing yet"}</code>
                                         </pre>
                                     </td>
                                 </tr>
@@ -195,7 +195,7 @@ export default function TestCases({ testCases, runCode, runTestCases, submitCode
                                     <th scope="row">Message</th>
                                     <td style={tdStyle}>
                                         <pre>
-                                            <code>{ testCaseResults[activeIndex]?.message ?? "Loremipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}</code>
+                                            <code>{testCaseResults[activeIndex]?.message ?? "Loremipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}</code>
                                         </pre>
                                     </td>
                                 </tr>
@@ -203,7 +203,7 @@ export default function TestCases({ testCases, runCode, runTestCases, submitCode
                         </table>
                     </div>
                 </div>
-                <div 
+                <div
                     className={styles.codeOutput}
                     style={{
                         height: informationMode === "output" ? "100%" : "0",
@@ -215,8 +215,8 @@ export default function TestCases({ testCases, runCode, runTestCases, submitCode
                             color: line.type === "error"
                                 ? CODE_FAIL_BORDER_COLOR
                                 : line.type === "warn"
-                                ? CODE_WARNING_COLOR
-                                : "var(--font-colour)"
+                                    ? CODE_WARNING_COLOR
+                                    : "var(--font-colour)"
                         }}>
                             {line.content}
                         </code>

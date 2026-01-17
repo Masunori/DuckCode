@@ -1,14 +1,14 @@
 "use client";
 
-import CountdownTimer from "@/app/components/countdownTimer/CountdownTimer";
+import { GENERAL_KEY_BINDINGS, MULTIPLAYER_KEY_BINDINGS, translateCombo } from "@/components/settings/settingsUtils";
+import CountdownTimer from "@/components/countdownTimer/CountdownTimer";
+import { useSettings } from "@/contexts/SettingsContext";
+import { useUserStore } from "@/contexts/UserContext";
 import Image from "next/image";
-import styles from "../page.module.css";
-import { useSettings } from "@/app/components/contexts/SettingsContext";
-import { useUserStore } from"@/app/components/contexts/UserContext";
 import { useRouter } from "next/navigation";
-import { GENERAL_KEY_BINDINGS, MULTIPLAYER_KEY_BINDINGS, translateCombo } from "@/app/components/settings/settingsUtils";
-import { useChatController } from "../hooks/useChatController";
 import { useBoardController } from "../hooks/useBoardController";
+import { useChatController } from "../hooks/useChatController";
+import styles from "../page.module.css";
 
 type MultiplayerNavbarProps = {
     initialTime: number;
@@ -54,7 +54,7 @@ function MatchInformation({ initialTime, forceSubmitOnCountdownEnds }: Multiplay
     )
 }
 
-export default function MultiplayerNavbar({ initialTime, forceSubmitOnCountdownEnds = () => {} }: MultiplayerNavbarProps) {
+export default function MultiplayerNavbar({ initialTime, forceSubmitOnCountdownEnds = () => { } }: MultiplayerNavbarProps) {
     const { openSettings } = useSettings();
     const user = useUserStore(state => state.user);
     const setIsChatboxOpen = useChatController(state => state.setIsChatboxOpen);
@@ -66,9 +66,9 @@ export default function MultiplayerNavbar({ initialTime, forceSubmitOnCountdownE
         <nav className={styles.navbar}>
             <div className={styles.navbarButtons}>
                 <button onClick={openSettings} title="Open Settings">
-                    <Image 
-                        src={'/icons/settings.png'} 
-                        alt="settings" 
+                    <Image
+                        src={'/icons/settings.png'}
+                        alt="settings"
                         width={user.userPreference.fontSize * 1.5}
                         height={user.userPreference.fontSize * 1.5}
                     />
@@ -99,7 +99,7 @@ export default function MultiplayerNavbar({ initialTime, forceSubmitOnCountdownE
                     </p>
                 </button>
             </div>
-            <MatchInformation 
+            <MatchInformation
                 initialTime={initialTime}
                 forceSubmitOnCountdownEnds={forceSubmitOnCountdownEnds}
             />

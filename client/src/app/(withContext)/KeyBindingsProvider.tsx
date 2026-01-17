@@ -1,16 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { keyboardManager } from "../utils/keyboardManager";
-import { User } from "../userPrefs/userPrefsUtils";
-import { useUserStore } from "../components/contexts/UserContext";
+import { keyboardManager } from "../../lib/utils/keyboardManager";
 
 type KeyBindingProviderProps = {
     children: React.ReactNode;
-    user: User;
 }
 
-export default function KeyBindingsProvider({ children, user }: KeyBindingProviderProps) {
+export default function KeyBindingsProvider({ children }: KeyBindingProviderProps) {
     // binds keyboard manager to keydown events
     useEffect(() => {
         function handleKeyDown(event: KeyboardEvent) {
@@ -22,13 +19,7 @@ export default function KeyBindingsProvider({ children, user }: KeyBindingProvid
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         }
-    });
-
-    // hydrates user
-    const setUser = useUserStore(state => state.setUser);
-    useEffect(() => {
-        setUser(user);
-    }, [user, setUser]);
+    }, []);
 
     return (
         <>

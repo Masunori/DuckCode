@@ -1,15 +1,15 @@
 "use client";
 
-import styles from "../page.module.css";
+import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { PRESET_THEMES } from "@/components/themes/themes";
+import { useUserStore } from "@/contexts/UserContext";
 import { Editor } from '@monaco-editor/react';
 import type * as monaco from "monaco-editor";
-import { useUserStore } from"@/app/components/contexts/UserContext";
-import { PROGRAMMING_LANGUAGES } from "@/app/components/settings/settingsUtils";
 import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "../../../userPrefs/userPrefsUtils";
-import { PRESET_THEMES } from "@/app/components/themes/themes";
-import { useCodeEditorStore } from "../stores/codeEditorStores";
-import { EXECUTION_STATUS_INFORMATION } from "../multiplayerUtils";
 import { useGameplayController } from "../hooks/useGameplayController";
+import { EXECUTION_STATUS_INFORMATION } from "../multiplayerUtils";
+import styles from "../page.module.css";
+import { useCodeEditorStore } from "../stores/codeEditorStores";
 import { useCodeExecutionStore } from "../stores/codeExecutionStore";
 
 type CodeEditorProps = {
@@ -21,7 +21,7 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
 
     const codeByUser = useCodeEditorStore(state => state.codeByUser);
     const setCodeForUser = useCodeEditorStore(state => state.setCodeForUser);
-    
+
     const executionStatusByUser = useCodeExecutionStore(state => state.executionStatusByUser);
     const setExecutionStatus = useCodeExecutionStore(state => state.setExecutionStatus);
 
@@ -52,14 +52,14 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
         <div className={styles.codeEditor}>
             <ul className={styles.codeEditorTabs}>
                 {Object.keys(codeByUser).map((user, index) => (
-                    <li 
-                        key={index} 
+                    <li
+                        key={index}
                         onClick={() => { setActiveTab(user); }}
-                        className={ activeTab === user ? styles.selected : "" }
+                        className={activeTab === user ? styles.selected : ""}
                         style={{ color: EXECUTION_STATUS_INFORMATION[executionStatusByUser[user]].color }}
                     >
                         <div>{user}</div>
-                        <span 
+                        <span
                             title={EXECUTION_STATUS_INFORMATION[executionStatusByUser[user]].desc}
                         >
                             {EXECUTION_STATUS_INFORMATION[executionStatusByUser[user]].abbr}
@@ -70,7 +70,7 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
             <div className={readOnlyTabs.includes(activeTab) ? styles.editorOverlayReadonly : styles.editorOverlay}>
                 <Editor
                     theme={PRESET_THEMES[user.userPreference.editorOptions.theme].monacoEditorAlias}
-                    language={PROGRAMMING_LANGUAGES[user.userPreference.language].monaco_editor_alias}
+                    language={PROGRAMMING_LANGUAGES[user.userPreference.language].monacoEditorAlias}
                     defaultLanguage="javascript"
                     onMount={onMount}
                     onChange={handleEditorChange}

@@ -1,4 +1,4 @@
-import { printd } from "@/app/utils/debugUtils";
+import { printd } from "@/lib/utils/debugUtils";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {

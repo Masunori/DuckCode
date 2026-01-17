@@ -1,14 +1,21 @@
-import { printd } from "@/app/utils/debugUtils";
-import { p } from "motion/react-client";
+import { printd } from "@/lib/utils/debugUtils";
 import { NextResponse } from "next/server";
-import test from "node:test";
 
 export async function POST(request: Request) {
     try {
         const tokens = request.headers.get('cookie');
-        const accessToken = tokens?.split('; ').filter(cookie => cookie.startsWith('accessToken='))[0].split('=')[1];
-        const refreshToken = tokens?.split('; ').filter(cookie => cookie.startsWith('refreshToken='))[0].split('=')[1];
+        const accessToken =
+            tokens
+                ?.split('; ')
+                .find(c => c.startsWith('accessToken='))
+                ?.split('=')[1] ?? null;
 
+        const refreshToken =
+            tokens
+                ?.split('; ')
+                .find(c => c.startsWith('refreshToken='))
+                ?.split('=')[1] ?? null;
+                
         const cookieHeader = {
             'accessToken': accessToken,
             'refreshToken': refreshToken
@@ -28,7 +35,7 @@ export async function POST(request: Request) {
         if (!response.ok) {
             const err = await response.json().catch(() => ({}));
             return NextResponse.json(
-                { ok: false, message: err.message || 'Failed to execute code' },
+                { ok: false, message: err.message || 'Failed to run test cases' },
                 { status: response.status }
             );
         }
@@ -63,7 +70,7 @@ export async function POST(request: Request) {
         printd("@api/execute/run-all-test-cases/route.ts", "Error in POST:", err);
 
         return NextResponse.json(
-            { ok: false, message: `Internal server error: ${err}` }, 
+            { ok: false, message: `Internal server error: ${err}` },
             { status: 500 }
         );
     }

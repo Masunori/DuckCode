@@ -1,15 +1,15 @@
 "use client";
 
-import { Rnd } from "react-rnd";
-import styles from "../page.module.css";
-import dynamic from "next/dynamic";
+import { isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from "@/components/settings/settingsUtils";
+import { keyboardManager } from "@/lib/utils/keyboardManager";
 import "@excalidraw/excalidraw/index.css";
-import { useEffect, useState } from "react";
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types";
-import { isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from "@/app/components/settings/settingsUtils";
-import { keyboardManager } from "@/app/utils/keyboardManager";
-import { useBoardController } from "../hooks/useBoardController";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import { Rnd } from "react-rnd";
 import { useShallow } from "zustand/shallow";
+import { useBoardController } from "../hooks/useBoardController";
+import styles from "../page.module.css";
 
 const Excalidraw = dynamic(
     async () => (await import("@excalidraw/excalidraw")).Excalidraw,
@@ -60,7 +60,7 @@ export default function StrategyBoard() {
                     }}
                 >
                     <div className={styles.excalidraw}>
-                        <Excalidraw 
+                        <Excalidraw
                             excalidrawAPI={(api) => setExcalidrawApi(api)}
                             onPointerDown={() => setDragDisabled(true)}
                             onPointerUp={() => setDragDisabled(false)}

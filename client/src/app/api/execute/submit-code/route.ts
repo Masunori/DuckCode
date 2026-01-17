@@ -1,12 +1,21 @@
-import { printd } from "@/app/utils/debugUtils";
+import { printd } from "@/lib/utils/debugUtils";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     try {
         const tokens = request.headers.get('cookie');
-        const accessToken = tokens?.split('; ').filter(cookie => cookie.startsWith('accessToken='))[0].split('=')[1];
-        const refreshToken = tokens?.split('; ').filter(cookie => cookie.startsWith('refreshToken='))[0].split('=')[1];
+        const accessToken =
+            tokens
+                ?.split('; ')
+                .find(c => c.startsWith('accessToken='))
+                ?.split('=')[1] ?? null;
 
+        const refreshToken =
+            tokens
+                ?.split('; ')
+                .find(c => c.startsWith('refreshToken='))
+                ?.split('=')[1] ?? null;
+                
         const cookieHeader = {
             'accessToken': accessToken,
             'refreshToken': refreshToken
@@ -41,7 +50,7 @@ export async function POST(request: Request) {
         );
     } catch (err) {
         return NextResponse.json(
-            { ok: false, message: `Internal server error: ${err}` }, 
+            { ok: false, message: `Internal server error: ${err}` },
             { status: 500 }
         );
     }

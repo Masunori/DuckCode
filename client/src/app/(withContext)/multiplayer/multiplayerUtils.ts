@@ -1,12 +1,12 @@
 "use client";
 
-import { RefObject } from "react";
-import type * as monaco from 'monaco-editor';
-import { PRESET_THEMES } from "@/app/components/themes/themes";
 import { User } from "@/app/userPrefs/userPrefsUtils";
-import { Lock, LockUnavailableError } from "@/app/utils/lock";
+import { PRESET_THEMES } from "@/components/themes/themes";
 import { runAllTestCases, runCode, submitCode } from "@/lib/apiClient/gameplay";
 import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
+import { Lock, LockUnavailableError } from "@/lib/utils/lock";
+import type * as monaco from 'monaco-editor';
+import { RefObject } from "react";
 
 export type TestCase = {
     tid: number;
@@ -191,7 +191,7 @@ export type InformationMode = "question" | "testCases" | "output" | "-";
  */
 export function instantiateEditorOnMount(
     editorRef: RefObject<monaco.editor.IStandaloneCodeEditor | null>,
-    editor: monaco.editor.IStandaloneCodeEditor, 
+    editor: monaco.editor.IStandaloneCodeEditor,
     monacoInstance: typeof monaco,
     user: User
 ) {
@@ -255,7 +255,7 @@ export async function runCodeOutputModeClientSide(
     try {
         setIsClusterLocked(true);
         const response = await lock.call(() => runCode(0, codeContent, programmingLanguage));
-        
+
         if (setInformationMode) {
             setInformationMode("output");
         }
@@ -274,8 +274,8 @@ export async function runCodeOutputModeClientSide(
                 "Please wait for the code to run before attempting running the code again, running test cases, or submitting the code.",
                 "Understood",
                 null,
-                () => {},
-                () => {}
+                () => { },
+                () => { }
             );
         } else {
             if (setExecutionStatus && activeTab) {
@@ -285,8 +285,8 @@ export async function runCodeOutputModeClientSide(
                 (err as Error).message,
                 "Understood",
                 null,
-                () => {},
-                () => {}
+                () => { },
+                () => { }
             );
         }
     } finally {
@@ -315,7 +315,7 @@ export async function runTestCasesClientSide(
     programmingLanguage: string,
     question: Question,
     lock: Lock,
-    setIsClusterLocked:(bool: boolean) => void,
+    setIsClusterLocked: (bool: boolean) => void,
     setCodeOutput: (output: OutputEntry[]) => void,
     setTestCaseResults: (results: TestCaseResult[]) => void,
     setActiveIndex: (index: number) => void,
@@ -340,8 +340,8 @@ export async function runTestCasesClientSide(
                     `Test case ${i + 1} failed. Reason: ${response.results[i].message}`,
                     "Understood",
                     null,
-                    () => {},
-                    () => {}
+                    () => { },
+                    () => { }
                 );
 
                 if (setExecutionStatus && activeTab) {
@@ -352,11 +352,11 @@ export async function runTestCasesClientSide(
                 return;
             }
         }
-        
+
         if (setExecutionStatus && activeTab) {
             setExecutionStatus(activeTab, "testCasesPassed");
         }
-        
+
         openPopupWith(
             `All public test cases passed!`,
             "Submit Code",
@@ -371,15 +371,15 @@ export async function runTestCasesClientSide(
                 openPopupWith,
                 setInformationMode
             ),
-            () => {}
+            () => { }
         );
     } catch {
         openPopupWith(
             "Please wait for the code to run before attempting running the code, running test cases again, or submitting the code.",
             "Understood",
             null,
-            () => {},
-            () => {}
+            () => { },
+            () => { }
         )
     } finally {
         setIsClusterLocked(false);
@@ -404,7 +404,7 @@ export async function submitCodeClientSide(
     question: Question,
     lock: Lock,
     setIsClusterLocked: (bool: boolean) => void,
-    setCodeOutput:(output: OutputEntry[]) => void,
+    setCodeOutput: (output: OutputEntry[]) => void,
     openPopupWith: (popupMessage: string, confirmMessage: string, cancelMessage: string | null, confirm: () => void, cancelFn: () => void) => void,
     setInformationMode?: (mode: InformationMode) => void,
 ) {
@@ -426,16 +426,16 @@ export async function submitCodeClientSide(
                 "Please wait for the code to run before attempting running the code, running test cases, or submitting the code again.",
                 "Understood",
                 null,
-                () => {},
-                () => {}
+                () => { },
+                () => { }
             );
         } else {
             openPopupWith(
                 (err as Error).message,
                 "Understood",
                 null,
-                () => {},
-                () => {}
+                () => { },
+                () => { }
             );
         }
     } finally {

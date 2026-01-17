@@ -1,28 +1,28 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { instantiateEditorOnMount, Question, runCodeOutputModeClientSide, runTestCasesClientSide, submitCodeClientSide, TestCaseResult } from "../../multiplayerUtils";
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from "@/app/components/settings/settingsUtils";
-import { useUserStore } from "@/app/components/contexts/UserContext";
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from "@/components/settings/settingsUtils";
+import { usePopup } from "@/contexts/PopupContext";
+import { useUserStore } from "@/contexts/UserContext";
+import { OutputEntry } from "@/lib/apiClient/runCodeStatuses";
+import { keyboardManager } from "@/lib/utils/keyboardManager";
 import type * as monacoType from 'monaco-editor';
-import { usePopup } from "@/app/components/contexts/PopupContext";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import QuestionDisplay from "../../components/QuestionDisplay";
+import { useShallow } from "zustand/shallow";
 import CodeEditor from "../../components/CodeEditor";
+import QuestionDisplay from "../../components/QuestionDisplay";
+import { useGameplayController } from "../../hooks/useGameplayController";
+import { instantiateEditorOnMount, Question, runCodeOutputModeClientSide, runTestCasesClientSide, submitCodeClientSide, TestCaseResult } from "../../multiplayerUtils";
+import { useCodeEditorStore } from "../../stores/codeEditorStores";
+import { useCodeExecutionStore } from "../../stores/codeExecutionStore";
 import TestCases from "./components/TestCases";
 import styles from "./page.module.css";
-import { keyboardManager } from "@/app/utils/keyboardManager";
-import { useCodeEditorStore } from "../../stores/codeEditorStores";
-import { useGameplayController } from "../../hooks/useGameplayController";
-import { useShallow } from "zustand/shallow";
-import { useCodeExecutionStore } from "../../stores/codeExecutionStore";
-import { OutputEntry } from "@/lib/apiClient/runCodeStatuses";
 
 export function DefaultLayout({ question }: { question: Question }) {
     const [monaco, setMonaco] = useState<typeof import('monaco-editor') | null>(null);
     useEffect(() => {
         import('monaco-editor').then((monacoInstance) => {
-            setMonaco(monacoInstance); 
+            setMonaco(monacoInstance);
         });
     }, []);
 
@@ -34,8 +34,8 @@ export function DefaultLayout({ question }: { question: Question }) {
     const [
         setActiveIndex,
         activeTab,
-        setActiveTab, 
-        informationMode, 
+        setActiveTab,
+        informationMode,
         setInformationMode,
         lock,
         isClusterLocked,
@@ -43,7 +43,7 @@ export function DefaultLayout({ question }: { question: Question }) {
         readOnlyTabs
     ] = useGameplayController(
         useShallow((state) => [
-            state.setActiveIndex,
+            state.setActiveTestCaseIndex,
             state.activeTab,
             state.setActiveTab,
             state.informationMode,
@@ -68,13 +68,13 @@ export function DefaultLayout({ question }: { question: Question }) {
         ])
     );
 
-    const setTestCaseResults = useCallback((testCaseResults: TestCaseResult[]) => 
+    const setTestCaseResults = useCallback((testCaseResults: TestCaseResult[]) =>
         setTestCaseResultsForUser(activeTab, testCaseResults)
-    , [activeTab, setTestCaseResultsForUser]);
+        , [activeTab, setTestCaseResultsForUser]);
 
-    const setCodeOutput = useCallback((output: OutputEntry[]) => 
+    const setCodeOutput = useCallback((output: OutputEntry[]) =>
         setOutputForUser(activeTab, output)
-    , [activeTab, setOutputForUser]);
+        , [activeTab, setOutputForUser]);
 
     const codeByUser = useCodeEditorStore(state => state.codeByUser);
     const programmingLanguage = useCodeEditorStore(state => state.programmingLanguage);
@@ -93,7 +93,7 @@ export function DefaultLayout({ question }: { question: Question }) {
         if (isReadonlyTab) {
             return;
         }
-        
+
         setExecutionStatus(activeTab, "running");
 
         runCodeOutputModeClientSide(
@@ -106,7 +106,7 @@ export function DefaultLayout({ question }: { question: Question }) {
             setInformationMode,
             activeTab,
             setExecutionStatus
-        );        
+        );
     }, [isReadonlyTab, setExecutionStatus, activeTab, codeByUser, programmingLanguage, lock, setIsClusterLocked, setCodeOutput, openPopupWith, setInformationMode]);
 
     // submit code
@@ -178,7 +178,7 @@ export function DefaultLayout({ question }: { question: Question }) {
             model.setValue(codeForTab);
         }
     }, [activeTab, codeForTab, monaco]);
-    
+
     // this useEffect encapsulates all key bindings
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -265,7 +265,7 @@ export function DefaultLayout({ question }: { question: Question }) {
                 </Panel>
                 <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
                 <Panel defaultSize={60} minSize={2} className={styles.codePanel}>
-                    <CodeEditor 
+                    <CodeEditor
                         onMount={handleEditorDidMount}
                     />
                     <TestCases

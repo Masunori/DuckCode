@@ -1,14 +1,14 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import styles from "../../page.module.css";
-import { GAME_MODES, GameMenuTab } from "../../homeUtils";
-import { useUserStore } from "@/app/components/contexts/UserContext";
-import { motion } from 'motion/react';
-import DoubleThumbRangeInput from "@/app/components/inputs/DoubleThumbRangeInput";
-import { useRouter } from "next/navigation";
+import { useUserStore } from "@/contexts/UserContext";
 import { getQuestionsInRange as getQnAPI } from "@/lib/apiClient/gameplay";
-import { printd } from "@/app/utils/debugUtils";
+import { printd } from "@/lib/utils/debugUtils";
+import { motion } from 'motion/react';
+import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import DoubleThumbRangeInput from "@/components/inputs/DoubleThumbRangeInput";
+import { GAME_MODES, GameMenuTab } from "../../homeUtils";
+import styles from "../../page.module.css";
 
 type ArcadeModeTabProps = {
     setTab: Dispatch<SetStateAction<GameMenuTab>>;
@@ -22,29 +22,29 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
     const overlayRef = useRef<HTMLDivElement>(null);
     const arcadeModeTabRef = useRef<HTMLDivElement>(null);
 
-    async function getQuestionsInRange(minDifficulty: number, maxDifficulty: number): Promise<number> {
+    async function getQuestionsInRange(minDifficulty: number, maxDifficulty: number): Promise<number[]> {
         const qid = await getQnAPI(minDifficulty, maxDifficulty).
-        then(response => {
-            console.log(response);
+            then(response => {
+                console.log(response);
 
-            switch (response.status) {
-                case 200:
-                    const qidArray: number[] = response.data.data.qid;
-                    printd("@app/(withContext)/home/components/gameMenu/ArcadeModeTab.tsx", `Received QIDs:`, qidArray);
-                    return qidArray.length === 0 ? 1 : qidArray[0];
-                default:
-                    console.error(`Unexpected response status: ${response.status}`);
-                    return 1;
-            }
-        });
+                switch (response.status) {
+                    case 200:
+                        const qidArray: number[] = response.data.data.qid;
+                        printd("@app/(withContext)/home/components/gameMenu/ArcadeModeTab.tsx", `Received QIDs:`, qidArray);
+                        return qidArray.length === 0 ? [1] : qidArray;
+                    default:
+                        console.error(`Unexpected response status: ${response.status}`);
+                        return [1];
+                }
+            });
 
         return qid;
     }
 
-    
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (overlayRef.current 
+            if (overlayRef.current
                 && arcadeModeTabRef.current
                 && overlayRef.current.contains(event.target as Node)
                 && !arcadeModeTabRef.current.contains(event.target as Node)
@@ -64,8 +64,8 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
 
     return (
         <>
-            <motion.div 
-                className={styles.gameMenuTabOverlay} 
+            <motion.div
+                className={styles.gameMenuTabOverlay}
                 ref={overlayRef}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -94,12 +94,15 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                                 <DoubleThumbRangeInput
                                     inputId="difficulty-slider"
                                     inputName="Difficulty"
-                                    defaultMinThumbValue={Math.min(Math.max(user.rankPoint, 0), 5000)}
-                                    defaultMaxThumbValue={Math.min(Math.max(user.rankPoint, 0), 5000)}
+                                    defaultMinThumbValue={difficultyRange[0]}
+                                    defaultMaxThumbValue={difficultyRange[1]}
                                     min={0}
                                     max={5000}
                                     step={25}
-                                    onChange={(lower, upper) => { setDifficultyRange([lower, upper]); }}
+                                    onChange={(lower, upper) => { 
+                                        setDifficultyRange([lower, upper]); 
+                                        printd("@app/(withContext)/home/components/gameMenu/ArcadeModeTab.tsx", `Difficulty range changed to [${lower}, ${upper}]`);
+                                    }}
                                 />
                             </div>
                         </div>
@@ -136,7 +139,7 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                                 onClick={async () => {
                                     if (mode === "classic") {
                                         const qid = await getQuestionsInRange(difficultyRange[0], difficultyRange[1]);
-                                        router.push("/arcade?qid=" + qid);
+                                        router.push("/arcade?qid=" + qid[0]);
                                     }
                                 }}
                             >Confirm</button>

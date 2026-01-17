@@ -1,4 +1,4 @@
-import { printd } from "@/app/utils/debugUtils";
+import { printd } from "@/lib/utils/debugUtils";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -18,7 +18,7 @@ export async function GET(request: Request) {
         const maxDifficulty = searchParams.get('max_difficulty');
 
         const url = `${process.env.NEXT_PUBLIC_API_URL}question/get_questions_in_range?minDifficulty=${minDifficulty}&maxDifficulty=${maxDifficulty}`;
-        
+
         const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -44,7 +44,7 @@ export async function GET(request: Request) {
         );
     } catch (err) {
         return NextResponse.json(
-            { ok: false, message: `Internal server error: ${err}` }, 
+            { ok: false, message: `Internal server error: ${err}` },
             { status: 500 }
         );
     }

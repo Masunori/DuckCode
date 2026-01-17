@@ -1,6 +1,3 @@
-import { encodeUserPrefs } from "@/app/userPrefs/userPrefSerializer";
-import { UserPreference } from "@/app/userPrefs/userPrefsUtils";
-
 export async function login(email: string, password: string) {
     const response = await fetch("/api/auth/login", {
         method: 'POST',
@@ -128,26 +125,6 @@ export async function verifyNewPassword(
         status: response.status,
         data
     };
-}
-
-export async function updateSettings(userPreference: UserPreference) {
-    const encoded = encodeUserPrefs(userPreference);
-
-    const response = await fetch("user/updateSettings", {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-            userPreference: encoded,
-        })
-    });
-
-    return {
-        status: response.status,
-        data: null
-    }
 }
 
 export async function getCookies() {

@@ -1,12 +1,12 @@
-import { InformationMode } from "../multiplayerUtils";
-import { Lock } from "@/app/utils/lock";
+import { Lock } from "@/lib/utils/lock";
 import { create } from "zustand";
+import { InformationMode } from "../multiplayerUtils";
 
 type GameplayControllerProps = {
     /** The index of the test case currently rendered in the test case panel (active test case) */
-    activeIndex: number;
+    activeTestCaseIndex: number;
     /** Sets the index of the active test case */
-    setActiveIndex: (index: number) => void;
+    setActiveTestCaseIndex: (index: number) => void;
     /** The name of the user whose code editor tab (as well as whose test case results and code output) is being displayed (active tab) */
     activeTab: string;
     /** Sets the active tab */
@@ -43,16 +43,16 @@ type GameplayControllerProps = {
  * between, they will handle with corresponding key bindings and visual.
  */
 export const useGameplayController = create<GameplayControllerProps>((set) => ({
-    activeIndex: 0,
+    activeTestCaseIndex: 0,
     informationMode: "-",
     activeTab: "Team",
     lock: new Lock(),
     readOnlyTabs: [],
     isClusterLocked: false,
 
-    setActiveIndex: (index) => set(({ activeIndex: index, })),
-    setActiveTab: (tab) => set({ activeTab: tab, }),    
+    setActiveTestCaseIndex: (index) => set(({ activeTestCaseIndex: index, })),
+    setActiveTab: (tab) => set({ activeTab: tab, }),
     setReadOnlyTabs: (readOnlyTabs) => set({ readOnlyTabs: readOnlyTabs }),
-    setInformationMode: (mode) =>  set({ informationMode: mode, }),
+    setInformationMode: (mode) => set({ informationMode: mode, }),
     setIsClusterLocked: (bool) => set({ isClusterLocked: bool }),
 }))
