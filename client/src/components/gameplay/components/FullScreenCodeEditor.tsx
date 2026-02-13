@@ -1,33 +1,37 @@
 "use client";
 
+import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "@/app/userPrefs/userPrefsUtils";
 import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 import { PRESET_THEMES } from "@/components/themes/themes";
+import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 import { Editor } from '@monaco-editor/react';
 import * as monaco from "monaco-editor";
 import { useEffect, useRef } from "react";
-import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "../../../userPrefs/userPrefsUtils";
-import styles from "../page.module.css";
+import styles from "./fullscreenEditor.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 import { useDebouncedSave } from "@/hooks/useDebounce";
 
 type CodeEditorProps = {
     onMount: (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => void;
 }
 
-export default function CodeEditor({ onMount }: CodeEditorProps) {
-    const userPreference = useUserPreferenceStore(state => state.userPreference);
+export default function FullScreenCodeEditor({ onMount }: CodeEditorProps) {
 
+    const codeContent = useBaseGameplayStore(state => state.codeContent);
+    const setCodeContent = useBaseGameplayStore(state => state.setCodeContent);
+    const setCodeContentAtIndex = useBaseGameplayStore(state => state.setCodeContentAtIndex);
+    
+    const activeQuestionIndex = useBaseGameplayStore(state => state.activeQuestionIndex);
+    const code = useBaseGameplayStore(state => state.codeContent[activeQuestionIndex]);
+
+    const { debouncedSave } = useDebouncedSave((code: string) => setCodeContentAtIndex(activeQuestionIndex, code), 500);
+
+    const userPreference = useUserPreferenceStore(state => state.userPreference);
+    // this makes sure we only update code content when language actually changes, not on every render
     const languageRef = useRef(userPreference.language);
 
-    const codeContent = useBaseGameplayStore(state => state.codeContent[0]);
-    const setCodeContent = (code: string) => useBaseGameplayStore(state => state.setCodeContentAtIndex(0, code));
-
-    const { debouncedSave } = useDebouncedSave((code: string) => setCodeContent(code), 500);
-
-
     function handleEditorChange(value: string | undefined) {
-        if (value === undefined) {
+        if (!value) {
             return;
         }
 
@@ -40,8 +44,8 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
         }
 
         languageRef.current = userPreference.language;
-        setCodeContent(PROGRAMMING_LANGUAGES[userPreference.language].codeSnippet);
-    }, [userPreference.language, setCodeContent]);
+        setCodeContent(new Array(codeContent.length).fill(PROGRAMMING_LANGUAGES[userPreference.language].codeSnippet));
+    }, [userPreference.language, setCodeContent, codeContent.length]);
 
     const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
         detectIndentation: false,
@@ -63,7 +67,7 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
                 language={PROGRAMMING_LANGUAGES[userPreference.language].monacoEditorAlias}
                 defaultLanguage="javascript"
                 onMount={onMount}
-                defaultValue={codeContent}
+                defaultValue={code}
                 onChange={handleEditorChange}
                 height={"100%"}
                 options={editorOptions}

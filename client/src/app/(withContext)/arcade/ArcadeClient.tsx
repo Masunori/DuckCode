@@ -2,13 +2,11 @@
 
 import { LAYOUTS } from "@/components/gameplay/layout/layoutUtils";
 import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
-import { useUserStore } from "@/contexts/UserContext";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 import { Question, TestCaseResult } from "@/lib/gameplay/utils";
 import { printd } from "@/lib/utils/debugUtils";
 import { useEffect } from "react";
-import { useShallow } from "zustand/shallow";
 
 type GameplayClientProps = {
     initialServerData: {
@@ -22,26 +20,24 @@ export default function ArcadeClient({ initialServerData }: GameplayClientProps)
 
     const userPreference = useUserPreferenceStore(state => state.userPreference);
 
-    const [
-        setQuestions, setTestCaseResults, setCodeContent
-    ] = useBaseGameplayStore(
-        useShallow(
-            state => [
-                state.setQuestions,
-                state.setTestCaseResults,
-                state.setCodeContent
-            ]
-        )
-    )
+    const setQuestions = useBaseGameplayStore(state => state.setQuestions);
+    const setTestCaseResults = useBaseGameplayStore(state => state.setTestCaseResults);
+    const setCodeContent = useBaseGameplayStore(state => state.setCodeContent);
+    const codeContent = useBaseGameplayStore(state => state.codeContent);
 
     const initialTestCaseResults: TestCaseResult[][] = Array(initialServerData.questions.length).fill([]);
-    const initialCodeContent: string[] = Array(initialServerData.questions.length).fill(PROGRAMMING_LANGUAGES[userPreference.language].codeSnippet);
-
+    
     useEffect(() => {
+        printd("@/app/(withContext)/arcade/ArcadeClient", codeContent.toString());
+
         setQuestions(initialServerData.questions);
         setTestCaseResults(initialTestCaseResults);
-        setCodeContent(initialCodeContent);
-    }, [initialServerData.questions, setQuestions, setTestCaseResults, setCodeContent]);
+
+        if (codeContent.length === 0) {
+            const initialCodeContent: string[] = Array(initialServerData.questions.length).fill(PROGRAMMING_LANGUAGES[userPreference.language].codeSnippet);
+            setCodeContent(initialCodeContent);
+        }
+    }, [initialServerData.questions, setQuestions, setTestCaseResults, setCodeContent, initialTestCaseResults]);
 
     // set the information mode for respective layouts
     const layout = userPreference.gameplayLayout;

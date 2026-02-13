@@ -133,8 +133,8 @@
     opacity: 0;
     margin: auto;
     display: block;
+    border-radius: 0.5rem;
 }
-
 /* for checkbox inputs */
 .checkboxInput {
     display: grid;

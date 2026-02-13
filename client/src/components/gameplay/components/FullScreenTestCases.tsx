@@ -1,45 +1,40 @@
 "use client";
 
 import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
-import { useGameplayController } from "@/lib/gameplay/hooks/useGameplayController";
-import { useGameplayStore } from "@/lib/gameplay/hooks/useGameplayStore";
 import { TestCase } from "@/lib/gameplay/utils";
 import { AnimatePresence, motion } from "motion/react";
 import { CSSProperties, useEffect, useRef } from "react";
-import { useShallow } from "zustand/shallow";
-import styles from "../page.module.css";
+import styles from "./fullscreenEditor.module.css";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 
-export default function TestCases({ testCases }: { testCases: TestCase[] }) {
+const CODE_FAIL_BORDER_COLOR = 'var(--wrong-on-hover-indicator-color)';
+const CODE_SUCCEED_BORDER_COLOR = 'var(--correct-indicator-color)';
+
+const CODE_FAIL_BG_COLOR = 'var(--wrong-indicator-color)';
+const CODE_FAIL_BG_COLOR_HOVER = 'var(--wrong-on-hover-indicator-color)';
+
+const CODE_SUCCEED_BG_COLOR = 'var(--correct-indicator-color)';
+const CODE_SUCCEED_BG_COLOR_HOVER = 'var(--correct-on-hover-indicator-color)';
+
+export default function FullScreenTestCases({ testCases }: { testCases: TestCase[] }) {
     const activeTestCaseIndex = useBaseGameplayStore(state => state.activeTestCaseIndex);
     const setActiveTestCaseIndex = useBaseGameplayStore(state => state.setActiveTestCaseIndex);
     const informationMode = useBaseGameplayStore(state => state.informationMode);
     const setInformationMode = useBaseGameplayStore(state => state.setInformationMode);
 
-    const testCaseResults = useGameplayStore(state => state.testCaseResults);
+    const testCaseResults = useBaseGameplayStore(state => state.testCaseResults);
+    const activeQuestionIndex = useBaseGameplayStore(state => state.activeQuestionIndex);
+    const testCasesForActiveQuestion = testCaseResults[activeQuestionIndex];
 
     const testCaseSelectorsRef = useRef<HTMLLIElement[] | null[]>([]);
     const overlayRef = useRef<HTMLDivElement>(null);
     const testCasesRef = useRef<HTMLDivElement>(null);
 
-    const CODE_FAIL_BORDER_COLOR = 'var(--error-code-text-border-color)';
-    const CODE_SUCCEED_BORDER_COLOR = 'var(--success-code-text-border-color)';
-
-    const CODE_FAIL_BG_COLOR = 'var(--error-test-case-bg-color)';
-    const CODE_FAIL_BG_COLOR_HOVER = 'var(--error-test-case-bg-color-hover)';
-
-    const CODE_SUCCEED_BG_COLOR = 'var(--success-test-case-bg-color)';
-    const CODE_SUCCEED_BG_COLOR_HOVER = 'var(--success-test-case-bg-color-hover)';
-
     const tdStyle: CSSProperties = {
-        backgroundColor: !testCaseResults[activeTestCaseIndex]
-            ? "var(--terminal-like-background-color)"
-            : RUN_CODE_RESPONSES[testCaseResults[activeTestCaseIndex].statusId] === RunCodeStatuses.ACCEPTED
-                ? CODE_SUCCEED_BG_COLOR
-                : CODE_FAIL_BG_COLOR,
-        borderColor: !testCaseResults[activeTestCaseIndex]
+        backgroundColor: "var(--terminal-like-background-color)",
+        borderColor: !testCasesForActiveQuestion[activeTestCaseIndex]
             ? "var(--second-layer-background-color)"
-            : RUN_CODE_RESPONSES[testCaseResults[activeTestCaseIndex].statusId] === RunCodeStatuses.ACCEPTED
+            : RUN_CODE_RESPONSES[testCasesForActiveQuestion[activeTestCaseIndex].statusId] === RunCodeStatuses.ACCEPTED
                 ? CODE_SUCCEED_BORDER_COLOR
                 : CODE_FAIL_BORDER_COLOR,
     }
@@ -66,9 +61,9 @@ export default function TestCases({ testCases }: { testCases: TestCase[] }) {
             return;
         }
 
-        testCaseSelectorsRef.current[index].style.backgroundColor = !testCaseResults[index]
+        testCaseSelectorsRef.current[index].style.backgroundColor = !testCasesForActiveQuestion[index]
             ? "var(--first-layer-background-color)"
-            : RUN_CODE_RESPONSES[testCaseResults[index].statusId] === RunCodeStatuses.ACCEPTED
+            : RUN_CODE_RESPONSES[testCasesForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
                 ? CODE_SUCCEED_BG_COLOR_HOVER
                 : CODE_FAIL_BG_COLOR_HOVER
     }
@@ -78,9 +73,9 @@ export default function TestCases({ testCases }: { testCases: TestCase[] }) {
             return;
         }
 
-        testCaseSelectorsRef.current[index].style.backgroundColor = !testCaseResults[index]
+        testCaseSelectorsRef.current[index].style.backgroundColor = !testCasesForActiveQuestion[index]
             ? "var(--second-layer-background-color)"
-            : RUN_CODE_RESPONSES[testCaseResults[index].statusId] === RunCodeStatuses.ACCEPTED
+            : RUN_CODE_RESPONSES[testCasesForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
                 ? CODE_SUCCEED_BG_COLOR
                 : CODE_FAIL_BG_COLOR
     }
@@ -112,13 +107,13 @@ export default function TestCases({ testCases }: { testCases: TestCase[] }) {
                                     ref={el => { testCaseSelectorsRef.current[index] = el; }}
                                     onClick={() => setActiveTestCaseIndex(index)}
                                     style={{
-                                        backgroundColor: !testCaseResults[index]
+                                        backgroundColor: !testCasesForActiveQuestion[index]
                                             ? (index === activeTestCaseIndex ? "var(--first-layer-background-color" : "var(--second-layer-background-color)")
-                                            : RUN_CODE_RESPONSES[testCaseResults[index].statusId] === RunCodeStatuses.ACCEPTED
+                                            : RUN_CODE_RESPONSES[testCasesForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
                                                 ? (index === activeTestCaseIndex ? CODE_SUCCEED_BG_COLOR_HOVER : CODE_SUCCEED_BG_COLOR)
                                                 : (index === activeTestCaseIndex ? CODE_FAIL_BG_COLOR_HOVER : CODE_FAIL_BG_COLOR),
 
-                                        fontWeight: testCaseResults[index] && RUN_CODE_RESPONSES[testCaseResults[index].statusId] !== RunCodeStatuses.ACCEPTED
+                                        fontWeight: testCasesForActiveQuestion[index] && RUN_CODE_RESPONSES[testCasesForActiveQuestion[index].statusId] !== RunCodeStatuses.ACCEPTED
                                             ? 600
                                             : 400,
                                     }}
@@ -156,7 +151,7 @@ export default function TestCases({ testCases }: { testCases: TestCase[] }) {
                                         <motion.th scope="row">Actual</motion.th>
                                         <motion.td style={tdStyle}>
                                             <motion.pre>
-                                                <motion.code>{testCaseResults[activeTestCaseIndex]?.actualOutput ?? "Nothing yet"}</motion.code>
+                                                <motion.code>{testCasesForActiveQuestion[activeTestCaseIndex]?.actualOutput ?? "Nothing yet"}</motion.code>
                                             </motion.pre>
                                         </motion.td>
                                     </motion.tr>
@@ -164,7 +159,7 @@ export default function TestCases({ testCases }: { testCases: TestCase[] }) {
                                         <motion.th scope="row">Message</motion.th>
                                         <motion.td style={tdStyle}>
                                             <motion.pre>
-                                                <motion.code>{testCaseResults[activeTestCaseIndex]?.message ?? "Loremipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}</motion.code>
+                                                <motion.code>{testCasesForActiveQuestion[activeTestCaseIndex]?.message ?? "Loremipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}</motion.code>
                                             </motion.pre>
                                         </motion.td>
                                     </motion.tr>

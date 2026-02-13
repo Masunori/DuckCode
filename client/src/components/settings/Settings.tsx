@@ -1,23 +1,22 @@
 "use client";
 
-import { PRISTINE_USER_PREFERENCE } from "@/app/userPrefs/userPrefsUtils";
 import { User, UserPreference } from "@/app/userPrefs/userPrefsTypes";
+import { PRISTINE_USER_PREFERENCE } from "@/app/userPrefs/userPrefsUtils";
+import { usePopup } from "@/contexts/PopupContext";
+import { useSettings } from "@/contexts/SettingsContext";
+import { useUserStore } from "@/contexts/UserContext";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import sleep from "@/lib/utils/delay";
 import { keyboardManager } from "@/lib/utils/keyboardManager";
 import { Paths } from "@/lib/utils/types";
 import equal from 'fast-deep-equal';
-import React, { use, useEffect, useState } from "react";
-import { usePopup } from "@/contexts/PopupContext";
-import { useSettings } from "@/contexts/SettingsContext";
-import { useUserStore } from "@/contexts/UserContext";
+import React, { useEffect, useState } from "react";
 import AccountSettings from "./options/AccountSettings";
 import CodeEditorSettings from "./options/CodeEditorSettings";
 import GeneralSettings from "./options/GeneralSettings";
 import KeyboardShortcutSettings from "./options/KeyboardShortcutSettings";
 import styles from './settings.module.css';
 import { GENERAL_KEY_BINDINGS, isKeyCombo } from "./settingsUtils";
-import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { printd } from "@/lib/utils/debugUtils";
 
 type SettingsOptionNames = "General" | "Code Editor" | "Keyboard Shortcut Configuration" | "Account";
 export type TempAccountInfo = Pick<User, 'name' | 'email' | 'bio' | 'isTwoFactored'>;
@@ -27,7 +26,7 @@ export default function Settings() {
 
     const user = useUserStore(state => state.user);
 
-    printd("@components/settings/Settings.tsx", `Current user in Settings: ${JSON.stringify(user)}`);
+    // printd("@components/settings/Settings.tsx", `Current user in Settings: ${JSON.stringify(user)}`);
 
     const setUserField = useUserStore(state => state.setUserField);
 
@@ -39,7 +38,7 @@ export default function Settings() {
 
     // Settings keep track of a previous user preference object and an editable future user preference object.
     // These only exist during the lifetime of Settings. Thus, all unsaved changes will be lost.
-    const [nextuserPreference, setNextuserPreference] = useState<UserPreference>(structuredClone(userPreference));
+    const [nextUserPreference, setNextUserPreference] = useState<UserPreference>(structuredClone(userPreference));
     const [nextUserInfo, setNextUserInfo] = useState<TempAccountInfo>({
         name: user.name,
         email: user.email,
@@ -52,7 +51,7 @@ export default function Settings() {
     };
 
     useEffect(() => { // re-initializes whenever Settings is opened
-        setNextuserPreference(structuredClone(userPreference));
+        setNextUserPreference(structuredClone(userPreference));
     }, [userPreference]);
 
     // handle Settings's 4 big events: exit, revert, reset, save
@@ -61,13 +60,13 @@ export default function Settings() {
         // React states are updated asynchronously, so even if closeSettings()  is called after setNextuserPreference(),
         // the nextuserPreference will not be updated immediately, causing the gameplay code editor to reflect the hypothetical settings value instead of the current settings value.
         // thus, we need to wait for the nextuserPreference to be updated before closing settings, by forcing a sleep of 1ms (a blocking call)
-        if (!equal(nextuserPreference, userPreference)) {
+        if (!equal(nextUserPreference, userPreference)) {
             openPopupWith(
                 "There are unsaved changes! Do you want to discard changes and close settings?",
                 "Discard changes and close settings",
                 "Go back to settings",
                 async () => {
-                    setNextuserPreference(structuredClone(userPreference));
+                    setNextUserPreference(structuredClone(userPreference));
                     await sleep(1);
                     closeSettings();
                 },
@@ -79,7 +78,7 @@ export default function Settings() {
     }
 
     function handleRevert() {
-        if (equal(nextuserPreference, userPreference)) {
+        if (equal(nextUserPreference, userPreference)) {
             openPopupWith(
                 "No changes to discard.",
                 "Go back to settings",
@@ -93,7 +92,7 @@ export default function Settings() {
                 "Discard",
                 "Keep the changes",
                 () => {
-                    setNextuserPreference(structuredClone(userPreference));
+                    setNextUserPreference(structuredClone(userPreference));
                 },
                 () => { }
             );
@@ -101,7 +100,7 @@ export default function Settings() {
     }
 
     function handleSave() {
-        if (equal(nextuserPreference, userPreference)) {
+        if (equal(nextUserPreference, userPreference)) {
             openPopupWith(
                 "No changes to save.",
                 "Go back to settings",
@@ -115,7 +114,7 @@ export default function Settings() {
                 "Save changes",
                 "Keep the current settings",
                 () => {
-                    setUserPreference(nextuserPreference);
+                    setUserPreference(nextUserPreference);
                     Object.entries(nextUserInfo).forEach(([key, value]) => {
                         setUserField(key as Paths<User>, value);
                     });
@@ -141,7 +140,7 @@ export default function Settings() {
                 "Keep the current settings",
                 () => {
                     setUserPreference(PRISTINE_USER_PREFERENCE);
-                    setNextuserPreference(PRISTINE_USER_PREFERENCE);
+                    setNextUserPreference(PRISTINE_USER_PREFERENCE);
                 },
                 () => { }
             );
@@ -152,10 +151,10 @@ export default function Settings() {
 
     const SETTINGS_OPTIONS: Record<SettingsOptionNames, { component: React.JSX.Element }> = {
         "General": {
-            component: <GeneralSettings nextuserPreference={nextuserPreference} setNextuserPreference={setNextuserPreference} />
+            component: <GeneralSettings nextuserPreference={nextUserPreference} setNextuserPreference={setNextUserPreference} />
         },
         "Code Editor": {
-            component: <CodeEditorSettings nextuserPreference={nextuserPreference} setNextuserPreference={setNextuserPreference} />
+            component: <CodeEditorSettings nextuserPreference={nextUserPreference} setNextuserPreference={setNextUserPreference} />
         },
         "Keyboard Shortcut Configuration": {
             component: <KeyboardShortcutSettings />

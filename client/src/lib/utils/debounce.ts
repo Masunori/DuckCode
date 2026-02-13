@@ -7,7 +7,8 @@
  * @returns A debounced version of the same function that is only called after the delay.
  */
 export default function debounce<Fn extends (...args: never[]) => unknown>(fn: Fn, delay: number) {
-    let timeoutId: NodeJS.Timeout;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    
     return function (...args: Parameters<Fn>) {
         if (timeoutId) {
             clearTimeout(timeoutId);

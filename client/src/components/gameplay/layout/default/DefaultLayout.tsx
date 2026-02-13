@@ -2,19 +2,19 @@
 
 import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from "@/components/settings/settingsUtils";
 import { usePopup } from "@/contexts/PopupContext";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 import { instantiateEditorOnMount, Question } from "@/lib/gameplay/utils";
+import { printd } from "@/lib/utils/debugUtils";
 import { keyboardManager } from "@/lib/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
-import { use, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useShallow } from "zustand/shallow";
 import CodeEditor from "../../components/CodeEditor";
-import TestCases from "./components/TestCases";
-import styles from "./page.module.css";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
-import { printd } from "@/lib/utils/debugUtils";
 import QuestionTab from "../../components/QuestionTab";
-import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import DefaultTestCases from "../../components/DefaultTestCases";
+import styles from "./page.module.css";
 
 export function DefaultLayout({ questions }: { questions: Question[] }) {
     // for code editor
@@ -35,7 +35,7 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
         runCode,
         runTestCases,
         submitCode
-     ] = useBaseGameplayStore(
+    ] = useBaseGameplayStore(
         useShallow(
             state => [
                 state.runCode,
@@ -56,8 +56,8 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
             response.message,
             "Understood",
             null,
-            () => {},
-            () => {}
+            () => { },
+            () => { }
         );
     }, [runCode, openPopupWith]);
 
@@ -72,9 +72,9 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
             response.message,
             "Understood",
             null,
-            () => {},
-            () => {}
-        );  
+            () => { },
+            () => { }
+        );
     }, [submitCode, openPopupWith]);
 
     const runTestCasesClientSide = useCallback(async () => {
@@ -91,15 +91,24 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
             passed ? "Submit Code" : "Understood",
             passed ? "Go back to code" : null,
             () => passed ? submitCodeClientSide() : {},
-            () => {}
+            () => { }
         );
     }, [runTestCases, openPopupWith, submitCodeClientSide]);
 
-    
+
 
     const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
         instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
     }
+
+    useEffect(() => {
+        const editor = editorRef.current;
+
+        if (editor) {
+            const codeContent = useBaseGameplayStore.getState().codeContent;
+            editor.setValue(codeContent[activeQuestionIndex]);
+        }
+    }, [activeQuestionIndex]);
 
     // this useEffect encapsulates all key bindings
     useEffect(() => {
@@ -163,7 +172,7 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
                     <CodeEditor
                         onMount={handleEditorDidMount}
                     />
-                    <TestCases
+                    <DefaultTestCases
                         testCases={question.publicTestCases}
                         runCode={runCodeClientSide}
                         runTestCases={runTestCasesClientSide}

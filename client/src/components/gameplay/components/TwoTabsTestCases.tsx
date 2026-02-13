@@ -3,20 +3,20 @@
 import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
 import { TestCase } from "@/lib/gameplay/utils";
 import { CSSProperties, useRef } from "react";
-import { useShallow } from "zustand/shallow";
-import styles from "../page.module.css";
+import styles from "./twoTabs.module.css";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 
-const CODE_FAIL_BORDER_COLOR = 'var(--error-code-text-border-color)';
-const CODE_SUCCEED_BORDER_COLOR = 'var(--success-code-text-border-color)';
+const CODE_FAIL_BORDER_COLOR = 'var(--wrong-on-hover-indicator-color)';
+const CODE_SUCCEED_BORDER_COLOR = 'var(--correct-indicator-color)';
+const CODE_WARNING_COLOR = 'var(--warn-code-text-border-color)';
 
-const CODE_FAIL_BG_COLOR = 'var(--error-test-case-bg-color)';
-const CODE_FAIL_BG_COLOR_HOVER = 'var(--error-test-case-bg-color-hover)';
+const CODE_FAIL_BG_COLOR = 'var(--wrong-indicator-color)';
+const CODE_FAIL_BG_COLOR_HOVER = 'var(--wrong-on-hover-indicator-color)';
 
-const CODE_SUCCEED_BG_COLOR = 'var(--success-test-case-bg-color)';
-const CODE_SUCCEED_BG_COLOR_HOVER = 'var(--success-test-case-bg-color-hover)';
+const CODE_SUCCEED_BG_COLOR = 'var(--correct-indicator-color)';
+const CODE_SUCCEED_BG_COLOR_HOVER = 'var(--correct-on-hover-indicator-color)';
 
-export default function TestCases({ testCases }: { testCases: TestCase[] }) {
+export default function TwoTabsTestCases({ testCases }: { testCases: TestCase[] }) {
     const activeTestCaseIndex = useBaseGameplayStore(state => state.activeTestCaseIndex);
     const setActiveTestCaseIndex = useBaseGameplayStore(state => state.setActiveTestCaseIndex);
     const testCaseResults = useBaseGameplayStore(state => state.testCaseResults);
@@ -26,12 +26,16 @@ export default function TestCases({ testCases }: { testCases: TestCase[] }) {
 
     const testCaseSelectorsRef = useRef<HTMLLIElement[] | null[]>([]);
 
+    function selectTestCaseIndicator(idx: number) {
+        return !testCaseResultsForActiveQuestion[idx]
+            ? ""
+            : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[idx].statusId] === RunCodeStatuses.ACCEPTED
+                ? "[✔]"
+                : "[✖]";
+    }
+
     const tdStyle: CSSProperties = {
-        backgroundColor: !testCaseResultsForActiveQuestion[activeTestCaseIndex]
-            ? "var(--terminal-like-background-color)"
-            : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[activeTestCaseIndex].statusId] === RunCodeStatuses.ACCEPTED
-                ? CODE_SUCCEED_BG_COLOR
-                : CODE_FAIL_BG_COLOR,
+        backgroundColor: "var(--terminal-like-background-color)",
         borderColor: !testCaseResultsForActiveQuestion[activeTestCaseIndex]
             ? "var(--second-layer-background-color)"
             : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[activeTestCaseIndex].statusId] === RunCodeStatuses.ACCEPTED
@@ -45,7 +49,7 @@ export default function TestCases({ testCases }: { testCases: TestCase[] }) {
             return;
         }
 
-        testCaseSelectorsRef.current[index].style.backgroundColor = !testCaseResults[index]
+        testCaseSelectorsRef.current[index].style.backgroundColor = !testCaseResultsForActiveQuestion[index]
             ? "var(--first-layer-background-color)"
             : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
                 ? CODE_SUCCEED_BG_COLOR_HOVER
@@ -57,7 +61,7 @@ export default function TestCases({ testCases }: { testCases: TestCase[] }) {
             return;
         }
 
-        testCaseSelectorsRef.current[index].style.backgroundColor = !testCaseResults[index]
+        testCaseSelectorsRef.current[index].style.backgroundColor = !testCaseResultsForActiveQuestion[index]
             ? "var(--second-layer-background-color)"
             : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
                 ? CODE_SUCCEED_BG_COLOR
@@ -86,7 +90,7 @@ export default function TestCases({ testCases }: { testCases: TestCase[] }) {
                         onMouseEnter={() => handleOnMouseEnter(index)}
                         onMouseLeave={() => handleOnMouseLeave(index)}
                     >
-                        Test Case {index + 1}
+                        Test Case {index + 1} {selectTestCaseIndicator(index)}
                     </li>
                 ))}
             </ul>

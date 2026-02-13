@@ -208,12 +208,64 @@
     padding: 0 0.5rem;
 }
 
-.layoutSettings {
+.layoutSettings, .colorAccessibilitySettings {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
     margin-bottom: 1rem;
 }
+
+.colorAccessibilityPaletteColors {
+    list-style-type: none;
+    border-bottom: 0.2rem solid var(--settings-option-border-color);
+    margin-bottom: 0.5rem;
+}
+
+.colorAccessibilityPalettePreview ul {
+    list-style-type: none;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    background-color: var(--fourth-layer-background-color);
+}
+
+.colorAccessibilityPalettePreview li {
+    width: 10rem;
+    height: 2rem;
+    padding: 0.5rem;
+    transition-duration: 0.25s;
+}
+
+.colorAccessibilityPalettePreview li:hover {
+    cursor: pointer;
+}
+
+.colorAccessibilityPalettePreview .defaultTestCase {
+    background-color: var(--terminal-like-background-color);
+}
+
+.colorAccessibilityPalettePreview .defaultTestCase:hover {
+    background-color: var(--second-layer-background-color);
+}
+
+/* .colorAccessibilityPalettePreview .correctTestCase {
+    background-color: var(--correct-indicator-color);
+    color: var(--correct-indicator-text-color);
+}
+
+.colorAccessibilityPalettePreview .correctTestCase:hover {
+    background-color: var(--correct-on-hover-indicator-color);
+    color: var(--correct-on-hover-indicator-text-color);
+}
+
+.colorAccessibilityPalettePreview .wrongTestCase {
+    background-color: var(--wrong-indicator-color);
+    color: var(--wrong-indicator-text-color);
+}
+
+.colorAccessibilityPalettePreview .wrongTestCase:hover {
+    background-color: var(--wrong-on-hover-indicator-color);
+    color: var(--wrong-on-hover-indicator-text-color);
+} */
 
 /* Account Settings */
 .accountSettingsDisplay {

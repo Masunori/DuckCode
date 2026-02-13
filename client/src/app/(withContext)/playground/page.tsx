@@ -15,68 +15,39 @@ import GameplayNavbar from "./components/GameplayNavbar";
 import Output from "./components/Output";
 import styles from "./page.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 
 export default function Page() {
     // for code editor
     const userPreference = useUserPreferenceStore(state => state.userPreference);
-    const [codeContent, setCodeContent] = useState<string | undefined>(PROGRAMMING_LANGUAGES[userPreference.language].codeSnippet);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
-    const [isClusterLocked, setIsClusterLocked] = useState(false);
-
-    const lock: LockV2 = useMemo(() => new LockV2(), []);
-
-    useEffect(() => {
-        const unsubscribe = lock.subscribe(setIsClusterLocked);
-        return unsubscribe;
-    }, [lock]);
-
     const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
         instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
     }
 
-    // this is used in the information panel
-    const [codeOutput, setCodeOutput] = useState<OutputEntry[]>(
-        [
-            {
-                type: "log",
-                content: ">> Your code will be displayed here...",
-            },
-        ]
-    );
+    const isLocked = useBaseGameplayStore(state => state.isLocked);
 
     const { openPopupWith } = usePopup();
 
+    const runCode = useBaseGameplayStore(state => state.runCode);
     // for code handling
     // executing code normally
     const runCodeOutputMode = useCallback(async () => {
-        if (typeof (codeContent) === undefined) {
+        const response = await runCode();
+
+        if (!response) {
             return;
         }
 
-        try {
-            const response = await lock.call(() => runCode(codeContent as string, userPreference.language));
-
-            if (!response) {
-                throw new Error("Please wait for the code to run before attempting running the code again.");
-            }
-
-            setCodeOutput(response.output);
-
-            if (response.status != 200 || !response.output) {
-                throw new Error(`An error occurred. Message: ${response.codeStatus}`);
-            }
-        } catch (err) {
-            openPopupWith(
-                (err as Error).message,
-                "Understood",
-                null,
-                () => { },
-                () => { }
-            )
-        }
-
-    }, [codeContent, lock, openPopupWith]);
+        openPopupWith(
+            response.message,
+            "Understood",
+            null,
+            () => {},
+            () => {}
+        );
+    }, [runCode, openPopupWith]);
 
     // this useEffect encapsulates all key bindings
     useEffect(() => {
@@ -125,20 +96,18 @@ export default function Page() {
                         <button
                             className={styles.runCodeButton}
                             onClick={runCodeOutputMode}
-                            disabled={isClusterLocked}
+                            disabled={isLocked}
                             style={{
-                                pointerEvents: isClusterLocked ? "none" : "auto"
+                                pointerEvents: isLocked ? "none" : "auto"
                             }}
                         >Run Code</button>
                     </div>
-                    <Output codeOutput={codeOutput} />
+                    <Output />
                 </Panel>
                 <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
                 <Panel defaultSize={50} minSize={2}>
                     <CodeEditor
                         onMount={handleEditorDidMount}
-                        codeContent={codeContent}
-                        setCodeContent={setCodeContent}
                     />
                 </Panel>
             </PanelGroup>

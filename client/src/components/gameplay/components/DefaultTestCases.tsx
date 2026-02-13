@@ -3,9 +3,8 @@
 import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
 import { TestCase } from "@/lib/gameplay/utils";
 import { CSSProperties, useCallback, useRef } from "react";
-import styles from "../page.module.css";
+import styles from "./default.module.css";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
-import { printd } from "@/lib/utils/debugUtils";
 
 type TestCaseProps = {
     testCases: TestCase[];
@@ -14,17 +13,17 @@ type TestCaseProps = {
     submitCode: () => void;
 }
 
-const CODE_FAIL_BORDER_COLOR = 'var(--error-code-text-border-color)';
-const CODE_SUCCEED_BORDER_COLOR = 'var(--success-code-text-border-color)';
+const CODE_FAIL_BORDER_COLOR = 'var(--wrong-on-hover-indicator-color)';
+const CODE_SUCCEED_BORDER_COLOR = 'var(--correct-indicator-color)';
 const CODE_WARNING_COLOR = 'var(--warn-code-text-border-color)';
 
-const CODE_FAIL_BG_COLOR = 'var(--error-test-case-bg-color)';
-const CODE_FAIL_BG_COLOR_HOVER = 'var(--error-test-case-bg-color-hover)';
+const CODE_FAIL_BG_COLOR = 'var(--wrong-indicator-color)';
+const CODE_FAIL_BG_COLOR_HOVER = 'var(--wrong-on-hover-indicator-color)';
 
-const CODE_SUCCEED_BG_COLOR = 'var(--success-test-case-bg-color)';
-const CODE_SUCCEED_BG_COLOR_HOVER = 'var(--success-test-case-bg-color-hover)';
+const CODE_SUCCEED_BG_COLOR = 'var(--correct-indicator-color)';
+const CODE_SUCCEED_BG_COLOR_HOVER = 'var(--correct-on-hover-indicator-color)';
 
-export default function TestCases({
+export default function DefaultTestCases({
     testCases,
     runCode,
     runTestCases,
@@ -45,16 +44,20 @@ export default function TestCases({
 
     const testCaseResultsForActiveQuestion = testCaseResults[activeQuestionIndex] || [];
 
+    function selectTestCaseIndicator(idx: number) {
+        return !testCaseResultsForActiveQuestion[idx]
+            ? ""
+            : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[idx].statusId] === RunCodeStatuses.ACCEPTED
+                ? "[✔]"
+                : "[✖]";
+    }
+
     // printd("@/components/gameplay/layout/default/components/TestCases", "Rendering TestCases with testCases:", testCases, "and testCaseResults:", testCaseResults);
 
     const testCaseSelectorsRef = useRef<HTMLLIElement[] | null[]>([]);
 
     const tdStyle: CSSProperties = {
-        backgroundColor: !testCaseResultsForActiveQuestion[activeTestCaseIndex]
-            ? "var(--terminal-like-background-color)"
-            : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[activeTestCaseIndex].statusId] === RunCodeStatuses.ACCEPTED
-                ? CODE_SUCCEED_BG_COLOR
-                : CODE_FAIL_BG_COLOR,
+        backgroundColor: "var(--terminal-like-background-color)",
         borderColor: !testCaseResultsForActiveQuestion[activeTestCaseIndex]
             ? "var(--second-layer-background-color)"
             : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[activeTestCaseIndex].statusId] === RunCodeStatuses.ACCEPTED
@@ -130,14 +133,14 @@ export default function TestCases({
                                             ? (index === activeTestCaseIndex ? CODE_SUCCEED_BG_COLOR_HOVER : CODE_SUCCEED_BG_COLOR)
                                             : (index === activeTestCaseIndex ? CODE_FAIL_BG_COLOR_HOVER : CODE_FAIL_BG_COLOR),
 
-                                    fontWeight: testCaseResultsForActiveQuestion[index] && RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[index].statusId] !== RunCodeStatuses.ACCEPTED
+                                    fontWeight: index === activeTestCaseIndex
                                         ? 600
                                         : 400,
                                 }}
                                 onMouseEnter={() => handleOnMouseEnter(index)}
                                 onMouseLeave={() => handleOnMouseLeave(index)}
                             >
-                                Test Case {index + 1}
+                                Test Case {index + 1} {selectTestCaseIndicator(index)}
                             </li>
                         ))}
                     </ul>
@@ -194,7 +197,7 @@ export default function TestCases({
                     {codeOutput.map((line, index) => (
                         <code key={index} style={{
                             color: line.type === "error"
-                                ? CODE_FAIL_BORDER_COLOR
+                                ? CODE_FAIL_BG_COLOR
                                 : line.type === "warn"
                                     ? CODE_WARNING_COLOR
                                     : "var(--font-colour)"

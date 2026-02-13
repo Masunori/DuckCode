@@ -10,11 +10,11 @@ import { useCallback, useEffect, useRef } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useShallow } from "zustand/shallow";
 import CodeEditor from "../../components/CodeEditor";
-import TestCases from "./components/TestCases";
 import styles from "./page.module.css";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 import QuestionTab from "../../components/QuestionTab";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import DefaultTestCases from "../../components/DefaultTestCases";
 
 export function InvertedLayout({ questions }: { questions: Question[] }) {
     // for code editor
@@ -99,6 +99,15 @@ export function InvertedLayout({ questions }: { questions: Question[] }) {
     const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
         instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
     }
+    
+    useEffect(() => {
+        const editor = editorRef.current;
+
+        if (editor) {
+            const codeContent = useBaseGameplayStore.getState().codeContent;
+            editor.setValue(codeContent[activeQuestionIndex]);
+        }
+    }, [activeQuestionIndex]);
 
     // this useEffect encapsulates all key bindings
     useEffect(() => {
@@ -158,7 +167,7 @@ export function InvertedLayout({ questions }: { questions: Question[] }) {
                     <CodeEditor
                         onMount={handleEditorDidMount}
                     />
-                    <TestCases
+                    <DefaultTestCases
                         testCases={question.publicTestCases}
                         runCode={runCodeClientSide}
                         runTestCases={runTestCasesClientSide}

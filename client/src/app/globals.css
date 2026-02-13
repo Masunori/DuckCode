@@ -39,7 +39,19 @@
 
   --code-fragment-font: monospace;
   --font-colour: #ccc;
+  --font-colour-black: #222;
   --font-colour-hover: #777;
+
+  /* Correct-wrong indicator */
+  --correct-indicator-color: #42BE65;
+  --wrong-indicator-color: #F82D37;
+  --correct-on-hover-indicator-color: #086222;
+  --wrong-on-hover-indicator-color: #92080F;
+
+  --correct-indicator-text-color: var(--font-colour-black);
+  --wrong-indicator-text-color: var(--font-colour);
+  --correct-on-hover-indicator-text-color: var(--font-colour);
+  --wrong-on-hover-indicator-text-color: var(--font-colour);
 
   /* Code output (and terminal in the future) */
   --error-code-text-border-color: #CC2020;

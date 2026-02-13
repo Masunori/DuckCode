@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import styles from "../page.module.css";
+import styles from "./fullscreenEditor.module.css";
 import { motion, AnimatePresence } from "motion/react";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 
-export default function Output() {
+const CODE_FAIL_BORDER_COLOR = 'var(--wrong-on-hover-indicator-color)';
+const CODE_WARNING_COLOR = 'var(--warn-code-text-border-color)';
+
+export default function FullScreenOutput() {
     const codeOutput = useBaseGameplayStore(state => state.codeOutput);
     const informationMode = useBaseGameplayStore(state => state.informationMode);
     const setInformationMode = useBaseGameplayStore(state => state.setInformationMode);
-    
-    const CODE_FAIL_BORDER_COLOR = 'var(--error-code-text-border-color)';
-    const CODE_WARNING_COLOR = 'var(--warn-code-text-border-color)';
 
     const overlayRef = useRef<HTMLDivElement>(null);
     const outputRef = useRef<HTMLDivElement>(null);

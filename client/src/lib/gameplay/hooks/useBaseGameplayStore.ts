@@ -1,13 +1,16 @@
+"use client";
+
 import { SetState } from "@/lib/utils/types";
 import { InformationMode, Question, TestCaseResult } from "../utils"
 import { LockV2 } from "@/lib/utils/lock";
 import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { useUserStore } from "@/contexts/UserContext";
 import { runAllTestCases, runCode, submitCode } from "@/lib/apiClient/gameplay";
 import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
 import { printd } from "@/lib/utils/debugUtils";
 import { ExecutionStatus } from "@/lib/multiplayer/utils";
-import { use } from "react";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 
 /** Type of code editor view, where `shared` represents the shared code editor and `private` represents any player's private code editor identified by userId */
 type CodeView = 
@@ -98,7 +101,7 @@ type ResetSlice = {
 /** The base gameplay store that contains common functionalities for different gameplay modes. */
 export type BaseGameplayController = ProblemSlice & EditorSlice & ExecutionSlice & UIStateSlice & ResetSlice;
 
-export const useBaseGameplayStore = create<BaseGameplayController>((set, get) => {
+export const useBaseGameplayStore = create<BaseGameplayController>()(persist((set, get) => {
     const lock = new LockV2();
 
     lock.subscribe((v) => {
@@ -131,10 +134,12 @@ export const useBaseGameplayStore = create<BaseGameplayController>((set, get) =>
                     : codeContents
             })),
         setCodeContentAtIndex: (index, content) => {
-            const currentContents = get().codeContent;
-            const newContents = [...currentContents];
-            newContents[index] = content;
-            set({ codeContent: newContents });
+            printd("@/src/lib/gameplay/hooks/useBaseGameplayStore.ts", `Setting code content at index ${index}: ${content}.`);
+            set((state) => {
+                const newContents = [...state.codeContent];
+                newContents[index] = content;
+                return { codeContent: newContents };
+            });
         },
         emitCodePatch: (questionId, newContent) => {
             // Placeholder for emitting code patches to server or other clients
@@ -159,7 +164,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>((set, get) =>
                 return undefined;
             }
 
-            const language = useUserStore.getState().user.userPreference.language;
+            const language = useUserPreferenceStore.getState().userPreference.language;
             const output = await lock.call(() => runCode(sourceCode, language));
 
             setInformationMode("output");
@@ -190,33 +195,55 @@ export const useBaseGameplayStore = create<BaseGameplayController>((set, get) =>
                 return undefined;
             }
 
-            const language = useUserStore.getState().user.userPreference.language;
-            const questionId = questions[activeQuestionIndex].qid;
-            const output = await lock.call(() => runAllTestCases(questionId, sourceCode, language));
-
             setInformationMode("testCases");
 
-            if (!output) {
-                return { status: 409, message: "Another code execution is in progress." };
-            } else if (output.status !== 200) {
-                return { status: output.status, message: output.message || "Failed to run test cases." };
-            } else {
-                setTestCaseResults((prev) => {
-                    const newResults = [...prev];
-                    newResults[activeQuestionIndex] = output.results;
-                    return newResults;
-                });
+            setTestCaseResults((prev) => {
+                const newResults = [...prev];
 
-                const firstWrongTestCaseIndex = output.results.findIndex(result => RUN_CODE_RESPONSES[result.statusId] !== RunCodeStatuses.ACCEPTED);
+                const newTestCaseResults: TestCaseResult[] = [];
 
-                if (firstWrongTestCaseIndex !== -1) {
-                    setActiveTestCaseIndex(firstWrongTestCaseIndex);
-                    const failedReason = output.results[firstWrongTestCaseIndex].message;
-                    return { status: 200, message: `Test case ${firstWrongTestCaseIndex + 1} failed. Reason: ${failedReason}` };
-                } else {
-                    return { status: 200, message: "All public test cases passed successfully." };
+                for (let i = 0; i < questions[activeQuestionIndex].publicTestCases.length; i++) {
+                    newTestCaseResults.push({
+                        tid: questions[activeQuestionIndex].publicTestCases[i].tid,
+                        actualOutput: "",
+                        statusId: i % 2 + 1,
+                        message: "Test case is pending execution..."
+                    });
                 }
-            }
+
+                newResults[activeQuestionIndex] = newTestCaseResults;
+                return newResults;
+            });
+
+            return { status: 200, message: "Dummy..." };
+
+            // const language = useUserPreferenceStore.getState().userPreference.language;
+            // const questionId = questions[activeQuestionIndex].qid;
+            // const output = await lock.call(() => runAllTestCases(questionId, sourceCode, language));
+
+            // setInformationMode("testCases");
+
+            // if (!output) {
+            //     return { status: 409, message: "Another code execution is in progress." };
+            // } else if (output.status !== 200) {
+            //     return { status: output.status, message: output.message || "Failed to run test cases." };
+            // } else {
+            //     setTestCaseResults((prev) => {
+            //         const newResults = [...prev];
+            //         newResults[activeQuestionIndex] = output.results;
+            //         return newResults;
+            //     });
+
+            //     const firstWrongTestCaseIndex = output.results.findIndex(result => RUN_CODE_RESPONSES[result.statusId] !== RunCodeStatuses.ACCEPTED);
+
+            //     if (firstWrongTestCaseIndex !== -1) {
+            //         setActiveTestCaseIndex(firstWrongTestCaseIndex);
+            //         const failedReason = output.results[firstWrongTestCaseIndex].message;
+            //         return { status: 200, message: `Test case ${firstWrongTestCaseIndex + 1} failed. Reason: ${failedReason}` };
+            //     } else {
+            //         return { status: 200, message: "All public test cases passed successfully." };
+            //     }
+            // }
         },
         submitCode: async () => {
             const {
@@ -234,7 +261,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>((set, get) =>
                 return undefined;
             }
 
-            const language = useUserStore.getState().user.userPreference.language;
+            const language = useUserPreferenceStore.getState().userPreference.language;
             const questionId = questions[activeQuestionIndex].qid;
             const output = await lock.call(() => submitCode(questionId, sourceCode, language));
 
@@ -324,4 +351,11 @@ export const useBaseGameplayStore = create<BaseGameplayController>((set, get) =>
             informationMode: "question"
         })
     }
-});
+}, {
+    name: "duckcode-base-gameplay",
+    storage: createJSONStorage(() => localStorage),
+    partialize: (state) => ({
+        codeContent: state.codeContent,
+        activeQuestionIndex: state.activeQuestionIndex
+    }),
+}));

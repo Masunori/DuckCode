@@ -11,13 +11,13 @@ import { useShallow } from "zustand/shallow";
 import CodeEditor from "../../components/CodeEditor";
 import CodeHandlerButtons from "../../components/CodeHandlerButtons";
 import InformationPanelButtons from "../../components/InformationPanelButtons";
-import Output from "./components/Output";
-import TestCases from "./components/TestCases";
 import styles from "./page.module.css";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 import { printd } from "@/lib/utils/debugUtils";
 import QuestionTab from "../../components/QuestionTab";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import TwoTabsOutput from "../../components/TwoTabsOutput";
+import TwoTabsTestCases from "../../components/TwoTabsTestCases";
 
 export function TwoTabsInvertedLayout({ questions }: { questions: Question[] }) {
     // for code editor
@@ -104,6 +104,16 @@ export function TwoTabsInvertedLayout({ questions }: { questions: Question[] }) 
     const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
         instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
     }
+
+    useEffect(() => {
+        const editor = editorRef.current;
+
+        if (editor) {
+            const codeContent = useBaseGameplayStore.getState().codeContent;
+            editor.setValue(codeContent[activeQuestionIndex]);
+        }
+    }, [activeQuestionIndex]);
+
     // this useEffect encapsulates all key bindings
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -175,9 +185,9 @@ export function TwoTabsInvertedLayout({ questions }: { questions: Question[] }) 
                     {informationMode === "question"
                         ? <QuestionTab questions={questions} />
                         : informationMode === "output"
-                            ? <Output />
+                            ? <TwoTabsOutput />
                             : informationMode === "testCases"
-                                ? <TestCases testCases={question.publicTestCases} />
+                                ? <TwoTabsTestCases testCases={question.publicTestCases} />
                                 : <></>
                     }
                     <div className={styles.twoTabsInvertedCodeHandlerButtons}>

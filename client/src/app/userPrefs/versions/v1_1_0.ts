@@ -1,17 +1,18 @@
+import { ColorAccessibilityKeyword } from "@/components/themes/colorAccessibilityPalettes";
 import { UserPreference } from "../userPrefsTypes";
 
 export type Fragment = {
-    colorAccessibilityMode: string;
+    colorAccessibilityMode: ColorAccessibilityKeyword;
 }
 
 export function encode(p: UserPreference): Partial<Fragment> {
     return {
-        colorAccessibilityMode: p.colorAccessibilityMode ?? "normal"
+        colorAccessibilityMode: p.colorAccessibilityMode ?? "Normal"
     };
 }
 
 export const PRISTINE: Fragment = {
-    colorAccessibilityMode: "normal"
+    colorAccessibilityMode: "Normal"
 }
 
 export function decode(raw: any): Fragment {

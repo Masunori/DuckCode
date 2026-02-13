@@ -139,7 +139,7 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                                 onClick={async () => {
                                     if (mode === "classic") {
                                         const qid = await getQuestionsInRange(difficultyRange[0], difficultyRange[1]);
-                                        router.push("/arcade?qid=" + qid[0]);
+                                        // router.push("/arcade?qid=" + qid[0]);
                                     }
                                 }}
                             >Confirm</button>

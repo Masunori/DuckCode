@@ -16,7 +16,7 @@ export const PRIORITY_INFO: Record<PriorityName, { priority: number, stopPropaga
     GAMEPLAY_TAB_KEY_PRIORITY: { priority: 3, stopPropagation: false, },
     CANVAS_KEY_PRIORITY: { priority: 4, stopPropagation: true, },
     CHAT_KEY_PRIORITY: { priority: 5, stopPropagation: true, },
-    SETTINGS_KEY_PRIORITY: { priority: 6, stopPropagation: false, },
+    SETTINGS_KEY_PRIORITY: { priority: 6, stopPropagation: true, },
     POPUP_KEY_PRIORITY: { priority: 1000, stopPropagation: true, },
     INPUT_KEY_PRIORITY: { priority: 10, stopPropagation: false }, // Input layers
 };

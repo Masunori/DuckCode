@@ -7,15 +7,15 @@ import { keyboardManager } from "@/lib/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
 import { useCallback, useEffect, useRef } from "react";
 import { useShallow } from "zustand/shallow";
-import CodeEditor from "./components/CodeEditor";
-import Output from "./components/Output";
-import QuestionDisplay from "./components/QuestionDisplay";
-import TestCases from "./components/TestCases";
 import styles from "./page.module.css";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 import { printd } from "@/lib/utils/debugUtils";
 import QuestionSwitcher from "../../components/QuestionSwitcher";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import FulLScreenQuestionDisplay from "../../components/FullScreenQuestionDisplay";
+import FullScreenTestCases from "../../components/FullScreenTestCases";
+import FullScreenOutput from "../../components/FullScreenOutput";
+import FullScreenCodeEditor from "../../components/FullScreenCodeEditor";
 
 export function FullscreenEditorLayout({ questions }: { questions: Question[] }) {
     // for code editor
@@ -103,6 +103,15 @@ export function FullscreenEditorLayout({ questions }: { questions: Question[] })
         instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
     }
 
+    useEffect(() => {
+        const editor = editorRef.current;
+
+        if (editor) {
+            const codeContent = useBaseGameplayStore.getState().codeContent;
+            editor.setValue(codeContent[activeQuestionIndex]);
+        }
+    }, [activeQuestionIndex]);
+
     const setNextInformationMode = useCallback(() => {
         setInformationMode(prev => (
             prev === "question"
@@ -161,6 +170,14 @@ export function FullscreenEditorLayout({ questions }: { questions: Question[] })
         }
 
         const handleCloseTab = (e: KeyboardEvent) => {
+            const editor = editorRef.current;
+            const active = document.activeElement;
+            const isFocusOnEditor = editor && editor.getDomNode()?.contains(active);
+
+            if (isFocusOnEditor) {
+                return false; // don't trigger tab closing when user is focused on editor, since they might be trying to type a tab or use tab for autocompletion
+            }
+
             if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["EXIT_TAB_ON_FULLSCREEN"].combo) && informationMode !== "-") {
                 e.preventDefault();
                 setInformationMode("-");
@@ -211,11 +228,11 @@ export function FullscreenEditorLayout({ questions }: { questions: Question[] })
         <div ref={gameplayRef} tabIndex={0} className={styles.fullscreenEditorLayout}>
             <div className={styles.editorAndSwitcher}>
                 <QuestionSwitcher numQuestions={questions.length} />
-                <CodeEditor onMount={handleEditorDidMount} />
+                <FullScreenCodeEditor onMount={handleEditorDidMount} />
             </div>
-            <QuestionDisplay questions={questions} />
-            <TestCases testCases={question.publicTestCases} />
-            <Output />
+            <FulLScreenQuestionDisplay questions={questions} />
+            <FullScreenTestCases testCases={question.publicTestCases} />
+            <FullScreenOutput />
         </div>
     );
 }

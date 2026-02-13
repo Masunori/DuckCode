@@ -58,7 +58,7 @@ export const PRISTINE_USER_PREFERENCE: UserPreference = {
         wordWrap: "Off",
         wordWrapColumn: 80,
     },
-    colorAccessibilityMode: "normal",
+    colorAccessibilityMode: "Normal",
 }
 
 export const PRISTINE_USER: User = {

@@ -1,49 +1,45 @@
 "use client";
 
-import { PLKeys } from "@/components/settings/settingsUtils";
-import { useUserStore } from "@/contexts/UserContext";
+import { PLKeys, PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 import { useRef } from "react";
 import { Question } from "@/lib/gameplay/utils";
-import Chatbox from "./components/Chatbox";
-import MultiplayerNavbar from "./components/MultiplayerNavbar";
-import StrategyBoard from "./components/StrategyBoard";
-import { useGameplayController } from "./hooks/useGameplayController";
-import { LAYOUTS } from "./layout/layoutUtils";
+import Chatbox from "@/components/multiplayer/components/Chatbox";
+import MultiplayerNavbar from "@/components/multiplayer/components/MultiplayerNavbar";
+import StrategyBoard from "@/components/multiplayer/components/StrategyBoard";
+import { LAYOUTS } from "@/components/multiplayer/layout/layoutUtils";
 import { ExecutionStatus, TestCaseResult } from "./multiplayerUtils";
 import { useCodeEditorStore } from "./stores/codeEditorStores";
 import { useCodeExecutionStore } from "./stores/codeExecutionStore";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import { useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
 
 type MultiplayerClientProps = {
     initialServerData: {
-        question: Question;
+        questions: Question[];
         initialTime: number;
-        activeTab: string;
-        codeByUser: {
-            [userId: string]: string;
-        };
-        executionStatusByUser: {
-            [userId: string]: string;
-        };
         programmingLanguage: PLKeys;
-        readOnlyTabs: string[];
     }
 }
 
 export default function MultiplayerClient({ initialServerData }: MultiplayerClientProps) {
-    const user = useUserStore(state => state.user);
+    // const user = useUserStore(state => state.user);
+    const userPreference = useUserPreferenceStore(state => state.userPreference);
     const isAlreadyInitialized = useRef(false);
 
     // set up the entire gameplay
     if (!isAlreadyInitialized.current) {
         isAlreadyInitialized.current = true;
 
-        useGameplayController.getState().setActiveTab(initialServerData.activeTab);
-        useGameplayController.getState().setReadOnlyTabs(initialServerData.readOnlyTabs);
-        useCodeEditorStore.getState().setProgrammingLanguage(initialServerData.programmingLanguage as PLKeys);
+        useMultiplayerGameplayStore.getState().setActiveCodeView({ kind: "shared" });
+        useMultiplayerGameplayStore.getState().setProgrammingLanguage(initialServerData.programmingLanguage as PLKeys);
 
-        for (const [userId, code] of Object.entries(initialServerData.codeByUser)) {
-            useCodeEditorStore.getState().setCodeForUser(userId, code);
-        }
+        // for (const [userId, code] of Object.entries(initialServerData.codeByUser)) {
+        //     useCodeEditorStore.getState().setCodeForUser(userId, code);
+        // }
+
+        useMultiplayerGameplayStore.getState().setCodeContent(new Array<string>(
+            initialServerData.questions.length).fill(PROGRAMMING_LANGUAGES[initialServerData.programmingLanguage].codeSnippet)
+        );
 
         for (const [userId, status] of Object.entries(initialServerData.executionStatusByUser)) {
             useCodeExecutionStore.getState().setExecutionStatus(userId, status as ExecutionStatus);
@@ -60,7 +56,7 @@ export default function MultiplayerClient({ initialServerData }: MultiplayerClie
             <MultiplayerNavbar initialTime={initialServerData.initialTime} />
             <StrategyBoard />
             <Chatbox />
-            {LAYOUTS[user.userPreference.gameplayLayout].implementation(initialServerData.question)}
+            {LAYOUTS[userPreference.gameplayLayout].implementation(initialServerData.questions)}
         </>
     );
 }
