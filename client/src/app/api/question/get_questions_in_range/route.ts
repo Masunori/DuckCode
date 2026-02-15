@@ -43,7 +43,7 @@ export async function GET(request: Request) {
         }
 
         const res = await response.json();
-        printd("@/app/api/question/get_questions_in_range/route.ts", `Fetched questions in range ${minDifficulty}-${maxDifficulty}:`, res);
+        // printd("@/app/api/question/get_questions_in_range/route.ts", `Fetched questions in range ${minDifficulty}-${maxDifficulty}:`, res);
         
         return NextResponse.json(
             { ok: true, res },

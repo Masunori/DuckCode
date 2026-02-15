@@ -1,5 +1,5 @@
-// const debug: boolean = process.env.NODE_ENV === "development";
-const debug: boolean = true;
+const debug: boolean = process.env.NODE_ENV === "development";
+// const debug: boolean = true;
 
 /**
  * Prints a debug message to the console with a timestamp.
