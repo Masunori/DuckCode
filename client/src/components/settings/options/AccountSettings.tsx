@@ -6,6 +6,7 @@ import { useState } from "react";
 import editIcon from '@/../public/icons/edit.png';
 import { useUserStore } from "@/contexts/UserContext";
 import styles from '@/components/settings/settings.module.css';
+import { usePopup } from "@/contexts/PopupContext";
 
 type AccountSettingsProps = {
     nextUserInfo: TempAccountInfo;
@@ -51,9 +52,19 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
         // No temporary password stored, immediately change for user object upon typing - to update
     }
 
+    const { openPopupWith } = usePopup();
+
     const handleLogout = async () => {
-        await fetch('/api/auth/logout', { method: 'POST' });
-        window.location.href = "/portal";
+        openPopupWith(
+            "Are you sure you want to logout?",
+            "Logout",
+            "Cancel",
+            async () => {
+                await fetch('/api/auth/logout', { method: 'POST' });
+                window.location.href = "/portal";
+            },
+            () => { }
+        );
     }
 
     return (

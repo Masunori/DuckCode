@@ -11,6 +11,7 @@ import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClien
 import { printd } from "@/lib/utils/debugUtils";
 import { ExecutionStatus } from "@/lib/multiplayer/utils";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import { tryApiCallWithAuth } from "@/lib/apiClient/apiCallWithAuth";
 
 /** Type of code editor view, where `shared` represents the shared code editor and `private` represents any player's private code editor identified by userId */
 type CodeView = 
@@ -165,7 +166,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
             }
 
             const language = useUserPreferenceStore.getState().userPreference.language;
-            const output = await lock.call(() => runCode(sourceCode, language));
+            const output = await lock.call(() => tryApiCallWithAuth(() => runCode(sourceCode, language)));
 
             setInformationMode("output");
 
@@ -195,55 +196,55 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
                 return undefined;
             }
 
-            setInformationMode("testCases");
-
-            setTestCaseResults((prev) => {
-                const newResults = [...prev];
-
-                const newTestCaseResults: TestCaseResult[] = [];
-
-                for (let i = 0; i < questions[activeQuestionIndex].publicTestCases.length; i++) {
-                    newTestCaseResults.push({
-                        tid: questions[activeQuestionIndex].publicTestCases[i].tid,
-                        actualOutput: "",
-                        statusId: i % 2 + 1,
-                        message: "Test case is pending execution..."
-                    });
-                }
-
-                newResults[activeQuestionIndex] = newTestCaseResults;
-                return newResults;
-            });
-
-            return { status: 200, message: "Dummy..." };
-
-            // const language = useUserPreferenceStore.getState().userPreference.language;
-            // const questionId = questions[activeQuestionIndex].qid;
-            // const output = await lock.call(() => runAllTestCases(questionId, sourceCode, language));
-
             // setInformationMode("testCases");
 
-            // if (!output) {
-            //     return { status: 409, message: "Another code execution is in progress." };
-            // } else if (output.status !== 200) {
-            //     return { status: output.status, message: output.message || "Failed to run test cases." };
-            // } else {
-            //     setTestCaseResults((prev) => {
-            //         const newResults = [...prev];
-            //         newResults[activeQuestionIndex] = output.results;
-            //         return newResults;
-            //     });
+            // setTestCaseResults((prev) => {
+            //     const newResults = [...prev];
 
-            //     const firstWrongTestCaseIndex = output.results.findIndex(result => RUN_CODE_RESPONSES[result.statusId] !== RunCodeStatuses.ACCEPTED);
+            //     const newTestCaseResults: TestCaseResult[] = [];
 
-            //     if (firstWrongTestCaseIndex !== -1) {
-            //         setActiveTestCaseIndex(firstWrongTestCaseIndex);
-            //         const failedReason = output.results[firstWrongTestCaseIndex].message;
-            //         return { status: 200, message: `Test case ${firstWrongTestCaseIndex + 1} failed. Reason: ${failedReason}` };
-            //     } else {
-            //         return { status: 200, message: "All public test cases passed successfully." };
+            //     for (let i = 0; i < questions[activeQuestionIndex].publicTestCases.length; i++) {
+            //         newTestCaseResults.push({
+            //             tid: questions[activeQuestionIndex].publicTestCases[i].tid,
+            //             actualOutput: "",
+            //             statusId: i % 2 + 1,
+            //             message: "Test case is pending execution..."
+            //         });
             //     }
-            // }
+
+            //     newResults[activeQuestionIndex] = newTestCaseResults;
+            //     return newResults;
+            // });
+
+            // return { status: 200, message: "Dummy..." };
+
+            const language = useUserPreferenceStore.getState().userPreference.language;
+            const questionId = questions[activeQuestionIndex].qid;
+            const output = await lock.call(() => tryApiCallWithAuth(() => runAllTestCases(questionId, sourceCode, language)));
+
+            setInformationMode("testCases");
+
+            if (!output) {
+                return { status: 409, message: "Another code execution is in progress." };
+            } else if (output.status !== 200) {
+                return { status: output.status, message: output.message || "Failed to run test cases." };
+            } else {
+                setTestCaseResults((prev) => {
+                    const newResults = [...prev];
+                    newResults[activeQuestionIndex] = output.results;
+                    return newResults;
+                });
+
+                const firstWrongTestCaseIndex = output.results.findIndex(result => RUN_CODE_RESPONSES[result.statusId] !== RunCodeStatuses.ACCEPTED);
+
+                if (firstWrongTestCaseIndex !== -1) {
+                    setActiveTestCaseIndex(firstWrongTestCaseIndex);
+                    const failedReason = output.results[firstWrongTestCaseIndex].message;
+                    return { status: 200, message: `Test case ${firstWrongTestCaseIndex + 1} failed. Reason: ${failedReason}` };
+                } else {
+                    return { status: 200, message: "All public test cases passed successfully." };
+                }
+            }
         },
         submitCode: async () => {
             const {
@@ -263,7 +264,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
 
             const language = useUserPreferenceStore.getState().userPreference.language;
             const questionId = questions[activeQuestionIndex].qid;
-            const output = await lock.call(() => submitCode(questionId, sourceCode, language));
+            const output = await lock.call(() => tryApiCallWithAuth(() => submitCode(questionId, sourceCode, language)));
 
             setInformationMode("output");
 

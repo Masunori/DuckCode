@@ -11,40 +11,40 @@ export default async function Page({
 }: {
 	searchParams: Promise<{ qid: string }>;
 }) {
-	// const { qid } = await searchParams;
+	const { qid } = await searchParams;
 
-	// printd("@app/(withContext)/arcade/page.tsx", `Loading question with QID: ${qid}`);
+	printd("@app/(withContext)/arcade/page.tsx", `Loading question with QID: ${qid}`);
 
-	// const response = await getQuestionById(qid);
+	const response = await getQuestionById(qid);
 
-	// if (response.status === 200) {
-	// 	const q = response.data as Question; 
+	if (response.status === 200) {
+		const q = response.data as Question; 
 
-	// 	printd("@app/(withContext)/arcade/page.tsx", `Fetched question data:`, response.data.title);
+		printd("@app/(withContext)/arcade/page.tsx", `Fetched question data:`, response.data.title);
 
-	// 	const initialServerData = {
-	// 		questions: [q],
-	// 		initialTime: 900,
-	// 	}
+		const initialServerData = {
+			questions: [q],
+			initialTime: 900,
+		}
 
-	// 	return (
-	// 		<div className={styles.container}>
-	// 			<GameplayNavbar initialTime={initialServerData.initialTime} />
-	// 			<ArcadeClient initialServerData={initialServerData} />
-	// 		</div>
-	// 	)
-	// }
+		return (
+			<div className={styles.container}>
+				<GameplayNavbar initialTime={initialServerData.initialTime} />
+				<ArcadeClient initialServerData={initialServerData} />
+			</div>
+		)
+	}
 
-	// if (response.status === 401) {
-	// 	redirect("/portal");
-	// }
+	if (response.status === 401) {
+		redirect("/portal");
+	}
 
-	// throw new Error("Failed to load question data. HTTP Status: " + response.status);
+	throw new Error("Failed to load question data. HTTP Status: " + response.status);
 
-	return (
-		<div className={styles.container}>
-			<GameplayNavbar initialTime={900} />
-			<ArcadeClient initialServerData={{ questions: [dummyQuestion, placeholderQuestion], initialTime: 900 }} />
-		</div>
-	)
+	// return (
+	// 	<div className={styles.container}>
+	// 		<GameplayNavbar initialTime={900} />
+	// 		<ArcadeClient initialServerData={{ questions: [dummyQuestion, placeholderQuestion], initialTime: 900 }} />
+	// 	</div>
+	// )
 }

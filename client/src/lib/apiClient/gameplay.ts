@@ -2,6 +2,7 @@ import { TestCaseResult } from '@/lib/gameplay/utils';
 import { PLKeys } from '@/components/settings/settingsUtils';
 import { OutputEntry } from '@/lib/apiClient/runCodeStatuses';
 import { printd } from '@/lib/utils/debugUtils';
+import { Question } from '@/lib/gameplay/utils';
 
 export async function getQuestionsInRange(minDifficulty: number, maxDifficulty: number) {
     const response = await fetch(`/api/question/get_questions_in_range?min_difficulty=${minDifficulty}&max_difficulty=${maxDifficulty}`, {
@@ -16,9 +17,13 @@ export async function getQuestionsInRange(minDifficulty: number, maxDifficulty: 
 
     printd("@apiClient/gameplay.ts", `Fetched questions in range ${minDifficulty}-${maxDifficulty}:`, data);
 
+    // If there is no question available, this endpoint returns "{ data: null }", else, the question array.
+    // Hence, return empty array if the data is null, else return the question array.
     return {
         status: response.status,
-        data
+        data: Array.isArray(data.res)
+            ? data.res as { qid: string; title: string; difficulty: number }[]
+            : []
     };
 }
 

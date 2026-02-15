@@ -5,15 +5,20 @@ type StylizedEventMenuButtonProps = {
     buttonName: string;
     onClick: MouseEventHandler<HTMLButtonElement> | undefined;
     buttonDescription: string;
+    disabled?: boolean;
 }
 
-function StylizedEventMenuButton({ buttonName, onClick, buttonDescription }: StylizedEventMenuButtonProps) {
+function StylizedEventMenuButton({ buttonName, onClick, buttonDescription, disabled }: StylizedEventMenuButtonProps) {
     return (
         <div className={styles.stylizedEventMenuButton}>
             <div className={styles.stylizedEventMenuButtonDescription}>
                 {buttonDescription}
             </div>
-            <button onClick={onClick}>{buttonName}</button>
+            <button 
+                onClick={onClick} 
+                disabled={disabled} 
+                style={{ cursor: disabled ? "not-allowed" : "pointer" }}
+            >{buttonName}</button>
             <div className={styles.stylizedEventMenuButtonOverlay}>
                 
             </div>
@@ -24,9 +29,24 @@ function StylizedEventMenuButton({ buttonName, onClick, buttonDescription }: Sty
 export default function EventMenu() {
     return (
         <div className={styles.eventMenu}>
-            <StylizedEventMenuButton buttonName="Daily Challenge" onClick={undefined} buttonDescription="An easy problem to start your day." />
-            <StylizedEventMenuButton buttonName="DuckPass" onClick={undefined} buttonDescription="Not yet available..." />
-            <StylizedEventMenuButton buttonName="Event" onClick={undefined} buttonDescription="Access time-limited events here!" />
+            <StylizedEventMenuButton 
+                buttonName="Daily Challenge" 
+                onClick={undefined} 
+                buttonDescription="An easy problem to start your day." 
+                disabled={true}
+            />
+            <StylizedEventMenuButton 
+                buttonName="DuckPass" 
+                onClick={undefined} 
+                buttonDescription="Not yet available..." 
+                disabled={true}
+            />
+            <StylizedEventMenuButton 
+                buttonName="Event" 
+                onClick={undefined} 
+                buttonDescription="Access time-limited events here!" 
+                disabled={true}
+            />
         </div>
     )
 }

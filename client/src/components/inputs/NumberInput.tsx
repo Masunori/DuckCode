@@ -24,7 +24,7 @@ type NumberInputProps = {
  * - `increment (number)`: this input has a button that jumps the input up and down by some number more than 1, you can set it here
  * - `inputName (string)`: the text to describe the number input
  * - `handleInputChange (number => void)`: the function that is applied on the new number input
- * @returns 
+ * @returns The number input component
  */
 export default function NumberInput({ inputId, defaultValue, min, max, increment, inputName, handleInputChange }: NumberInputProps) {
     const [value, setValue] = useState(defaultValue);

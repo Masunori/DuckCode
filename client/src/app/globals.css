@@ -52,17 +52,6 @@
   --wrong-indicator-text-color: var(--font-colour);
   --correct-on-hover-indicator-text-color: var(--font-colour);
   --wrong-on-hover-indicator-text-color: var(--font-colour);
-
-  /* Code output (and terminal in the future) */
-  --error-code-text-border-color: #CC2020;
-  --warn-code-text-border-color: #FF8D00;
-  --success-code-text-border-color: #00FF00;
-
-  /* Test case selector */
-  --error-test-case-bg-color: #480000;
-  --error-test-case-bg-color-hover: #FF4040;
-  --success-test-case-bg-color: #005600;
-  --success-test-case-bg-color-hover: #009600;
   
   /* Settings background color */
   --settings-option-bg-color: #242424;
@@ -138,6 +127,10 @@ body, p, h1, h2, h3, h4, h5, h6, button {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+button {
+  cursor: pointer;
 }
 
 @media (prefers-color-scheme: dark) {

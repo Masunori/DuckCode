@@ -54,6 +54,18 @@ export default function Settings() {
         setNextUserPreference(structuredClone(userPreference));
     }, [userPreference]);
 
+    // ensure account info is initialized when settings opens or when the user updates
+    useEffect(() => {
+        if (isSettingsOpen) {
+            setNextUserInfo({
+                name: user?.name ?? "",
+                email: user?.email ?? "",
+                bio: user?.bio ?? "",
+                isTwoFactored: user?.isTwoFactored ?? false,
+            });
+        }
+    }, [isSettingsOpen, user]);
+
     // handle Settings's 4 big events: exit, revert, reset, save
     function handleExit() {
         // there is an await sleep(1) because for the code editor theme, an update to the theme will be reflected for all editors (somehow)

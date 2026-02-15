@@ -4,8 +4,15 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
     try {
         const tokens = request.headers.get('cookie');
-        const accessToken = tokens?.split('; ').filter(cookie => cookie.startsWith('accessToken='))[0].split('=')[1];
-        const refreshToken = tokens?.split('; ').filter(cookie => cookie.startsWith('refreshToken='))[0].split('=')[1];
+        const accessToken = tokens?.split('; ').filter(cookie => cookie.startsWith('accessToken='))[0]?.split('=')[1];
+        const refreshToken = tokens?.split('; ').filter(cookie => cookie.startsWith('refreshToken='))[0]?.split('=')[1];
+        
+        if (!accessToken || !refreshToken) {
+            return NextResponse.json(
+                { ok: false, message: "Not authenticated" },
+                { status: 401 }
+            );
+        }
 
         const cookieHeader = {
             'accessToken': accessToken,
@@ -28,7 +35,7 @@ export async function GET(request: Request) {
         });
 
         if (!response.ok) {
-            const err = await response.json().catch(() => ({}));
+            const err = await response.json().catch(() => {});
             return NextResponse.json(
                 { ok: false, message: err.message || 'Failed to fetch questions' },
                 { status: response.status }
@@ -36,10 +43,10 @@ export async function GET(request: Request) {
         }
 
         const res = await response.json();
-        printd("@api/question/get_questions_in_range/route.ts", "Fetched questions in range:", res);
-
+        printd("@/app/api/question/get_questions_in_range/route.ts", `Fetched questions in range ${minDifficulty}-${maxDifficulty}:`, res);
+        
         return NextResponse.json(
-            { ok: true, data: res },
+            { ok: true, res },
             { status: 200, headers: { 'Cache-Control': 'no-store' } },
         );
     } catch (err) {

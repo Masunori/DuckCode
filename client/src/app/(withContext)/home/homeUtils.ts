@@ -11,5 +11,5 @@ export const GAME_MODES: Record<string, GameMode> = {
     regex: { name: "RegEx", description: "Guess as many regular expressions as possible based on the sequence of given Finite State Automata." },
     aiMl: { name: "AI/ML", description: "Using whatever machine learning algorithm you want, create the strongest model that can most accurately predict something based on given data." },
     database: { name: "Database", description: "Get the data you want from a database with the expressive power of SQL queries." },
-    fixTheCode: { name: "Fix the Code", description: "Patch the faulty code before everything breaks down." },
+    // fixTheCode: { name: "Fix the Code", description: "Patch the faulty code before everything breaks down." },
 }

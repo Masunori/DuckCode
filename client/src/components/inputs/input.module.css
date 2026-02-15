@@ -278,3 +278,45 @@
 .sliderMinThumb:hover, .sliderMaxThumb:hover {
     background-color: var(--significant-button-hover-color);
 }
+
+/* for pagination controller */
+.paginationController {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.paginationController button {
+    background-color: transparent;
+    transition-duration: 0.25s;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    width: 2rem;
+    height: 2rem;
+    box-sizing: border-box;
+}
+
+.paginationController button:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.paginationController button.selected {
+    border: 2px solid var(--significant-button-color);
+    color: var(--significant-button-color);
+}
+
+.paginationController button:disabled {
+    cursor: not-allowed;
+    background-color: transparent;
+}
+
+.paginationController button.skipPagesButton {
+    color: #888;
+}
+
+.paginationController button.placeholderButton {
+    opacity: 0;
+    pointer-events: none;
+}
