@@ -1,3 +1,4 @@
+import { printd } from "@/lib/utils/debugUtils";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -35,7 +36,7 @@ export async function GET(request: Request) {
             { status: 200, headers: { 'Cache-Control': 'no-store' } },
         );
     } catch (err) {
-        console.log(err);
+        printd("@/app/api/auth/me/route", "Error in GET /auth/me:", err);
 
         return NextResponse.json(
             { ok: false, message: `Internal server error: ${err}` }, 

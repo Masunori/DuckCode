@@ -4,9 +4,12 @@ import { User } from "@/app/userPrefs/userPrefsTypes";
 import { useSettings } from "@/contexts/SettingsContext";
 import Image from "next/image";
 import styles from "../page.module.css";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 
 export default function HomeNavbar({ user }: { user: User }) {
     const { openSettings } = useSettings();
+
+    const userPreference = useUserPreferenceStore(state => state.userPreference);
 
     return (
         <div
@@ -14,10 +17,10 @@ export default function HomeNavbar({ user }: { user: User }) {
         >
             <div className={styles.userInfo}>
                 {/* <Image 
-                    src={null} 
+                    src={"/images/default_profile_pic.png"} 
                     alt="user-profile-pic" 
-                    width={user.userPreference.fontSize * 3} 
-                    height={user.userPreference.fontSize * 3} 
+                    width={userPreference.fontSize * 3} 
+                    height={userPreference.fontSize * 3} 
                 /> */}
                 <div className={styles.img}>
 

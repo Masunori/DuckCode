@@ -85,7 +85,8 @@
 
 .settingsContentChunk {
     border-bottom: 1px solid var(--settings-option-border-color);
-    margin-bottom: 1rem;
+    overflow: hidden;
+    padding: 1rem 0;
 }
 
 /* Keyboard Shortcut Configuration */
@@ -136,7 +137,6 @@
 .resizeHandler:hover {
     background-color: var(--significant-button-color);
 }
-
 .demoEditor h2 {
     margin-bottom: 1rem;
 }
@@ -247,37 +247,16 @@
     background-color: var(--second-layer-background-color);
 }
 
-/* .colorAccessibilityPalettePreview .correctTestCase {
-    background-color: var(--correct-indicator-color);
-    color: var(--correct-indicator-text-color);
-}
-
-.colorAccessibilityPalettePreview .correctTestCase:hover {
-    background-color: var(--correct-on-hover-indicator-color);
-    color: var(--correct-on-hover-indicator-text-color);
-}
-
-.colorAccessibilityPalettePreview .wrongTestCase {
-    background-color: var(--wrong-indicator-color);
-    color: var(--wrong-indicator-text-color);
-}
-
-.colorAccessibilityPalettePreview .wrongTestCase:hover {
-    background-color: var(--wrong-on-hover-indicator-color);
-    color: var(--wrong-on-hover-indicator-text-color);
-} */
-
 /* Account Settings */
 .accountSettingsDisplay {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
 }
 
 .accountSettingsDisplay input {
     width: 100%;
     box-sizing: border-box;
-    margin: 1rem 0;
+    margin: 0.5rem 0;
     padding: 0.25rem;
     background-color: var(--terminal-like-background-color);
     border: 2px solid var(--fourth-layer-background-color);
@@ -366,17 +345,18 @@
 }
 
 .editButton {
-    background-color: var(--insignificant-button-color);
+    background-color: var(--significant-button-color);
     color: white;
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.2s;
+    margin-top: 1rem;
 }
 
 .editButton:hover {
-    background-color: var(--insignificant-button-hover-color);
+    background-color: var(--significant-button-hover-color);
 }
 
 .accountInfoGrid {
@@ -424,36 +404,73 @@
     text-shadow: 0 0 2px black;
 }
 
+.passwordGuideTooltip {
+    overflow: hidden;
+    padding-left: 1.25rem;
+    box-sizing: border-box;
+}
+
 .passwordChangeForm {
     margin-top: 1rem;
+    height: fit-content;
 }
 
-.formGroup {
-    margin-bottom: 1rem;
-}
-
-.formGroup label {
-    display: block;
-    margin-bottom: 0.25rem;
+.passwordChangeForm .formGroup label {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
     color: #aaa;
 }
 
-.formGroup input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #444;
-    border-radius: 4px;
-    background-color: var(--terminal-like-background-color);
-    color: white;
+.passwordChangeForm .formGroup label button {
+    padding: 0.25rem;
+    height: fit-content;
+    font-family: var(--code-fragment-font);
+    width: max-content;
+    background-color: var(--insignificant-button-color);
+    border: 2px var(--fourth-layer-background-color) solid;
+    border-radius: 0.25rem;
+    transition-duration: 0.25s;
 }
 
-.formActions {
+.passwordChangeForm .formGroup label button:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.passwordChangeForm .formGroup input {
+    border: 1px solid #888;
+}
+
+.passwordChangeForm .formGroup input:focus {
+    outline: none;
+}
+
+.passwordChangeForm .formActions {
     display: flex;
     gap: 1rem;
-    margin-top: 1rem;
+    margin: 1rem 0 5rem;
 }
 
-.cancelButton {
+.passwordChangeForm .saveButton {
+    background-color: var(--significant-button-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.passwordChangeForm .saveButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.passwordChangeForm .saveButton:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+.passwordChangeForm .cancelButton {
     background-color: #444;
     color: white;
     border: none;
@@ -463,11 +480,11 @@
     transition: background-color 0.2s;
 }
 
-.cancelButton:hover {
+.passwordChangeForm .cancelButton:hover {
     background-color: #555;
 }
 
-.securityOptions {
+.passwordChangeForm .securityOptions {
     margin-top: 1.5rem;
     display: flex;
     flex-direction: column;
@@ -747,4 +764,18 @@
     100% {
         transform: translateX(100%);
     }
+}
+
+.logoutButton {
+    background-color: var(--significant-button-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition-duration: 0.25s;
+}
+
+.logoutButton:hover {
+    background-color: var(--significant-button-hover-color);
 }

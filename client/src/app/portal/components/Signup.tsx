@@ -3,9 +3,12 @@ import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/compon
 import { SignupStatuses } from "@/lib/apiClient/portalStatuses";
 import { getVerificationCode, signUp, verifyCode } from "@/lib/apiClient/user";
 import React, { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
+import { PASSWORD_CONDITIONS, USERNAME_CONDITIONS } from "../../../lib/utils/fieldConditions";
 import styles from '../page.module.css';
 import PopupOverlay from "./PopupOverlay";
-import { PASSWORD_CONDITIONS, USERNAME_CONDITIONS } from "./fieldConditions";
+import NewUsernameInput from "@/components/authInputs/NewUsernameInput";
+import NewEmailInput from "@/components/authInputs/NewEmailInput";
+import NewPasswordInput from "@/components/authInputs/NewPasswordInput";
 
 type SignupProps = {
     portalMode: PortalMode;
@@ -18,6 +21,17 @@ enum FieldState {
     INVALID,
     SERVER_SIDE_INVALID
 }
+
+const EMPTY_STRING_BORDER_COLOR = 'var(--fourth-layer-background-color)';
+const INVALID_STRING_BORDER_COLOR = '#DC143C';
+const VALID_STRING_BORDER_COLOR = '#00FF00';
+const SERVER_SIDE_ERROR_BORDER_COLOR = '#FF5C00';
+
+const EMPTY_STRING_BG_COLOR = 'var(--second-layer-background-color)';
+const INVALID_STRING_BG_COLOR = '#540A1E';
+const VALID_STRING_BG_COLOR = '#008800';
+const SERVER_SIDE_ERROR_BG_COLOR = '#7C1212';
+
 
 function ResendOTPButton({ email }: { email: string }) {
     const [seconds, setSeconds] = useState(60);
@@ -38,71 +52,13 @@ function ResendOTPButton({ email }: { email: string }) {
         <button
             onClick={handleResend}
             disabled={seconds > 0}
-            style={{
-                cursor: seconds > 0 ? "not-allowed" : "pointer",
-                opacity: seconds > 0 ? 0.5 : 1
-            }}
         >
             {seconds > 0 ? `Resend in ${seconds}s` : "Resend OTP"}
         </button>
     )
 }
 
-function UsernameGuideTooltip({ usernameConditionsRef, focusedField }: {
-    usernameConditionsRef: RefObject<HTMLLIElement[] | null[]>,
-    focusedField?: "username" | "email" | "password" | "confirmPassword" | null
-}) {
-    return (
-        <ul
-            className={styles.usernameGuide}
-            style={{
-                height: focusedField === "username" ? "4rem" : "0",
-                transitionDuration: "0.25s",
-                overflow: "hidden",
-            }}
-        >
-            {Object.entries(USERNAME_CONDITIONS).map(([key, value], index) => (
-                <li key={key} ref={el => { usernameConditionsRef.current[index] = el; }}>
-                    {value.name}
-                </li>
-            ))}
-        </ul>
-    );
-}
-
-function PasswordGuideTooltip({ passwordConditionsRef, focusedField }: {
-    passwordConditionsRef: RefObject<HTMLLIElement[] | null[]>,
-    focusedField?: "username" | "email" | "password" | "confirmPassword" | null
-}) {
-    return (
-        <ul
-            className={styles.passwordGuide}
-            style={{
-                height: focusedField === "password" ? "8rem" : "0",
-                transitionDuration: "0.25s",
-                overflow: "hidden",
-            }}
-        >
-            {Object.entries(PASSWORD_CONDITIONS).map(([key, value], index) => (
-                <li key={key} ref={el => { passwordConditionsRef.current[index] = el; }}>
-                    {value.name}
-                </li>
-            ))}
-        </ul>
-    );
-}
-
 export default function Signup({ portalMode, setPortalMode }: SignupProps) {
-    const EMPTY_STRING_BORDER_COLOR = 'var(--fourth-layer-background-color)';
-    const INVALID_STRING_BORDER_COLOR = '#DC143C';
-    const VALID_STRING_BORDER_COLOR = '#00FF00';
-    const SERVER_SIDE_ERROR_BORDER_COLOR = '#FF5C00';
-
-    const EMPTY_STRING_BG_COLOR = 'var(--second-layer-background-color)';
-    const INVALID_STRING_BG_COLOR = '#540A1E';
-    const VALID_STRING_BG_COLOR = '#008800';
-    const SERVER_SIDE_ERROR_BG_COLOR = '#7C1212';
-
     // sign up phase
     const [signupProgressSteps, setSignupProgressSteps] = useState<ProgressStep[]>([
         {
@@ -125,29 +81,6 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
         }
     ]);
 
-    // const [signupProgressSteps, setSignupProgressSteps] = useState<ProgressStep[]>([
-    //     {
-    //         id: "registration",
-    //         label: "Registration",
-    //         status: "completed",
-    //         isBackwardNavigable: true
-    //     },
-    //     {
-    //         id: "otp",
-    //         label: "OTP",
-    //         status: "active",
-    //         isBackwardNavigable: true
-    //     },
-    //     {
-    //         id: "success",
-    //         label: "Success",
-    //         status: "unreached",
-    //         isBackwardNavigable: false
-    //     }
-    // ]);
-
-
-
     const handleStepClick = (step: number) => {
         setSignupProgressSteps(prevSteps => {
             const newSteps = [...prevSteps];
@@ -157,12 +90,6 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
         });
     }
 
-    // tracks which field is being focused
-    const [focusedField, setFocusedField] = useState<"username" | "email" | "password" | "confirmPassword" | null>(null);
-
-    // use to show/hide password
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
     // tracks the state of each input field
     const [usernameInputState, setUsernameInputState] = useState(FieldState.EMPTY);
     const [emailInputState, setEmailInputState] = useState(FieldState.EMPTY);
@@ -170,21 +97,6 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
     const [confirmPasswordInputState, setConfirmPasswordInputState] = useState(FieldState.EMPTY);
 
     const [signupStatus, setSignupStatus] = useState<SignupStatuses[] | null>(null);
-
-    // colors for the input fields based on their state
-    const borderColors = {
-        [FieldState.EMPTY]: EMPTY_STRING_BORDER_COLOR,
-        [FieldState.VALID]: VALID_STRING_BORDER_COLOR,
-        [FieldState.INVALID]: INVALID_STRING_BORDER_COLOR,
-        [FieldState.SERVER_SIDE_INVALID]: SERVER_SIDE_ERROR_BORDER_COLOR
-    }
-
-    const backgroundColors = {
-        [FieldState.EMPTY]: EMPTY_STRING_BG_COLOR,
-        [FieldState.VALID]: VALID_STRING_BG_COLOR,
-        [FieldState.INVALID]: INVALID_STRING_BG_COLOR,
-        [FieldState.SERVER_SIDE_INVALID]: SERVER_SIDE_ERROR_BG_COLOR
-    }
 
     // form data
     const [username, setUsername] = useState('');
@@ -196,109 +108,11 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
     const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const [otpPointer, setOtpPointer] = useState(0);
 
-    const usernameConditionsRef: RefObject<HTMLLIElement[] | null[]> = useRef([]);
-    const passwordConditionsRef: RefObject<HTMLLIElement[] | null[]> = useRef([]);
-
     function areAllFieldsValid(): boolean {
         return usernameInputState === FieldState.VALID &&
             emailInputState === FieldState.VALID &&
             passwordInputState === FieldState.VALID &&
             confirmPasswordInputState === FieldState.VALID;
-    }
-
-    function handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newUsername: string = event.target.value;
-        setUsername(newUsername);
-
-        let isUsernameValid: boolean = true;
-
-        Object.entries(USERNAME_CONDITIONS).forEach((condition, index) => {
-            const el = usernameConditionsRef.current[index];
-            if (el === null) return;
-
-            const value = condition[1];
-
-            if (newUsername === "") {
-                el.innerText = `  ${value.name}`;
-                el.style.color = 'var(--font-colour)';
-            } else if (!value.checkFn(newUsername)) {
-                isUsernameValid = false;
-                el.innerText = `✖ ${value.name}`;
-                el.style.color = INVALID_STRING_BORDER_COLOR;
-            } else {
-                el.innerText = `✔ ${value.name}`;
-                el.style.color = VALID_STRING_BORDER_COLOR;
-            }
-        });
-
-        setUsernameInputState(newUsername === ''
-            ? FieldState.EMPTY
-            : isUsernameValid
-                ? FieldState.VALID
-                : FieldState.INVALID);
-    }
-
-    function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newEmail = event.target.value;
-        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})*$/;
-
-        setEmail(newEmail);
-
-        setEmailInputState(newEmail === ''
-            ? FieldState.EMPTY
-            : emailRegex.test(newEmail)
-                ? FieldState.VALID
-                : FieldState.INVALID);
-    }
-
-    function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newPassword = event.target.value;
-        setPassword(newPassword);
-
-        let isPasswordValid = true;
-
-        Object.entries(PASSWORD_CONDITIONS).forEach((condition, index) => {
-            const el = passwordConditionsRef.current[index];
-            if (el === null) return;
-
-            const value = condition[1];
-
-            if (newPassword === "") {
-                el.innerText = `  ${value.name}`;
-                el.style.color = 'var(--font-colour)';
-            } else if (!value.checkFn(newPassword)) {
-                isPasswordValid = false;
-                el.innerText = `✖ ${value.name}`;
-                el.style.color = INVALID_STRING_BORDER_COLOR;
-            } else {
-                el.innerText = `✔ ${value.name}`;
-                el.style.color = VALID_STRING_BORDER_COLOR;
-            }
-        });
-
-        setPasswordInputState(newPassword === ''
-            ? FieldState.EMPTY
-            : isPasswordValid
-                ? FieldState.VALID
-                : FieldState.INVALID);
-
-        // this is so that the confirm password also updates accordingly if password is changed
-        if (newPassword === confirmPassword && confirmPassword !== '') {
-            setConfirmPasswordInputState(FieldState.VALID);
-        } else if (confirmPassword !== '' && newPassword !== confirmPassword) {
-            setConfirmPasswordInputState(FieldState.INVALID);
-        }
-    }
-
-    function handleConfirmPasswordChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newCfmPassword = event.target.value;
-        setConfirmPassword(newCfmPassword);
-
-        setConfirmPasswordInputState(newCfmPassword === '' || newCfmPassword.length < password.length
-            ? FieldState.EMPTY
-            : newCfmPassword === password
-                ? FieldState.VALID
-                : FieldState.INVALID);
     }
 
     const handleOtpChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -340,6 +154,8 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
             setSignupStatus([SignupStatuses.INVALID_CLIENT_SIDE_CREDENTIALS]);
             return;
         }
+
+        setSignupStatus(null);
 
         await signUp(
             username, email, password, confirmPassword
@@ -459,25 +275,9 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                         <h2>Welcome to DuckCode!</h2>
                         <h4>Your journey starts here!</h4>
                         <form action={"/api/portal/signup"} method="POST" onSubmit={register}>
-                            <label htmlFor="signupUsername" className={styles.fieldWithInputGuide}>
-                                <p>Username</p>
-                                <input
-                                    style={{
-                                        borderColor: borderColors[usernameInputState],
-                                        backgroundColor: backgroundColors[usernameInputState]
-                                    }}
-                                    id="signupUsername"
-                                    type="text"
-                                    name="username"
-                                    value={username}
-                                    onChange={handleUsernameChange}
-                                    onFocus={() => setFocusedField("username")}
-                                    onBlur={() => setFocusedField(null)}
-                                ></input>
-                            </label>
-                            <UsernameGuideTooltip
-                                usernameConditionsRef={usernameConditionsRef}
-                                focusedField={focusedField}
+                            <NewUsernameInput 
+                                onChangeNewUsername={setUsername}
+                                onValidateNewUsername={setUsernameInputState}
                             />
                             <ul>
                                 {signupStatus?.includes(SignupStatuses.USERNAME_TAKEN)
@@ -491,22 +291,10 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                                     </li>
                                 }
                             </ul>
-                            <label htmlFor="signupEmail">
-                                <p>Email</p>
-                                <input
-                                    style={{
-                                        borderColor: borderColors[emailInputState],
-                                        backgroundColor: backgroundColors[emailInputState]
-                                    }}
-                                    id="signupEmail"
-                                    type="email"
-                                    name="email"
-                                    value={email}
-                                    onChange={handleEmailChange}
-                                    onFocus={() => setFocusedField("email")}
-                                    onBlur={() => setFocusedField(null)}
-                                ></input>
-                            </label>
+                            <NewEmailInput 
+                                onChangeNewEmail={setEmail}
+                                onValidateNewEmail={setEmailInputState}
+                            />
                             <ul>
                                 {signupStatus?.includes(SignupStatuses.EMAIL_USED)
                                     &&
@@ -519,48 +307,12 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                                     </li>
                                 }
                             </ul>
-                            <label htmlFor="signupPassword" className={styles.passwordLabel}>
-                                <p>Password</p>
-                                <input
-                                    id="signupPassword"
-                                    style={{
-                                        borderColor: borderColors[passwordInputState],
-                                        backgroundColor: backgroundColors[passwordInputState]
-                                    }}
-                                    type={isPasswordVisible ? "text" : "password"}
-                                    name="password"
-                                    value={password}
-                                    onChange={handlePasswordChange}
-                                    onFocus={() => setFocusedField("password")}
-                                    onBlur={() => setFocusedField(null)}
-                                ></input>
-                                <button type="button" onClick={() => setIsPasswordVisible(!isPasswordVisible)} tabIndex={-1}>
-                                    {isPasswordVisible ? 'Hide' : 'Show'}
-                                </button>
-                            </label>
-                            <PasswordGuideTooltip
-                                passwordConditionsRef={passwordConditionsRef}
-                                focusedField={focusedField}
+                            <NewPasswordInput 
+                                onChangeNewPassword={setPassword}
+                                onChangeConfirmPassword={setConfirmPassword}
+                                onValidateNewPassword={setPasswordInputState}
+                                onValidateConfirmPassword={setConfirmPasswordInputState}
                             />
-                            <label htmlFor="signupConfirmPassword" className={styles.passwordLabel}>
-                                <p>Confirm Password</p>
-                                <input
-                                    id="signupConfirmPassword"
-                                    style={{
-                                        borderColor: borderColors[confirmPasswordInputState],
-                                        backgroundColor: backgroundColors[confirmPasswordInputState]
-                                    }}
-                                    type={isPasswordVisible ? "text" : "password"}
-                                    name="confirmPassword"
-                                    value={confirmPassword}
-                                    onChange={handleConfirmPasswordChange}
-                                    onFocus={() => setFocusedField("confirmPassword")}
-                                    onBlur={() => setFocusedField(null)}
-                                ></input>
-                                <button type="button" onClick={() => setIsPasswordVisible(!isPasswordVisible)} tabIndex={-1}>
-                                    {isPasswordVisible ? 'Hide' : 'Show'}
-                                </button>
-                            </label>
                             {signupStatus?.includes(SignupStatuses.INVALID_CLIENT_SIDE_CREDENTIALS)
                                 &&
                                 <p style={{
@@ -585,10 +337,6 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                             <button
                                 type="submit"
                                 disabled={!areAllFieldsValid()}
-                                style={{
-                                    cursor: areAllFieldsValid() ? 'pointer' : 'not-allowed',
-                                    opacity: areAllFieldsValid() ? 1 : 0.5
-                                }}
                             >Register</button>
                         </form>
                         <div className={styles.or}>

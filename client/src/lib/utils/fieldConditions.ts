@@ -3,6 +3,13 @@ type Condition = {
     checkFn: (password: string) => boolean;
 }
 
+export enum FieldState {
+    EMPTY,
+    VALID,
+    INVALID,
+    SERVER_SIDE_INVALID
+}
+
 export const PASSWORD_CONDITIONS: Record<string, Condition> = {
     hasTenCharOrMore: {
         name: 'At least 10 characters',

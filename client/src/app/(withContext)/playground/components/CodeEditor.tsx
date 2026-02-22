@@ -2,7 +2,7 @@
 
 import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 import { PRESET_THEMES } from "@/components/themes/themes";
-import { Editor } from '@monaco-editor/react';
+import { Editor, loader } from '@monaco-editor/react';
 import * as monaco from "monaco-editor";
 import { useEffect, useRef } from "react";
 import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "../../../userPrefs/userPrefsUtils";
@@ -10,6 +10,12 @@ import styles from "../page.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 import { useDebouncedSave } from "@/hooks/useDebounce";
+
+loader.config({
+	paths: {
+		vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs',
+	},
+});
 
 type CodeEditorProps = {
     onMount: (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => void;

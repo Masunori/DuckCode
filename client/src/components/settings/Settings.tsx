@@ -166,7 +166,7 @@ export default function Settings() {
             component: <GeneralSettings nextuserPreference={nextUserPreference} setNextuserPreference={setNextUserPreference} />
         },
         "Code Editor": {
-            component: <CodeEditorSettings nextuserPreference={nextUserPreference} setNextuserPreference={setNextUserPreference} />
+            component: <CodeEditorSettings nextUserPreference={nextUserPreference} setNextUserPreference={setNextUserPreference} />
         },
         "Keyboard Shortcut Configuration": {
             component: <KeyboardShortcutSettings />

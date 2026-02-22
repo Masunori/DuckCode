@@ -1,16 +1,70 @@
 "use client";
 
-import { User } from "@/app/userPrefs/userPrefsTypes";
-import Image from "next/image";
-import { useState } from "react";
 import editIcon from '@/../public/icons/edit.png';
-import { useUserStore } from "@/contexts/UserContext";
+import { User } from "@/app/userPrefs/userPrefsTypes";
+import CurrentPasswordInput from '@/components/authInputs/CurrentPasswordInput';
+import NewPasswordInput from '@/components/authInputs/NewPasswordInput';
 import styles from '@/components/settings/settings.module.css';
+import { InputIndicatorColours } from '@/components/themes/authColors';
 import { usePopup } from "@/contexts/PopupContext";
+import { useUserStore } from "@/contexts/UserContext";
+import { FieldState, PASSWORD_CONDITIONS } from "@/lib/utils/fieldConditions";
+import { AnimatePresence, motion } from 'motion/react';
+import Image from "next/image";
+import { RefObject, useRef, useState } from "react";
 
 type AccountSettingsProps = {
     nextUserInfo: TempAccountInfo;
     handleAccountChange: (key: keyof TempAccountInfo, value: string) => void;
+}
+
+type PasswordChangeFormProps = {
+    onSave: (currentPassword: string, newPassword: string, confirmPassword: string) => void;
+    onCancel: () => void;
+}
+
+const PasswordChangeForm = ({
+    onSave,
+    onCancel
+}: PasswordChangeFormProps) => {
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    const [newPasswordFieldState, setNewPasswordFieldState] = useState(FieldState.EMPTY);
+    const [confirmPasswordFieldState, setConfirmPasswordFieldState] = useState(FieldState.EMPTY);
+
+    return <div className={styles.passwordChangeForm}>
+        <CurrentPasswordInput 
+            onChangeCurrentPassword={setCurrentPassword}
+            name="Current Password"
+        />
+        <NewPasswordInput 
+            onChangeNewPassword={setNewPassword}
+            onChangeConfirmPassword={setConfirmPassword}
+            onValidateNewPassword={setNewPasswordFieldState}
+            onValidateConfirmPassword={setConfirmPasswordFieldState}
+        />
+        <div className={styles.formActions}>
+            <button
+                disabled={
+                    currentPassword === "" 
+                    || newPasswordFieldState !== FieldState.VALID 
+                    || confirmPasswordFieldState !== FieldState.VALID
+                }
+                className={styles.saveButton}
+                onClick={() => onSave(currentPassword, newPassword, confirmPassword)}
+            >
+                Change Password
+            </button>
+            <button
+                className={styles.cancelButton}
+                onClick={onCancel}
+            >
+                Cancel
+            </button>
+        </div>
+    </div>;
 }
 
 type TempAccountInfo = Pick<User, 'name' | 'email' | 'bio' | 'isTwoFactored'>;
@@ -24,9 +78,6 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
     const [tempBio, setTempBio] = useState(nextUserInfo.bio || "");
     const [isHoveringProfilePic, setIsHoveringProfilePic] = useState(false);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
 
     const handleSaveUsername = () => {
         handleAccountChange("name", tempUsername);
@@ -47,10 +98,6 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
         setTempBio(tempBio || "");
         setIsEditingBio(false);
     };
-
-    const handlePasswordChange = () => {
-        // No temporary password stored, immediately change for user object upon typing - to update
-    }
 
     const { openPopupWith } = usePopup();
 
@@ -245,55 +292,43 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
             {/* Password & Security Section */}
             <div className={styles.settingsContentChunk}>
                 <h2>Password & Security</h2>
-                {isChangingPassword ? (
-                    <div className={styles.passwordChangeForm}>
-                        <div className={styles.formGroup}>
-                            <label>Current Password</label>
-                            <input
-                                type="password"
-                                value={currentPassword}
-                                onChange={(e) => setCurrentPassword(e.target.value)}
+                <AnimatePresence initial={false}>
+                    {isChangingPassword ? (
+                        <motion.div
+                            key="form"
+                            initial={{ opacity: 0, height: 0, overflow: "hidden" }}
+                            animate={{ opacity: 1, height: "auto", overflow: "hidden" }}
+                            exit={{ opacity: 0, height: 0, overflow: "hidden" }}
+                            transition={{ duration: 0.25, ease: "easeInOut" }}
+                        >
+                            <PasswordChangeForm
+                                onSave={(currentPassword, newPassword, confirmPassword) => {
+                                    // Validation can be added here before calling handleAccountChange
+                                    if (newPassword !== confirmPassword) {
+                                        alert("New password and confirm password do not match.");
+                                        return;
+                                    }
+                                }}
+                                onCancel={() => setIsChangingPassword(false)}
                             />
-                        </div>
-                        <div className={styles.formGroup}>
-                            <label>New Password</label>
-                            <input
-                                type="password"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                            />
-                        </div>
-                        <div className={styles.formGroup}>
-                            <label>Confirm New Password</label>
-                            <input
-                                type="password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                            />
-                        </div>
-                        <div className={styles.formActions}>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="button"
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.25 }}
+                        >
                             <button
-                                className={styles.saveButton}
-                                onClick={handlePasswordChange}
+                                className={styles.editButton}
+                                onClick={() => setIsChangingPassword(true)}
                             >
                                 Change Password
                             </button>
-                            <button
-                                className={styles.cancelButton}
-                                onClick={() => setIsChangingPassword(false)}
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                ) : (
-                    <button
-                        className={styles.editButton}
-                        onClick={() => setIsChangingPassword(true)}
-                    >
-                        Change Password
-                    </button>
-                )}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
                 {/*}
                 <div className={styles.securityOptions}>
                     <CheckboxInput
@@ -308,7 +343,10 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
                                     */}
             </div>
             <div className={styles.settingsContentChunk}>
-                <button onClick={handleLogout}>Logout</button>
+                <button
+                    onClick={handleLogout}
+                    className={styles.logoutButton}
+                >Logout</button>
             </div>
         </div>
     );

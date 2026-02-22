@@ -4,13 +4,19 @@ import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } fr
 import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 import { PRESET_THEMES } from "@/components/themes/themes";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
-import { Editor } from '@monaco-editor/react';
 import * as monaco from "monaco-editor";
 import { useEffect, useRef } from "react";
 import styles from "../page.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { printd } from "@/lib/utils/debugUtils";
 import { useDebouncedSave } from "@/hooks/useDebounce";
+import { Editor, loader } from "@monaco-editor/react";
+
+loader.config({
+	paths: {
+		vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs',
+	},
+});
 
 type CodeEditorProps = {
     onMount: (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => void;

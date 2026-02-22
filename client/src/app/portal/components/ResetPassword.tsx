@@ -3,8 +3,8 @@ import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/compon
 import { ResetPasswordStatuses } from "@/lib/apiClient/portalStatuses";
 import { getVerificationCode, verifyCode, verifyNewPassword } from "@/lib/apiClient/user";
 import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
+import { PASSWORD_CONDITIONS } from "../../../lib/utils/fieldConditions";
 import styles from '../page.module.css';
-import { PASSWORD_CONDITIONS } from "./fieldConditions";
 import PopupOverlay from "./PopupOverlay";
 
 type ResetPasswordProps = {
