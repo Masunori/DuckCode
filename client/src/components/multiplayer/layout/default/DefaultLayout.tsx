@@ -198,7 +198,7 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
 
             Thus, I use `codeForTab`, which removes the dependency on codeByUser.
         */
-        if (model && model.getValue() !== codeForTab[activeQuestionIndex]) {
+        if (model && codeForTab && model.getValue() !== codeForTab[activeQuestionIndex]) {
             model.setValue(codeForTab[activeQuestionIndex]);
         }
     }, [activeTab, codeForTab, activeQuestionIndex, monaco]);
