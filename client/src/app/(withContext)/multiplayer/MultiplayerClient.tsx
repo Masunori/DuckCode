@@ -2,12 +2,11 @@
 
 import { PLKeys, PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 import { useRef } from "react";
-import { Question } from "@/lib/gameplay/utils";
+import { Question, TestCaseResult } from "@/lib/gameplay/utils";
 import Chatbox from "@/components/multiplayer/components/Chatbox";
 import MultiplayerNavbar from "@/components/multiplayer/components/MultiplayerNavbar";
 import StrategyBoard from "@/components/multiplayer/components/StrategyBoard";
 import { LAYOUTS } from "@/components/multiplayer/layout/layoutUtils";
-import { ExecutionStatus, TestCaseResult } from "./multiplayerUtils";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { selectCodeOutputSetterForUser, selectExecutionStatusSetterForUser, selectTestCaseResultsSetterForUser, useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
 import { printd } from "@/lib/utils/debugUtils";
