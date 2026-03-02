@@ -1,7 +1,7 @@
 "use client";
 
-import StarryBackground from "./components/backgrounds/StarryBackground";
-import "./globals.css";
+import StarryBackground from "../components/backgrounds/StarryBackground";
+// import "./globals.css";
 import UserPrefRootSetter from "./userPrefs/UserPrefRootSetter";
 import { useEffect, useState } from "react";
 

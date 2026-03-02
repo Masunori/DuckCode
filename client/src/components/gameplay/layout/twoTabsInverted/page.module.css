@@ -1,0 +1,33 @@
+.gameplayPanels {
+    width: 100%;
+    height: 100%;
+    padding: 5.5rem 1rem 1rem;
+}
+
+.verticalGameplayPanelResizeHandler {
+    width: 3px;
+    margin: 0 2px;
+    transition-duration: 0.25s;
+}
+
+.horizontalGameplayPanelResizeHandler {
+    height: 3px;
+    margin: 2px 0;
+    transition-duration: 0.25s;
+}
+
+.verticalGameplayPanelResizeHandler:hover, .horizontalGameplayPanelResizeHandler:hover {
+    background-color: var(--significant-button-color);
+}
+
+/* Information Panel - Toggle between Question, Test Case and Output */
+.informationPanel {
+    display: grid;
+    grid-template-rows: 3rem 1fr 3rem;
+    height: 100%;
+    overflow: hidden;
+}
+
+.twoTabsCodeHandlerButtons {
+    border-top: 1px solid #888;
+}

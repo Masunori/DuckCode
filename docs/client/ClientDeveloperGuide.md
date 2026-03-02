@@ -11,7 +11,7 @@
 - [`/landing`](#landing)
 - [`/portal`](#portal)
 - [`/home`](#home)
-- [`/gameplay`](#gameplay)
+- [`/arcade`](#arcade)
 - [`/playground`](#playground)
 
 [Reusable Components Design](#reusable-components-design)
@@ -38,8 +38,7 @@
 ## Documentation Revision History
 | Version | Date | Content |
 | --- | --- | --- |
-| 0.1.0 | 28 June, 2025 | UI skeleton for `gameplay`, `landing`, `portal`, `home`, and `playground` |
-| 0.2.0 | 16 July, 2025 | Refactored `gameplay` UI logic, added UI skeleton for `multiplayer` |
+| 0.1.0 | 28 June, 2025 | UI skeleton for `arcade`, `multiplayer`, `landing`, `portal`, `home`, and `playground` |
 ---
 
 ## Setting Up and Getting Started
@@ -67,9 +66,9 @@ After a successful login, the home interface is what the user sees.
 Refer to the [Home](./routes/Home.md) documentation for more details.
 
 
-### [`/gameplay`](../../client/src/app/(withContext)/gameplay/page.tsx)
-This is a generic interface where game interactions occur. Different game modes will copy the template from the game play interface and make modifications accordingly. Because it is a generic interface, it is not what a user will see.
-Refer to the [Gameplay](./routes/Gameplay.md) documentation for more details.
+### [`/arcade`](../../client/src/app/(withContext)/arcade/page.tsx)
+This is an interface where single-player games
+Refer to the [Arcade](./routes/Arcade.md) documentation for more details.
 
 ### [`/multiplayer`](../../client/src/app/(withContext)/multiplayer/page.tsx)
 This interface inherits the gameplay interface by adding on multiplayer logic.

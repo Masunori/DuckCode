@@ -28,7 +28,7 @@
   
   /* Button colors */
   --significant-button-color: #007fff;
-  --significant-button-hover-color: #0560bc;
+  --significant-button-hover-color: #0c5aa8;
   --significant-button-hover-heavier-color: #163d63;
   --insignificant-button-color: #363636;
   --insignificant-button-hover-color: #484848;
@@ -39,18 +39,19 @@
 
   --code-fragment-font: monospace;
   --font-colour: #ccc;
+  --font-colour-black: #222;
   --font-colour-hover: #777;
 
-  /* Code output (and terminal in the future) */
-  --error-code-text-border-color: #CC2020;
-  --warn-code-text-border-color: #FF8D00;
-  --success-code-text-border-color: #00FF00;
+  /* Correct-wrong indicator */
+  --correct-indicator-color: #42BE65;
+  --wrong-indicator-color: #F82D37;
+  --correct-on-hover-indicator-color: #086222;
+  --wrong-on-hover-indicator-color: #92080F;
 
-  /* Test case selector */
-  --error-test-case-bg-color: #480000;
-  --error-test-case-bg-color-hover: #FF4040;
-  --success-test-case-bg-color: #005600;
-  --success-test-case-bg-color-hover: #009600;
+  --correct-indicator-text-color: var(--font-colour-black);
+  --wrong-indicator-text-color: var(--font-colour);
+  --correct-on-hover-indicator-text-color: var(--font-colour);
+  --wrong-on-hover-indicator-text-color: var(--font-colour);
   
   /* Settings background color */
   --settings-option-bg-color: #242424;
@@ -126,6 +127,10 @@ body, p, h1, h2, h3, h4, h5, h6, button {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+button {
+  cursor: pointer;
 }
 
 @media (prefers-color-scheme: dark) {

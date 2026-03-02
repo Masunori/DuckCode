@@ -1,6 +1,3 @@
-import { encodeUserPrefs } from "@/app/userPrefs/userPrefSerializer";
-import { UserPreference } from "@/app/userPrefs/userPrefsUtils";
-
 export async function login(email: string, password: string) {
     const response = await fetch("/api/auth/login", {
         method: 'POST',
@@ -130,22 +127,34 @@ export async function verifyNewPassword(
     };
 }
 
-export async function updateSettings(userPreference: UserPreference) {
-    const encoded = encodeUserPrefs(userPreference);
-
-    const response = await fetch("user/updateSettings", {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-            userPreference: encoded,
-        })
+export async function getCookies() {
+    const response = await fetch("/api/cookies", {
+        method: "GET",
+        credentials: "include",
     });
+
+    const data = await response.json();
 
     return {
         status: response.status,
-        data: null
+        data
+    };
+}
+
+export async function refresh() {
+    try {
+        const response = await fetch(`/api/auth/refresh-token`, {
+            method: "POST",
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        
+
+        return response;
+    } catch (error) {
+        console.error('Error in refreshToken:', error);
+        throw error;
     }
 }

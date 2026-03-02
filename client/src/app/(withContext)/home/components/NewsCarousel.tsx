@@ -1,8 +1,8 @@
 "use client";
 
+import debounce from "@/lib/utils/debounce";
 import { useCallback, useEffect, useState } from "react";
 import styles from "../page.module.css";
-import debounce from "@/app/utils/debounce";
 
 export default function NewsCarousel() {
     const [activeNewsTab, setActiveNewsTab] = useState(1);
@@ -77,7 +77,7 @@ export default function NewsCarousel() {
             <button className={styles.leftButton} onClick={debounceHandleLeftShift}>{"<"}</button>
             <div className={styles.allNewsTabs}>
                 {augmentData(data).map((info, index) => (
-                    <div 
+                    <div
                         key={index}
                         style={{
                             width: `${(data.length + 2) * 100}%`,
@@ -93,7 +93,7 @@ export default function NewsCarousel() {
             <button className={styles.rightButton} onClick={debounceHandleRightShift}>{">"}</button>
             <div className={styles.indicators}>
                 {data.map((_, index) => (
-                    <div 
+                    <div
                         className={styles.indicator}
                         key={index}
                         style={{

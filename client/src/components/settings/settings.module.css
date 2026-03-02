@@ -1,0 +1,781 @@
+.settingsOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--background-color);
+    z-index: var(--settings-z-index);
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 9fr 1fr;
+    grid-template-areas:
+        "options display"
+        "options buttons";
+}
+
+/* Floating buttons */
+.settingsFunctionalButtons {
+    grid-area: buttons;
+    display: flex;
+    border-top: 1px solid var(--settings-option-border-color);
+}
+
+.settingsFunctionalButtons button {
+    width: 100%;
+    border: none;
+    background-color: var(--insignificant-button-color);
+    transition-duration: 0.25s;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 1rem;
+    font-weight: 600;
+}
+
+.settingsFunctionalButtons button:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.saveButton {
+    background-color: var(--significant-button-color) !important;
+}
+
+.saveButton:hover {
+    background-color: var(--significant-button-hover-color) !important;
+}
+
+/* Settings options */
+.settingsOptions {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    grid-area: options;
+}
+
+.settingsOptions::-webkit-scrollbar {
+    width: 5px;
+}
+
+.settingsOptions::-webkit-scrollbar-thumb {
+    background-color: #484848;
+    border-radius: 10px;
+}
+
+.settingsOptions li {
+    padding: 10px;
+    border-bottom: 1px solid var(--settings-option-border-color);
+    margin: 0;
+    transition-duration: 0.25s;
+    cursor: pointer;
+}
+
+/* Display panel for the active settings option */
+.settingsOptionDisplay {
+    grid-area: display;
+    background-color: var(--settings-bg-color);
+    padding: 5%;
+    overflow-y: scroll;
+}
+
+.settingsOptionDisplay::-webkit-scrollbar {
+    width: 0;
+}
+
+.settingsContentChunk {
+    border-bottom: 1px solid var(--settings-option-border-color);
+    overflow: hidden;
+    padding: 1rem 0;
+}
+
+/* Keyboard Shortcut Configuration */
+.keyboardShortcutDisplay table {
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.keyboardShortcutDisplay tr {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: center;
+    transition-duration: 0.25s;
+    border-radius: 0.5rem;
+    padding: 0 0.5rem;
+}
+
+.keyboardShortcutDisplay td, .keyboardShortcutDisplay th {
+    padding: 1rem;
+}
+
+.keyboardShortcutDisplay td code {
+    background-color: var(--terminal-like-background-color);
+    width: 100%;
+    display: block;
+    padding: 0.5rem;
+    border: 1px solid var(--settings-option-border-color);
+    border-radius: 5px;
+}
+
+.keyboardShortcutDisplay tr:hover {
+    background-color: var(--settings-bg-hover-color);
+    font-weight: 600;
+}
+
+/* Code editor settings */
+/* .codeEditorSettingsDisplay {
+    
+} */
+
+.resizeHandler {
+    width: 0.35rem;
+    margin: 0 0.7rem 0 0.35rem;
+    transition-duration: 0.25s;
+    border-radius: 1000px;
+}
+
+.resizeHandler:hover {
+    background-color: var(--significant-button-color);
+}
+.demoEditor h2 {
+    margin-bottom: 1rem;
+}
+
+.codeEditorSettingsOptions {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.codeEditorSettingsOptions::-webkit-scrollbar {
+    width: 5px;
+}
+
+.codeEditorSettingsOptions::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 1000px;
+}
+
+/* General settings */
+.buttonColorControls {
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+    grid-template-columns: 3fr 1fr;
+    grid-template-areas: 
+        "main button"
+        "main button"
+        "main button"
+        "hover button"
+        "hover autoHover"
+        "hover autoHover";
+    column-gap: 1rem;
+}
+
+.significantButtonColor {
+    grid-area: main;
+    border-right: 1px solid #888;
+}
+
+.significantButtonColorHovered {
+    grid-area: hover;
+    border-right: 1px solid #888;
+}
+
+.buttonColorControls button {
+    display: block;
+    grid-area: button;
+    transition-duration: 0.25s;
+    justify-self: center;
+    align-self: center;
+    font-size: 1.2rem;
+    height: fit-content;
+    width: fit-content;
+    padding: 1rem;
+    border: 2px solid;
+    border-radius: 0.5rem;
+}
+
+.autoSelectHoverColor {
+    grid-area: autoHover;
+}
+
+.autoHoverSelectorExplanation {
+    display: block;
+    margin: 1rem;
+}
+
+.autoHoverSelectorExplanation code {
+    background-color: var(--terminal-like-background-color);
+    padding: 0 0.5rem;
+}
+
+.layoutSettings, .colorAccessibilitySettings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.colorAccessibilityPaletteColors {
+    list-style-type: none;
+    border-bottom: 0.2rem solid var(--settings-option-border-color);
+    margin-bottom: 0.5rem;
+}
+
+.colorAccessibilityPalettePreview ul {
+    list-style-type: none;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    background-color: var(--fourth-layer-background-color);
+}
+
+.colorAccessibilityPalettePreview li {
+    width: 10rem;
+    height: 2rem;
+    padding: 0.5rem;
+    transition-duration: 0.25s;
+}
+
+.colorAccessibilityPalettePreview li:hover {
+    cursor: pointer;
+}
+
+.colorAccessibilityPalettePreview .defaultTestCase {
+    background-color: var(--terminal-like-background-color);
+}
+
+.colorAccessibilityPalettePreview .defaultTestCase:hover {
+    background-color: var(--second-layer-background-color);
+}
+
+/* Account Settings */
+.accountSettingsDisplay {
+    display: flex;
+    flex-direction: column;
+}
+
+.accountSettingsDisplay input {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0.5rem 0;
+    padding: 0.25rem;
+    background-color: var(--terminal-like-background-color);
+    border: 2px solid var(--fourth-layer-background-color);
+    border-radius: 3px;
+    font-family: var(--code-fragment-font);
+    transition: 0.25s;
+}
+
+.profileSection {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    margin-top: 1rem;
+}
+
+.profilePictureContainer {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.profilePicture {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--significant-button-color);
+}
+
+.changePictureButton {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--significant-button-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.changePictureButton:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+.profileInfo {
+    flex: 1;
+}
+
+.profileInfo h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+}
+
+.bioText {
+    color: #aaa;
+    margin: 0;
+}
+
+/* .bioInput {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: var(--terminal-like-background-color);
+    color: white;
+    resize: vertical;
+}
+
+.profileInput {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: var(--terminal-like-background-color);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+} */
+
+.profileActions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.editButton {
+    background-color: var(--significant-button-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+}
+
+.editButton:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+.accountInfoGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.infoItem {
+    margin-bottom: 1rem;
+}
+
+.infoLabel {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+    color: #aaa;
+}
+
+.infoValue {
+    display: block;
+}
+
+.expBar {
+    height: 1rem;
+    background-color: #333;
+    border-radius: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.expProgress {
+    height: 100%;
+    background-color: var(--significant-button-color);
+    border-radius: 0.5rem;
+}
+
+.expText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.7rem;
+    color: white;
+    text-shadow: 0 0 2px black;
+}
+
+.passwordGuideTooltip {
+    overflow: hidden;
+    padding-left: 1.25rem;
+    box-sizing: border-box;
+}
+
+.passwordChangeForm {
+    margin-top: 1rem;
+    height: fit-content;
+}
+
+.passwordChangeForm .formGroup label {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    color: #aaa;
+}
+
+.passwordChangeForm .formGroup label button {
+    padding: 0.25rem;
+    height: fit-content;
+    font-family: var(--code-fragment-font);
+    width: max-content;
+    background-color: var(--insignificant-button-color);
+    border: 2px var(--fourth-layer-background-color) solid;
+    border-radius: 0.25rem;
+    transition-duration: 0.25s;
+}
+
+.passwordChangeForm .formGroup label button:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.passwordChangeForm .formGroup input {
+    border: 1px solid #888;
+}
+
+.passwordChangeForm .formGroup input:focus {
+    outline: none;
+}
+
+.passwordChangeForm .formActions {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0 5rem;
+}
+
+.passwordChangeForm .saveButton {
+    background-color: var(--significant-button-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.passwordChangeForm .saveButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.passwordChangeForm .saveButton:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+.passwordChangeForm .cancelButton {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.passwordChangeForm .cancelButton:hover {
+    background-color: #555;
+}
+
+.passwordChangeForm .securityOptions {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Profile Picture Hover Effects */
+.profilePictureHover {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.profilePictureOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.editIcon {
+    font-size: 1.5rem;
+    color: white;
+    text-shadow: 0 0 3px black;
+}
+
+/* Username and Bio Edit Styles */
+.usernameContainer,
+.bioContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.usernameText {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.bioText {
+    color: #aaa;
+    margin: 0;
+    flex: 1;
+}
+
+.editSmallButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #aaa;
+    font-size: 1rem;
+    padding: 0.25rem;
+    transition: color 0.2s;
+}
+
+.editSmallButton:hover {
+    color: var(--significant-button-color);
+}
+
+.editActions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 0.5rem;
+}
+
+.saveSmallButton,
+.cancelSmallButton {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition-duration: 0.25s;
+}
+
+.saveSmallButton {
+    background-color: var(--significant-button-color);
+    color: white;
+    border: none;
+}
+
+.saveSmallButton:hover {
+    background-color: var(--significant-button-hover-color);
+}
+
+.cancelSmallButton {
+    background-color: #444;
+    color: white;
+    border: none;
+}
+
+.cancelSmallButton:hover {
+    background-color: #555;
+}
+
+.profileInput {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: var(--terminal-like-background-color);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.bioInput {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: var(--terminal-like-background-color);
+    color: white;
+    resize: vertical;
+}
+
+.editIcon {
+    filter: brightness(0) invert(1); /* Makes black icon white */
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.editSmallButton .editIcon {
+    width: 16px;
+    height: 16px;
+}
+
+.profilePictureOverlay .editIcon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Account Information Container */
+.accountInfoContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.topRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-right: 25rem;
+    margin-top: 1rem;
+}
+
+.bottomRow {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+/* Level and Rank Container */
+.levelRankContainer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.levelContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.levelLabel {
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+.levelValue {
+    font-size: 2.5rem;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    background: linear-gradient(to right, #0077ff, #00aaff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Rank Styles */
+.rank {
+    padding: 0.3rem 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    color: white;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.rank.rookie {
+    background-color: #cc0000;
+    box-shadow: 0 0 6px rgba(204, 0, 0, 0.4);
+}
+
+
+.rank.veteran {
+    background-color: #55aaff;
+    box-shadow: 0 0 10px rgba(85, 170, 255, 0.5);
+}
+
+.rank.legend {
+    background-color: #ffaa00;
+    box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+}
+
+/* Experience Bar */
+.expContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 200px;
+    margin-top: 0.5rem;
+}
+
+.expBarWithLevel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.levelMin, .levelMax {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #aaa;
+}
+
+.expBarTotal {
+    flex: 1;
+    height: 1rem;
+    background-color: var(--terminal-like-background-color);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.expBarAcquired {
+    height: 100%;
+    background: linear-gradient(to right, #0077ff, #00ccff);
+    position: relative;
+    overflow: hidden;
+}
+
+.expBarRunner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: runningExpBar 2s linear infinite;
+}
+
+.expText {
+    font-size: 0.8rem;
+    color: #aaa;
+    text-align: center;
+    margin-top: 0.25rem;
+}
+
+@keyframes runningExpBar {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.logoutButton {
+    background-color: var(--significant-button-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition-duration: 0.25s;
+}
+
+.logoutButton:hover {
+    background-color: var(--significant-button-hover-color);
+}

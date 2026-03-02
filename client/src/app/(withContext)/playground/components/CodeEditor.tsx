@@ -1,53 +1,75 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect } from "react";
-import styles from "../page.module.css";
-import { Editor } from '@monaco-editor/react';
+import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { PRESET_THEMES } from "@/components/themes/themes";
+import { Editor, loader } from '@monaco-editor/react';
 import * as monaco from "monaco-editor";
-import { useUserStore } from"@/app/components/contexts/UserContext";
-import { PROGRAMMING_LANGUAGES } from "@/app/components/settings/settingsUtils";
+import { useEffect, useRef } from "react";
 import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "../../../userPrefs/userPrefsUtils";
-import { PRESET_THEMES } from "@/app/components/themes/themes";
+import styles from "../page.module.css";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import { useDebouncedSave } from "@/hooks/useDebounce";
+
+loader.config({
+	paths: {
+		vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs',
+	},
+});
 
 type CodeEditorProps = {
     onMount: (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => void;
-    codeContent: string | undefined;
-    setCodeContent: Dispatch<SetStateAction<string | undefined>>;
 }
 
-export default function CodeEditor({ onMount, codeContent, setCodeContent }: CodeEditorProps) {
-    const user = useUserStore(state => state.user);
+export default function CodeEditor({ onMount }: CodeEditorProps) {
+    const userPreference = useUserPreferenceStore(state => state.userPreference);
+
+    const languageRef = useRef(userPreference.language);
+
+    const codeContent = useBaseGameplayStore(state => state.codeContent[0]);
+    const setCodeContent = (code: string) => useBaseGameplayStore(state => state.setCodeContentAtIndex(0, code));
+
+    const { debouncedSave } = useDebouncedSave((code: string) => setCodeContent(code), 500);
+
 
     function handleEditorChange(value: string | undefined) {
-        setCodeContent(value);
+        if (value === undefined) {
+            return;
+        }
+
+        debouncedSave(value);
     }
 
     useEffect(() => {
-        setCodeContent(PROGRAMMING_LANGUAGES[user.userPreference.language].code_snippet);
-    }, [user.userPreference, setCodeContent]);
+        if (languageRef.current === userPreference.language) {
+            return;
+        }
+
+        languageRef.current = userPreference.language;
+        setCodeContent(PROGRAMMING_LANGUAGES[userPreference.language].codeSnippet);
+    }, [userPreference.language, setCodeContent]);
 
     const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
         detectIndentation: false,
-        fontSize: user.userPreference.fontSize,
-        lineNumbers: LINE_NUMBERS_OPTIONS[user.userPreference.editorOptions.lineNumbers],
+        fontSize: userPreference.fontSize,
+        lineNumbers: LINE_NUMBERS_OPTIONS[userPreference.editorOptions.lineNumbers],
         minimap: {
-            enabled: user.userPreference.editorOptions.enableMinimap,
+            enabled: userPreference.editorOptions.enableMinimap,
         },
-        renderWhitespace: RENDER_WHITESPACE_OPTIONS[user.userPreference.editorOptions.renderWhiteSpace],
-        tabSize: user.userPreference.editorOptions.tabSize,
-        wordWrap: WORD_WRAP_OPTIONS[user.userPreference.editorOptions.wordWrap],
-        wordWrapColumn: user.userPreference.editorOptions.wordWrapColumn,
+        renderWhitespace: RENDER_WHITESPACE_OPTIONS[userPreference.editorOptions.renderWhiteSpace],
+        tabSize: userPreference.editorOptions.tabSize,
+        wordWrap: WORD_WRAP_OPTIONS[userPreference.editorOptions.wordWrap],
+        wordWrapColumn: userPreference.editorOptions.wordWrapColumn,
     }
 
     return (
         <div className={styles.codeEditor}>
             <Editor
-                theme={PRESET_THEMES[user.userPreference.editorOptions.theme].monacoEditorAlias}
-                language={PROGRAMMING_LANGUAGES[user.userPreference.language].monaco_editor_alias}
+                theme={PRESET_THEMES[userPreference.editorOptions.theme].monacoEditorAlias}
+                language={PROGRAMMING_LANGUAGES[userPreference.language].monacoEditorAlias}
                 defaultLanguage="javascript"
                 onMount={onMount}
-                value={codeContent}
-                defaultValue={PROGRAMMING_LANGUAGES[user.userPreference.language].code_snippet}
+                defaultValue={codeContent}
                 onChange={handleEditorChange}
                 height={"100%"}
                 options={editorOptions}

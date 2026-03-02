@@ -1,39 +1,24 @@
-import { PLKeys } from "@/app/components/settings/settingsUtils";
+import { PLKeys } from "@/components/settings/settingsUtils";
 import * as monaco from 'monaco-editor';
+import { UserPreference, UserPreferenceAddOn, Version, EncodeSchema, User } from "./userPrefsTypes";
+import { USER_PREF_SCHEMA } from "./userPrefRegistry";
 
-export type EditorOptions = {
-    theme: string;
-    enableMinimap: boolean;
-    lineNumbers: string;
-    renderWhiteSpace: string;
-    tabSize: number;
-    wordWrap: string;
-    wordWrapColumn: number;
-}
+/**
+ * Compares two version strings, according to the rules of semantic versioning.
+ * @param v1 The first version string.
+ * @param v2 The second version string.
+ * @returns A negative number if v1 < v2, a positive number if v1 > v2, or 0 if they are equal.
+ */
+export function compareVersions(v1: Version, v2: Version): number {
+    const v1Parts = v1.split('.').map(Number);
+    const v2Parts = v2.split('.').map(Number);
 
-export type UserPreference = {
-    fontSize: number;
-    language: PLKeys;
-    significantButtonColor: string;
-    significantButtonHoverColor: string;
-    gameplayLayout: string;
-    editorOptions: EditorOptions;
-}
+    for (let i = 0; i < 3; i++) {
+        if (v1Parts[i] < v2Parts[i]) return -1;
+        if (v1Parts[i] > v2Parts[i]) return 1;
+    }
 
-export type User = {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-    level: number;
-    exp: number;
-    rank: string;
-    rankPoint: number;
-    userPreference: UserPreference;
-    bio: string;
-    createdAt: string;
-    isTwoFactored: boolean;
-    profilePicture: string;    
+    return 0;
 }
 
 export const LINE_NUMBERS_OPTIONS: Record<string, monaco.editor.LineNumbersType> = {
@@ -72,7 +57,8 @@ export const PRISTINE_USER_PREFERENCE: UserPreference = {
         tabSize: 4,
         wordWrap: "Off",
         wordWrapColumn: 80,
-    }
+    },
+    colorAccessibilityMode: "Normal",
 }
 
 export const PRISTINE_USER: User = {
@@ -84,11 +70,20 @@ export const PRISTINE_USER: User = {
     exp: 0,
     rank: "Rookie",
     rankPoint: 1000,
-    userPreference: structuredClone(PRISTINE_USER_PREFERENCE),
     bio: "Welcome to my DuckCode profile!",
     createdAt: "2023-01-01T00:00:00Z",
     isTwoFactored: false,
     profilePicture: "/default-profile.png", // Update with a default profile picture path
+}
+
+export function getDefaultUserPreference(): UserPreference {
+    const defaultUserPreference: Partial<UserPreference> = {};
+
+    for (const schemaEntry of USER_PREF_SCHEMA) {
+        Object.assign(defaultUserPreference, structuredClone(schemaEntry.default));
+    }
+
+    return defaultUserPreference as UserPreference;
 }
 
 /*

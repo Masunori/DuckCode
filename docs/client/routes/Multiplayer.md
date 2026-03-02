@@ -1,7 +1,8 @@
 # Multiplayer
 
 **Route**: [`client/src/app/(withContext)/multiplayer`](../../../client/src/app/(withContext)/multiplayer/page.tsx)
-**Introduced**: Version 0.2.0
+**Introduced**: Version 0.1.0
+**Last modified**: Version 0.1.0
 
 **New/Changed components**:
 - (Changed) [CodeEditor](#codeeditortsx)

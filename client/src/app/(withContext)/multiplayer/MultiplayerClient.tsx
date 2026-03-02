@@ -1,66 +1,66 @@
 "use client";
 
-import { useUserStore } from "@/app/components/contexts/UserContext";
-import { Question } from "../gameplay/gameplayUtils";
-import { LAYOUTS } from "./layout/layoutUtils";
-import { useCodeEditorStore } from "./stores/codeEditorStores";
-import { PLKeys } from "@/app/components/settings/settingsUtils";
-import { ExecutionStatus, TestCaseResult } from "./multiplayerUtils";
+import { PLKeys, PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 import { useRef } from "react";
-import { useGameplayController } from "./hooks/useGameplayController";
-import { useCodeExecutionStore } from "./stores/codeExecutionStore";
-import StrategyBoard from "./components/StrategyBoard";
-import MultiplayerNavbar from "./components/MultiplayerNavbar";
-import Chatbox from "./components/Chatbox";
+import { Question, TestCaseResult } from "@/lib/gameplay/utils";
+import Chatbox from "@/components/multiplayer/components/Chatbox";
+import MultiplayerNavbar from "@/components/multiplayer/components/MultiplayerNavbar";
+import StrategyBoard from "@/components/multiplayer/components/StrategyBoard";
+import { LAYOUTS } from "@/components/multiplayer/layout/layoutUtils";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import { selectCodeOutputSetterForUser, selectExecutionStatusSetterForUser, selectTestCaseResultsSetterForUser, useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
+import { printd } from "@/lib/utils/debugUtils";
 
 type MultiplayerClientProps = {
     initialServerData: {
-        question: Question;
+        questions: Question[];
         initialTime: number;
-        activeTab: string;        
-        codeByUser: {
-            [userId: string]: string;
-        };
-        executionStatusByUser: {
-            [userId: string]: string;
-        };
         programmingLanguage: PLKeys;
-        readOnlyTabs: string[];
+        teammatesIds: string[];
     }
 }
 
 export default function MultiplayerClient({ initialServerData }: MultiplayerClientProps) {
-    const user = useUserStore(state => state.user);
+    // const user = useUserStore(state => state.user);
+    const userPreference = useUserPreferenceStore(state => state.userPreference);
     const isAlreadyInitialized = useRef(false);
+
+    printd("@/app/(withContext)/multiplayer/MultiplayerClient", "Rendering MultiplayerClient with initialServerData:", initialServerData);
 
     // set up the entire gameplay
     if (!isAlreadyInitialized.current) {
         isAlreadyInitialized.current = true;
 
-        useGameplayController.getState().setActiveTab(initialServerData.activeTab);
-        useGameplayController.getState().setReadOnlyTabs(initialServerData.readOnlyTabs);
-        useCodeEditorStore.getState().setProgrammingLanguage(initialServerData.programmingLanguage as PLKeys);
-        
-        for (const [userId, code] of Object.entries(initialServerData.codeByUser)) {
-            useCodeEditorStore.getState().setCodeForUser(userId, code);
+        useMultiplayerGameplayStore.getState().setActiveCodeView({ kind: "shared" });
+        useMultiplayerGameplayStore.getState().setProgrammingLanguage(initialServerData.programmingLanguage as PLKeys);
+
+        useMultiplayerGameplayStore.getState().setCodeContent(new Array<string>(
+            initialServerData.questions.length).fill(PROGRAMMING_LANGUAGES[initialServerData.programmingLanguage].codeSnippet)
+        );
+
+        for (const userId of initialServerData.teammatesIds) {
+            const setter = selectExecutionStatusSetterForUser(useMultiplayerGameplayStore.getState());
+            setter(userId, "idle");
         }
 
-        for (const [userId, status] of Object.entries(initialServerData.executionStatusByUser)) {
-            useCodeExecutionStore.getState().setExecutionStatus(userId, status as ExecutionStatus);
-        }
+        for (const userId of initialServerData.teammatesIds) {
+            const testCaseResultsSetter = selectTestCaseResultsSetterForUser(useMultiplayerGameplayStore.getState());
+            const outputSetter = selectCodeOutputSetterForUser(useMultiplayerGameplayStore.getState());
 
-        for (const userId of Object.keys(initialServerData.codeByUser)) {
-            useCodeExecutionStore.getState().setTestCaseResults(userId, new Array<TestCaseResult>(initialServerData.question.publicTestCases.length));
-            useCodeExecutionStore.getState().setOutput(userId, [{ type: "log", content: ">> Code results will be shown here..." }])
+            for (let i = 0; i < initialServerData.questions.length; i++) {
+                testCaseResultsSetter(userId, i, new Array<TestCaseResult>(initialServerData.questions[i].publicTestCases.length));
+            }
+
+            outputSetter(userId, [{ type: "log", content: ">> Code results will be shown here..." }]);
         }
     }
-    
+
     return (
         <>
             <MultiplayerNavbar initialTime={initialServerData.initialTime} />
             <StrategyBoard />
             <Chatbox />
-            {LAYOUTS[user.userPreference.gameplayLayout].implementation(initialServerData.question)}
+            {LAYOUTS[userPreference.gameplayLayout].implementation(initialServerData.questions)}
         </>
     );
 }
