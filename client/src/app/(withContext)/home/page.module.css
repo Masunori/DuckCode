@@ -4,7 +4,7 @@
     height: 100vh;
     display: grid;
     grid-template-columns: repeat(9, 1fr);
-    grid-template-rows: 5rem 4fr 1fr;
+    grid-template-rows: auto 4fr 1fr;
     grid-template-areas:
         "nav nav nav nav nav nav nav nav nav"
         "evt inf inf inf inf inf inf gam gam"
@@ -16,23 +16,24 @@
     display: grid;
     grid-area: nav;
     grid-template-columns: 7fr 1fr 1fr 1fr;
+    height: 100%;
     background-color: var(--first-layer-background-color);
 }
 
 .userInfo {
     display: grid;
     margin: 1rem;
-    grid-template-columns: 3rem 15rem 6rem;
-    align-items: center;
-    column-gap: 2px;
+    grid-template-columns: 3.2rem 15rem 6rem;
+    grid-template-rows: 3.2rem;
+    padding: 0.1rem;
+    align-items: stretch;
+    column-gap: 0.5rem;
     background-color: var(--terminal-like-background-color);
     width: fit-content;
 }
 
-.img {
-    /* .userInfo img { */
-    width: 100%;
-    border: 3px solid var(--first-layer-background-color);
+.profilePicContainer {
+    border: 0.1rem solid var(--third-layer-background-color);
 }
 
 .usernameLevelExp {
@@ -112,16 +113,26 @@
 
 .inventory,
 .clan {
-    font-size: 1rem;
+    font-size: 1.2rem;
     transition-duration: 0.25s;
     border: none;
     background-color: var(--first-layer-background-color);
-    font-size: 1.2rem;
+    height: 100%;
 }
 
 .inventory:hover,
 .clan:hover {
     background-color: var(--fourth-layer-background-color);
+}
+
+.inventory:disabled,
+.clan:disabled {
+    cursor: not-allowed;
+}
+
+.inventory:disabled:hover,
+.clan:disabled:hover {
+    background-color: var(--first-layer-background-color);
 }
 
 .toSettings {
@@ -512,11 +523,30 @@
     font-size: 1.2rem;
     padding: 1rem;
     border: none;
-    background-color: var(--significant-button-color);
     transition-duration: 0.25s;
 }
 
-.arcadeModeActions button:hover {
+.arcadeModeActions button:disabled {
+    cursor: not-allowed;
+}
+
+.arcadeModeActions button.goBackButton,
+.arcadeModeActions button.luckyButton {
+    background-color: var(--insignificant-button-color);
+}
+
+.arcadeModeActions button.goBackButton:hover,
+.arcadeModeActions button.luckyButton:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.arcadeModeActions button.playButton,
+.arcadeModeActions button.selectModeButton {
+    background-color: var(--significant-button-color);
+}
+
+.arcadeModeActions button.playButton:hover,
+.arcadeModeActions button.selectModeButton:hover {
     background-color: var(--significant-button-hover-color);
 }
 
@@ -554,23 +584,29 @@
 
 .questionListWithPagination {
     display: grid;
-    grid-template-rows: 1fr auto 1fr;
+    grid-template-rows: auto 1fr auto;
     row-gap: 0.5rem;
     height: 100%;
-    overflow: hidden;
+    width: 100%;
+    overflow-y: hidden;
+}
+
+.questionList {
+    width: 100%;
 }
 
 .questionItem {
     display: grid;
     width: 100%;
     padding: 0.5rem;
-    grid-template-columns: 1fr 4fr 2fr;
+    grid-template-columns: 1fr 4fr 1fr;
     border-radius: 0;
     border: 0;
     transition-duration: 0.25s;
     font-size: 1rem;
     height: 2.5rem;
     box-sizing: border-box;
+    height: fit-content;
 }
 
 .questionList li:nth-child(odd) .questionItem {
@@ -581,7 +617,8 @@
     background-color: transparent;
 }
 
-.questionList li.selected .questionItem, .questionItem:hover {
+.questionList li.selected .questionItem,
+.questionItem:hover {
     border: 0.1rem solid var(--significant-button-color);
     background-color: var(--significant-button-hover-heavier-color);
 }

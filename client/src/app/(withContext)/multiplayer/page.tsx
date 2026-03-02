@@ -12,6 +12,7 @@ export default async function Page() {
         questions: questions,
         initialTime: 900,
         programmingLanguage: "JavaScript" as PLKeys,
+        teammatesIds: ["user1", "user2"],
     }
     
     return (

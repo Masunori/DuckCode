@@ -15,6 +15,7 @@ import CodeEditor from "../../components/CodeEditor";
 import QuestionTab from "../../components/QuestionTab";
 import DefaultTestCases from "../../components/DefaultTestCases";
 import styles from "./page.module.css";
+import { useRouter } from "next/navigation";
 
 export function DefaultLayout({ questions }: { questions: Question[] }) {
     // for code editor
@@ -45,6 +46,9 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
         )
     );
 
+    const reset = useBaseGameplayStore(state => state.reset);
+    const router = useRouter();
+
     const runCodeClientSide = useCallback(async () => {
         const response = await runCode();
 
@@ -68,11 +72,13 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
             return;
         }
 
+        const submissionSuccessful = response.message === "Congratulations! You pass all test cases. Exit?";
+
         openPopupWith(
             response.message,
-            "Understood",
-            null,
-            () => { },
+            submissionSuccessful ? "Exit" : "Understood",
+            submissionSuccessful ? "Go back to code" : null,
+            submissionSuccessful ? () => { reset(); router.push("/home") } : () => { },
             () => { }
         );
     }, [submitCode, openPopupWith]);

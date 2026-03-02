@@ -28,8 +28,6 @@ export default function ArcadeClient({ initialServerData }: GameplayClientProps)
     const initialTestCaseResults: TestCaseResult[][] = Array(initialServerData.questions.length).fill([]);
     
     useEffect(() => {
-        printd("@/app/(withContext)/arcade/ArcadeClient", codeContent.toString());
-
         setQuestions(initialServerData.questions);
         setTestCaseResults(initialTestCaseResults);
 

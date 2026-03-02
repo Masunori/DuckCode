@@ -163,6 +163,8 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                 </div>
                 <div className={styles.arcadeModeActions}>
                     <button
+                        className={styles.selectModeButton}
+                        disabled={mode !== "classic"}
                         onClick={async () => {
                             if (mode === "classic") {
                                 await getQuestionsInRange(difficultyRange[0], difficultyRange[1]);
@@ -172,7 +174,7 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                                 setView("questions");
                             }
                         }}
-                    >Select Mode</button>
+                    >{mode === "classic" ? "Select Mode" : "Not Available"}</button>
                 </div>
             </motion.div>
         </motion.div>
@@ -232,6 +234,11 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
             </div>
             <div className={styles.arcadeModeActions}>
                 <button
+                    className={styles.goBackButton}
+                    onClick={() => setView("gameMode")}
+                >Go Back</button>
+                <button
+                    className={styles.luckyButton}
                     onClick={async () => {
                         const randomPage = Math.floor(Math.random() * Math.ceil(questionInfo.length / PAGE_SIZE)) + 1;
                         setQuestionPage(randomPage);
@@ -242,6 +249,7 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                     }}
                 >I'm feeling lucky</button>
                 <button
+                    className={styles.playButton}
                     onClick={async () => {
                         if (selectedQuestion) {
                             router.push(`/arcade?qid=${selectedQuestion.qid}`);

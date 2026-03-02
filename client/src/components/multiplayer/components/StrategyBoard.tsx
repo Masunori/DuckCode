@@ -8,8 +8,8 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { Rnd } from "react-rnd";
 import { useShallow } from "zustand/shallow";
-import { useBoardController } from "../hooks/useBoardController";
 import styles from "../page.module.css";
+import { useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
 
 const Excalidraw = dynamic(
     async () => (await import("@excalidraw/excalidraw")).Excalidraw,
@@ -22,7 +22,7 @@ export default function StrategyBoard() {
     const [dragDisabled, setDragDisabled] = useState(false);
     const [excalidrawApi, setExcalidrawApi] = useState<ExcalidrawImperativeAPI | null>(null);
 
-    const [isBoardOpen, setIsBoardOpen] = useBoardController(
+    const [isBoardOpen, setIsBoardOpen] = useMultiplayerGameplayStore(
         useShallow(state => [state.isBoardOpen, state.setIsBoardOpen])
     );
 

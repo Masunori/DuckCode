@@ -16,14 +16,13 @@ export default function HomeNavbar({ user }: { user: User }) {
             className={styles.homeNavbar}
         >
             <div className={styles.userInfo}>
-                {/* <Image 
-                    src={"/images/default_profile_pic.png"} 
-                    alt="user-profile-pic" 
-                    width={userPreference.fontSize * 3} 
-                    height={userPreference.fontSize * 3} 
-                /> */}
-                <div className={styles.img}>
-
+                <div className={styles.profilePicContainer}>
+                    <Image 
+                        src={"/images/default_profile_pic.png"} 
+                        alt="user-profile-pic" 
+                        width={userPreference.fontSize * 3} 
+                        height={userPreference.fontSize * 3} 
+                    />
                 </div>
                 <div className={styles.usernameLevelExp}>
                     <p>{user.name}</p>
@@ -45,14 +44,14 @@ export default function HomeNavbar({ user }: { user: User }) {
                     <p>{user.rank}</p>
                 </div>
             </div>
-            <button className={styles.inventory}>Inventory</button>
-            <button className={styles.clan}>Clan</button>
+            <button className={styles.inventory} disabled>Inventory</button>
+            <button className={styles.clan} disabled>Clan</button>
             <button className={styles.toSettings} onClick={openSettings}>
                 <Image
                     src={'/icons/settings.png'}
                     alt="settings"
-                    width={20}
-                    height={20}
+                    width={userPreference.fontSize * 1.25}
+                    height={userPreference.fontSize * 1.25}
                 />
             </button>
         </div>

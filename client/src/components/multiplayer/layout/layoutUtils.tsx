@@ -1,6 +1,6 @@
 "use client";
 
-import { Question } from '../multiplayerUtils';
+import { Question } from '@/lib/gameplay/utils';
 import { DefaultLayout } from './default/DefaultLayout';
 // import { FullscreenEditorLayout } from './fullscreenEditor/FullscreenEditorLayout';
 import styles from './gameplay.layout.module.css';
@@ -10,7 +10,7 @@ import styles from './gameplay.layout.module.css';
 
 export type LayoutInfo = {
     miniPreview: React.JSX.Element;
-    implementation: (question: Question) => React.JSX.Element;
+    implementation: (questions: Question[]) => React.JSX.Element;
 }
 
 // export type LayoutNames =
@@ -29,7 +29,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.editor}>Code Editor</div>
                 <div className={styles.testCases}>Test Cases</div>
             </div>,
-        implementation: (question) => <DefaultLayout question={question} />
+        implementation: (questions) => <DefaultLayout questions={questions} />
     },
     "Inverted": {
         miniPreview: 
@@ -39,7 +39,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.editor}>Code Editor</div>
                 <div className={styles.testCases}>Test Cases</div>
             </div>,
-            implementation: (question) => <DefaultLayout question={question} />
+            implementation: (questions) => <DefaultLayout questions={questions} />
         // implementation: (question: Question) => (<InvertedLayout question={question} />)
     },
     "Two Tabs": {
@@ -49,7 +49,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.question}>Question + Test Cases (Toggle)</div>
                 <div className={styles.editor}>Code Editor</div>
             </div>,
-        implementation: (question) => <DefaultLayout question={question} />
+        implementation: (questions) => <DefaultLayout questions={questions} />
         // implementation: (question: Question) => (<TwoTabsLayout question={question} />)
     },
     "Two Tabs Inverted": {
@@ -59,7 +59,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.question}>Question + Test Cases (Toggle)</div>
                 <div className={styles.editor}>Code Editor</div>
             </div>,
-        implementation: (question) => <DefaultLayout question={question} />
+        implementation: (questions) => <DefaultLayout questions={questions} />
         // implementation: (question: Question) => (<TwoTabsInvertedLayout question={question} />)
     },
     "Fullscreen Editor": {
@@ -72,7 +72,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
                 <div className={styles.testCases}>Test Cases + Output (toggle)</div>
                 <div className={styles.editor}>Code Editor</div>
             </div>,
-        implementation: (question) => <DefaultLayout question={question} />
+        implementation: (questions) => <DefaultLayout questions={questions} />
         // implementation: (question: Question) => (<FullscreenEditorLayout question={question} />)
     },
 }

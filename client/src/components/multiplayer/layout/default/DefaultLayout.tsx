@@ -1,21 +1,23 @@
 "use client";
 
+import DefaultTestCases from "@/components/multiplayer/components/DefaultTestCases";
 import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from "@/components/settings/settingsUtils";
 import { usePopup } from "@/contexts/PopupContext";
 import { useUserStore } from "@/contexts/UserContext";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { OutputEntry } from "@/lib/apiClient/runCodeStatuses";
+import { instantiateEditorOnMount, Question, TestCaseResult } from "@/lib/gameplay/utils";
+import { selectCodeByUser, selectCodeOutputSetterForUser, selectExecutionStatusSetterForUser, selectTestCaseResultsSetterForUser, useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
+import { printd } from "@/lib/utils/debugUtils";
 import { keyboardManager } from "@/lib/utils/keyboardManager";
 import type * as monacoType from 'monaco-editor';
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useShallow } from "zustand/shallow";
 import CodeEditor from "../../components/CodeEditor";
 import QuestionDisplay from "../../components/QuestionDisplay";
-import { useGameplayController } from "../../hooks/useGameplayController";
-import { instantiateEditorOnMount, Question, runCodeOutputModeClientSide, runTestCasesClientSide, submitCodeClientSide, TestCaseResult } from "../../multiplayerUtils";
-import { useCodeEditorStore } from "../../stores/codeEditorStores";
-import { useCodeExecutionStore } from "../../stores/codeExecutionStore";
-import TestCases from "./components/TestCases";
+import QuestionSwitcher from "../../components/QuestionSwitcher";
 import styles from "./page.module.css";
 
 export function DefaultLayout({ questions }: { questions: Question[] }) {
@@ -26,138 +28,160 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
         });
     }, []);
 
+    useEffect(() => {
+        printd("@/components/multiplayer/layout/default/DefaultLayout", "Received questions:", questions);
+    }, [questions]);
+
     // for code editor
     const user = useUserStore(state => state.user);
+    const userPreference = useUserPreferenceStore(state => state.userPreference);
     const editorRef = useRef<monacoType.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
 
+    const activeTestCaseIndex = useMultiplayerGameplayStore(state => state.activeTestCaseIndex);
+    const activeCodeView = useMultiplayerGameplayStore(state => state.activeCodeView);
+    const activeTab = activeCodeView.kind === "shared"
+        ? "Team"
+        : activeCodeView.userId === user.id
+            ? "You"
+            : activeCodeView.userId.toString();
+    const setActiveCodeView = useMultiplayerGameplayStore(state => state.setActiveCodeView);
+    const activeQuestionIndex = useMultiplayerGameplayStore(state => state.activeQuestionIndex);
+    const readOnly = activeCodeView.kind === "private" && activeCodeView.userId != user.id;
+
+    const informationMode = useMultiplayerGameplayStore(state => state.informationMode);
+    const setInformationMode = useMultiplayerGameplayStore(state => state.setInformationMode);
+
+    const isLocked = useMultiplayerGameplayStore(state => state.isLocked);
+
     const [
-        setActiveIndex,
-        activeTab,
-        setActiveTab,
-        informationMode,
-        setInformationMode,
-        lock,
-        isClusterLocked,
-        setIsClusterLocked,
-        readOnlyTabs
-    ] = useGameplayController(
-        useShallow((state) => [
-            state.setActiveTestCaseIndex,
-            state.activeTab,
-            state.setActiveTab,
-            state.informationMode,
-            state.setInformationMode,
-            state.lock,
-            state.isClusterLocked,
-            state.setIsClusterLocked,
-            state.readOnlyTabs
-        ])
+        runCode,
+        runTestCases,
+        submitCode
+    ] = useMultiplayerGameplayStore(
+        useShallow(
+            state => [
+                state.runCode,
+                state.runTestCases,
+                state.submitCode
+            ]
+        )
     );
 
-    // changes code output and test case results content when changing code editor tabs
-    const [
-        setExecutionStatus,
-        setTestCaseResultsForUser,
-        setOutputForUser
-    ] = useCodeExecutionStore(
-        useShallow((state) => [
-            state.setExecutionStatus,
-            state.setTestCaseResults,
-            state.setOutput
-        ])
-    );
+
+    const setExecutionStatusForUser = useMultiplayerGameplayStore(selectExecutionStatusSetterForUser);
+    const setTestCaseResultsForUser = useMultiplayerGameplayStore(selectTestCaseResultsSetterForUser);
+    const setCodeOutputForUser = useMultiplayerGameplayStore(selectCodeOutputSetterForUser);
 
     const setTestCaseResults = useCallback((testCaseResults: TestCaseResult[]) =>
-        setTestCaseResultsForUser(activeTab, testCaseResults)
-        , [activeTab, setTestCaseResultsForUser]);
+        setTestCaseResultsForUser(activeTab, activeQuestionIndex, testCaseResults)
+        , [activeTab, activeQuestionIndex, setTestCaseResultsForUser]);
 
     const setCodeOutput = useCallback((output: OutputEntry[]) =>
-        setOutputForUser(activeTab, output)
-        , [activeTab, setOutputForUser]);
-
-    const codeByUser = useCodeEditorStore(state => state.codeByUser);
-    const programmingLanguage = useCodeEditorStore(state => state.programmingLanguage);
-
-    const isReadonlyTab = useMemo(() => readOnlyTabs.includes(activeTab), [activeTab, readOnlyTabs]);
+        setCodeOutputForUser(activeTab, output)
+        , [activeTab, setCodeOutputForUser]);
 
     // instantiates the reference to the code editor when it first mounts
-    const handleEditorDidMount = (editor: monacoType.editor.IStandaloneCodeEditor, monacoInstance: typeof monacoType) => {
-        instantiateEditorOnMount(editorRef, editor, monacoInstance, user);
-    }
+    const handleEditorDidMount = useCallback((editor: monacoType.editor.IStandaloneCodeEditor, monacoInstance: typeof monacoType) => {
+        instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
+    }, [userPreference]);
     const { openPopupWith } = usePopup();
 
     // for code handling
     // executing code normally
-    const runCodeOutputMode = useCallback(async () => {
-        if (isReadonlyTab) {
+    const runCodeWrapper = useCallback(async () => {
+        if (readOnly) {
+            openPopupWith(
+                "You do not have permission to run another player's code.",
+                "Understood",
+                null,
+                () => { },
+                () => { }
+            );
+
             return;
         }
 
-        setExecutionStatus(activeTab, "running");
+        const activeTab = activeCodeView.kind === "shared" ? "Team" : activeCodeView.userId.toString();
 
-        runCodeOutputModeClientSide(
-            codeByUser[activeTab],
-            programmingLanguage,
-            lock,
-            setIsClusterLocked,
-            setCodeOutput,
-            openPopupWith,
-            setInformationMode,
-            activeTab,
-            setExecutionStatus
-        );
-    }, [isReadonlyTab, setExecutionStatus, activeTab, codeByUser, programmingLanguage, lock, setIsClusterLocked, setCodeOutput, openPopupWith, setInformationMode]);
+        setExecutionStatusForUser(activeTab, "running");
 
-    // submit code
-    const submit = useCallback(async () => {
-        if (activeTab !== "Team") {
+        const response = await runCode();
+
+        if (!response) {
+            setExecutionStatusForUser(activeTab, "codeError");
             return;
         }
 
-        setExecutionStatus(activeTab, "running");
-
-        submitCodeClientSide(
-            codeByUser[activeTab],
-            programmingLanguage,
-            question,
-            lock,
-            setIsClusterLocked,
-            setCodeOutput,
-            openPopupWith,
-            setInformationMode
+        openPopupWith(
+            response.message,
+            "Understood",
+            null,
+            () => { },
+            () => { }
         );
-    }, [activeTab, setExecutionStatus, codeByUser, programmingLanguage, question, lock, setIsClusterLocked, setCodeOutput, openPopupWith, setInformationMode]);
+    }, [runCode, readOnly, openPopupWith]);
 
-    // run code against all test cases
-    // if all test cases passed, prompt to submit code
-    const runTestCases = useCallback(async () => {
-        if (isReadonlyTab) {
+    const runTestCasesWrapper = useCallback(async () => {
+        if (readOnly) {
+            openPopupWith(
+                "You do not have permission to run test cases for another player's code.",
+                "Understood",
+                null,
+                () => { },
+                () => { }
+            );
+
             return;
         }
 
-        setExecutionStatus(activeTab, "running");
+        const activeTab = activeCodeView.kind === "shared" ? "Team" : activeCodeView.userId.toString();
 
-        runTestCasesClientSide(
-            codeByUser[activeTab],
-            programmingLanguage,
-            question,
-            lock,
-            setIsClusterLocked,
-            setCodeOutput,
-            setTestCaseResults,
-            setActiveIndex,
-            openPopupWith,
-            setInformationMode,
-            activeTab,
-            setExecutionStatus
+        setExecutionStatusForUser(activeTab, "running");
+
+        const response = await runTestCases();
+
+        if (!response) {
+            setExecutionStatusForUser(activeTab, "codeError");
+            return;
+        }
+
+        openPopupWith(
+            response.message,
+            "Understood",
+            null,
+            () => { },
+            () => { }
         );
+    }, [runTestCases, readOnly, openPopupWith]);
 
-        console.log(useCodeExecutionStore.getState().testCasesResultsByUser);
-    }, [activeTab, codeByUser, isReadonlyTab, lock, openPopupWith, programmingLanguage, question, setActiveIndex, setCodeOutput, setExecutionStatus, setInformationMode, setIsClusterLocked, setTestCaseResults]);
+    const router = useRouter();
+    const reset = useMultiplayerGameplayStore(state => state.reset);
+    const submitWrapper = useCallback(async () => {
+        setExecutionStatusForUser("Team", "running");
+
+        const response = await submitCode();
+
+        if (!response) {
+            setExecutionStatusForUser("Team", "codeError");
+            return;
+        }
+
+        const submissionSuccessful = response.message === "Congratulations! You pass all test cases. Exit?";
+
+        openPopupWith(
+            response.message,
+            submissionSuccessful ? "Exit" : "Understood",
+            submissionSuccessful ? "Go back to code" : null,
+            submissionSuccessful ? () => { reset(); router.push("/home") } : () => { },
+            () => { }
+        );
+    }, []);
 
     // change model whenever the user changes tab
+    const codeByUser = useMultiplayerGameplayStore(useShallow(selectCodeByUser));
     const codeForTab = codeByUser[activeTab];
+
     useEffect(() => {
         const editor = editorRef.current;
 
@@ -174,10 +198,10 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
 
             Thus, I use `codeForTab`, which removes the dependency on codeByUser.
         */
-        if (model && model.getValue() !== codeForTab) {
-            model.setValue(codeForTab);
+        if (model && model.getValue() !== codeForTab[activeQuestionIndex]) {
+            model.setValue(codeForTab[activeQuestionIndex]);
         }
-    }, [activeTab, codeForTab, monaco]);
+    }, [activeTab, codeForTab, activeQuestionIndex, monaco]);
 
     // this useEffect encapsulates all key bindings
     useEffect(() => {
@@ -193,27 +217,27 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
                 }
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)) {
                 e.preventDefault();
-                if (isClusterLocked || readOnlyTabs.includes(activeTab)) {
+                if (isLocked || readOnly) {
                     return false;
                 }
 
-                runCodeOutputMode();
+                runCodeWrapper();
                 return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["RUN_TEST_CASES"].combo)) {
                 e.preventDefault();
-                if (isClusterLocked || readOnlyTabs.includes(activeTab)) {
+                if (isLocked || readOnly) {
                     return false;
                 }
 
-                runTestCases();
+                runTestCasesWrapper();
                 return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["SUBMIT_CODE"].combo)) {
                 e.preventDefault();
-                if (isClusterLocked || readOnlyTabs.includes(activeTab)) {
+                if (isLocked || readOnly) {
                     return false;
                 }
 
-                submit();
+                submitWrapper();
                 return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["FOCUS_EDITOR"].combo) && editor) {
                 e.preventDefault(); // stop "i" from inserting text somewhere random
@@ -226,15 +250,15 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
             } else if (isKeyCombo(e, MULTIPLAYER_KEY_BINDINGS["TOGGLE_TEAM_TAB"].combo)) {
                 e.preventDefault();
 
-                setActiveTab("Team");
+                setActiveCodeView({ kind: "shared" });
                 return true;
             } else if (isKeyCombo(e, MULTIPLAYER_KEY_BINDINGS["TOGGLE_PLAYER_1_TAB"].combo)) {
                 e.preventDefault();
-                setActiveTab(Object.keys(codeByUser)[1]);
+                setActiveCodeView({ kind: "private", userId: user.id });
                 return true;
             } else if (isKeyCombo(e, MULTIPLAYER_KEY_BINDINGS["TOGGLE_PLAYER_2_TAB"].combo)) {
                 e.preventDefault();
-                setActiveTab(Object.keys(codeByUser)[2]);
+                setActiveCodeView({ kind: "private", userId: Number(Object.keys(codeByUser)[2]) });
                 return true;
             } else if (isKeyCombo(e, MULTIPLAYER_KEY_BINDINGS["TOGGLE_PLAYER_3_TAB"].combo)) {
                 e.preventDefault();
@@ -243,7 +267,7 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
                     return false;
                 }
 
-                setActiveTab(Object.keys(codeByUser)[3]);
+                setActiveCodeView({ kind: "private", userId: Number(Object.keys(codeByUser)[3]) });
                 return true;
             }
 
@@ -255,24 +279,30 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
         return () => {
             keyboardManager.unregister("gameplay");
         }
-    }, [runCodeOutputMode, runTestCases, submit, informationMode, isClusterLocked, readOnlyTabs, activeTab, setActiveTab, codeByUser, setInformationMode]);
+    }, [runCodeWrapper, runTestCases, submitWrapper, informationMode, isLocked, readOnly, activeCodeView, setActiveCodeView, codeByUser, setInformationMode]);
+
+    if (!questions) {
+        printd("@/components/multiplayer/layout/default/DefaultLayout", "No questions received. Rendering null.");
+        return null;
+    }
 
     return (
         <div ref={gameplayRef} tabIndex={0}>
             <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
                 <Panel defaultSize={40} minSize={2}>
-                    <QuestionDisplay question={questions[0]} />
+                    <QuestionSwitcher numQuestions={questions.length} />
+                    <QuestionDisplay question={questions[activeQuestionIndex]} />
                 </Panel>
                 <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
                 <Panel defaultSize={60} minSize={2} className={styles.codePanel}>
                     <CodeEditor
                         onMount={handleEditorDidMount}
                     />
-                    <TestCases
-                        testCases={questions[0].publicTestCases}
-                        runCode={runCodeOutputMode}
-                        runTestCases={runTestCases}
-                        submitCode={submit}
+                    <DefaultTestCases
+                        testCases={questions[activeQuestionIndex].publicTestCases}
+                        runCode={runCodeWrapper}
+                        runTestCases={runTestCasesWrapper}
+                        submitCode={submitWrapper}
                     />
                 </Panel>
             </PanelGroup>

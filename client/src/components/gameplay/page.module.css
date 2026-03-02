@@ -21,7 +21,8 @@
     transition-duration: 0.25s;
 }
 
-.verticalGameplayPanelResizeHandler:hover, .horizontalGameplayPanelResizeHandler:hover {
+.verticalGameplayPanelResizeHandler:hover,
+.horizontalGameplayPanelResizeHandler:hover {
     background-color: var(--significant-button-color);
 }
 
@@ -137,7 +138,11 @@
     border-radius: 10px;
 }
 
-.question p, .question h1, .question h2, .question h3, .question h4 {
+.question p,
+.question h1,
+.question h2,
+.question h3,
+.question h4 {
     margin: 1rem 0;
 }
 
@@ -212,17 +217,30 @@
 
 .codeHandlerButtons button {
     font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.5rem;
 }
 
-.togglePanelButton, .runAllTestCasesButton, .runCodeButton {
+.codeHandlerButtons button kbd {
+    font-size: 0.75rem;
+    font-family: monospace;
+    opacity: 0.55;
+}
+
+.togglePanelButton,
+.runAllTestCasesButton,
+.runCodeButton {
     background-color: var(--insignificant-button-color);
     border: none;
     transition-duration: 0.25s;
     padding: 0 10px;
-    font-weight: 600;
 }
 
-.togglePanelButton:hover, .runAllTestCasesButton:hover, .runCodeButton:hover {
+.togglePanelButton:hover,
+.runAllTestCasesButton:hover,
+.runCodeButton:hover {
     background-color: var(--insignificant-button-hover-color);
 }
 
@@ -385,12 +403,19 @@
     height: 3rem;
 }
 
+.informationPanelButtons button {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.5rem;
+}
+
 .informationPanelButtons button.unselected {
     background-color: var(--first-layer-background-color);
     border: none;
     transition-duration: 0.25s;
     padding: 0 10px;
-    font-weight: 600;
 }
 
 .informationPanelButtons button.selected {
@@ -403,4 +428,10 @@
 
 .informationPanelButtons button:hover {
     background-color: var(--second-layer-background-color);
+}
+
+.informationPanelButtons button kbd {
+    font-size: 0.75rem;
+    font-family: monospace;
+    opacity: 0.55;
 }

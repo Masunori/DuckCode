@@ -3,9 +3,9 @@
 import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
 import { TestCase } from "@/lib/gameplay/utils";
 import { CSSProperties, useCallback, useRef } from "react";
-import styles from "./default.module.css";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import styles from "../../gameplay/components/default.module.css";
 import { GAMEPLAY_KEY_BINDINGS, translateCombo } from "@/components/settings/settingsUtils";
+import { useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
 
 type TestCaseProps = {
     testCases: TestCase[];
@@ -30,17 +30,17 @@ export default function DefaultTestCases({
     runTestCases,
     submitCode,
 }: TestCaseProps) {
-    const codeOutput = useBaseGameplayStore(s => s.codeOutput);
-    const testCaseResults = useBaseGameplayStore(s => s.testCaseResults);
+    const codeOutput = useMultiplayerGameplayStore(s => s.codeOutput);
+    const testCaseResults = useMultiplayerGameplayStore(s => s.testCaseResults);
 
-    const informationMode = useBaseGameplayStore(s => s.informationMode);
-    const setInformationMode = useBaseGameplayStore(s => s.setInformationMode);
+    const informationMode = useMultiplayerGameplayStore(s => s.informationMode);
+    const setInformationMode = useMultiplayerGameplayStore(s => s.setInformationMode);
 
-    const activeTestCaseIndex = useBaseGameplayStore(s => s.activeTestCaseIndex);
-    const setActiveTestCaseIndex = useBaseGameplayStore(s => s.setActiveTestCaseIndex);
+    const activeTestCaseIndex = useMultiplayerGameplayStore(s => s.activeTestCaseIndex);
+    const setActiveTestCaseIndex = useMultiplayerGameplayStore(s => s.setActiveTestCaseIndex);
 
-    const activeQuestionIndex = useBaseGameplayStore(s => s.activeQuestionIndex);
-    const isLocked = useBaseGameplayStore(s => s.isLocked);
+    const activeQuestionIndex = useMultiplayerGameplayStore(s => s.activeQuestionIndex);
+    const isLocked = useMultiplayerGameplayStore(s => s.isLocked);
 
 
     const testCaseResultsForActiveQuestion = testCaseResults[activeQuestionIndex] || [];

@@ -44,8 +44,16 @@ export default function GameplayNavbar({ initialTime, forceSubmitOnCountdownEnds
     }
 
     function exit() {
-        reset();
-        router.push("/home");
+        openPopupWith(
+            "Are you sure you want to exit? Your current progress will be lost.",
+            "Exit",
+            "Stay",
+            () => {
+                reset();
+                router.push("/home");
+            },
+            () => { }
+        )
     }
 
     return (
@@ -54,8 +62,8 @@ export default function GameplayNavbar({ initialTime, forceSubmitOnCountdownEnds
                 <Image
                     src={'/icons/settings.png'}
                     alt="settings"
-                    width={20}
-                    height={20}
+                    width={userPreference.fontSize * 1.25}
+                    height={userPreference.fontSize * 1.25}
                 />
             </button>
             <CountdownTimer

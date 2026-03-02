@@ -16,7 +16,7 @@ import { tryApiCallWithAuth } from "@/lib/apiClient/apiCallWithAuth";
 /** Type of code editor view, where `shared` represents the shared code editor and `private` represents any player's private code editor identified by userId */
 type CodeView = 
     | { kind: "shared" }
-    | { kind: "private", userId: string };
+    | { kind: "private", userId: number };
 
 /** The problem slice of the gameplay store. */
 type ProblemSlice = {
@@ -153,6 +153,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
         runCode: async () => {
             const { 
                 lock, 
+                isLocked,
                 codeContent, 
                 activeQuestionIndex, 
                 setInformationMode,
@@ -163,6 +164,10 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
 
             if (!sourceCode) {
                 return undefined;
+            }
+
+            if (isLocked) {
+                return { status: 409, message: "Another code execution is in progress." };
             }
 
             const language = useUserPreferenceStore.getState().userPreference.language;
@@ -185,6 +190,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
                 codeContent, 
                 questions, 
                 lock, 
+                isLocked,
                 activeQuestionIndex, 
                 setTestCaseResults, 
                 setActiveTestCaseIndex, 
@@ -196,27 +202,9 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
                 return undefined;
             }
 
-            // setInformationMode("testCases");
-
-            // setTestCaseResults((prev) => {
-            //     const newResults = [...prev];
-
-            //     const newTestCaseResults: TestCaseResult[] = [];
-
-            //     for (let i = 0; i < questions[activeQuestionIndex].publicTestCases.length; i++) {
-            //         newTestCaseResults.push({
-            //             tid: questions[activeQuestionIndex].publicTestCases[i].tid,
-            //             actualOutput: "",
-            //             statusId: i % 2 + 1,
-            //             message: "Test case is pending execution..."
-            //         });
-            //     }
-
-            //     newResults[activeQuestionIndex] = newTestCaseResults;
-            //     return newResults;
-            // });
-
-            // return { status: 200, message: "Dummy..." };
+            if (isLocked) {
+                return { status: 409, message: "Another code execution is in progress." };
+            }
 
             const language = useUserPreferenceStore.getState().userPreference.language;
             const questionId = questions[activeQuestionIndex].qid;
@@ -251,6 +239,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
                 codeContent,
                 questions,
                 lock,
+                isLocked,
                 activeQuestionIndex,
                 setCodeOutput,
                 setInformationMode
@@ -260,6 +249,10 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
 
             if (!sourceCode) {
                 return undefined;
+            }
+
+            if (isLocked) {
+                return { status: 409, message: "Another code execution is in progress." };
             }
 
             const language = useUserPreferenceStore.getState().userPreference.language;
@@ -274,13 +267,20 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
                 setCodeOutput([{ type: "error", content: "Failed to submit code" }]);
                 return { status: output.status, message: "Failed to submit code" };
             } else {
+                const correctCount = output.result.correct;
+                const totalCount = output.result.total;
+
                 setCodeOutput([
-                    { type: "log", content: `Correct: ${output.result.correct}` },
-                    { type: "log", content: `Total: ${output.result.total}` },
+                    { type: "log", content: `Correct: ${correctCount}` },
+                    { type: "log", content: `Total: ${totalCount}` },
                     { type: output.result.statusId === 1 ? "log" : "error", content: `Status: ${RUN_CODE_RESPONSES[output.result.statusId]}` }
                 ]);
 
-                return { status: 200, message: "Code submitted successfully" };
+                const message = output.result.statusId === 1
+                    ? "Congratulations! You pass all test cases. Exit?"
+                    : `You passed ${correctCount}/${totalCount} test cases. Reason: ${output.result.message}`;
+
+                return { status: 200, message };
             }
         },
         codeOutput: [],
@@ -333,7 +333,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
                     ? mode(state.informationMode)
                     : mode
             })),
-        activeCodeView: { kind: "private", userId: String(useUserStore.getState().user.id) },
+        activeCodeView: { kind: "private", userId: useUserStore.getState().user.id },
         setActiveCodeView: (view) =>
             set((state) => ({
                 activeCodeView: typeof view === "function"

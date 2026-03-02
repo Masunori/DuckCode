@@ -17,14 +17,23 @@
 
 .codeHandlerButtons button {
     font-size: 1rem;
+    border: none;
+    transition-duration: 0.25s;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.5rem;
+}
+
+.codeHandlerButtons button kbd {
+    font-size: 0.8rem;
+    font-family: monospace;
+    opacity: 0.55;
 }
 
 .togglePanelButton, .runAllTestCasesButton {
     background-color: var(--insignificant-button-color);
-    border: none;
-    transition-duration: 0.25s;
-    padding: 0 10px;
-    font-weight: 600;
 }
 
 .togglePanelButton:hover, .runAllTestCasesButton:hover {
@@ -33,10 +42,6 @@
 
 .submitCodeButton {
     background-color: var(--significant-button-color);
-    border: none;
-    transition-duration: 0.25s;
-    padding: 0 10px;
-    font-weight: 600;
 }
 
 .submitCodeButton:hover {

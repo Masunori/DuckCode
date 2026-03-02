@@ -1,27 +1,31 @@
-type InformationPanelButtonsProps = {
-    informationMode: InformationMode;
-    setInformationMode: Dispatch<SetStateAction<InformationMode>>;
-}
+"use client";
 
-import { Dispatch, SetStateAction } from 'react';
-import { InformationMode } from '../multiplayerUtils';
+import { useShallow } from 'zustand/shallow';
 import styles from '../page.module.css';
+import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/components/settings/settingsUtils';
+import { useMultiplayerGameplayStore } from '@/lib/multiplayer/hooks/useMultiplayerGameplayStore';
 
-export default function InformationPanelButtons({ informationMode, setInformationMode }: InformationPanelButtonsProps) {
+export default function InformationPanelButtons() {
+    const [informationMode, setInformationMode] = useMultiplayerGameplayStore(
+        useShallow(
+            state => [state.informationMode, state.setInformationMode]
+        )
+    );
+
     return (
         <div className={styles.informationPanelButtons}>
-            <button 
+            <button
                 className={informationMode === "question" ? styles.selected : styles.unselected}
                 onClick={() => setInformationMode("question")}
-            >Question</button>
-            <button 
+            ><b>Question</b> <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["TOGGLE_QUESTION_TAB"].combo)}]</kbd></button>
+            <button
                 className={informationMode === "testCases" ? styles.selected : styles.unselected}
                 onClick={() => setInformationMode("testCases")}
-            >Test Cases</button>
-            <button 
+            ><b>Test Cases</b> <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["TOGGLE_TEST_CASES_TAB"].combo)}]</kbd></button>
+            <button
                 className={informationMode === "output" ? styles.selected : styles.unselected}
                 onClick={() => setInformationMode("output")}
-            >Output</button>
+            ><b>Output</b> <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TAB"].combo)}]</kbd></button>
         </div>
     );
 }

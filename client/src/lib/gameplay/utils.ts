@@ -170,7 +170,7 @@ export type InformationMode = "question" | "testCases" | "output" | "-";
  * 
  * ```typescript
  * import * as monaco from 'monaco-editor';
- * import { Editor } from '@monaco-editor/react;;
+ * import { Editor } from '@monaco-editor/react';
  * 
  * const user = useUserStore(state => state.user); // call the user context
  * const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
@@ -179,8 +179,9 @@ export type InformationMode = "question" | "testCases" | "output" | "-";
  *      handleEditorDidMount(editorRef, editor, MonacoInstance, user);
  * }
  * 
- * return {
- *     <Editor
+ * 
+ * export default function CodeEditor() {
+ *     return <Editor
  *         onMount={handleEditorDidMount}
  *     />
  * }

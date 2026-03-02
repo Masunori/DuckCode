@@ -135,6 +135,7 @@
     display: block;
     border-radius: 0.5rem;
 }
+
 /* for checkbox inputs */
 .checkboxInput {
     display: grid;
@@ -193,7 +194,7 @@
 .rangeInput {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-areas: 
+    grid-template-areas:
         "desc slider";
     align-items: center;
     row-gap: 0.5rem;
@@ -275,16 +276,33 @@
     transform: translateY(-50%);
 }
 
-.sliderMinThumb:hover, .sliderMaxThumb:hover {
+.sliderMinThumb:hover,
+.sliderMaxThumb:hover {
     background-color: var(--significant-button-hover-color);
 }
 
 /* for pagination controller */
 .paginationController {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: auto 1fr auto 1fr auto;
     align-items: center;
     gap: 1rem;
+}
+
+.paginationLeft {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    overflow: hidden;
+}
+
+.paginationRight {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    overflow: hidden;
 }
 
 .paginationController button {
@@ -295,6 +313,7 @@
     font-size: 1rem;
     width: 2rem;
     height: 2rem;
+    flex-shrink: 0;
     box-sizing: border-box;
 }
 
@@ -314,9 +333,4 @@
 
 .paginationController button.skipPagesButton {
     color: #888;
-}
-
-.paginationController button.placeholderButton {
-    opacity: 0;
-    pointer-events: none;
 }

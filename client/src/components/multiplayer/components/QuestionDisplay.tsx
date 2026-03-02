@@ -1,4 +1,4 @@
-import { Question } from "../multiplayerUtils";
+import { Question } from "@/lib/gameplay/utils";
 import styles from "../page.module.css";
 
 export default function QuestionDisplay({ question }: { question: Question }) {
@@ -49,7 +49,7 @@ export default function QuestionDisplay({ question }: { question: Question }) {
                             ))}
 
                             <h4>Explanation:</h4>
-                            {example.explanation || "None"}
+                            {example?.explanation ?? "None"}
                         </div>
                     </div>
                 ))}

@@ -44,6 +44,9 @@ export function InvertedLayout({ questions }: { questions: Question[] }) {
         )
     );
 
+    const reset = useBaseGameplayStore(state => state.reset);
+    const router = useRouter();
+
     const runCodeClientSide = useCallback(async () => {
         const response = await runCode();
 
@@ -55,8 +58,8 @@ export function InvertedLayout({ questions }: { questions: Question[] }) {
             response.message,
             "Understood",
             null,
-            () => {},
-            () => {}
+            () => { },
+            () => { }
         );
     }, [runCode, openPopupWith]);
 
@@ -66,14 +69,14 @@ export function InvertedLayout({ questions }: { questions: Question[] }) {
         if (!response) {
             return;
         }
-
+        
         openPopupWith(
             response.message,
             "Understood",
             null,
-            () => {},
-            () => {}
-        );  
+            () => { },
+            () => { }
+        );
     }, [submitCode, openPopupWith]);
 
     const runTestCasesClientSide = useCallback(async () => {

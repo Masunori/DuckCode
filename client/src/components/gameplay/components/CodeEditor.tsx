@@ -3,19 +3,19 @@
 import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "@/app/userPrefs/userPrefsUtils";
 import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 import { PRESET_THEMES } from "@/components/themes/themes";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import { useDebouncedSave } from "@/hooks/useDebounce";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import { printd } from "@/lib/utils/debugUtils";
+import { Editor, loader } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { useEffect, useRef } from "react";
 import styles from "../page.module.css";
-import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { printd } from "@/lib/utils/debugUtils";
-import { useDebouncedSave } from "@/hooks/useDebounce";
-import { Editor, loader } from "@monaco-editor/react";
 
 loader.config({
-	paths: {
-		vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs',
-	},
+    paths: {
+        vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs',
+    },
 });
 
 type CodeEditorProps = {
@@ -47,6 +47,9 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
 
     // changes the default code content whenever programming language changes
     useEffect(() => {
+        printd("@/components/gameplay/components/CodeEditor", "User language preference is:", languageRef.current);
+        printd("@/components/gameplay/components/CodeEditor", "User language preference changed to:", userPreference.language);
+
         if (languageRef.current === userPreference.language) {
             return;
         }
@@ -72,6 +75,7 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
     return (
         <div className={styles.codeEditor}>
             <Editor
+                key={userPreference.language}
                 theme={PRESET_THEMES[userPreference.editorOptions.theme].monacoEditorAlias}
                 language={PROGRAMMING_LANGUAGES[userPreference.language].monacoEditorAlias}
                 defaultLanguage="javascript"
