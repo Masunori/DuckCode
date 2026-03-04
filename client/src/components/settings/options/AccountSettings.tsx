@@ -5,13 +5,12 @@ import { User } from "@/app/userPrefs/userPrefsTypes";
 import CurrentPasswordInput from '@/components/authInputs/CurrentPasswordInput';
 import NewPasswordInput from '@/components/authInputs/NewPasswordInput';
 import styles from '@/components/settings/settings.module.css';
-import { InputIndicatorColours } from '@/components/themes/authColors';
 import { usePopup } from "@/contexts/PopupContext";
 import { useUserStore } from "@/contexts/UserContext";
 import { FieldState, PASSWORD_CONDITIONS } from "@/lib/utils/fieldConditions";
 import { AnimatePresence, motion } from 'motion/react';
 import Image from "next/image";
-import { RefObject, useRef, useState } from "react";
+import { useState } from "react";
 
 type AccountSettingsProps = {
     nextUserInfo: TempAccountInfo;

@@ -1,6 +1,6 @@
 "use client";
 
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, PROGRAMMING_LANGUAGES, translateCombo } from "@/components/settings/settingsUtils";
 import { usePopup } from "@/contexts/PopupContext";
 import { runCode } from "@/lib/apiClient/gameplay";
 import { OutputEntry } from "@/lib/apiClient/runCodeStatuses";
@@ -83,6 +83,9 @@ export default function Page() {
         }
     }, [runCodeOutputMode]);
 
+    const runCodeKeyHint = userPreference.displayKeyBindingOnButtons
+        ? ` [${translateCombo(GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)}]`
+        : "";
 
     return (
         <div ref={gameplayRef} tabIndex={0}>
@@ -100,7 +103,7 @@ export default function Page() {
                             style={{
                                 pointerEvents: isLocked ? "none" : "auto"
                             }}
-                        >Run Code</button>
+                        ><b>Run Code</b> <kbd>{runCodeKeyHint}</kbd></button>
                     </div>
                     <Output />
                 </Panel>

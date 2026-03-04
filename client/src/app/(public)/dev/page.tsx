@@ -8,10 +8,9 @@ export default function Page() {
             <section>
                 <p>
                     If you are seeing this, it means that DuckCode is still in development. The website you are
-                    viewing is a demonstration of the most current UI. The server is not on, so navigation has 
-                    to be by route instead of how you are supposed to navigate within a typical, full-fledged website.
+                    viewing is a demonstration of the most current UI. The server is online, feel free to navigate.
                 </p>
-                <p>
+                {/* <p>
                     Here, the following routes are accessible:
                 </p>
                 <table>
@@ -36,18 +35,18 @@ export default function Page() {
                         </tr>
                         <tr>
                             <td><Link href={"/home"}>/home</Link></td>
-                            <td>The main game interface after the user logs in. Because this is a UI demo website, this route is accessible by route without authentication.</td>
+                            <td><b>(AUTH-GATED)</b> The main game interface after the user logs in.</td>
                         </tr>
                         <tr>
                             <td><Link href={"/gameplay"}>/gameplay</Link></td>
-                            <td>A generic gameplay interface template in which many game modes will copy from and modify. Accessible by route because it is just a generic template.</td>
+                            <td><b>(AUTH-GATED)</b> A generic gameplay interface template in which many game modes will copy from and modify. Accessible by route because it is just a generic template.</td>
                         </tr>
                         <tr>
                             <td><Link href={"/multiplayer"}>/multiplayer</Link></td>
-                            <td>A gameplay interface adapted for multiplayer. Accessible by route.</td>
+                            <td><b>(AUTH-GATED)</b> A gameplay interface adapted for multiplayer. Accessible by route.</td>
                         </tr>
                     </tbody>
-                </table>
+                </table> */}
             </section>
         </main>
     )

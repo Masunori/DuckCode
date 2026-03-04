@@ -59,6 +59,7 @@ export const PRISTINE_USER_PREFERENCE: UserPreference = {
         wordWrapColumn: 80,
     },
     colorAccessibilityMode: "Normal",
+    displayKeyBindingOnButtons: true,
 }
 
 export const PRISTINE_USER: User = {

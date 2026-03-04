@@ -41,6 +41,7 @@
     background-color: var(--second-layer-background-color);
     opacity: 0.8;
     transition-duration: 0.25s;
+    box-sizing: border-box;
 
     --border-angle: 0deg;
     --border-angle-2: 180deg;
@@ -62,7 +63,7 @@
 }
 
 .news li:hover {
-    padding: 0.3rem;
+    padding: 0.15rem;
 }
 
 .articleBox {
@@ -88,6 +89,12 @@
     border: 2px solid var(--fourth-layer-background-color);
     padding: 0.25rem;
     border-radius: 0.25rem;
+    transition-duration: 0.25s;
+}
+
+.tagBox:hover {
+    border-color: var(--significant-button-color);
+    background-color: var(--first-layer-background-color);
 }
 
 .tagFilter {

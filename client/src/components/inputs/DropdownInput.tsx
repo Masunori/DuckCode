@@ -161,7 +161,7 @@ export default function DropdownInput({ options, inputId, defaultOption, dropdow
 
     return (
         <div
-            className={styles.dropdownInput}
+            className={`${styles.dropdownInput}${isDropdownVisible ? ` ${styles.dropdownInputOpen}` : ""}`}
             ref={dropdownRef}
         >
             <p>{dropdownName}</p>

@@ -1,21 +1,9 @@
-/* :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
 :root {
   /* --normal-text-font: 'PF Din Text Pro', 'sans-serif'; */
   /* Public layout variables */
   --public-background-opacity: 1;
 
-  
+
   /* General game theme color */
   --background-color: #121212;
   --first-layer-background-color: #242424;
@@ -25,7 +13,7 @@
   --terminal-like-background-color: #1e1e1e;
 
   --confirmation-popup-background-color: #242424;
-  
+
   /* Button colors */
   --significant-button-color: #007fff;
   --significant-button-hover-color: #0c5aa8;
@@ -52,7 +40,7 @@
   --wrong-indicator-text-color: var(--font-colour);
   --correct-on-hover-indicator-text-color: var(--font-colour);
   --wrong-on-hover-indicator-text-color: var(--font-colour);
-  
+
   /* Settings background color */
   --settings-option-bg-color: #242424;
   --settings-bg-color: #323232;
@@ -71,10 +59,10 @@
   --game-menu-tab-z-index: 4;
 
   /* the Monaco Editor minimap has z-index = 4. This value is just enough to allow an overlay over an editor during gameplay*/
-  
+
   /* only for fullscreen editor */
   --gameplay-tab-overlay-z-index: 5;
-  --gameplay-tab-z-index: 6; 
+  --gameplay-tab-z-index: 6;
 
   /* strategy board in multiplayer */
   --strategy-board-overlay-z-index: 7;
@@ -112,7 +100,12 @@
   font-style: normal;
 }
 
-body, p, h1, h2, h3, h4, h5, h6, button {
+body {
+  background-color: var(--background-color);
+  color: var(--font-colour);
+}
+
+body, h1, h2, h3, h4, h5, h6, p, button {
   font-family: 'PF Din Text Pro', Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

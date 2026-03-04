@@ -151,6 +151,22 @@ export function TwoTabsLayout({ questions }: { questions: Question[] }) {
                         : "question"
                 );
                 return true;
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_QUESTION_TAB"].combo)) {
+                e.preventDefault();
+                setInformationMode("question");
+                return true;
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_TEST_CASES_TAB"].combo)) {
+                e.preventDefault();
+                setInformationMode("testCases");
+                return true;
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TAB"].combo)) {
+                e.preventDefault();
+                setInformationMode("output");
+                return true;
+            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_QUESTION_TAB"].combo)) {
+                e.preventDefault();
+                setInformationMode("question");
+                return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["PREVIOUS_QUESTION"].combo)) {
                 e.preventDefault();
                 setActiveQuestionIndex(i => Math.max(i - 1, 0));

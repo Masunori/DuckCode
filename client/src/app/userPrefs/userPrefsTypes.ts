@@ -1,7 +1,5 @@
-import { PLKeys } from "@/components/settings/settingsUtils";
-import type { Fragment as V1_0_0Fragment } from "./versions/v1_0_0";
-import type { Fragment as V1_1_0Fragment } from "./versions/v1_1_0";
-import { object } from "motion/react-m";
+import type { Fragment as V1_0_0Fragment } from "./versions/v0_1_0";
+import type { Fragment as V1_1_0Fragment } from "./versions/v0_1_1";
 
 export type Version = `${number}.${number}.${number}`;
 
@@ -15,7 +13,7 @@ export type EditorOptions = {
     wordWrapColumn: number;
 }
 
-export type UserPreference = 
+export type UserPreference =
     V1_0_0Fragment &
     V1_1_0Fragment;
 
@@ -36,7 +34,7 @@ export type User = {
     bio: string;
     createdAt: string;
     isTwoFactored: boolean;
-    profilePicture: string;    
+    profilePicture: string;
 }
 
 export type Encoder<T> = (value: T) => string | number;

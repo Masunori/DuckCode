@@ -3,7 +3,7 @@
     display: grid;
     grid-template-rows: 1fr 5fr 2fr;
     grid-template-columns: 2fr 3fr;
-    grid-template-areas: 
+    grid-template-areas:
         "nav nav"
         "question editor"
         "question testcases";
@@ -12,6 +12,8 @@
     border: 1px solid #888;
     padding: 0.5rem;
     border-radius: 1.5rem;
+    height: 80%;
+    width: 100%;
 }
 
 .defaultLayoutPreview .navbar {
@@ -55,7 +57,7 @@
     display: grid;
     grid-template-rows: 1fr 5fr 2fr;
     grid-template-columns: 3fr 2fr;
-    grid-template-areas: 
+    grid-template-areas:
         "nav nav"
         "editor question"
         "testcases question";
@@ -64,6 +66,8 @@
     border: 1px solid #888;
     padding: 0.5rem;
     border-radius: 1.5rem;
+    height: 80%;
+    width: 100%;
 }
 
 .invertedLayoutPreview .navbar {
@@ -107,7 +111,7 @@
     display: grid;
     grid-template-rows: 1fr 5fr 2fr;
     grid-template-columns: 1fr 1fr;
-    grid-template-areas: 
+    grid-template-areas:
         "nav nav"
         "question editor"
         "question editor";
@@ -116,6 +120,8 @@
     border: 1px solid #888;
     padding: 0.5rem;
     border-radius: 1.5rem;
+    height: 80%;
+    width: 100%;
 }
 
 .twoTabsLayoutPreview .navbar {
@@ -150,7 +156,7 @@
     display: grid;
     grid-template-rows: 1fr 5fr 2fr;
     grid-template-columns: 1fr 1fr;
-    grid-template-areas: 
+    grid-template-areas:
         "nav nav"
         "editor question"
         "editor question";
@@ -159,6 +165,8 @@
     border: 1px solid #888;
     padding: 0.5rem;
     border-radius: 1.5rem;
+    height: 80%;
+    width: 100%;
 }
 
 .twoTabsInvertedLayoutPreview .navbar {
@@ -193,7 +201,7 @@
     display: grid;
     grid-template-rows: 1fr 7fr;
     grid-template-columns: 1fr 1fr;
-    grid-template-areas: 
+    grid-template-areas:
         "nav nav"
         "editor editor";
     column-gap: 0.5rem;
@@ -203,6 +211,8 @@
     border-radius: 1.5rem;
     position: relative;
     overflow: hidden;
+    height: 80%;
+    width: 100%;
 }
 
 .fullScreenEditorLayoutPreview .navbar {
@@ -223,6 +233,7 @@
     border-radius: 1rem;
 }
 
+/* toggles in-out first, wait for half the time that test cases and output toggle */
 @keyframes question-toggle {
     0% {
         transform: translateX(100%);
@@ -261,6 +272,7 @@
     animation-direction: normal;
 }
 
+/* wait for the question toggle finishes in the first half, then toggle in-out */
 @keyframes test-cases-toggle {
     0% {
         transform: translateY(100%);

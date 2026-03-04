@@ -54,7 +54,7 @@ export const LAYOUTS: Record<string, LayoutInfo> = {
         miniPreview: 
             <div className={styles.fullScreenEditorLayoutPreview}>
                 <div className={styles.navbar}>
-                    Navigation Bar + Toggle Question + Toggle Test Cases
+                    Navigation Bar
                 </div>
                 <div className={styles.question}>Question (toggle)</div>
                 <div className={styles.testCases}>Test Cases + Output (toggle)</div>

@@ -1,13 +1,13 @@
 import { UserPreference } from "@/app/userPrefs/userPrefsTypes";
 import { LAYOUTS } from "@/components/gameplay/layout/layoutUtils";
-import CheckboxInput from "@/components/inputs/CheckboxInput";
 import ColorInput from "@/components/inputs/ColorInput";
+import DropdownInput from "@/components/inputs/DropdownInput";
 import NumberInput from "@/components/inputs/NumberInput";
 import RadioInput from "@/components/inputs/RadioInput";
 import styles from "@/components/settings/settings.module.css";
 import { COLOR_ACCESSIBILITY_PALETTES, ColorAccessibilityKeyword } from "@/components/themes/colorAccessibilityPalettes";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { computeHoverColour, toGrayscale } from "@/lib/utils/colors";
+import { toGrayscale } from "@/lib/utils/colors";
 import { printd } from "@/lib/utils/debugUtils";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
@@ -96,67 +96,22 @@ export default function GeneralSettings({ nextuserPreference: nextUserPreference
                     }}
                 />
             </section>
-            {/* <section className={styles.settingsContentChunk}>
-                <div className={styles.buttonColorControls}>
-                    <div className={styles.significantButtonColor}>
-                        <ColorInput
-                            inputId="significant-button-color"
-                            defaultValue={userPreference.significantButtonColor}
-                            inputName="Main Action Button Color"
-                            handleOptionChange={(color: string) => {
-                                setNextuserPreference(prev => ({
-                                    ...prev,
-                                    significantButtonColor: color,
-                                    significantButtonHoverColor:
-                                        isAutoHoverColorSelection
-                                            ? computeHoverColour(color)
-                                            : prev.significantButtonHoverColor
-                                }));
-                            }}
-                        />
-                    </div>
-                    <div className={styles.significantButtonColorHovered}>
-                        <ColorInput
-                            inputId="significant-button-hover-color"
-                            defaultValue={userPreference.significantButtonHoverColor}
-                            inputName="Main Action Button Color (Hovered)"
-                            directInjectionValue={isAutoHoverColorSelection
-                                ? nextUserPreference.significantButtonHoverColor
-                                : undefined}
-                            handleOptionChange={(color: string) => {
-                                setNextuserPreference(prev => ({
-                                    ...prev,
-                                    significantButtonHoverColor: color,
-                                }));
-                            }}
-                        />
-                    </div>
-                    <button
-                        ref={demoButtonRef}
-                        onMouseEnter={handleDemoButtonMouseEnter}
-                        onMouseLeave={handleDemoButtonMouseLeave}
-                        style={{
-                            backgroundColor: nextUserPreference.significantButtonColor,
-                            borderColor: toGrayscale(nextUserPreference.significantButtonColor) < 128 ? "white" : "black",
-                            color: toGrayscale(nextUserPreference.significantButtonColor) < 128 ? "white" : "black",
-                        }}
-                    >Live preview. Hover me!</button>
-                    <div className={styles.autoSelectHoverColor}>
-                        <CheckboxInput
-                            inputId="auto-select-hover-color"
-                            inputName="Automatically select hover color"
-                            defaultChecked={isAutoHoverColorSelection}
-                            handleOptionChange={toggleAutoHover}
-                        />
-                    </div>
-                </div>
-                <p className={styles.autoHoverSelectorExplanation}>
-                    The automatic selection of hover color is selected in a way that for each red, green and blue component,<br></br>
-                    - If its value is below 128, the new value is: <code>value + min(floor(0.4 * (128 - value)), 24)</code><br></br>
-                    - If its value is above 128, the new value is: <code>value - min(floor(0.4 * (value - 128)), 24)</code><br></br><br></br>
-                    Note: Change the Main Action Button Color once after ticking this option to see the effect.
-                </p>
-            </section> */}
+
+            <section className={styles.settingsContentChunk}>
+                <DropdownInput
+                    options={["On", "Off"]}
+                    inputId="display-key-binding-on-buttons"
+                    defaultOption={nextUserPreference.displayKeyBindingOnButtons ? "On" : "Off"}
+                    dropdownName="Show Keyboard Shortcuts on Buttons"
+                    handleOptionChange={(option) => {
+                        setNextuserPreference(prev => ({
+                            ...prev,
+                            displayKeyBindingOnButtons: option === "On" ? true : false,
+                        }));
+                    }}
+                />
+            </section>
+
             <section className={styles.settingsContentChunk}>
                 <div className={styles.colorAccessibilitySettings}>
                     <RadioInput
@@ -169,38 +124,38 @@ export default function GeneralSettings({ nextuserPreference: nextUserPreference
                         <p><b>{COLOR_ACCESSIBILITY_PALETTES[nextUserPreference.colorAccessibilityMode].description}</b></p>
                         <ul className={styles.colorAccessibilityPaletteColors}>
                             <li>
-                                <ColorInput 
+                                <ColorInput
                                     inputName="Correct Indicator"
                                     inputId="color-accessibility-correct"
                                     defaultValue={palette.correct}
-                                    handleOptionChange={() => {}}
+                                    handleOptionChange={() => { }}
                                     directInjectionValue={palette.correct}
                                 />
                             </li>
                             <li>
-                                <ColorInput 
+                                <ColorInput
                                     inputName="Correct Indicator (On Hover)"
                                     inputId="color-accessibility-correct-on-hover"
                                     defaultValue={palette.correctOnHover}
-                                    handleOptionChange={() => {}}
+                                    handleOptionChange={() => { }}
                                     directInjectionValue={palette.correctOnHover}
                                 />
                             </li>
                             <li>
-                                <ColorInput 
+                                <ColorInput
                                     inputName="Wrong Indicator"
                                     inputId="color-accessibility-wrong"
                                     defaultValue={palette.wrong}
-                                    handleOptionChange={() => {}}
+                                    handleOptionChange={() => { }}
                                     directInjectionValue={palette.wrong}
                                 />
                             </li>
                             <li>
-                                <ColorInput 
+                                <ColorInput
                                     inputName="Wrong Indicator (On Hover)"
                                     inputId="color-accessibility-wrong-on-hover"
                                     defaultValue={palette.wrongOnHover}
-                                    handleOptionChange={() => {}}
+                                    handleOptionChange={() => { }}
                                     directInjectionValue={palette.wrongOnHover}
                                 />
                             </li>
@@ -209,7 +164,7 @@ export default function GeneralSettings({ nextuserPreference: nextUserPreference
                             <p><b>Test Case Selector Demonstration</b></p>
                             <ul>
                                 <li className={styles.defaultTestCase} >Default Test Case</li>
-                                <li 
+                                <li
                                     className={styles.correctTestCase}
                                     style={{
                                         backgroundColor: palette.correct,
@@ -217,34 +172,34 @@ export default function GeneralSettings({ nextuserPreference: nextUserPreference
                                     }}
                                     onMouseEnter={e => {
                                         e.currentTarget.style.backgroundColor = palette.correctOnHover;
-                                        e.currentTarget.style.color = toGrayscale(palette.correctOnHover) < 128 
-                                            ? "var(--font-colour)" 
+                                        e.currentTarget.style.color = toGrayscale(palette.correctOnHover) < 128
+                                            ? "var(--font-colour)"
                                             : "var(--font-colour-black)";
                                     }}
                                     onMouseLeave={e => {
                                         e.currentTarget.style.backgroundColor = palette.correct;
-                                        e.currentTarget.style.color = toGrayscale(palette.correct) < 128 
-                                            ? "var(--font-colour)" 
+                                        e.currentTarget.style.color = toGrayscale(palette.correct) < 128
+                                            ? "var(--font-colour)"
                                             : "var(--font-colour-black)";
                                     }}
-                               
+
                                 >Correct Test Case</li>
-                                <li 
-                                    className={styles.wrongTestCase} 
+                                <li
+                                    className={styles.wrongTestCase}
                                     style={{
                                         backgroundColor: palette.wrong,
                                         color: toGrayscale(palette.wrong) < 128 ? "var(--font-colour)" : "var(--font-colour-black)"
                                     }}
                                     onMouseEnter={e => {
                                         e.currentTarget.style.backgroundColor = palette.wrongOnHover;
-                                        e.currentTarget.style.color = toGrayscale(palette.wrongOnHover) < 128 
-                                            ? "var(--font-colour)" 
+                                        e.currentTarget.style.color = toGrayscale(palette.wrongOnHover) < 128
+                                            ? "var(--font-colour)"
                                             : "var(--font-colour-black)";
                                     }}
                                     onMouseLeave={e => {
                                         e.currentTarget.style.backgroundColor = palette.wrong;
-                                        e.currentTarget.style.color = toGrayscale(palette.wrong) < 128 
-                                            ? "var(--font-colour)" 
+                                        e.currentTarget.style.color = toGrayscale(palette.wrong) < 128
+                                            ? "var(--font-colour)"
                                             : "var(--font-colour-black)";
                                     }}
                                 >Wrong Test Case</li>
@@ -253,6 +208,7 @@ export default function GeneralSettings({ nextuserPreference: nextUserPreference
                     </div>
                 </div>
             </section>
+            
             <section className={styles.settingsContentChunk}>
                 <div className={styles.layoutSettings}>
                     <RadioInput
@@ -261,15 +217,14 @@ export default function GeneralSettings({ nextuserPreference: nextUserPreference
                         defaultOptionIndex={layoutIndex}
                         handleOptionChosen={handleChangeLayout}
                     />
-                    <div style={{
-                        width: "100%",
+                    <div style={{ 
+                        width: "100%", 
                         height: "100%",
                         display: "flex",
-                        alignItems: "center",
+                        alignItems: "center", 
+                        overflow: "hidden" 
                     }}>
-                        <div style={{ width: "100%" }}>
-                            {LAYOUTS[Object.keys(LAYOUTS)[layoutIndex]].miniPreview}
-                        </div>
+                        {LAYOUTS[Object.keys(LAYOUTS)[layoutIndex]].miniPreview}
                     </div>
                 </div>
             </section>
