@@ -1,16 +1,19 @@
 .newsContainer {
     width: calc(100vw);
-    height: calc(100vh);
 }
 
 .news {
     position: relative;
-    margin: 30vh 15vw 0;
+    margin: 30vh 15vw 10rem;
+}
+
+.news::-webkit-scrollbar {
+    width: 0;
 }
 
 .news h1 {
     font-size: 4rem;
-    margin: 2rem 0 2rem 4rem;
+    margin: 2rem 0 2rem 2rem;
 }
 
 .news ul {
@@ -82,6 +85,8 @@
 
 .tagBoxes {
     width: fit-content;
+    display: flex;
+    column-gap: 0.5rem;
     margin-bottom: 1rem;
 }
 

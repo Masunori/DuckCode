@@ -57,7 +57,6 @@ function MatchInformation({ initialTime, forceSubmitOnCountdownEnds }: Multiplay
 
 export default function MultiplayerNavbar({ initialTime, forceSubmitOnCountdownEnds = () => { } }: MultiplayerNavbarProps) {
     const { openSettings } = useSettings();
-    const user = useUserStore(state => state.user);
     const userPreference = useUserPreferenceStore(state => state.userPreference);
 
     const setIsChatboxOpen = useMultiplayerGameplayStore(state => state.setIsChatboxOpen);
@@ -80,6 +79,18 @@ export default function MultiplayerNavbar({ initialTime, forceSubmitOnCountdownE
         )
     }
 
+    const settingsKeyHint = userPreference.displayKeyBindingOnButtons
+        ? <kbd>[{translateCombo(GENERAL_KEY_BINDINGS["OPEN_SETTINGS"].combo)}]</kbd>
+        : null;
+
+    const chatboxKeyHint = userPreference.displayKeyBindingOnButtons
+        ? <kbd>[{translateCombo(MULTIPLAYER_KEY_BINDINGS["OPEN_CHATBOX"].combo)}]</kbd>
+        : null;
+
+    const boardKeyHint = userPreference.displayKeyBindingOnButtons
+        ? <kbd>[{translateCombo(MULTIPLAYER_KEY_BINDINGS["TOGGLE_CANVAS"].combo)}]</kbd>
+        : null;
+
     return (
         <nav className={styles.navbar}>
             <div className={styles.navbarButtons}>
@@ -90,9 +101,7 @@ export default function MultiplayerNavbar({ initialTime, forceSubmitOnCountdownE
                         width={userPreference.fontSize * 1.5}
                         height={userPreference.fontSize * 1.5}
                     />
-                    <p>
-                        [{translateCombo(GENERAL_KEY_BINDINGS["OPEN_SETTINGS"].combo)}]
-                    </p>
+                    {settingsKeyHint}
                 </button>
                 <button onClick={() => setIsChatboxOpen(true)} title="Open Chatbox">
                     <Image
@@ -101,9 +110,7 @@ export default function MultiplayerNavbar({ initialTime, forceSubmitOnCountdownE
                         width={userPreference.fontSize * 1.5}
                         height={userPreference.fontSize * 1.5}
                     />
-                    <p>
-                        [{translateCombo(MULTIPLAYER_KEY_BINDINGS["OPEN_CHATBOX"].combo)}]
-                    </p>
+                    {chatboxKeyHint}
                 </button>
                 <button onClick={() => setIsBoardOpen(prev => !prev)} title="Toggle Strategy Board">
                     <Image
@@ -112,9 +119,7 @@ export default function MultiplayerNavbar({ initialTime, forceSubmitOnCountdownE
                         width={userPreference.fontSize * 1.5}
                         height={userPreference.fontSize * 1.5}
                     />
-                    <p>
-                        [{translateCombo(MULTIPLAYER_KEY_BINDINGS["TOGGLE_CANVAS"].combo)}]
-                    </p>
+                    {boardKeyHint}
                 </button>
             </div>
             <MatchInformation

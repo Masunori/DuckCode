@@ -47,35 +47,9 @@
   --settings-bg-hover-color: #424242;
   --settings-option-border-color: #606060;
 
-  /* z-index */
-  --landing-z-index: 1;
-  --login-signup-overlay-z-index: 2;
-  --login-signup-z-index: 3;
-
-  /* for GameMenu.tsx in home */
-  --stylized-game-menu-button-z-index: 2;
-  --stylized-game-menu-button-description-z-index: 1;
-  --game-menu-tab-overlay-z-index: 3;
-  --game-menu-tab-z-index: 4;
-
-  /* the Monaco Editor minimap has z-index = 4. This value is just enough to allow an overlay over an editor during gameplay*/
-
-  /* only for fullscreen editor */
-  --gameplay-tab-overlay-z-index: 5;
-  --gameplay-tab-z-index: 6;
-
-  /* strategy board in multiplayer */
-  --strategy-board-overlay-z-index: 7;
-  --strategy-board-z-index: 8;
-
-  /* chatbox in multiplayer */
-  --chatbox-overlay-z-index: 9;
-  --chatbox-z-index: 10;
-
-  --navbar-z-index: 15;
-  --settings-z-index: 20;
-  --popup-overlay-z-index: 30;
-  --popup-z-index: 31;
+  /* z-index values are managed in src/app/zIndex.ts and injected as an
+     inline <style> tag by the root layout to guarantee availability before
+     any CSS module is parsed in production builds. */
 }
 
 /* global reset or common styles */
@@ -100,12 +74,24 @@
   font-style: normal;
 }
 
-body {
-  background-color: var(--background-color);
-  color: var(--font-colour);
+html::-webkit-scrollbar {
+  width: 0;
 }
 
-body, h1, h2, h3, h4, h5, h6, p, button {
+body {
+  background-color: var(--background-color);
+  color: var(--font-colour) !important;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+button {
   font-family: 'PF Din Text Pro', Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

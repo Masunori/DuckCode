@@ -1,7 +1,7 @@
 "use client";
 
 import DropdownInput from "@/components/inputs/DropdownInput";
-import { PLKeys, PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { GENERAL_KEY_BINDINGS, PLKeys, PROGRAMMING_LANGUAGES, translateCombo } from "@/components/settings/settingsUtils";
 import CountdownTimer from "@/components/countdownTimer/CountdownTimer";
 import { usePopup } from "@/contexts/PopupContext";
 import { useSettings } from "@/contexts/SettingsContext";
@@ -27,6 +27,10 @@ export default function GameplayNavbar({ initialTime, forceSubmitOnCountdownEnds
     const extractPLKey = (str: string) => str.split(" ")[0];
     const userPreference = useUserPreferenceStore(state => state.userPreference);
     const setUserPreference = useUserPreferenceStore(state => state.setUserPreference);
+
+    const settingsKeyHint = userPreference.displayKeyBindingOnButtons
+        ? <kbd>[{translateCombo(GENERAL_KEY_BINDINGS["OPEN_SETTINGS"].combo)}]</kbd>
+        : "";
 
     function handleOptionChange(option: string) {
         openPopupWith(
@@ -65,6 +69,7 @@ export default function GameplayNavbar({ initialTime, forceSubmitOnCountdownEnds
                     width={userPreference.fontSize * 1.25}
                     height={userPreference.fontSize * 1.25}
                 />
+                {settingsKeyHint}
             </button>
             <CountdownTimer
                 initialTime={initialTime}

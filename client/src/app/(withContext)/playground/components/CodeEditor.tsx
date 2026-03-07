@@ -27,7 +27,9 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
     const languageRef = useRef(userPreference.language);
 
     const codeContent = useBaseGameplayStore(state => state.codeContent[0]);
-    const setCodeContent = (code: string) => useBaseGameplayStore(state => state.setCodeContentAtIndex(0, code));
+
+    const setCodeContentAtIndex = useBaseGameplayStore(state => state.setCodeContentAtIndex);
+    const setCodeContent = (code: string) => setCodeContentAtIndex(0, code);
 
     const { debouncedSave } = useDebouncedSave((code: string) => setCodeContent(code), 500);
 

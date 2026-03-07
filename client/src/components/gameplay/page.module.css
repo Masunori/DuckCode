@@ -51,10 +51,18 @@
 .toSettings {
     background-color: var(--third-layer-background-color);
     display: flex;
-    justify-content: flex-start;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     border: none;
     padding: 0 1.5rem;
+}
+
+.toSettings kbd {
+    font-size: 0.7rem;
+    font-family: monospace;
+    opacity: 0.55;
+    margin-top: 0.3rem;
 }
 
 .toHome {

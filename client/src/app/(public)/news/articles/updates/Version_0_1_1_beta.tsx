@@ -18,8 +18,13 @@ export function Version_0_1_1_beta() {
                 <li>
                     <p>
                         <b>Arcade</b> - Currently supports Classic mode (DSA and competitive programming level questions).
-                        More modes and questions will be added in the future, so stay tuned! Highly programmer-centric with
-                        many useful keyboard shortcuts to make sure you barely need to take your hands off the keyboard.
+                        More modes and questions will be added in the future, so stay tuned! 
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <b>Highly programmer-centric design</b> - Many useful keyboard shortcuts to make sure you barely need to 
+                        take your hands off the keyboard. 
                     </p>
                 </li>
             </ul>
