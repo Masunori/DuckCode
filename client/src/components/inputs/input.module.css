@@ -238,6 +238,32 @@
     padding: 0.5rem;
 }
 
+/* for OTP inputs */
+.otpInputContainer {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.otpDigitInput {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 2px solid var(--third-layer-background-color);
+    border-radius: 0.5rem;
+    background-color: var(--terminal-like-background-color);
+    color: var(--font-colour);
+    font-family: var(--code-fragment-font);
+    font-size: 1.2rem;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.otpDigitInput:focus {
+    border-color: var(--significant-button-color);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--significant-button-color) 30%, transparent);
+}
+
 .slider {
     justify-self: center;
     position: relative;

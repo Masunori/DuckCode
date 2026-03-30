@@ -1,6 +1,6 @@
 import { FieldState, PASSWORD_CONDITIONS } from "@/lib/utils/fieldConditions";
 import { CSSProperties, useRef, useState } from "react";
-import { fieldBorderColors, InputIndicatorColours } from "../themes/authColors";
+import { fieldBorderColors } from "../themes/authColors";
 import styles from './authInputs.module.css';
 import PasswordGuideTooltip from "./PasswordTooltipGuide";
 
@@ -83,6 +83,7 @@ function getConfirmPasswordFieldState(
  * - onChangeNewPassword: A callback function that is called when the new password input value changes, receiving the new password as an argument.
  * - onChangeConfirmPassword: A callback function that is called when the confirm new password input value changes, receiving the confirm password as an argument.
  * - onValidatePassword: A callback function that is called when the new password input value changes, receiving the validation state of the new password as an argument.
+ * - onValidateConfirmPassword: A callback function that is called when the confirm new password input value changes, receiving the validation state of the confirm password as an argument.
  * @returns The NewPasswordInput component.
  */
 export default function NewPasswordInput({

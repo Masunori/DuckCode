@@ -37,7 +37,6 @@ button:disabled {
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     border: 1px solid var(--fourth-layer-background-color);
-    bottom: 50px;
     transition-duration: 0.25s;
     margin: 1rem auto;
     width: 10rem;
@@ -57,7 +56,7 @@ button:disabled {
     border: 1px solid var(--fourth-layer-background-color);
     bottom: 50px;
     transition-duration: 0.25s;
-    margin: 1remauto;
+    margin: 1rem auto;
     width: 10rem;
     display: block;
 }
@@ -252,6 +251,10 @@ button:disabled {
     background-color: var(--significant-button-hover-color);
 }
 
+.popup button[type="submit"] * {
+    margin: auto;
+}
+
 /* login */
 .loginPopup {
     display: grid;
@@ -350,6 +353,7 @@ button:disabled {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: 1.5rem;
     flex: 1;
 }
@@ -360,27 +364,38 @@ button:disabled {
 }
 
 .registerOtp button {
-    background-color: var(--insignificant-button-color);
     font-size: 1rem;
     font-weight: 600;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
-    border: 1px solid var(--fourth-layer-background-color);
-    bottom: 50px;
     transition-duration: 0.25s;
     width: 100%;
 }
 
-.registerOtp button:hover {
+.registerOtp .resendOtpButton {
+    background-color: var(--insignificant-button-color);
+    border: 1px solid var(--fourth-layer-background-color);
+}
+
+.registerOtp .resendOtpButton:hover {
     background-color: var(--insignificant-button-hover-color);
 }
 
-.registerOtp .registerVerifyOtp {
+.registerOtp .verifyOtpButton {
     background-color: var(--significant-button-color);
 }
 
-.registerOtp .registerVerifyOtp:hover {
+.registerOtp .verifyOtpButton:hover {
     background-color: var(--significant-button-hover-color);
+}
+
+.registerOtp .verifyOtpButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.registerOtp .verifyOtpButton * {
+    margin: auto;
 }
 
 /* the separator between traditional login and third-party login */
@@ -437,31 +452,13 @@ button:disabled {
     padding-top: 3rem;
 }
 
-.otpInputContainer {
-    position: relative;
-    padding: 1.5rem 0;
+.resetPasswordPopup button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
-.otpInput {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    pointer-events: none;
-    margin: 0.5rem 0;
-}
-
-.otpInput input {
-    width: 2rem;
-    height: 2rem;
-    margin: 0 0.5rem
-}
-
-.otpInputOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+.resetPasswordPopup button * {
+    margin: auto;
 }
 
 .emailVerification input, .resetPassword input {
@@ -494,6 +491,16 @@ button:disabled {
 
 .emailVerification button:hover, .otp button:hover, .signupOtp button:hover {
     background-color: var(--insignificant-button-hover-color);
+}
+
+.resetPasswordPopup .otp {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+}
+
+.resetPasswordPopup .otpInputContainer {
+    margin: auto;
 }
 
 .resetPasswordButton, .resetPasswordSuccess button {
