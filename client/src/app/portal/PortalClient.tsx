@@ -11,7 +11,7 @@ export default function PortalClient() {
     const [portalMode, setPortalMode] = useState(PortalMode.None);
 
    return (
-        <div>
+        <div className={styles.portalClient}>
             <button className={styles.loginButton} onClick={() => setPortalMode(PortalMode.Login)}>Login</button>
             <button className={styles.signupButton}  onClick={() => setPortalMode(PortalMode.Register)}>Register</button>
 
