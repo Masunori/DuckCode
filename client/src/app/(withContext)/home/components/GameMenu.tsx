@@ -23,9 +23,6 @@ function StylizedGameMenuButton({ buttonName, onClick, buttonDescription, disabl
             <button 
                 onClick={onClick} 
                 disabled={disabled}
-                style={{
-                    cursor: disabled ? "not-allowed" : "pointer",
-                }}
             >{buttonName}</button>
             <div className={styles.stylizedGameMenuButtonOverlay}>
                 

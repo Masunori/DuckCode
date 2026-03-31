@@ -334,6 +334,10 @@
     cursor: pointer;
 }
 
+.stylizedGameMenuButton button:disabled {
+    cursor: not-allowed;
+}
+
 /* Chat panel */
 .chatPanel {
     grid-area: mess;
