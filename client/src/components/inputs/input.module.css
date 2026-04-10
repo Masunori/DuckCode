@@ -86,6 +86,10 @@
     column-gap: 0.5rem;
 }
 
+.numberInput label.compact {
+    grid-template-columns: 1fr;
+}
+
 .numberInput input {
     width: 100%;
     padding: 0.5rem;
@@ -106,6 +110,14 @@
 
 .numberInput button:hover {
     background-color: var(--insignificant-button-hover-color);
+}
+
+.numberInput .compactControls {
+    display: grid;
+    height: 2.5rem;
+    margin-top: 0.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 0.5rem;
 }
 
 /* for color inputs */

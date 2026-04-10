@@ -36,18 +36,18 @@ export async function getProfile() {
         // user.level = Math.ceil((user.exp / 100));
         user.level = Math.floor(Math.log10((user.exp / 100) + 1) / Math.log10(1.1));
         user.rank = user.rankPoints >= 3000
-            ? "Tourist"
+            ? "Phoenix"
             : user.rankPoints >= 2500
-                ? "Diamond"
+                ? "Loon"
                 : user.rankPoints >= 2000
-                    ? "Platinum"
+                    ? "Grebe"
                     : user.rankPoints >= 1500
-                        ? "Gold"
+                        ? "Swan"
                         : user.rankPoints >= 1000
-                            ? "Silver"
+                            ? "Teal"
                             : user.rankPoints >= 500
-                                ? "Bronze"
-                                : "Vinh";
+                                ? "Mallard"
+                                : "Duckling";
 
         return {
             status: response.status,

@@ -2,7 +2,6 @@
 
 import { useDebouncedSave } from "@/hooks/useDebounce";
 import { toGrayscale } from "@/lib/utils/colors";
-import { printd } from "@/lib/utils/debugUtils";
 import { ChangeEvent, useEffect, useState } from "react";
 import styles from "./input.module.css";
 
@@ -28,8 +27,6 @@ type ColorInputProps = {
 export default function ColorInput({ inputName, inputId, defaultValue, handleOptionChange, directInjectionValue }: ColorInputProps) {
     const [color, setColor] = useState(defaultValue);
     const [isDisabled, setDisabled] = useState(false);
-
-    printd("@/components/inputs/ColorInput", `Rendering ColorInput (${inputName}) with color:`, color, "and isDisabled:", isDisabled);
 
     const { debouncedSave } = useDebouncedSave((color: string) => {
         handleOptionChange(color);

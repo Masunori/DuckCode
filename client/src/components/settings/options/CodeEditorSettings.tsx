@@ -9,9 +9,11 @@ import { PRESET_THEMES } from "@/components/themes/themes";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { Editor, loader } from "@monaco-editor/react";
 import * as monaco from 'monaco-editor';
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { CODE_EDITOR_LIVE_PREVIEW_TEXT, PLKeys, PROGRAMMING_LANGUAGES } from "../settingsUtils";
+import { CODE_EDITOR_LIVE_PREVIEW_TEXT, isKeyCombo, PLKeys, PROGRAMMING_LANGUAGES } from "../settingsUtils";
+import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { printd } from "@/lib/utils/debugUtils";
 
 loader.config({
 	paths: {
@@ -43,11 +45,53 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
         wordWrapColumn: nextUserPreference.editorOptions.wordWrapColumn,
     }
 
+    const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>(null);
+    const monacoRef = useRef<typeof monaco>(null);
+    const [isEditorReady, setIsEditorReady] = useState(false);
+
+    function handleEditorDidMount(editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) {
+        editorRef.current = editor;
+        monacoRef.current = monacoInstance;
+        setIsEditorReady(true);
+    }
+
+    useEffect(() => {
+        const editor = editorRef.current;
+        const monacoInstance = monacoRef.current;
+
+        if (!editor || !monacoInstance) return;
+
+        function handleEscapeKey(e: KeyboardEvent) {
+            if (isKeyCombo(e, { ctrl: false, shift: false, key: "Escape" })) {
+                e.preventDefault();
+                const domNode = editor?.getDomNode();
+
+                if (domNode && domNode.contains(document.activeElement)) {
+                    (document.activeElement as HTMLElement).blur();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        keyboardManager.register(
+            "codeEditorSettingsEscapeKey",
+            "INPUT_KEY_PRIORITY",
+            handleEscapeKey
+        );
+
+        return () => {
+            keyboardManager.unregister("codeEditorSettingsEscapeKey");
+        }
+    }, [isEditorReady]);
+
     return (
         <PanelGroup direction="horizontal" className={`${styles.settingsOptionDisplay} ${styles.codeEditorSettingsDisplay}`}>
             <Panel defaultSize={50} minSize={25} maxSize={80} className={styles.demoEditor}>
                 <h2>Code Editor Preview</h2>
                 <Editor
+                    onMount={handleEditorDidMount}
                     height="85%"
                     options={editorOptions}
                     value={CODE_EDITOR_LIVE_PREVIEW_TEXT}

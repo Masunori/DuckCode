@@ -207,7 +207,7 @@ int main() {
         version: "10.2.0",
         monacoEditorAlias: "cpp",
         codeSnippet: `#include <iostream>
-    using namespace std;
+using namespace std;
 
 int main() {
     cout << "Hello, World!";

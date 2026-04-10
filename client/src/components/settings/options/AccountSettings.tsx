@@ -5,12 +5,14 @@ import { User } from "@/app/userPrefs/userPrefsTypes";
 import CurrentPasswordInput from '@/components/authInputs/CurrentPasswordInput';
 import NewPasswordInput from '@/components/authInputs/NewPasswordInput';
 import styles from '@/components/settings/settings.module.css';
+import rankStyles from '@/components/styles/ranks.module.css';
 import { usePopup } from "@/contexts/PopupContext";
 import { useUserStore } from "@/contexts/UserContext";
 import { FieldState, PASSWORD_CONDITIONS } from "@/lib/utils/fieldConditions";
 import { AnimatePresence, motion } from 'motion/react';
+import { s } from 'motion/react-client';
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type AccountSettingsProps = {
     nextUserInfo: TempAccountInfo;
@@ -66,36 +68,93 @@ const PasswordChangeForm = ({
     </div>;
 }
 
+type UserProfileSectionProps = {
+    user: TempAccountInfo;
+    onSave: (bio: string) => void;
+}
+
+const UserProfileSection = ({ user, onSave }: UserProfileSectionProps) => {
+    const [isEditingBio, setIsEditingBio] = useState(false);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    return (
+        <div className={styles.profileSection}>
+            <Image
+                src={"/images/default_profile_pic.png"}
+                alt="Profile"
+                width={80}
+                height={80}
+                className={`${styles.profilePicture}`}
+            />
+            <ul className={styles.profileInfo}>
+                <li>
+                    <h4>Username</h4>
+                    <p>{user.name}</p>
+                </li>
+                <li style={{ 
+                    display: "grid",
+                    gridTemplateColumns: "1fr auto",
+                    gap: "1rem",
+                    alignItems: "start"
+                }}>
+                    <div>
+                        <h4>Bio</h4>
+                        <p
+                            className={`${styles.bioDisplay} ${isEditingBio ? styles.closed : styles.open}`}
+                        >
+                            {user.bio || "No bio yet"}
+                        </p>
+                        <textarea
+                            ref={textareaRef}
+                            className={`${styles.bioTextarea} ${isEditingBio ? styles.open : styles.closed}`}
+                            defaultValue={user.bio || ""}
+                            name='bio'
+                        />
+                    </div>
+                    {
+                        !isEditingBio && (
+                            <button className={styles.editButton} onClick={() => setIsEditingBio(true)}>
+                                Edit
+                            </button>
+                        )
+                    }
+                    {
+                        isEditingBio && (
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                                <button 
+                                    className={styles.saveButton} 
+                                    onClick={() => {
+                                        setIsEditingBio(false);
+                                        onSave(textareaRef.current?.value || "");
+                                    }}
+                                >
+                                    Save
+                                </button>
+                                <button 
+                                    className={styles.cancelButton} 
+                                    onClick={() => setIsEditingBio(false)}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        )
+                    }
+                </li>
+            </ul>
+        </div>
+    )
+}
+
 type TempAccountInfo = Pick<User, 'name' | 'email' | 'bio' | 'isTwoFactored'>;
 
 export default function AccountSettings({ nextUserInfo, handleAccountChange }: AccountSettingsProps) {
     const user = useUserStore(state => state.user);
 
-    const [isEditingUsername, setIsEditingUsername] = useState(false);
-    const [tempUsername, setTempUsername] = useState(nextUserInfo.name);
-    const [isEditingBio, setIsEditingBio] = useState(false);
-    const [tempBio, setTempBio] = useState(nextUserInfo.bio || "");
     const [isHoveringProfilePic, setIsHoveringProfilePic] = useState(false);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
 
-    const handleSaveUsername = () => {
-        handleAccountChange("name", tempUsername);
-        setIsEditingUsername(false);
-    };
-
-    const handleCancelUsername = () => {
-        setTempUsername(tempUsername);
-        setIsEditingUsername(false);
-    };
-
-    const handleSaveBio = () => {
-        handleAccountChange("bio", tempBio);
-        setIsEditingBio(false);
-    };
-
-    const handleCancelBio = () => {
-        setTempBio(tempBio || "");
-        setIsEditingBio(false);
+    const handleSaveBio = (newBio: string) => {
+        handleAccountChange("bio", newBio);
     };
 
     const { openPopupWith } = usePopup();
@@ -118,7 +177,8 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
             {/* User Profile Section */}
             <section className={styles.settingsContentChunk}>
                 <h2>User Profile</h2>
-                <div className={styles.profileSection}>
+                <UserProfileSection user={nextUserInfo} onSave={handleSaveBio} />
+                {/* <div className={styles.profileSection}>
                     <div
                         className={styles.profilePictureContainer}
                         onMouseEnter={() => setIsHoveringProfilePic(true)}
@@ -144,97 +204,8 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
                         )}
                     </div>
 
-                    <div className={styles.profileInfo}>
-                        <div className={styles.usernameContainer}>
-                            {isEditingUsername ? (
-                                <>
-                                    <input
-                                        type="text"
-                                        value={tempUsername}
-                                        onChange={(e) => setTempUsername(e.target.value)}
-                                        className={styles.profileInput}
-                                        autoFocus
-                                    />
-                                    <div className={styles.editActions}>
-                                        <button
-                                            className={styles.saveSmallButton}
-                                            onClick={handleSaveUsername}
-                                        >
-                                            Save
-                                        </button>
-                                        <button
-                                            className={styles.cancelSmallButton}
-                                            onClick={handleCancelUsername}
-                                        >
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <span className={styles.usernameText}>{nextUserInfo.name}</span>
-                                    <button
-                                        className={styles.editSmallButton}
-                                        onClick={() => setIsEditingUsername(true)}
-                                    >
-                                        <Image
-                                            src={editIcon}
-                                            alt="Edit"
-                                            width={16}
-                                            height={16}
-                                            className={styles.editIcon}
-                                        />
-                                    </button>
-                                </>
-                            )}
-                        </div>
-
-                        <div className={styles.bioContainer}>
-                            {isEditingBio ? (
-                                <>
-                                    <textarea
-                                        value={tempBio}
-                                        onChange={(e) => setTempBio(e.target.value)}
-                                        placeholder="Add a bio..."
-                                        className={styles.bioInput}
-                                        rows={3}
-                                        autoFocus
-                                    />
-                                    <div className={styles.editActions}>
-                                        <button
-                                            className={styles.saveSmallButton}
-                                            onClick={handleSaveBio}
-                                        >
-                                            Save
-                                        </button>
-                                        <button
-                                            className={styles.cancelSmallButton}
-                                            onClick={handleCancelBio}
-                                        >
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <p className={styles.bioText}>{nextUserInfo.bio || "No bio yet"}</p>
-                                    <button
-                                        className={styles.editSmallButton}
-                                        onClick={() => setIsEditingBio(true)}
-                                    >
-                                        <Image
-                                            src={editIcon}
-                                            alt="Edit"
-                                            width={16}
-                                            height={16}
-                                            className={styles.editIcon}
-                                        />
-                                    </button>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </div>
+                    
+                </div> */}
             </section>
 
             {/* Rest of the component remains the same */}
@@ -265,7 +236,7 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
                                 <span className={styles.levelLabel}>Level</span>
                                 <span className={styles.levelValue}>{user.level}</span>
                             </div>
-                            <div className={`${styles.rank} ${styles[user.rank.toLowerCase()]}`}>
+                            <div className={`${styles.rank} ${rankStyles[user.rank.toLowerCase()]}`}>
                                 {user.rank}
                             </div>
                         </div>

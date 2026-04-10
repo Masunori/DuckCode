@@ -66,7 +66,6 @@ export default function FullScreenCodeEditor({ onMount }: CodeEditorProps) {
                 key={userPreference.language}
                 theme={PRESET_THEMES[userPreference.editorOptions.theme].monacoEditorAlias}
                 language={PROGRAMMING_LANGUAGES[userPreference.language].monacoEditorAlias}
-                defaultLanguage="javascript"
                 onMount={onMount}
                 defaultValue={code}
                 onChange={handleEditorChange}

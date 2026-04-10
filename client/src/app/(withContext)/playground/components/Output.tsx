@@ -5,6 +5,7 @@ import styles from "../page.module.css";
 
 const CODE_FAIL_COLOR = 'var(--wrong-indicator-color)';
 const CODE_WARNING_COLOR = 'var(--warn-code-text-border-color)';
+const CODE_OUTPUT_COLOR = 'var(--font-colour)';
 
 export default function Output() {
     const codeOutput = useBaseGameplayStore(state => state.codeOutput);
@@ -18,7 +19,7 @@ export default function Output() {
                             ? CODE_FAIL_COLOR
                             : line.type === "warn"
                             ? CODE_WARNING_COLOR
-                            : "var(--font-colour)"
+                            : CODE_OUTPUT_COLOR
                     }}>
                         {line.content}
                     </code>

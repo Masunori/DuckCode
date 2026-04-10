@@ -86,14 +86,24 @@ export default function DropdownInput({ options, inputId, defaultOption, dropdow
     // - arrow down: shift to the option below
     // - enter: select option
     // - escape: escape from the dropdown
+    // - tab (and shift + tab): also escape from the dropdown, since the user is trying to shift focus away
     useEffect(() => {
         const handleSelectOption = (e: KeyboardEvent) => {
-            if (!isDropdownVisible || !dropdownOptionsRef.current || !inputRef.current || !selectedOptionRef.current) {
+            if (!inputRef.current || document.activeElement !== inputRef.current) {
                 return false;
             }
 
+            // if (!isDropdownVisible || !dropdownOptionsRef.current || !inputRef.current || !selectedOptionRef.current) {
+            //     return false;
+            // }
+
             if (isKeyCombo(e, { ctrl: false, shift: false, key: "ArrowDown" })) {
                 e.preventDefault();
+
+                if (!isDropdownVisible) {
+                    return false;
+                }
+
                 const currentIndex = options.indexOf(previewOption);
                 const nextIndex = (currentIndex + 1) % options.length;
                 setPreviewOption(options[nextIndex]);
@@ -110,6 +120,11 @@ export default function DropdownInput({ options, inputId, defaultOption, dropdow
                 return true;
             } else if (isKeyCombo(e, { ctrl: false, shift: false, key: "ArrowUp" })) {
                 e.preventDefault();
+
+                if (!isDropdownVisible) {
+                    return false;
+                }
+
                 const currentIndex = options.indexOf(previewOption);
                 const prevIndex = (currentIndex - 1 + options.length) % options.length;
                 setPreviewOption(options[prevIndex]);
@@ -126,12 +141,25 @@ export default function DropdownInput({ options, inputId, defaultOption, dropdow
                 return true;
             } else if (isKeyCombo(e, { ctrl: false, shift: false, key: "Enter" })) {
                 e.preventDefault();
-                handleOptionChange(previewOption);
-                setIsDropdownVisible(false);
-                selectedOptionRef.current = previewOption;
-                return true;
+
+                if (!isDropdownVisible) {
+                    setIsDropdownVisible(true);
+                    return true;
+                } else {
+                    handleOptionChange(previewOption);
+                    setIsDropdownVisible(false);
+                    selectedOptionRef.current = previewOption;
+                    return true;
+                }
             } else if (isKeyCombo(e, { ctrl: false, shift: false, key: "Escape" })) {
                 e.preventDefault();
+                setIsDropdownVisible(false);
+                setPreviewOption(selectedOptionRef.current);
+                return true;
+            } else if (
+                isKeyCombo(e, { ctrl: false, shift: false, key: "Tab" })
+                || isKeyCombo(e, { ctrl: false, shift: true, key: "Tab" })
+            ) {
                 setIsDropdownVisible(false);
                 setPreviewOption(selectedOptionRef.current);
                 return true;
@@ -145,7 +173,7 @@ export default function DropdownInput({ options, inputId, defaultOption, dropdow
         return () => {
             keyboardManager.unregister(`handleSelectOption-${inputId}`);
         }
-    });
+    }, [isDropdownVisible, previewOption, options]);
 
 
     // when the dropdown is first opened, the preview option should automatically be scrolled into view

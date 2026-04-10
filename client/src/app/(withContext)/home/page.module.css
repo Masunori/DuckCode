@@ -99,7 +99,6 @@
 }
 
 .rank {
-    background-color: brown;
     width: 100%;
     height: 100%;
     display: flex;
@@ -289,7 +288,7 @@
 
 .stylizedGameMenuButton button {
     display: block;
-    position: absolute;
+    position: relative;
     width: 100%;
     height: 100%;
     font-size: 1.5rem;
@@ -529,6 +528,8 @@
     padding: 1rem;
     border: none;
     transition-duration: 0.25s;
+    display: flex;
+    justify-content: center;
 }
 
 .arcadeModeActions button:disabled {

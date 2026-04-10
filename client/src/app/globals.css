@@ -47,9 +47,29 @@
   --settings-bg-hover-color: #424242;
   --settings-option-border-color: #606060;
 
-  /* z-index values are managed in src/app/zIndex.ts and injected as an
-     inline <style> tag by the root layout to guarantee availability before
-     any CSS module is parsed in production builds. */
+  /* z-index values */
+  --landing-z-index: 1;
+  --login-signup-overlay-z-index: 2;
+  --login-signup-z-index: 3;
+
+  --stylized-game-menu-button-z-index: 2;
+  --stylized-game-menu-button-description-z-index: 1;
+  --game-menu-tab-overlay-z-index: 3;
+  --game-menu-tab-z-index: 4;
+
+  --gameplay-tab-overlay-z-index: 5;
+  --gameplay-tab-z-index: 6;
+
+  --strategy-board-overlay-z-index: 7;
+  --strategy-board-z-index: 8;
+
+  --chatbox-overlay-z-index: 9;
+  --chatbox-z-index: 10;
+
+  --navbar-z-index: 15;
+  --settings-z-index: 20;
+  --popup-overlay-z-index: 30;
+  --popup-z-index: 31;
 }
 
 /* global reset or common styles */

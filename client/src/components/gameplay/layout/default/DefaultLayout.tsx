@@ -116,6 +116,10 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
         }
     }, [activeQuestionIndex]);
 
+    // useEffect(() => {
+
+    // }, [userPreference.language]);
+
     // this useEffect encapsulates all key bindings
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {

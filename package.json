@@ -6,6 +6,8 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@monaco-editor/react": "^4.8.0-rc.3"
+    "@monaco-editor/react": "^4.8.0-rc.3",
+    "katex": "^0.16.44",
+    "react-katex": "^3.1.0"
   }
 }

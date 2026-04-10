@@ -60,7 +60,7 @@ export default function GameMenu() {
                 buttonDescription="Beginners or seasoned programmers, there is something for you here..." 
             />
             <StylizedGameMenuButton 
-                buttonName="Join/Host a Private Match" 
+                buttonName="Join/Host a Match" 
                 onClick={undefined} 
                 disabled={true}
                 buttonDescription="Create custom games and play with friends." 

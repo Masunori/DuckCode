@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { GAME_MODES, GameMenuTab } from "../../homeUtils";
 import styles from "../../page.module.css";
+import Spinner from "@/components/loading/Spinner";
 
 type ArcadeModeTabProps = {
     setTab: Dispatch<SetStateAction<GameMenuTab>>;
@@ -99,7 +100,11 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
     });
 
     const [mode, setMode] = useState<string>("classic");
-    const [difficultyRange, setDifficultyRange] = useState<[number, number]>([Math.min(Math.max(user.rankPoint, 0), 5000), Math.min(Math.max(user.rankPoint, 0), 5000)]);
+    const [difficultyRange, setDifficultyRange] = useState<[number, number]>([
+        Math.min(Math.max(user.rankPoint, 0), 5000), 
+        Math.min(Math.max(user.rankPoint, 0), 5000)
+    ]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const gameModeView = () => <>
         <motion.div
@@ -164,17 +169,27 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                 <div className={styles.arcadeModeActions}>
                     <button
                         className={styles.selectModeButton}
-                        disabled={mode !== "classic"}
+                        disabled={isLoading || mode !== "classic"}
                         onClick={async () => {
                             if (mode === "classic") {
+                                setIsLoading(true);
                                 await getQuestionsInRange(difficultyRange[0], difficultyRange[1]);
+                                setIsLoading(false);
                                 setView("questions");
                             } else {
                                 setQuestionInfo([]);
                                 setView("questions");
                             }
                         }}
-                    >{mode === "classic" ? "Select Mode" : "Not Available"}</button>
+                    >
+                        {
+                            isLoading
+                            ? <Spinner />
+                            : mode === "classic" 
+                                ? "Select Mode" 
+                                : "Not Available"
+                        }
+                    </button>
                 </div>
             </motion.div>
         </motion.div>
@@ -259,7 +274,9 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                     style={{
                         cursor: selectedQuestion ? "pointer" : "not-allowed",
                     }}
-                >Play</button>
+                >
+                    Play
+                </button>
             </div>
         </motion.div>
     </motion.div>;
