@@ -1,5 +1,8 @@
 .devNotice {
-    margin: 10vh 30vw 0;
+    /* margin: 10vh 30vw 0; */
+    width: max(40vw, 600px);
+    margin: auto;
+    margin-top: 10vh;
 }
 
 .devNotice h1 {

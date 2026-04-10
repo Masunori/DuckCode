@@ -7,6 +7,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { login } from "../../../lib/apiClient/user";
 import CurrentEmailInput from "@/components/authInputs/CurrentEmailInput";
 import CurrentPasswordInput from "@/components/authInputs/CurrentPasswordInput";
+import Spinner from "@/components/loading/Spinner";
 
 type LoginProps = {
     portalMode: PortalMode;
@@ -22,12 +23,15 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const [loginError, setLoginError] = useState(LoginStatus.NONE);
     const ERROR_COLOR = '#FF5C00';
 
     async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setLoginError(LoginStatus.NONE);
+        setIsLoading(true);
 
         await login(email, password)
         .then(response => {
@@ -37,7 +41,6 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
                 case 200:
                 case 302:
                     window.location.href = "/home";
-                    
                     break
                 case 401:
                     setLoginError(LoginStatus.WRONG_EMAIL_OR_PASSWORD);
@@ -45,9 +48,12 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
                 default:
                     console.error(`Unexpected response status: ${response.status}`);
             }
+
+            setIsLoading(false);
         })
         .catch(error => {
             console.error(`An unexpected error occurred: ${error}`)
+            setIsLoading(false);
         })
     }
 
@@ -88,8 +94,10 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
 
                         <button 
                             type="submit"
-                            disabled={email === '' || password === ''}
-                        >Login</button>
+                            disabled={email === '' || password === '' || isLoading}
+                        >
+                            {isLoading ? <Spinner /> : 'Login'}
+                        </button>
                     </form>
 
                     <div className={styles.or}>

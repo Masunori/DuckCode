@@ -1,11 +1,8 @@
 "use client";
 
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, PROGRAMMING_LANGUAGES, translateCombo } from "@/components/settings/settingsUtils";
 import { usePopup } from "@/contexts/PopupContext";
-import { runCode } from "@/lib/apiClient/gameplay";
-import { OutputEntry } from "@/lib/apiClient/runCodeStatuses";
 import { keyboardManager } from "@/lib/utils/keyboardManager";
-import { LockV2 } from "@/lib/utils/lock";
 import * as monaco from 'monaco-editor';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
@@ -22,9 +19,32 @@ export default function Page() {
     const userPreference = useUserPreferenceStore(state => state.userPreference);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
+
+    const languageRef = useRef(userPreference.language);
+
     const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
         instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
     }
+
+    const setCodeContentAtIndex = useBaseGameplayStore(state => state.setCodeContentAtIndex);
+    const setCodeContent = (code: string) => setCodeContentAtIndex(0, code);
+
+    useEffect(() => {
+        if (languageRef.current === userPreference.language) {
+            const currentCode = useBaseGameplayStore.getState().codeContent[0];
+
+            if (currentCode) {
+                editorRef.current?.setValue(currentCode);
+                return;
+            }
+            return;
+        }
+
+        languageRef.current = userPreference.language;        
+
+        setCodeContent(PROGRAMMING_LANGUAGES[userPreference.language].codeSnippet);
+        editorRef.current?.setValue(PROGRAMMING_LANGUAGES[userPreference.language].codeSnippet);
+    }, [userPreference.language]);
 
     const isLocked = useBaseGameplayStore(state => state.isLocked);
 
@@ -83,6 +103,9 @@ export default function Page() {
         }
     }, [runCodeOutputMode]);
 
+    const runCodeKeyHint = userPreference.displayKeyBindingOnButtons
+        ? ` [${translateCombo(GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)}]`
+        : "";
 
     return (
         <div ref={gameplayRef} tabIndex={0}>
@@ -100,7 +123,7 @@ export default function Page() {
                             style={{
                                 pointerEvents: isLocked ? "none" : "auto"
                             }}
-                        >Run Code</button>
+                        ><b>Run Code</b> <kbd>{runCodeKeyHint}</kbd></button>
                     </div>
                     <Output />
                 </Panel>

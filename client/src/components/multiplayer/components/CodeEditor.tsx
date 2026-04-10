@@ -11,6 +11,7 @@ import { Editor } from '@monaco-editor/react';
 import type * as monaco from "monaco-editor";
 import { useShallow } from "zustand/shallow";
 import styles from "../page.module.css";
+import { printd } from "@/lib/utils/debugUtils";
 
 type CodeEditorProps = {
     onMount: (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => void;
@@ -47,6 +48,20 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
         }
     }
 
+    const compareTabAndCodeView = (tab: string, codeView: { kind: "shared" } | { kind: "private", userId: number }) => {
+        printd("Comparing tab and code view:", { tab, codeView });
+
+        if (codeView.kind === "shared") {
+            return tab === "Team";
+        } else if (codeView.kind === "private") {
+            if (tab === "You") {
+                return codeView.userId === user.id;
+            } else {
+                return codeView.userId.toString() === tab;
+            }
+        }
+    }
+
     function handleEditorChange(value: string | undefined) {
         setExecutionStatusForUser(activeTab, "idle");
         setCodeForUserAtQuestionIdx(activeTab, activeQuestionIndex, value || "");
@@ -75,7 +90,11 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
                     <li
                         key={index}
                         onClick={() => { setActiveCodeView(tabToCodeView(user)); }}
-                        className={activeCodeView.kind === "private" && activeCodeView.userId === parseInt(user) ? styles.selected : ""}
+                        className={
+                            compareTabAndCodeView(user, activeCodeView) 
+                            ? styles.selected 
+                            : ""
+                        }
                         style={{ color: EXECUTION_STATUS_INFORMATION[executionStatusByUser[user]].color }}
                     >
                         <div>{user}</div>

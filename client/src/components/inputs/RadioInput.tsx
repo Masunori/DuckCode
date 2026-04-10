@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from './input.module.css';
 
 type RadioInputProps = {
@@ -22,10 +22,28 @@ type RadioInputProps = {
  */
 export default function RadioInput({ inputName, options, defaultOptionIndex, handleOptionChosen }: RadioInputProps) {
     const [selectedIndex, setSelectedIndex] = useState(defaultOptionIndex);
+    const containerRef = useRef<HTMLDivElement | null>(null);
 
     function handleClick(index: number) {
+        // Save the scroll position of the nearest scrollable ancestor before
+        // the state update, then restore it after render to prevent scroll jumps.
+        const scrollParent = containerRef.current?.closest("[class*='settingsOptionDisplay']") as HTMLElement | null;
+        const savedScroll = scrollParent?.scrollTop;
+
         setSelectedIndex(index);
         handleOptionChosen(index);
+
+        // `handleClick` calls `setSelectedIndex`, which triggers a React re-render. 
+        // During that re-render, the scale style on the radio dot changes, and some browsers will 
+        // scroll the changed element into view (especially when the parent container is scrollable)
+        // This causes a scroll jump whenever the user clicks on a radio option that is outside the current viewport of the scrollable container.
+        
+        // Restore the scroll position after the state update and re-render.
+        if (scrollParent && savedScroll !== undefined) {
+            requestAnimationFrame(() => {
+                scrollParent.scrollTop = savedScroll;
+            });
+        }
     };
 
     // in case of a discard, we want to set the selected index to the default option index
@@ -34,11 +52,11 @@ export default function RadioInput({ inputName, options, defaultOptionIndex, han
     }, [defaultOptionIndex]);
 
     return (
-        <div className={styles.radioInputs}>
+        <div className={styles.radioInputs} ref={containerRef}>
             <h3><b>{inputName}</b></h3>
             <ul>
                 {options.map((option, index) => (
-                    <li key={index} onClick={() => handleClick(index)}>
+                    <li key={index} onClick={() => handleClick(index)} onMouseDown={e => e.preventDefault()}>
                         <div>
                             {option}
                         </div>

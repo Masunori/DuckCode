@@ -5,7 +5,6 @@ import { InformationMode, Question, TestCaseResult } from "../utils"
 import { LockV2 } from "@/lib/utils/lock";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { useUserStore } from "@/contexts/UserContext";
 import { runAllTestCases, runCode, submitCode } from "@/lib/apiClient/gameplay";
 import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
 import { printd } from "@/lib/utils/debugUtils";
@@ -44,8 +43,6 @@ type EditorSlice = {
 
 /** The execution slice of the gameplay store */
 type ExecutionSlice = {
-    /** The lock to prevent concurrent code executions */
-    lock: LockV2;
     /** Whether the execution is currently locked */
     isLocked: boolean;
 
@@ -102,9 +99,9 @@ type ResetSlice = {
 /** The base gameplay store that contains common functionalities for different gameplay modes. */
 export type BaseGameplayController = ProblemSlice & EditorSlice & ExecutionSlice & UIStateSlice & ResetSlice;
 
-export const useBaseGameplayStore = create<BaseGameplayController>()(persist((set, get) => {
-    const lock = new LockV2();
+const lock = new LockV2();
 
+export const useBaseGameplayStore = create<BaseGameplayController>()(persist((set, get) => {
     lock.subscribe((v) => {
         set({ isLocked: v });
     });
@@ -148,12 +145,9 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
         },
 
         // Execution Slice
-        lock,
         isLocked: lock.locked,
         runCode: async () => {
-            const { 
-                lock, 
-                isLocked,
+            const {
                 codeContent, 
                 activeQuestionIndex, 
                 setInformationMode,
@@ -164,10 +158,6 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
 
             if (!sourceCode) {
                 return undefined;
-            }
-
-            if (isLocked) {
-                return { status: 409, message: "Another code execution is in progress." };
             }
 
             const language = useUserPreferenceStore.getState().userPreference.language;
@@ -188,9 +178,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
         runTestCases: async () => {
             const { 
                 codeContent, 
-                questions, 
-                lock, 
-                isLocked,
+                questions,
                 activeQuestionIndex, 
                 setTestCaseResults, 
                 setActiveTestCaseIndex, 
@@ -200,10 +188,6 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
 
             if (!sourceCode) {
                 return undefined;
-            }
-
-            if (isLocked) {
-                return { status: 409, message: "Another code execution is in progress." };
             }
 
             const language = useUserPreferenceStore.getState().userPreference.language;
@@ -238,8 +222,6 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
             const {
                 codeContent,
                 questions,
-                lock,
-                isLocked,
                 activeQuestionIndex,
                 setCodeOutput,
                 setInformationMode
@@ -249,10 +231,6 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
 
             if (!sourceCode) {
                 return undefined;
-            }
-
-            if (isLocked) {
-                return { status: 409, message: "Another code execution is in progress." };
             }
 
             const language = useUserPreferenceStore.getState().userPreference.language;
@@ -333,24 +311,14 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
                     ? mode(state.informationMode)
                     : mode
             })),
-        activeCodeView: { kind: "private", userId: useUserStore.getState().user.id },
+        activeCodeView: { kind: "shared" },
         setActiveCodeView: (view) =>
             set((state) => ({
                 activeCodeView: typeof view === "function"
                     ? view(state.activeCodeView)
                     : view
             })),
-        reset: () => set({
-            questions: [],
-            timeLimit: 0,
-            codeContent: [],
-            testCaseResults: [],
-            codeOutput: [],
-            isLocked: false,
-            activeQuestionIndex: 0,
-            activeTestCaseIndex: 0,
-            informationMode: "question"
-        })
+        reset: () => set(initialState)
     }
 }, {
     name: "duckcode-base-gameplay",
@@ -360,3 +328,17 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
         activeQuestionIndex: state.activeQuestionIndex
     }),
 }));
+
+const initialState: Partial<BaseGameplayController> = {
+    questions: [],
+    timeLimit: 0,
+    codeContent: [],
+    codeOutput: [],
+    testCaseResults: [],
+    isLocked: false,
+    executionStatus: "idle",
+    activeQuestionIndex: 0,
+    activeTestCaseIndex: 0,
+    informationMode: "question",
+    activeCodeView: { kind: "shared" }
+}

@@ -53,7 +53,7 @@ export const GAMEPLAY_KEY_BINDINGS: Record<GameplayKeyBindingNames, KeyBinding> 
         combo: { ctrl: false, shift: false, key: 'Escape' }
     },
     TOGGLE_QUESTION_TAB: {
-        action: "(Only Fullscreen Editor Layoutde) Toggle Question Mode",
+        action: "(Only Fullscreen Editor Layout) Toggle Question Mode",
         combo: { ctrl: false, shift: true, key: 'Q' }
     },
     TOGGLE_OUTPUT_TAB: {
@@ -207,7 +207,7 @@ int main() {
         version: "10.2.0",
         monacoEditorAlias: "cpp",
         codeSnippet: `#include <iostream>
-    using namespace std;
+using namespace std;
 
 int main() {
     cout << "Hello, World!";

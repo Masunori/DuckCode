@@ -51,10 +51,18 @@
 .toSettings {
     background-color: var(--third-layer-background-color);
     display: flex;
-    justify-content: flex-start;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     border: none;
     padding: 0 1.5rem;
+}
+
+.toSettings kbd {
+    font-size: 0.7rem;
+    font-family: monospace;
+    opacity: 0.55;
+    margin-top: 0.3rem;
 }
 
 .toHome {
@@ -216,44 +224,35 @@
 }
 
 .codeHandlerButtons button {
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    column-gap: 0.5rem;
-}
-
-.codeHandlerButtons button kbd {
-    font-size: 0.75rem;
-    font-family: monospace;
-    opacity: 0.55;
-}
-
-.togglePanelButton,
-.runAllTestCasesButton,
-.runCodeButton {
-    background-color: var(--insignificant-button-color);
+    font-size: 0.9rem;
     border: none;
     transition-duration: 0.25s;
-    padding: 0 10px;
 }
 
-.togglePanelButton:hover,
-.runAllTestCasesButton:hover,
-.runCodeButton:hover {
+.runCodeButton, .runAllTestCasesButton {
+    background-color: var(--insignificant-button-color);
+}
+
+.runCodeButton:hover, .runAllTestCasesButton:hover {
     background-color: var(--insignificant-button-hover-color);
 }
 
 .submitCodeButton {
     background-color: var(--significant-button-color);
-    border: none;
-    transition-duration: 0.25s;
-    padding: 0 10px;
-    font-weight: 600;
 }
 
 .submitCodeButton:hover {
     background-color: var(--significant-button-hover-color);
+}
+
+.codeHandlerButtons button * {
+    display: block;
+}
+
+.codeHandlerButtons button kbd {
+    font-size: 0.7rem;
+    font-family: monospace;
+    opacity: 0.55;
 }
 
 /* Code results: Test Case Panel and Output */
@@ -404,11 +403,11 @@
 }
 
 .informationPanelButtons button {
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    column-gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.informationPanelButtons button * {
+    display: block;
 }
 
 .informationPanelButtons button.unselected {
@@ -423,7 +422,6 @@
     border: none;
     transition-duration: 0.25s;
     padding: 0 10px;
-    font-weight: 600;
 }
 
 .informationPanelButtons button:hover {
@@ -431,7 +429,7 @@
 }
 
 .informationPanelButtons button kbd {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-family: monospace;
     opacity: 0.55;
 }

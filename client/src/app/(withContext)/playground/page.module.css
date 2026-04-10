@@ -109,8 +109,17 @@
     border: none;
     transition-duration: 0.25s;
     padding: 0 10px;
-    font-weight: 600;
     font-size: 1.1rem;
+}
+
+.runCodeButton * {
+    display: block;
+}
+
+.runCodeButton kbd {
+    font-size: 0.8rem;
+    font-family: monospace;
+    opacity: 0.55;
 }
 
 .runCodeButton:hover {

@@ -3,26 +3,23 @@ import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/compon
 import { ResetPasswordStatuses } from "@/lib/apiClient/portalStatuses";
 import { getVerificationCode, verifyCode, verifyNewPassword } from "@/lib/apiClient/user";
 import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
-import { PASSWORD_CONDITIONS } from "../../../lib/utils/fieldConditions";
+import { FieldState, PASSWORD_CONDITIONS } from "../../../lib/utils/fieldConditions";
 import styles from '../page.module.css';
 import PopupOverlay from "./PopupOverlay";
+import OTPInput from "@/components/inputs/OTPInput";
+import NewPasswordInput from "@/components/authInputs/NewPasswordInput";
+import Spinner from "@/components/loading/Spinner";
+import CurrentEmailInput from "@/components/authInputs/CurrentEmailInput";
 
 type ResetPasswordProps = {
     portalMode: PortalMode;
     setPortalMode: Dispatch<SetStateAction<PortalMode>>;
 }
 
-enum FieldState {
-    EMPTY,
-    VALID,
-    INVALID,
-    SERVER_SIDE_INVALID
-}
-
 export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswordProps) {
-    const [otp, setOtp] = useState(new Array<string>(6).fill(''));
-    const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
-    const [otpPointer, setOtpPointer] = useState(0);
+    const [otp, setOtp] = useState<string>('');
+    const [isOtpValid, setIsOtpValid] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const EMPTY_STRING_BORDER_COLOR = 'var(--fourth-layer-background-color)';
     const INVALID_STRING_BORDER_COLOR = '#DC143C';
@@ -33,9 +30,6 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
     const INVALID_STRING_BG_COLOR = '#540A1E';
     const VALID_STRING_BG_COLOR = '#008800';
     const SERVER_SIDE_ERROR_BG_COLOR = '#7C1212';
-
-    // use to show/hide password
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     // tracks the state of each input field
     const [emailInputState, setEmailInputState] = useState(FieldState.EMPTY);
@@ -101,96 +95,17 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
 
     const passwordConditionsRef: RefObject<HTMLLIElement[] | null[]> = useRef([]);
 
-
-    const handleOtpChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-
-        if (!/^\d?$/.test(value)) {
-            return;
-        }
-
-        const newOtp = [...otp];
-        newOtp[otpPointer] = value;
-        setOtp(newOtp);
-
-        if (value && otpPointer < otp.length - 1) {
-            otpInputRefs.current[otpPointer + 1]?.focus();
-            setOtpPointer(ptr => ptr + 1);
-        }
-    }
-
-    const handleBackspace = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Backspace' && !otp[otpPointer] && otpPointer > 0) {
-            const newOtp = [...otp];
-            newOtp[otpPointer - 1] = '';
-            setOtp(newOtp);
-            otpInputRefs.current[otpPointer - 1]?.focus();
-            setOtpPointer(ptr => ptr - 1);
-        }
-    }
-
-    function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newPassword = event.target.value;
-        setPassword(newPassword);
-
-        let isPasswordValid = true;
-
-        Object.entries(PASSWORD_CONDITIONS).forEach((condition, index) => {
-            const el = passwordConditionsRef.current[index];
-            if (el === null) return;
-
-            const value = condition[1];
-
-            if (newPassword === "") {
-                el.innerText = `  ${value.name}`;
-                el.style.color = 'var(--font-colour)';
-            } else if (!value.checkFn(newPassword)) {
-                isPasswordValid = false;
-                el.innerText = `✖ ${value.name}`;
-                el.style.color = INVALID_STRING_BORDER_COLOR;
-            } else {
-                el.innerText = `✔ ${value.name}`;
-                el.style.color = VALID_STRING_BORDER_COLOR;
-            }
-        });
-
-        setPasswordInputState(newPassword === ''
-            ? FieldState.EMPTY
-            : isPasswordValid
-                ? FieldState.VALID
-                : FieldState.INVALID);
-
-        // this is so that the confirm password also updates accordingly if password is changed
-        if (newPassword === confirmPassword && confirmPassword !== '') {
-            setConfirmPasswordInputState(FieldState.VALID);
-        } else if (confirmPassword !== '' && newPassword !== confirmPassword) {
-            setConfirmPasswordInputState(FieldState.INVALID);
-        }
-    }
-
-    function handleConfirmPasswordChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newCfmPassword = event.target.value;
-        setConfirmPassword(newCfmPassword);
-
-        setConfirmPasswordInputState(newCfmPassword === '' || newCfmPassword.length < password.length
-            ? FieldState.EMPTY
-            : newCfmPassword === password
-                ? FieldState.VALID
-                : FieldState.INVALID);
-    }
-
-    function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newEmail = event.target.value;
+    function handleEmailChange(newEmail: string): void {
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})*$/;
 
         setEmail(newEmail);
-
         setEmailInputState(newEmail === ''
             ? FieldState.EMPTY
             : emailRegex.test(newEmail)
                 ? FieldState.VALID
-                : FieldState.INVALID);
-    }
+                : FieldState.INVALID
+        );
+    };
 
     function closePopup() {
         setPortalMode(PortalMode.None);
@@ -227,24 +142,23 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
         setEmail('');
         setEmailInputState(FieldState.EMPTY);
 
-        setOtpPointer(0);
-
         setPassword('');
         setConfirmPassword('');
         setPasswordInputState(FieldState.EMPTY);
         setConfirmPasswordInputState(FieldState.EMPTY);
 
-        setOtp(new Array<string>(6).fill(''));
+        setOtp('');
+        setIsOtpValid(false);
     }
 
     async function getOTP() {
-        console.log("Getting verification code...");
-
         if (email === '' || !(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})*$/.test(email))) {
             setResetPasswordStatus(ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS);
             setEmailInputState(FieldState.SERVER_SIDE_INVALID);
             return;
         }
+
+        setIsLoading(true);
 
         await getVerificationCode(email)
             .then(response => {
@@ -256,10 +170,6 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                             newSteps[1].status = 'active';
                             return newSteps;
                         });
-
-                        setTimeout(() => {
-                            otpInputRefs.current[0]?.focus();
-                        }, 500);
                         break;
                     case 400:
                         setResetPasswordStatus(ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS);
@@ -268,18 +178,19 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                     default:
                         console.error(`Internal server error: ${response.status}`);
                 }
+
+                setIsLoading(false);
             });
     }
 
     async function verifyOtp() {
-        if (otp.some(value => value === '')) {
+        if (!isOtpValid) {
             setResetPasswordStatus(ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS);
             return;
         }
 
-        const code = otp.join('');
-
-        await verifyCode(email, code)
+        setIsLoading(true);
+        await verifyCode(email, otp)
             .then(response => {
                 switch (response.status) {
                     case 200:
@@ -292,11 +203,14 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                         break;
                     case 400:
                         setResetPasswordStatus(ResetPasswordStatuses.WRONG_VERIFICATION_CODE);
+                        setIsOtpValid(false);
                         break;
                     default:
                         setResetPasswordStatus(ResetPasswordStatuses.INTERNAL_SERVER_ERROR);
                         console.error(`Internal server error: ${response.status}`);
                 }
+
+                setIsLoading(false);
             });
     }
 
@@ -312,6 +226,8 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
             setConfirmPasswordInputState(FieldState.SERVER_SIDE_INVALID);
             return;
         }
+
+        setIsLoading(true);
 
         await verifyNewPassword(email, password, confirmPassword)
             .then(response => {
@@ -329,6 +245,8 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                     default:
                         setResetPasswordStatus(ResetPasswordStatuses.INTERNAL_SERVER_ERROR);
                 }
+
+                setIsLoading(false);
             })
     }
 
@@ -366,14 +284,12 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
         setEmail('');
         setEmailInputState(FieldState.EMPTY);
 
-        setOtpPointer(0);
-
         setPassword('');
         setConfirmPassword('');
         setPasswordInputState(FieldState.EMPTY);
         setConfirmPasswordInputState(FieldState.EMPTY);
 
-        setOtp(new Array<string>(6).fill(''));
+        setOtp('');
 
         setPortalMode(PortalMode.Login);
     }
@@ -386,7 +302,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
             if (event.key === 'Enter') {
                 if (resetPasswordProgressSteps[0].status === "active" && emailInputState === FieldState.VALID) {
                     getOTP();
-                } else if (resetPasswordProgressSteps[1].status === "active" && !otp.some(value => value === '')) {
+                } else if (resetPasswordProgressSteps[1].status === "active" && otp !== '') {
                     verifyOtp();
                 } else if (resetPasswordProgressSteps[2].status === "active" && passwordInputState === FieldState.VALID && confirmPasswordInputState === FieldState.VALID) {
                     setNewPassword();
@@ -399,7 +315,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
         return () => {
             window.removeEventListener('keydown', handleEnterKey);
         }
-    })
+    });
 
     const children = (
         <div
@@ -422,20 +338,9 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                                 <span style={{ fontWeight: 600 }}>Reminder</span>: This process does not allow you to navigate to previous sections.
                                 To restart the reset password process, close this popup.
                             </p>
-                            <p>1. Tell us your email</p>
-                            <label htmlFor="signupEmail">
-                                <input
-                                    style={{
-                                        borderColor: borderColors[emailInputState],
-                                        backgroundColor: backgroundColors[emailInputState]
-                                    }}
-                                    id="signupEmail"
-                                    type="email"
-                                    name="email"
-                                    value={email}
-                                    onChange={handleEmailChange}
-                                ></input>
-                            </label>
+                            <CurrentEmailInput 
+                                onChangeCurrentEmail={handleEmailChange}
+                            />
                             {resetPasswordStatus === ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS
                                 &&
                                 <p style={{
@@ -449,47 +354,29 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                             }
                             <button
                                 onClick={getOTP}
-                                disabled={emailInputState !== FieldState.VALID}
-                                style={{
-                                    cursor: emailInputState === FieldState.VALID ? 'pointer' : 'not-allowed',
-                                    opacity: emailInputState === FieldState.VALID ? 1 : 0.5,
-                                }}
-                            >Get verification code</button>
+                                disabled={emailInputState !== FieldState.VALID || isLoading}
+                            >
+                                {isLoading ? <Spinner /> : 'Get verification code'}
+                            </button>
                         </div>
                     }
                     {resetPasswordProgressSteps[1].status === 'active' &&
                         <div className={styles.otp}>
-                            <p>2. Key in the verification code here</p>
+                            <p>A verification code has been sent to:</p>
+                            <p style={{textAlign: 'center'}}>{email}</p>
                             <div className={styles.otpInputContainer}>
-                                <div
-                                    className={styles.otpInputOverlay}
-                                    onClick={() => otpInputRefs.current[otpPointer]?.focus()}
-                                ></div>
-                                <div className={styles.otpInput}>
-                                    {otp.map((value, index) => (
-                                        <label key={index} htmlFor={`verificationCode${index}`}>
-                                            <input
-                                                id={`verificationCode${index}`}
-                                                type="text"
-                                                maxLength={1}
-                                                value={value}
-                                                onChange={handleOtpChange}
-                                                onKeyDown={handleBackspace}
-                                                ref={el => { otpInputRefs.current[index] = el; }}
-                                                autoComplete="off"
-                                            ></input>
-                                        </label>
-                                    ))}
-                                </div>
+                                <OTPInput   
+                                    n={6}
+                                    onOtpChange={setOtp}
+                                    onOtpValidate={setIsOtpValid} 
+                                />
                             </div>
                             <button
                                 onClick={verifyOtp}
-                                disabled={otp.some(value => value === '')}
-                                style={{
-                                    cursor: otp.some(value => value === '') ? 'not-allowed' : 'pointer',
-                                    opacity: otp.some(value => value === '') ? 0.5 : 1,
-                                }}
-                            >Verify</button>
+                                disabled={!isOtpValid || isLoading}
+                            >
+                                {isLoading ? <Spinner /> : 'Verify'}
+                            </button>
                             <ul>
                                 {resetPasswordStatus === ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS
                                     &&
@@ -527,41 +414,13 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                     }
                     {resetPasswordProgressSteps[2].status === 'active' &&
                         <div className={styles.resetPassword}>
-                            <label htmlFor="resetPasswordNewPassword" className={styles.passwordLabel}>
-                                <p>3. Tell us your new password</p>
-                                <input
-                                    id="resetPasswordNewPassword"
-                                    style={{
-                                        borderColor: borderColors[passwordInputState],
-                                        backgroundColor: backgroundColors[passwordInputState]
-                                    }}
-                                    type={isPasswordVisible ? "text" : "password"}
-                                    name="password"
-                                    value={password}
-                                    onChange={handlePasswordChange}
-                                ></input>
-                                <button type="button" onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
-                                    {isPasswordVisible ? 'Hide' : 'Show'}
-                                </button>
-                            </label>
-                            <label htmlFor="resetPasswordNewConfirmedPasswordpConfirmPassword" className={styles.passwordLabel}>
-                                <p>Confirm the new password</p>
-                                <input
-                                    id="resetPasswordNewConfirmedPassword"
-                                    style={{
-                                        borderColor: borderColors[confirmPasswordInputState],
-                                        backgroundColor: backgroundColors[confirmPasswordInputState]
-                                    }}
-                                    type={isPasswordVisible ? "text" : "password"}
-                                    name="confirmPassword"
-                                    value={confirmPassword}
-                                    onChange={handleConfirmPasswordChange}
-                                ></input>
-                                <button type="button" onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
-                                    {isPasswordVisible ? 'Hide' : 'Show'}
-                                </button>
-                            </label>
-                            <ul>
+                            <NewPasswordInput 
+                                onChangeNewPassword={setPassword}
+                                onChangeConfirmPassword={setConfirmPassword}
+                                onValidateNewPassword={setPasswordInputState}
+                                onValidateConfirmPassword={setConfirmPasswordInputState}
+                            />
+                            <ul style={{ 'listStyleType': 'none' }}>
                                 {resetPasswordStatus === ResetPasswordStatuses.INVALID_CLIENT_SIDE_CREDENTIALS
                                     &&
                                     <li style={{
@@ -576,24 +435,15 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                             <button
                                 className={styles.resetPasswordButton}
                                 onClick={setNewPassword}
-                                disabled={passwordInputState !== FieldState.VALID || confirmPasswordInputState !== FieldState.VALID}
-                                style={{
-                                    cursor: passwordInputState !== FieldState.VALID || confirmPasswordInputState !== FieldState.VALID ? 'not-allowed' : 'pointer',
-                                    opacity: passwordInputState !== FieldState.VALID || confirmPasswordInputState !== FieldState.VALID ? 0.5 : 1,
-                                }}
-                            >Reset Password</button>
-                            <ul>
-                                {Object.entries(PASSWORD_CONDITIONS).map(([key, value], index) => (
-                                    <li key={key} ref={el => { passwordConditionsRef.current[index] = el; }}>
-                                        {value.name}
-                                    </li>
-                                ))}
-                            </ul>
+                                disabled={passwordInputState !== FieldState.VALID || confirmPasswordInputState !== FieldState.VALID || isLoading}
+                            >
+                                {isLoading ? <Spinner /> : 'Reset Password'}
+                            </button>
                         </div>
                     }
                     {resetPasswordProgressSteps[3].status === 'active' &&
                         <div className={styles.resetPasswordSuccess}>
-                            <p style={{ marginBottom: '15%' }}>4. Your password has been reset successfully!</p>
+                            <p style={{ marginBottom: '15%' }}>Your password has been reset successfully!</p>
                             <button onClick={toLogin}>Login</button>
                         </div>
                     }

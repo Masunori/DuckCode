@@ -16,18 +16,18 @@
 }
 
 .codeHandlerButtons button {
-    font-size: 1rem;
+    font-size: 0.9rem;
     border: none;
     transition-duration: 0.25s;
     padding: 0 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    column-gap: 0.5rem;
+}
+
+.codeHandlerButtons button * {
+    display: block;
 }
 
 .codeHandlerButtons button kbd {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     font-family: monospace;
     opacity: 0.55;
 }

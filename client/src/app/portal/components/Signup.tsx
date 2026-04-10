@@ -3,34 +3,21 @@ import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/compon
 import { SignupStatuses } from "@/lib/apiClient/portalStatuses";
 import { getVerificationCode, signUp, verifyCode } from "@/lib/apiClient/user";
 import React, { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
-import { PASSWORD_CONDITIONS, USERNAME_CONDITIONS } from "../../../lib/utils/fieldConditions";
 import styles from '../page.module.css';
 import PopupOverlay from "./PopupOverlay";
 import NewUsernameInput from "@/components/authInputs/NewUsernameInput";
 import NewEmailInput from "@/components/authInputs/NewEmailInput";
 import NewPasswordInput from "@/components/authInputs/NewPasswordInput";
+import Spinner from "@/components/loading/Spinner";
+import OTPInput from "@/components/inputs/OTPInput";
+import { FieldState } from "@/lib/utils/fieldConditions";
 
 type SignupProps = {
     portalMode: PortalMode;
     setPortalMode: Dispatch<SetStateAction<PortalMode>>;
 }
 
-enum FieldState {
-    EMPTY,
-    VALID,
-    INVALID,
-    SERVER_SIDE_INVALID
-}
-
-const EMPTY_STRING_BORDER_COLOR = 'var(--fourth-layer-background-color)';
-const INVALID_STRING_BORDER_COLOR = '#DC143C';
-const VALID_STRING_BORDER_COLOR = '#00FF00';
 const SERVER_SIDE_ERROR_BORDER_COLOR = '#FF5C00';
-
-const EMPTY_STRING_BG_COLOR = 'var(--second-layer-background-color)';
-const INVALID_STRING_BG_COLOR = '#540A1E';
-const VALID_STRING_BG_COLOR = '#008800';
-const SERVER_SIDE_ERROR_BG_COLOR = '#7C1212';
 
 
 function ResendOTPButton({ email }: { email: string }) {
@@ -50,6 +37,7 @@ function ResendOTPButton({ email }: { email: string }) {
 
     return (
         <button
+            className={styles.resendOtpButton}
             onClick={handleResend}
             disabled={seconds > 0}
         >
@@ -97,6 +85,7 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
     const [confirmPasswordInputState, setConfirmPasswordInputState] = useState(FieldState.EMPTY);
 
     const [signupStatus, setSignupStatus] = useState<SignupStatuses[] | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     // form data
     const [username, setUsername] = useState('');
@@ -104,42 +93,14 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const [otp, setOtp] = useState(new Array<string>(6).fill(''));
-    const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
-    const [otpPointer, setOtpPointer] = useState(0);
+    const [otp, setOtp] = useState<string>('');
+    const [isOtpValid, setIsOtpValid] = useState<boolean>(false);
 
     function areAllFieldsValid(): boolean {
         return usernameInputState === FieldState.VALID &&
             emailInputState === FieldState.VALID &&
             passwordInputState === FieldState.VALID &&
             confirmPasswordInputState === FieldState.VALID;
-    }
-
-    const handleOtpChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
-
-        if (!/^\d?$/.test(value)) {
-            return;
-        }
-
-        const newOtp = [...otp];
-        newOtp[otpPointer] = value;
-        setOtp(newOtp);
-
-        if (value && otpPointer < otp.length - 1) {
-            otpInputRefs.current[otpPointer + 1]?.focus();
-            setOtpPointer(ptr => ptr + 1);
-        }
-    }
-
-    const handleOtpBackspace = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Backspace' && !otp[otpPointer] && otpPointer > 0) {
-            const newOtp = [...otp];
-            newOtp[otpPointer - 1] = '';
-            setOtp(newOtp);
-            otpInputRefs.current[otpPointer - 1]?.focus();
-            setOtpPointer(ptr => ptr - 1);
-        }
     }
 
     async function register(event: React.FormEvent<HTMLFormElement>): Promise<void> {
@@ -156,13 +117,12 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
         }
 
         setSignupStatus(null);
+        setIsLoading(true);
 
         await signUp(
             username, email, password, confirmPassword
         )
             .then(response => {
-                console.log(response.status);
-
                 switch (response.status) {
                     case 400:
                         const data = response.data;
@@ -208,25 +168,29 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                                 }
                             ]
                         )
-                        setOtp(new Array<string>(6).fill(''));
-                        setOtpPointer(0);
+                        setOtp('');
                         break;
                     default:
                         console.error(`Unexpected response status: ${response.status}`);
                 }
+
+                setIsLoading(false);
             })
             .catch(error => {
                 console.error('Unexpected error:', error);
+                setIsLoading(false);
             });
     }
 
     async function registerVerifyOtp() {
-        if (otp.some(value => value === '')) {
+        if (!isOtpValid) {
             setSignupStatus([SignupStatuses.INVALID_CLIENT_SIDE_CREDENTIALS]);
             return;
         }
 
-        await verifyCode(email, otp.join(""))
+        setIsLoading(true);
+
+        await verifyCode(email, otp)
             .then(response => {
                 switch (response.status) {
                     case 200:
@@ -257,6 +221,12 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                     default:
                         setSignupStatus([SignupStatuses.INTERNAL_SERVER_ERROR]);
                 }
+
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Unexpected error:', error);
+                setIsLoading(false);
             });
     }
 
@@ -336,8 +306,10 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
 
                             <button
                                 type="submit"
-                                disabled={!areAllFieldsValid()}
-                            >Register</button>
+                                disabled={!areAllFieldsValid() || isLoading}
+                            >
+                                {isLoading ? <Spinner /> : 'Register'}
+                            </button>
                         </form>
                         <div className={styles.or}>
                             <span></span>
@@ -359,37 +331,14 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
                             <p>{`We have sent a verification code to:`}</p>
                             <p>{email}</p>
                         </div>
-                        <div className={styles.otpInputContainer}>
-                            <div
-                                className={styles.otpInputOverlay}
-                                onClick={() => otpInputRefs.current[otpPointer]?.focus()}
-                            ></div>
-                            <div className={styles.otpInput}>
-                                {otp.map((value, index) => (
-                                    <label key={index} htmlFor={`verificationCode${index}`}>
-                                        <input
-                                            id={`verificationCode${index}`}
-                                            type="text"
-                                            maxLength={1}
-                                            value={value}
-                                            onChange={handleOtpChange}
-                                            onKeyDown={handleOtpBackspace}
-                                            ref={el => { otpInputRefs.current[index] = el; }}
-                                            autoComplete="off"
-                                        ></input>
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
+                        <OTPInput n={6} onOtpChange={setOtp} onOtpValidate={setIsOtpValid} />
                         <ResendOTPButton email={email} />
-                        <button className={styles.registerVerifyOtp}
+                        <button className={styles.verifyOtpButton}
                             onClick={registerVerifyOtp}
-                            disabled={otp.some(value => value === '')}
-                            style={{
-                                cursor: otp.some(value => value === '') ? 'not-allowed' : 'pointer',
-                                opacity: otp.some(value => value === '') ? 0.5 : 1,
-                            }}
-                        >Verify</button>
+                            disabled={!isOtpValid || isLoading}
+                        >
+                            {isLoading ? <Spinner /> : 'Verify OTP'}
+                        </button>
                         <ul>
                             {signupStatus?.includes(SignupStatuses.INVALID_CLIENT_SIDE_CREDENTIALS)
                                 &&

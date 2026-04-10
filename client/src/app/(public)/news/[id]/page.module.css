@@ -1,11 +1,13 @@
 .articleHeader {
     position: relative;
     height: 65vh;
-    margin: 0 20vw;
+    width: min(60vw, 40rem);
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    row-gap: 1rem;
 }
 
 .articleHeader h1 {
@@ -15,7 +17,7 @@
 
 .tagBoxes {
     width: fit-content;
-    margin: 1rem;
+    margin: 1rem auto;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -28,5 +30,6 @@
 }
 
 .articleContent {
-    margin: 2rem 30vw 0;
+    width: min(60vw, 40rem);
+    margin: 0 auto;
 }

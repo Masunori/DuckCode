@@ -6,6 +6,7 @@ import { CSSProperties, useCallback, useRef } from "react";
 import styles from "./default.module.css";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 import { GAMEPLAY_KEY_BINDINGS, translateCombo } from "@/components/settings/settingsUtils";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 
 type TestCaseProps = {
     testCases: TestCase[];
@@ -91,6 +92,23 @@ export default function DefaultTestCases({
                 : CODE_FAIL_BG_COLOR
     }
 
+    const userPreference = useUserPreferenceStore(state => state.userPreference);
+    const switchModeKeyHint = userPreference.displayKeyBindingOnButtons
+        ? <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TEST_CASE_MODE"].combo)}]</kbd>
+        : "";
+
+    const runCodeKeyHint = userPreference.displayKeyBindingOnButtons
+        ? <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)}]</kbd>
+        : "";
+
+    const runTestCasesKeyHint = userPreference.displayKeyBindingOnButtons
+        ? <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["RUN_TEST_CASES"].combo)}]</kbd>
+        : "";
+
+    const submitCodeKeyHint = userPreference.displayKeyBindingOnButtons
+        ? <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["SUBMIT_CODE"].combo)}]</kbd>
+        : "";
+
     return (
         <div className={styles.testCases}>
             <div className={styles.codeHandlerButtons}>
@@ -99,7 +117,7 @@ export default function DefaultTestCases({
                     onClick={() => setInformationMode(informationMode === "output" ? "testCases" : "output")}
                 >
                     <b>{informationMode === "output" ? "Switch to Test Cases Mode" : "Switch to Output Mode"}</b>
-                    <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TEST_CASE_MODE"].combo)}]</kbd>
+                    {switchModeKeyHint}
                 </button>
                 <button
                     className={styles.runAllTestCasesButton}
@@ -107,9 +125,9 @@ export default function DefaultTestCases({
                     disabled={isLocked} style={{
                         pointerEvents: isLocked ? "none" : "auto",
                     }}
-                >{informationMode === "output"
-                    ? <><b>Run Code</b> <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)}]</kbd></>
-                    : <><b>Run all Test Cases</b> <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["RUN_TEST_CASES"].combo)}]</kbd></>}
+                >
+                    {informationMode === "output" ? <b>Run Code</b> : <b>Run all Test Cases</b>}
+                    {informationMode === "output" ? runCodeKeyHint : runTestCasesKeyHint}
                 </button>
                 <button
                     className={styles.submitCodeButton}
@@ -117,7 +135,7 @@ export default function DefaultTestCases({
                     disabled={isLocked} style={{
                         pointerEvents: isLocked ? "none" : "auto",
                     }}
-                ><b>Submit</b> <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["SUBMIT_CODE"].combo)}]</kbd></button>
+                ><b>Submit</b> {submitCodeKeyHint}</button>
             </div>
             <div className={styles.codeResults}>
                 <div

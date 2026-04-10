@@ -16,6 +16,10 @@ type CodeEditorProps = {
 }
 
 export default function FullScreenCodeEditor({ onMount }: CodeEditorProps) {
+    const userPreference = useUserPreferenceStore(state => state.userPreference);
+
+    // this makes sure we only update code content when language actually changes, not on every render
+    const languageRef = useRef(userPreference.language);
 
     const codeContent = useBaseGameplayStore(state => state.codeContent);
     const setCodeContent = useBaseGameplayStore(state => state.setCodeContent);
@@ -26,12 +30,8 @@ export default function FullScreenCodeEditor({ onMount }: CodeEditorProps) {
 
     const { debouncedSave } = useDebouncedSave((code: string) => setCodeContentAtIndex(activeQuestionIndex, code), 500);
 
-    const userPreference = useUserPreferenceStore(state => state.userPreference);
-    // this makes sure we only update code content when language actually changes, not on every render
-    const languageRef = useRef(userPreference.language);
-
     function handleEditorChange(value: string | undefined) {
-        if (!value) {
+        if (value === undefined) {
             return;
         }
 
@@ -63,9 +63,9 @@ export default function FullScreenCodeEditor({ onMount }: CodeEditorProps) {
     return (
         <div className={styles.codeEditor}>
             <Editor
+                key={userPreference.language}
                 theme={PRESET_THEMES[userPreference.editorOptions.theme].monacoEditorAlias}
                 language={PROGRAMMING_LANGUAGES[userPreference.language].monacoEditorAlias}
-                defaultLanguage="javascript"
                 onMount={onMount}
                 defaultValue={code}
                 onChange={handleEditorChange}

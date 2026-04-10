@@ -122,7 +122,7 @@ export default function Settings() {
             );
         } else {
             openPopupWith(
-                "Saving will overwrite the current settings with your new changes and wipe all code from your editor (if you are in a match). This action can't be undone.",
+                "Save these changes? If the programming language changed, your editor code will be wiped.",
                 "Save changes",
                 "Keep the current settings",
                 () => {
@@ -147,7 +147,7 @@ export default function Settings() {
             );
         } else {
             openPopupWith(
-                "Resetting will overwrite the current settings with the default settings and wipe all code from your editor (if you are in a match). This action can't be undone.",
+                "Reset to default settings? If the programming language changes, your editor code will be wiped.",
                 "Reset settings to default",
                 "Keep the current settings",
                 () => {

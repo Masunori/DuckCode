@@ -99,7 +99,6 @@
 }
 
 .rank {
-    background-color: brown;
     width: 100%;
     height: 100%;
     display: flex;
@@ -284,6 +283,7 @@
 
 .stylizedGameMenuButton {
     position: relative;
+    height: 5rem;
 }
 
 .stylizedGameMenuButton button {
@@ -331,6 +331,10 @@
 
 .stylizedGameMenuButton button:hover {
     cursor: pointer;
+}
+
+.stylizedGameMenuButton button:disabled {
+    cursor: not-allowed;
 }
 
 /* Chat panel */
@@ -524,6 +528,8 @@
     padding: 1rem;
     border: none;
     transition-duration: 0.25s;
+    display: flex;
+    justify-content: center;
 }
 
 .arcadeModeActions button:disabled {

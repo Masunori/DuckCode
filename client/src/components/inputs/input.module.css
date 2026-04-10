@@ -3,6 +3,17 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     margin: 1rem;
+    position: relative;
+    z-index: 0;
+    /* Delay the z-index drop until after the closing animation (0.3s) finishes */
+    transition: z-index 0s 0.3s;
+}
+
+/* Applied when the dropdown list is open — raises this instance above sibling dropdowns */
+.dropdownInputOpen {
+    z-index: 1;
+    /* Raise z-index immediately on open */
+    transition: z-index 0s 0s;
 }
 
 .dropdownInput p {
@@ -27,9 +38,10 @@
 .dropdownInput ul {
     list-style-type: none;
     position: absolute;
-    width: 100%;
+    width: 90%;
+    right: 0;
     transition-duration: 0.3s;
-    z-index: calc(var(--settings-z-index) + 1);
+    z-index: 1;
 }
 
 .dropdownInput ul::-webkit-scrollbar {
@@ -74,6 +86,10 @@
     column-gap: 0.5rem;
 }
 
+.numberInput label.compact {
+    grid-template-columns: 1fr;
+}
+
 .numberInput input {
     width: 100%;
     padding: 0.5rem;
@@ -94,6 +110,14 @@
 
 .numberInput button:hover {
     background-color: var(--insignificant-button-hover-color);
+}
+
+.numberInput .compactControls {
+    display: grid;
+    height: 2.5rem;
+    margin-top: 0.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 0.5rem;
 }
 
 /* for color inputs */
@@ -224,6 +248,32 @@
 .sliderAndValue .higher {
     font-family: var(--code-fragment-font);
     padding: 0.5rem;
+}
+
+/* for OTP inputs */
+.otpInputContainer {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.otpDigitInput {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 2px solid var(--third-layer-background-color);
+    border-radius: 0.5rem;
+    background-color: var(--terminal-like-background-color);
+    color: var(--font-colour);
+    font-family: var(--code-fragment-font);
+    font-size: 1.2rem;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.otpDigitInput:focus {
+    border-color: var(--significant-button-color);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--significant-button-color) 30%, transparent);
 }
 
 .slider {

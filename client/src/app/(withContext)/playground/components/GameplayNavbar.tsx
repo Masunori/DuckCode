@@ -11,7 +11,8 @@ import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 export default function GameplayNavbar() {
     const { openSettings } = useSettings();
     const userPreference = useUserPreferenceStore(state => state.userPreference);
-    const setUserPreference = useUserPreferenceStore(state => state.setUserPreference);
+    // const setUserPreference = useUserPreferenceStore(state => state.setUserPreference);
+    const setUserPreferenceField = useUserPreferenceStore(state => state.setUserPreferenceField);
     const setUserField = useUserStore(state => state.setUserField);
     const { openPopupWith } = usePopup();
 
@@ -26,10 +27,11 @@ export default function GameplayNavbar() {
             "Change language",
             "Keep the current language",
             () => {
-                setUserPreference({
-                    ...userPreference,
-                    language: extractPLKey(option) as PLKeys
-                })
+                // setUserPreference({
+                //     ...userPreference,
+                //     language: extractPLKey(option) as PLKeys
+                // })
+                setUserPreferenceField("language", extractPLKey(option) as PLKeys);
             },
             () => { }
         )

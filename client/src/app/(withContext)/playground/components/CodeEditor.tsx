@@ -22,12 +22,14 @@ type CodeEditorProps = {
 }
 
 export default function CodeEditor({ onMount }: CodeEditorProps) {
-    const userPreference = useUserPreferenceStore(state => state.userPreference);
-
-    const languageRef = useRef(userPreference.language);
+    const language = useUserPreferenceStore(state => state.userPreference.language);
+    const fontSize = useUserPreferenceStore(state => state.userPreference.fontSize);
+    const editorOptionsStore = useUserPreferenceStore(state => state.userPreference.editorOptions);
 
     const codeContent = useBaseGameplayStore(state => state.codeContent[0]);
-    const setCodeContent = (code: string) => useBaseGameplayStore(state => state.setCodeContentAtIndex(0, code));
+
+    const setCodeContentAtIndex = useBaseGameplayStore(state => state.setCodeContentAtIndex);
+    const setCodeContent = (code: string) => setCodeContentAtIndex(0, code);
 
     const { debouncedSave } = useDebouncedSave((code: string) => setCodeContent(code), 500);
 
@@ -40,34 +42,24 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
         debouncedSave(value);
     }
 
-    useEffect(() => {
-        if (languageRef.current === userPreference.language) {
-            return;
-        }
-
-        languageRef.current = userPreference.language;
-        setCodeContent(PROGRAMMING_LANGUAGES[userPreference.language].codeSnippet);
-    }, [userPreference.language, setCodeContent]);
-
     const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
         detectIndentation: false,
-        fontSize: userPreference.fontSize,
-        lineNumbers: LINE_NUMBERS_OPTIONS[userPreference.editorOptions.lineNumbers],
+        fontSize: fontSize,
+        lineNumbers: LINE_NUMBERS_OPTIONS[editorOptionsStore.lineNumbers],
         minimap: {
-            enabled: userPreference.editorOptions.enableMinimap,
+            enabled: editorOptionsStore.enableMinimap,
         },
-        renderWhitespace: RENDER_WHITESPACE_OPTIONS[userPreference.editorOptions.renderWhiteSpace],
-        tabSize: userPreference.editorOptions.tabSize,
-        wordWrap: WORD_WRAP_OPTIONS[userPreference.editorOptions.wordWrap],
-        wordWrapColumn: userPreference.editorOptions.wordWrapColumn,
+        renderWhitespace: RENDER_WHITESPACE_OPTIONS[editorOptionsStore.renderWhiteSpace],
+        tabSize: editorOptionsStore.tabSize,
+        wordWrap: WORD_WRAP_OPTIONS[editorOptionsStore.wordWrap],
+        wordWrapColumn: editorOptionsStore.wordWrapColumn,
     }
 
     return (
         <div className={styles.codeEditor}>
             <Editor
-                theme={PRESET_THEMES[userPreference.editorOptions.theme].monacoEditorAlias}
-                language={PROGRAMMING_LANGUAGES[userPreference.language].monacoEditorAlias}
-                defaultLanguage="javascript"
+                theme={PRESET_THEMES[editorOptionsStore.theme].monacoEditorAlias}
+                language={PROGRAMMING_LANGUAGES[language].monacoEditorAlias}
                 onMount={onMount}
                 defaultValue={codeContent}
                 onChange={handleEditorChange}

@@ -91,6 +91,13 @@
     height: 100%;
 }
 
+.navbar button kbd {
+    font-size: 0.7rem;
+    font-family: monospace;
+    opacity: 0.55;
+    margin-top: 0.3rem;
+}
+
 .navbar button p {
     font-size: 0.85rem;
 }

@@ -4,6 +4,7 @@ import { User } from "@/app/userPrefs/userPrefsTypes";
 import { useSettings } from "@/contexts/SettingsContext";
 import Image from "next/image";
 import styles from "../page.module.css";
+import rankStyles from "@/components/styles/ranks.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 
 export default function HomeNavbar({ user }: { user: User }) {
@@ -40,8 +41,8 @@ export default function HomeNavbar({ user }: { user: User }) {
                         <span>{user.level + 1}</span>
                     </div>
                 </div>
-                <div className={styles.rank}>
-                    <p>{user.rank}</p>
+                <div className={`${styles.rank} ${rankStyles[user.rank.toLowerCase()]}`}>
+                    <p>{user.rank.toUpperCase()}</p>
                 </div>
             </div>
             <button className={styles.inventory} disabled>Inventory</button>

@@ -6,6 +6,9 @@
     display: flex;
     flex-direction: column;
 
+    /* The public layout should be independent of user preference */
+    font-size: 16px;
+
     background-image: radial-gradient(circle at top right, 
                                     rgba(78, 78, 78, var(--public-background-opacity)) 0%, 
                                     rgba(78, 78, 78, var(--public-background-opacity)) 1%,
@@ -30,16 +33,17 @@
     height: 4rem;
     box-sizing: border-box;
     background-color: var(--first-layer-background-color);
+    border-bottom: 0.1rem solid var(--second-layer-background-color);
     padding: 0 1rem;
     box-shadow: 0 1rem 15rem 2rem var(--second-layer-background-color);
     display: grid;
-    grid-template-columns: 1fr 9fr ;
+    grid-template-columns: 9rem 1fr;
     align-items: center;
     z-index: var(--navbar-z-index);
 }
 
 .publicNavbar h2 {
-    margin: 0 1rem;
+    text-align: center;
     height: inherit;
 }
 

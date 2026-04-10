@@ -23,9 +23,6 @@ function StylizedGameMenuButton({ buttonName, onClick, buttonDescription, disabl
             <button 
                 onClick={onClick} 
                 disabled={disabled}
-                style={{
-                    cursor: disabled ? "not-allowed" : "pointer",
-                }}
             >{buttonName}</button>
             <div className={styles.stylizedGameMenuButtonOverlay}>
                 
@@ -63,7 +60,7 @@ export default function GameMenu() {
                 buttonDescription="Beginners or seasoned programmers, there is something for you here..." 
             />
             <StylizedGameMenuButton 
-                buttonName="Join/Host a Private Match" 
+                buttonName="Join/Host a Match" 
                 onClick={undefined} 
                 disabled={true}
                 buttonDescription="Create custom games and play with friends." 

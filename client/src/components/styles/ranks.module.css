@@ -1,0 +1,111 @@
+/* Iron — Dark metallic */
+@keyframes ironGlow {
+  0% { box-shadow: 0 0 1rem rgba(105, 105, 105, 0.4); }
+  50% { box-shadow: 0 0 1.5rem rgba(105, 105, 105, 0.8); }
+  100% { box-shadow: 0 0 1rem rgba(105, 105, 105, 0.4); }
+}
+
+.duckling {
+    background: linear-gradient(135deg, #696969, #3D3D3D, #2A2A2A);
+    border: 0.2rem solid #8A8A8A;
+    box-shadow: 0 0 0.8rem rgba(105, 105, 105, 0.4);
+    color: #E0E0E0;
+    text-shadow: 0 0.1rem 0.2rem rgba(0,0,0,0.5);
+    animation: ironGlow 3s infinite;
+}
+
+/* Bronze — Warm earthy metal */
+@keyframes bronzeGlow {
+  0% { box-shadow: 0 0 1.2rem rgba(205, 127, 50, 0.4); }
+  50% { box-shadow: 0 0 1.8rem rgba(205, 127, 50, 0.8); }
+  100% { box-shadow: 0 0 1.2rem rgba(205, 127, 50, 0.4); }
+}
+
+.mallard {
+    background: linear-gradient(135deg, #CD7F32, #B87333, #8B5A2B);
+    box-shadow: 0 0 1.2rem rgba(205, 127, 50, 0.4);
+    border: 0.2rem solid #E8A35E;
+    color: #FFF2E6;
+    text-shadow: 0 0.1rem 0.2rem rgba(0,0,0,0.5);
+    animation: bronzeGlow 3s infinite;
+}
+
+/* Silver — Bright polished metal */
+@keyframes silverGlow {
+    0% { box-shadow: 0 0 1.4rem rgba(217, 217, 217, 0.4); }
+    50% { box-shadow: 0 0 2.1rem rgba(217, 217, 217, 0.8); }
+    100% { box-shadow: 0 0 1.4rem rgba(217, 217, 217, 0.4); }
+}
+
+.teal {
+    background: linear-gradient(135deg, #F5F5F5, #D9D9D9, #A9A9A9, #808080);
+    border: 0.2rem solid #FFFFFF;
+    box-shadow: 0 0 1.4rem rgba(217, 217, 217, 0.4);
+    color: #1A1A1A;
+    text-shadow: 0 0.1rem 0.1rem rgba(255,255,255,0.3);
+    animation: silverGlow 3s infinite;
+}
+
+/* Gold — Radiant treasure */
+@keyframes goldGlow {
+    0% { box-shadow: 0 0 1.6rem rgba(245, 184, 27, 0.4); }
+    50% { box-shadow: 0 0 2.4rem rgba(245, 184, 27, 0.8); }
+    100% { box-shadow: 0 0 1.6rem rgba(245, 184, 27, 0.4); }
+}
+
+.swan {
+    background: linear-gradient(135deg, #FFE066, #F5B81B, #D4A017, #B8860B);
+    border: 0.2rem solid #FFEAA7;
+    box-shadow: 0 0 1.6rem rgba(245, 184, 27, 0.4);
+    color: #2A1A00;
+    text-shadow: 0 0.1rem 0.2rem rgba(255,170,0,0.6);
+    animation: goldGlow 3s infinite;
+}
+
+/* Platinum — Cool premium silver */
+@keyframes platinumGlow {
+    0% { box-shadow: 0 0 1.8rem rgba(109, 213, 250, 0.4); }
+    50% { box-shadow: 0 0 2.7rem rgba(109, 213, 250, 0.8); }
+    100% { box-shadow: 0 0 1.8rem rgba(109, 213, 250, 0.4); }
+}   
+
+.grebe {
+    background: linear-gradient(135deg, #B0E0FF, #6DD5FA, #3A9BC4, #2A7A9A);
+    border: 0.2rem solid #D6F0FF;
+    box-shadow: 0 0 1.8rem rgba(109, 213, 250, 0.4);
+    color: #0A1A2A;
+    text-shadow: 0 0.1rem 0.2rem rgba(0,170,255,0.4);
+    animation: platinumGlow 3s infinite;
+}
+
+/* Diamond — Icy crystalline */
+@keyframes diamondGlow {
+    0% { box-shadow: 0 0 2.0rem rgba(77, 248, 255, 0.4); }
+    50% { box-shadow: 0 0 3.0rem rgba(77, 248, 255, 0.8); }
+    100% { box-shadow: 0 0 2.0rem rgba(77, 248, 255, 0.4); }
+}
+
+.loon {
+    background: linear-gradient(135deg, #AFFFFF, #4DF8FF, #00D0E0, #0099AA);
+    border: 0.2rem solid #E0FFFF;
+    box-shadow: 0 0 2.0rem rgba(77, 248, 255, 0.4);
+    color: #001F22;
+    text-shadow: 0 0.1rem 0.2rem rgba(0,85,85,0.4);
+    animation: diamondGlow 3s infinite;
+}
+
+/* Legend — Mythic blazing */
+@keyframes legendGlow {
+    0% { box-shadow: 0 0 2.2rem rgba(255, 58, 58, 0.4); }
+    50% { box-shadow: 0 0 3.3rem rgba(255, 58, 58, 0.8); }
+    100% { box-shadow: 0 0 2.2rem rgba(255, 58, 58, 0.4); }
+}
+
+.phoenix {
+    background: linear-gradient(135deg, #FF6B6B, #FF3A3A, #CC0000, #8B0000, #4A0000);
+    border: 0.2rem solid #AA8080;
+    box-shadow: 0 0 2.2rem rgba(255, 58, 58, 0.4);
+    color: #FFE6E6;
+    text-shadow: 0 0 0.4rem rgba(0,0,0,1);
+    animation: legendGlow 3s infinite;
+}

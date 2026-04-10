@@ -1,23 +1,25 @@
 import { decodeUserPreference, encodeUserPreference } from "./userPrefSerializer";
 import { UserPreference } from "./userPrefsTypes";
 
-export const USER_PREF_KEY = "duckcode_user_preference";
+// export const USER_PREF_KEY = "duckcode_user_preference";
 
 /**
  * Saves user preference to local storage.
  * @param pref The user preference to save.
+ * @param key The key under which to save the preference.
  */
-export function saveUserPreference(pref: UserPreference): void {
+export function saveUserPreference(pref: UserPreference, key: string): void {
     const encoded = encodeUserPreference(pref);
-    localStorage.setItem(USER_PREF_KEY, encoded);
+    localStorage.setItem(key, encoded);
 }
 
 /**
  * Loads user preference from local storage.
+ * @param key The key from which to load the preference.
  * @returns the loaded user preference, or null if not found or corrupted.
  */
-export function loadUserPreference(): UserPreference | null {
-    const raw = localStorage.getItem(USER_PREF_KEY);
+export function loadUserPreference(key: string): UserPreference | null {
+    const raw = localStorage.getItem(key);
 
     if (!raw) {
         return null;
@@ -32,7 +34,8 @@ export function loadUserPreference(): UserPreference | null {
 
 /**
  * Clears the user preference from local storage.
+ * @param key The key under which the preference is saved.
  */
-export function clearUserPreference(): void {
-    localStorage.removeItem(USER_PREF_KEY);
+export function clearUserPreference(key: string): void {
+    localStorage.removeItem(key);
 }

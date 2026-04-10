@@ -1,6 +1,6 @@
 import { PLKeys } from "@/components/settings/settingsUtils";
 import * as monaco from 'monaco-editor';
-import { UserPreference, UserPreferenceAddOn, Version, EncodeSchema, User } from "./userPrefsTypes";
+import { UserPreference, Version, User } from "./userPrefsTypes";
 import { USER_PREF_SCHEMA } from "./userPrefRegistry";
 
 /**
@@ -59,6 +59,7 @@ export const PRISTINE_USER_PREFERENCE: UserPreference = {
         wordWrapColumn: 80,
     },
     colorAccessibilityMode: "Normal",
+    displayKeyBindingOnButtons: true,
 }
 
 export const PRISTINE_USER: User = {

@@ -42,4 +42,3 @@ next-env.d.ts
 
 # debug files/routes
 src/app/dump/
-src/app/dummy/
