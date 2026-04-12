@@ -60,7 +60,7 @@ export async function runCode(sourceCode: string, language: string): Promise<{ s
     }
 }
 
-export async function runAllTestCases(qid: number, sourceCode: string, language: string) {
+export async function runAllTestCases(qid: number | string, sourceCode: string, language: string) {
     const response = await fetch("/api/execute/run-all-test-cases", {
         method: 'POST',
         headers: {
@@ -94,7 +94,7 @@ export async function runAllTestCases(qid: number, sourceCode: string, language:
     }
 }
 
-export async function submitCode(qid: number, sourceCode: string, language: string) {
+export async function submitCode(qid: number | string, sourceCode: string, language: string) {
     const response = await fetch("/api/execute/submit-code", {
         method: 'POST',
         headers: {
