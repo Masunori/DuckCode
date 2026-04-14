@@ -21,7 +21,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
     }
 
     if (accessToken) {
-        printd("@app/(withContext)/layout.tsx", "Fetching user profile...");
+        // printd("@app/(withContext)/layout.tsx", "Fetching user profile...");
         const response = await getProfile();
 
         if (response.status === 200 && response.data) {

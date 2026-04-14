@@ -4,7 +4,7 @@ import { printd } from "../utils/debugUtils";
 
 export async function getProfile() {
     try {
-        printd("@/lib/apiServer/user.ts", "Attempting to fetch user profile...");
+        // printd("@/lib/apiServer/user.ts", "Attempting to fetch user profile...");
         const accessToken = (await cookies()).get('accessToken')?.value;
         const refreshToken = (await cookies()).get('refreshToken')?.value;
 

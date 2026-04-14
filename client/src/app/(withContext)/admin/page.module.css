@@ -1,0 +1,104 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+}
+
+.container section {
+    margin: 1rem;
+    padding: 1rem;  
+    border: 1px solid #888;  
+}
+
+.container textarea {
+    min-height: 3rem;
+}
+
+.addQuestionSection h2 {
+    margin-bottom: 1rem;
+}
+
+.addQuestionSection form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.exampleWithRemove {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    border: 1px solid #888;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.exampleContainer, .testCaseContainer {
+    border: 1px solid #888;
+    padding: 1rem;
+    background-color: var(--first-layer-background-color);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.exampleContainer button {
+    align-self: flex-start;
+    padding: 0.5rem 1rem;
+    background-color: var(--insignificant-button-color);
+    color: var(--font-color);
+    border: 1px solid #888;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition-duration: 0.25s;
+}
+
+.exampleContainer button:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.testCaseWithRemove {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    border: 1px solid #888;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.index {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.remove, .add {
+    padding: 0.5rem;
+    background-color: var(--insignificant-button-color);
+    color: var(--font-color);
+    border: 1px solid #888;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition-duration: 0.25s;
+}
+
+.remove:hover, .add:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.addNewQuestionButton {
+    width: fit-content;
+    padding: 0.5rem 1rem;
+    background-color: var(--significant-button-color);
+    color: var(--font-color);
+    border: 1px solid #888;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition-duration: 0.25s;
+}
+
+.addNewQuestionButton:hover {
+    background-color: var(--significant-button-hover-color);
+}

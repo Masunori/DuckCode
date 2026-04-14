@@ -18,7 +18,7 @@ export type Example = {
 }
 
 export type Question = {
-    qid: number;
+    qid: number | string;
     title: string;
     difficulty: number;
     description: string[];
@@ -56,6 +56,18 @@ export const placeholderQuestion: Question = {
             expectedOutput: "Loading...",
         }
     ]
+}
+
+export const emptyQuestion: Question = {
+    qid: -1,
+    title: "",
+    difficulty: -1,
+    description: [],
+    input: [],
+    output: [],
+    examples: [],
+    constraints: [],
+    publicTestCases: []
 }
 
 export const dummyQuestion: Question = {
