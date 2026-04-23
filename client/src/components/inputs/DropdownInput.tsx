@@ -2,7 +2,7 @@
 
 import { keyboardManager } from "@/lib/utils/keyboardManager";
 import { useEffect, useRef, useState } from "react";
-import { isKeyCombo } from "../settings/settingsUtils";
+import { isKeyCombo } from '@/lib/utils/keyBindings';
 import styles from "./input.module.css";
 
 type DropdownInputProps = {
@@ -168,7 +168,7 @@ export default function DropdownInput({ options, inputId, defaultOption, dropdow
             return false
         }
 
-        keyboardManager.register(`handleSelectOption-${inputId}`, "INPUT_KEY_PRIORITY", handleSelectOption);
+        keyboardManager.register(`handleSelectOption-${inputId}`, "SETTINGS_INPUT_KEY_PRIORITY", handleSelectOption);
 
         return () => {
             keyboardManager.unregister(`handleSelectOption-${inputId}`);

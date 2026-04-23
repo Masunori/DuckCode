@@ -51,13 +51,16 @@
 .expBarWithLevel {
     display: grid;
     height: 100%;
-    grid-template-columns: 2em 1fr 2em;
+    grid-template-columns: 2em 1fr 2rem;
     column-gap: 2px;
+    align-items: center;
 }
 
 .expBarWithLevel span {
-    display: block;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
 .expBarWithLevel span:first-of-type {
@@ -72,13 +75,34 @@
     background-color: var(--first-layer-background-color);
     height: 100%;
     width: 100%;
-    overflow: hidden;
+    position: relative;
+}
+
+.expBarTotal span {
+    display: flex;
+    font-size: 0.8rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: transparent !important;
+    text-shadow: 0 0 0.25rem var(--significant-button-color);
+}
+
+.cumulatedExpTooltip {
+    position: absolute;
+    top: 100%;
+    padding: 0.25rem;
+    background-color: var(--terminal-like-background-color);
+    cursor: default;
 }
 
 .expBarAcquired {
     height: 100%;
     background-color: #0077ff;
     overflow: hidden;
+    position: absolute;
+    pointer-events: none;
 }
 
 @keyframes runningExpBar {
@@ -95,7 +119,8 @@
     animation: runningExpBar 5s linear infinite;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(to right, #0077ff, rgb(111, 166, 206));
+    background-image: linear-gradient(to right, #0077ff, rgb(92, 143, 179));
+    pointer-events: none;
 }
 
 .rank {
@@ -180,7 +205,7 @@
     transition-duration: 0.25s;
     z-index: var(--stylized-game-menu-button-description-z-index);
     background-color: rgba(0, 0, 0, 0.3);
-    padding: 0.5em;
+    padding: 0.5rem;
 }
 
 .stylizedEventMenuButtonOverlay {
@@ -306,7 +331,7 @@
     transition-duration: 0.25s;
     z-index: var(--stylized-game-menu-button-description-z-index);
     background-color: rgba(0, 0, 0, 0.3);
-    padding: 0.5em;
+    padding: 0.5rem;
     overflow-y: auto;
 }
 

@@ -1,10 +1,10 @@
 .article p {
     margin: 2em 0;
-    text-indent: 1em;
+    text-indent: 1rem
 }
 
 .article ul {
-    margin: 1em;
+    margin: 1rem
 }
 
 .article p.signature {

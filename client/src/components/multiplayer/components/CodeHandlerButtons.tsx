@@ -4,7 +4,7 @@ type CodeHandlerButtonsProps = {
     onSubmitCode: () => void;
 }
 
-import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/components/settings/settingsUtils';
+import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/lib/utils/keyBindings';
 import styles from '../page.module.css';
 import { useMultiplayerGameplayStore } from '@/lib/multiplayer/hooks/useMultiplayerGameplayStore';
 

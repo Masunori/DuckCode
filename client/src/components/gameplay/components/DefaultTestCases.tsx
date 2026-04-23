@@ -5,7 +5,7 @@ import { TestCase } from "@/lib/gameplay/utils";
 import { CSSProperties, useCallback, useRef } from "react";
 import styles from "./default.module.css";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
-import { GAMEPLAY_KEY_BINDINGS, translateCombo } from "@/components/settings/settingsUtils";
+import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/lib/utils/keyBindings';
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 
 type TestCaseProps = {

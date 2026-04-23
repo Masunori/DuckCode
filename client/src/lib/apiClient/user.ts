@@ -1,3 +1,5 @@
+import { printd } from "../utils/debugUtils";
+
 export async function login(email: string, password: string) {
     const response = await fetch("/api/auth/login", {
         method: 'POST',
@@ -103,7 +105,6 @@ export async function verifyNewPassword(
     password: string,
     confirmPassword: string
 ) {
-    console.log(email, password, confirmPassword);
     const response = await fetch("/api/auth/reset-password", {
         method: 'POST',
         headers: {
@@ -118,8 +119,6 @@ export async function verifyNewPassword(
     });
 
     const data = await response.json();
-
-    console.log(data);
 
     return {
         status: response.status,
@@ -155,6 +154,42 @@ export async function refresh() {
         return response;
     } catch (error) {
         console.error('Error in refreshToken:', error);
+        throw error;
+    }
+}
+
+export async function updateProfile(
+    username: string,
+    bio: string,
+    profilePicture: string = ""
+) {
+    try {
+        const body = {
+            name: username,
+            bio: bio,
+            profilePicture: profilePicture,
+        }
+
+        printd("@/lib/apiClient/user", "Updating profile with data:", body);
+
+        const response = await fetch("/api/user/update-profile", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                credentials: "include",
+            },
+            body: JSON.stringify(body),
+        });
+
+        const data = await response.json();
+
+        return {
+            status: response.status,
+            data
+        };
+
+    } catch (error) {
+        console.error('Error in updateProfile:', error);
         throw error;
     }
 }

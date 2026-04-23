@@ -22,8 +22,8 @@
 
 @keyframes illuminating-border {
     to {
-      --border-angle: 360deg;
-      --border-angle-2: 540deg;
+        --border-angle: 360deg;
+        --border-angle-2: 540deg;
     }
 }
 
@@ -52,16 +52,16 @@
     color: var(--foreground);
     display: grid;
     background-color: var(--significant-button-hover-heavier-color);
-    background-image: conic-gradient(from var(--border-angle) at 50% 50%, 
-                                    transparent, 
-                                    var(--significant-button-color) 10%, 
-                                    transparent 30%, 
-                                    transparent),
-                      conic-gradient(from var(--border-angle-2) at 50% 50%, 
-                                    transparent, 
-                                    var(--significant-button-color) 10%, 
-                                    transparent 30%, 
-                                    transparent);
+    background-image: conic-gradient(from var(--border-angle) at 50% 50%,
+            transparent,
+            var(--significant-button-color) 10%,
+            transparent 30%,
+            transparent),
+        conic-gradient(from var(--border-angle-2) at 50% 50%,
+            transparent,
+            var(--significant-button-color) 10%,
+            transparent 30%,
+            transparent);
     animation: illuminating-border 3s linear infinite;
 }
 
@@ -80,7 +80,7 @@
 }
 
 .articleBox p {
-    margin-top: 1em;
+    margin-top: 1rem
 }
 
 .tagBoxes {

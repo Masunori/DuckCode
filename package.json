@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/jest": "^30.0.0",
     "jest": "^30.2.0",
     "ts-jest": "^29.4.6",
@@ -7,6 +8,7 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.8.0-rc.3",
+    "canvas-confetti": "^1.9.4",
     "katex": "^0.16.44",
     "react-katex": "^3.1.0"
   }

@@ -4,7 +4,7 @@ import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStat
 import { TestCase } from "@/lib/gameplay/utils";
 import { CSSProperties, useCallback, useRef } from "react";
 import styles from "../../gameplay/components/default.module.css";
-import { GAMEPLAY_KEY_BINDINGS, translateCombo } from "@/components/settings/settingsUtils";
+import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/lib/utils/keyBindings';
 import { useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
 
 type TestCaseProps = {

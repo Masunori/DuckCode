@@ -1,5 +1,4 @@
 import ArcadeClient from "./ArcadeClient";
-import GameplayNavbar from "@/components/gameplay/components/GameplayNavbar";
 import styles from "./page.module.css";
 import { dummyQuestion, placeholderQuestion, Question } from "@/lib/gameplay/utils";
 import { printd } from "@/lib/utils/debugUtils";
@@ -23,13 +22,11 @@ export default async function Page({
 		printd("@app/(withContext)/arcade/page.tsx", `Fetched question data:`, response.data.title);
 
 		const initialServerData = {
-			questions: [q],
-			initialTime: 900,
+			questions: [q]
 		}
 
 		return (
 			<div className={styles.container}>
-				<GameplayNavbar initialTime={initialServerData.initialTime} />
 				<ArcadeClient initialServerData={initialServerData} />
 			</div>
 		)

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState } from "react";
-import { GENERAL_KEY_BINDINGS, isKeyCombo } from "@/components/settings/settingsUtils";
+import { GENERAL_KEY_BINDINGS, isKeyCombo } from '@/lib/utils/keyBindings';
 
 type PopupContextType = {
     isPopupOpen: boolean;
@@ -110,6 +110,24 @@ export function PopupProvider({ children }: { children: React.ReactNode }) {
     )
 }
 
+/**
+ * A hook to access the popup context, which contains the following properties:
+ * - `isPopupOpen`: A boolean indicating whether the popup is currently open.
+ * - `closePopup`: A function to close the popup.
+ * - `openPopupWith`: A function to open the popup with custom parameters.
+ *   - `popupMessage`: The message displayed in the popup. Default: `"Popup opened!"`.
+ *   - `confirmMessage`: The information on the confirm action button. Default: `"Confirm"`.
+ *   - `cancelMessage`: The information on the cancel action button. Default: `"Cancel"`. Set to "null" if you only want a confirm action.
+ *   - `confirmFn`: The function executed if the user confirms. You do not need to manually close the popup. Default: `() => {}`.
+ *   - `cancelFn`: The function executed if the user cancels. You do not need to manually close the popup. Default: `() => {}`.
+ * - `popupMessage`: The message displayed in the popup.
+ * - `confirmMessage`: The information on the confirm action button.
+ * - `cancelMessage`: The information on the cancel action button.
+ * - `confirmFn`: The function executed if the user confirms. You do not need to manually close the popup.
+ * - `cancelFn`: The function executed if the user cancels. You do not need to manually close the popup.
+ * - `handleKeyBinding`: A function to handle key bindings for confirming or canceling the popup.
+ * @returns The popup context values.
+ */
 export function usePopup() {
     const ctx = useContext(PopupContext);
     if (!ctx) {

@@ -1,5 +1,5 @@
 import styles from "../settings.module.css";
-import { GAMEPLAY_KEY_BINDINGS, GENERAL_KEY_BINDINGS, MULTIPLAYER_KEY_BINDINGS, translateCombo } from "../settingsUtils";
+import { GAMEPLAY_KEY_BINDINGS, GENERAL_KEY_BINDINGS, MULTIPLAYER_KEY_BINDINGS, translateCombo } from '@/lib/utils/keyBindings';
 
 export default function KeyboardShortcutSettings() {
     return (

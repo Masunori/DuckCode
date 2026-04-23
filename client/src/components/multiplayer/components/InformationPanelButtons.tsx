@@ -2,7 +2,7 @@
 
 import { useShallow } from 'zustand/shallow';
 import styles from '../page.module.css';
-import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/components/settings/settingsUtils';
+import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/lib/utils/keyBindings';
 import { useMultiplayerGameplayStore } from '@/lib/multiplayer/hooks/useMultiplayerGameplayStore';
 
 export default function InformationPanelButtons() {

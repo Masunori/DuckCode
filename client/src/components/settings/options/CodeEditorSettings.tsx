@@ -11,9 +11,10 @@ import { Editor, loader } from "@monaco-editor/react";
 import * as monaco from 'monaco-editor';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { CODE_EDITOR_LIVE_PREVIEW_TEXT, isKeyCombo, PLKeys, PROGRAMMING_LANGUAGES } from "../settingsUtils";
+import { CODE_EDITOR_LIVE_PREVIEW_TEXT, PLKeys, PROGRAMMING_LANGUAGES } from "../settingsUtils";
 import { keyboardManager } from "@/lib/utils/keyboardManager";
 import { printd } from "@/lib/utils/debugUtils";
+import { isKeyCombo } from "@/lib/utils/keyBindings";
 
 loader.config({
 	paths: {
@@ -77,7 +78,7 @@ export default function CodeEditorSettings({ nextUserPreference, setNextUserPref
 
         keyboardManager.register(
             "codeEditorSettingsEscapeKey",
-            "INPUT_KEY_PRIORITY",
+            "SETTINGS_INPUT_KEY_PRIORITY",
             handleEscapeKey
         );
 

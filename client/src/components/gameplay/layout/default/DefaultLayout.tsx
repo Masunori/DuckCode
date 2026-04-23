@@ -1,27 +1,41 @@
 "use client";
 
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from "@/components/settings/settingsUtils";
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/lib/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import { useTimerStore } from "@/hooks/useTimerStore";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 import { instantiateEditorOnMount, Question } from "@/lib/gameplay/utils";
 import { printd } from "@/lib/utils/debugUtils";
 import { keyboardManager } from "@/lib/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
-import { useCallback, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useShallow } from "zustand/shallow";
 import CodeEditor from "../../components/CodeEditor";
-import QuestionTab from "../../components/QuestionTab";
 import DefaultTestCases from "../../components/DefaultTestCases";
+import GameplayNavbar from "../../components/GameplayNavbar";
+import QuestionTab from "../../components/QuestionTab";
+import WinPopup from "../../components/WinPopup";
 import styles from "./page.module.css";
-import { useRouter } from "next/navigation";
 
 export function DefaultLayout({ questions }: { questions: Question[] }) {
     // for code editor
     const userPreference = useUserPreferenceStore(state => state.userPreference);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
+
+    // Use refs to maintain stable references for keyboard handler
+    const callbacksRef = useRef<{
+        runCodeClientSide: () => Promise<void>;
+        runTestCasesClientSide: () => Promise<void>;
+        submitCodeClientSide: () => Promise<void>;
+    }>({
+        runCodeClientSide: async () => { },
+        runTestCasesClientSide: async () => { },
+        submitCodeClientSide: async () => { },
+    });
 
     const setInformationMode = useBaseGameplayStore(state => state.setInformationMode);
     const activeQuestionIndex = useBaseGameplayStore(state => state.activeQuestionIndex);
@@ -46,8 +60,14 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
         )
     );
 
-    const reset = useBaseGameplayStore(state => state.reset);
+    const resetGameState = useBaseGameplayStore(state => state.reset);
     const router = useRouter();
+
+    const resetTimer = useTimerStore(state => state.reset);
+    const pauseTimer = useTimerStore(state => state.pause);
+
+    const [isShowingWinPopup, setIsShowingWinPopup] = useState(false);
+    const [winTimeElapsedSeconds, setWinTimeElapsedSeconds] = useState<number | null>(null);
 
     const runCodeClientSide = useCallback(async () => {
         const response = await runCode();
@@ -72,16 +92,22 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
             return;
         }
 
-        const submissionSuccessful = response.message === "Congratulations! You pass all test cases. Exit?";
+        const submissionSuccessful = response.message === "pass";
 
-        openPopupWith(
-            response.message,
-            submissionSuccessful ? "Exit" : "Understood",
-            submissionSuccessful ? "Go back to code" : null,
-            submissionSuccessful ? () => { reset(); router.push("/home") } : () => { },
-            () => { }
-        );
-    }, [submitCode, openPopupWith]);
+        if (submissionSuccessful) {
+            setWinTimeElapsedSeconds(Math.floor(useTimerStore.getState().timeElapsed / 1000));
+            setIsShowingWinPopup(true);
+            pauseTimer();
+        } else {
+            openPopupWith(
+                response.message,
+                "Understood",
+                null,
+                () => { },
+                () => { }
+            );
+        }
+    }, [submitCode, openPopupWith, setIsShowingWinPopup, pauseTimer]);
 
     const runTestCasesClientSide = useCallback(async () => {
         const response = await runTestCases();
@@ -96,12 +122,23 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
             response.message,
             passed ? "Submit Code" : "Understood",
             passed ? "Go back to code" : null,
-            () => passed ? submitCodeClientSide() : {},
+            () => {
+                if (passed) {
+                    submitCodeClientSide();
+                }
+            },
             () => { }
         );
     }, [runTestCases, openPopupWith, submitCodeClientSide]);
 
-
+    // Keep keybinding callbacks fresh while allowing one-time registration effect.
+    useEffect(() => {
+        callbacksRef.current = {
+            runCodeClientSide,
+            runTestCasesClientSide,
+            submitCodeClientSide,
+        };
+    }, [runCodeClientSide, runTestCasesClientSide, submitCodeClientSide]);
 
     const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
         instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
@@ -134,15 +171,15 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
                 }
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)) {
                 e.preventDefault();
-                runCodeClientSide();
+                callbacksRef.current.runCodeClientSide();
                 return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["RUN_TEST_CASES"].combo)) {
                 e.preventDefault();
-                runTestCasesClientSide();
+                callbacksRef.current.runTestCasesClientSide();
                 return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["SUBMIT_CODE"].combo)) {
                 e.preventDefault();
-                submitCodeClientSide();
+                callbacksRef.current.submitCodeClientSide();
                 return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["FOCUS_EDITOR"].combo) && editor) {
                 e.preventDefault(); // stop "i" from inserting text somewhere random
@@ -169,10 +206,26 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
         return () => {
             keyboardManager.unregister("gameplay");
         }
-    }, [runCodeClientSide, runTestCasesClientSide, submitCodeClientSide, setInformationMode]);
+    }, []);
 
     return (
         <div ref={gameplayRef} tabIndex={0}>
+            <GameplayNavbar />
+            {
+                isShowingWinPopup && (
+                    <WinPopup
+                        timeElapsed={winTimeElapsedSeconds ?? 0}
+                        exit={() => {
+                            resetGameState();
+                            resetTimer();
+                            setWinTimeElapsedSeconds(null);
+                            setIsShowingWinPopup(false);
+                            router.push("/home");
+                            router.refresh();
+                        }}
+                    />
+                )
+            }
             <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
                 <Panel defaultSize={40} minSize={2}>
                     <QuestionTab questions={questions} />

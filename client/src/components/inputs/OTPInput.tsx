@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./input.module.css";
-import { s } from "motion/react-client";
 
 type OTPInputProps = {
     n: number;

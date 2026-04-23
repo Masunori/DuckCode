@@ -1,6 +1,6 @@
 .progressBar {
     width: 100%;
-    margin-bottom: 1em;
+    margin-bottom: 1rem
 }
 
 .progressBar section {
@@ -48,7 +48,7 @@
 }
 
 .progressBar .stepButtonCompletedUnnavigable .stepIndex,
-.progressBar .stepButtonCompletedNavigable .stepIndex{
+.progressBar .stepButtonCompletedNavigable .stepIndex {
     background-color: var(--font-colour);
     color: var(--significant-button-color);
 }

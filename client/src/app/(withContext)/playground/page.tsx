@@ -1,6 +1,6 @@
 "use client";
 
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, PROGRAMMING_LANGUAGES, translateCombo } from "@/components/settings/settingsUtils";
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, translateCombo } from "@/lib/utils/keyBindings";
 import { usePopup } from "@/contexts/PopupContext";
 import { keyboardManager } from "@/lib/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
@@ -13,6 +13,7 @@ import Output from "./components/Output";
 import styles from "./page.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 
 export default function Page() {
     // for code editor
