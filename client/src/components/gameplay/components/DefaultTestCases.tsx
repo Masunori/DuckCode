@@ -2,11 +2,12 @@
 
 import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
 import { TestCase } from "@/lib/gameplay/utils";
-import { CSSProperties, useCallback, useRef } from "react";
+import { CSSProperties, useCallback, useEffect, useRef } from "react";
 import styles from "./default.module.css";
 import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/lib/utils/keyBindings';
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import { useGettingStartedInstruction } from "@/contexts/GettingStartedInstructionContext";
 
 type TestCaseProps = {
     testCases: TestCase[];
@@ -42,6 +43,81 @@ export default function DefaultTestCases({
 
     const activeQuestionIndex = useBaseGameplayStore(s => s.activeQuestionIndex);
     const isLocked = useBaseGameplayStore(s => s.isLocked);
+
+    // speficically for getting started instruction
+    const ctx = useGettingStartedInstruction();
+    
+    const testCasesRef = useRef<HTMLDivElement | null>(null);
+    const codeHandlerButtonsRef = useRef<HTMLDivElement | null>(null);
+    const codeResultsRef = useRef<HTMLDivElement | null>(null);
+
+    const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
+    const runButtonRef = useRef<HTMLButtonElement | null>(null);
+    const submitButtonRef = useRef<HTMLButtonElement | null>(null);
+
+    const testCaseSelectorRef = useRef<HTMLUListElement | null>(null);
+    const testCaseResultsRef = useRef<HTMLDivElement | null>(null);
+    const testCaseInputRef = useRef<HTMLTableRowElement | null>(null);
+    const testCaseExpectedRef = useRef<HTMLTableRowElement | null>(null);
+    const testCaseActualRef = useRef<HTMLTableRowElement | null>(null);
+    const testCaseMessageRef = useRef<HTMLTableRowElement | null>(null);
+
+    useEffect(() => {
+        const update = () => {
+            if (testCasesRef.current) {
+                ctx?.registerTargetRect("test-cases", testCasesRef.current.getBoundingClientRect());
+            }
+
+            if (codeHandlerButtonsRef.current) {
+                ctx?.registerTargetRect("code-handler-buttons", codeHandlerButtonsRef.current.getBoundingClientRect());
+            }
+            
+            if (codeResultsRef.current) {
+                ctx?.registerTargetRect("code-results", codeResultsRef.current.getBoundingClientRect());
+            }
+
+            if (toggleButtonRef.current) {
+                ctx?.registerTargetRect("toggle-button", toggleButtonRef.current.getBoundingClientRect());
+            }
+
+            if (runButtonRef.current) {
+                ctx?.registerTargetRect("run-button", runButtonRef.current.getBoundingClientRect());
+            }
+
+            if (submitButtonRef.current) {
+                ctx?.registerTargetRect("submit-button", submitButtonRef.current.getBoundingClientRect());
+            }
+
+            if (testCaseSelectorRef.current) {
+                ctx?.registerTargetRect("test-case-selector", testCaseSelectorRef.current.getBoundingClientRect());
+            }
+
+            if (testCaseResultsRef.current) {
+                ctx?.registerTargetRect("test-case-results", testCaseResultsRef.current.getBoundingClientRect());
+            }
+
+            if (testCaseInputRef.current) {
+                ctx?.registerTargetRect("test-case-input", testCaseInputRef.current.getBoundingClientRect());
+            }
+
+            if (testCaseExpectedRef.current) {
+                ctx?.registerTargetRect("test-case-expected", testCaseExpectedRef.current.getBoundingClientRect());
+            }
+
+            if (testCaseActualRef.current) {
+                ctx?.registerTargetRect("test-case-actual", testCaseActualRef.current.getBoundingClientRect());
+            }
+            
+            if (testCaseMessageRef.current) {
+                ctx?.registerTargetRect("test-case-message", testCaseMessageRef.current.getBoundingClientRect());
+            }
+        }
+
+        update();
+        
+        window.addEventListener("resize", update);
+        return () => window.removeEventListener("resize", update);
+    }, []);
 
 
     const testCaseResultsForActiveQuestion = testCaseResults[activeQuestionIndex] || [];
@@ -110,10 +186,11 @@ export default function DefaultTestCases({
         : "";
 
     return (
-        <div className={styles.testCases}>
-            <div className={styles.codeHandlerButtons}>
+        <div className={styles.testCases} ref={testCasesRef}>
+            <div className={styles.codeHandlerButtons} ref={codeHandlerButtonsRef}>
                 <button
                     className={styles.togglePanelButton}
+                    ref={toggleButtonRef}
                     onClick={() => setInformationMode(informationMode === "output" ? "testCases" : "output")}
                 >
                     <b>{informationMode === "output" ? "Switch to Test Cases Mode" : "Switch to Output Mode"}</b>
@@ -121,6 +198,7 @@ export default function DefaultTestCases({
                 </button>
                 <button
                     className={styles.runAllTestCasesButton}
+                    ref={runButtonRef}
                     onClick={informationMode === "output" ? runCode : runTestCases}
                     disabled={isLocked} style={{
                         pointerEvents: isLocked ? "none" : "auto",
@@ -131,13 +209,14 @@ export default function DefaultTestCases({
                 </button>
                 <button
                     className={styles.submitCodeButton}
+                    ref={submitButtonRef}
                     onClick={submitCode}
                     disabled={isLocked} style={{
                         pointerEvents: isLocked ? "none" : "auto",
                     }}
                 ><b>Submit</b> {submitCodeKeyHint}</button>
             </div>
-            <div className={styles.codeResults}>
+            <div className={styles.codeResults} ref={codeResultsRef}>
                 <div
                     className={styles.testCasePanel}
                     style={{
@@ -145,7 +224,7 @@ export default function DefaultTestCases({
                         opacity: informationMode === "output" ? "0" : "1"
                     }}
                 >
-                    <ul className={styles.testCaseSelector}>
+                    <ul className={styles.testCaseSelector} ref={testCaseSelectorRef}>
                         {testCases.map((_, index) => (
                             <li
                                 key={index}
@@ -169,10 +248,10 @@ export default function DefaultTestCases({
                             </li>
                         ))}
                     </ul>
-                    <div className={styles.testCaseResults}>
+                    <div className={styles.testCaseResults} ref={testCaseResultsRef}>
                         <table>
                             <tbody>
-                                <tr>
+                                <tr ref={testCaseInputRef}>
                                     <th scope="row">Input</th>
                                     <td style={tdStyle}>
                                         <pre>
@@ -182,7 +261,7 @@ export default function DefaultTestCases({
                                         </pre>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr ref={testCaseExpectedRef}>
                                     <th scope="row">Expected</th>
                                     <td style={tdStyle}>
                                         <pre>
@@ -192,7 +271,7 @@ export default function DefaultTestCases({
                                         </pre>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr ref={testCaseActualRef}>
                                     <th scope="row">Actual</th>
                                     <td style={tdStyle}>
                                         <pre>
@@ -200,7 +279,7 @@ export default function DefaultTestCases({
                                         </pre>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr ref={testCaseMessageRef}>
                                     <th scope="row">Message</th>
                                     <td style={tdStyle}>
                                         <pre>

@@ -451,7 +451,6 @@
     margin-bottom: 0.25rem;
     color: #aaa;
     transition-duration: 0.25s;
-    font-family: var(--code-fragment-font);
 }
 
 .infoValue {

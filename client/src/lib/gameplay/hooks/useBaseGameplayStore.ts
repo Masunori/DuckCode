@@ -71,6 +71,13 @@ type ExecutionSlice = {
     setExecutionStatus: SetState<ExecutionStatus>;
 }
 
+type GettingStartedSlice = {
+    /** Run the test cases only for the getting started */
+    runTestCasesGettingStarted: () => Promise<{ status: number, message: string } | undefined>;
+    /** Submit the code only for the getting started */
+    submitCodeGettingStarted: () => Promise<{ status: number, message: string } | undefined>;
+}
+
 /** The UI state slice of the gameplay store */
 type UIStateSlice = {
     /** The index of the currently displayed question */
@@ -98,7 +105,7 @@ type ResetSlice = {
 }
 
 /** The base gameplay store that contains common functionalities for different gameplay modes. */
-export type BaseGameplayController = ProblemSlice & EditorSlice & ExecutionSlice & UIStateSlice & ResetSlice;
+export type BaseGameplayController = ProblemSlice & EditorSlice & ExecutionSlice & UIStateSlice & ResetSlice & GettingStartedSlice;
 
 const lock = new LockV2();
 
@@ -176,6 +183,66 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
                 return { status: 200, message: "Code executed successfully" };
             }
         },
+        runTestCasesGettingStarted: async () => {
+            const {
+                codeContent, 
+                activeQuestionIndex, 
+                testCaseResults,
+                setInformationMode,
+                setTestCaseResults, 
+                setActiveTestCaseIndex, 
+            } = get();
+
+            const sourceCode = codeContent[activeQuestionIndex];
+
+            if (!sourceCode) {
+                return undefined;
+            }
+
+            const language = useUserPreferenceStore.getState().userPreference.language;
+            const output = await lock.call(() => tryApiCallWithAuth(() => runCode(sourceCode, language)));
+            
+            setInformationMode("testCases");
+
+            if (!output) {
+                return { status: 409, message: "Another code execution is in progress." };
+            } else if (output.status !== 200) {
+                return { status: output.status, message: "Failed to run test cases." };
+            } else {
+                const actual = output.output[0].content.trim();
+                const type = output.output[0].type;
+                const expected = "Hello, World!";
+
+                const newResults: TestCaseResult[][] = [
+                    [
+                        {
+                            tid: 1,
+                            actualOutput: actual === expected ? expected : "",
+                            statusId: actual === expected ? 1 : 2,
+                            message: actual === expected ? "Accepted" : type === "log" ? "Wrong Answer" : "Code fails to run"
+                        },
+                        {
+                            tid: 2,
+                            actualOutput: actual === expected ? expected : "",
+                            statusId: actual === expected ? 1 : 2,
+                            message: actual === expected ? "Accepted" : type === "log" ? "Wrong Answer" : "Code fails to run"
+                        }
+                    ]
+                ];
+
+                setTestCaseResults(newResults);
+
+                const firstWrongTestCaseIndex = newResults[activeQuestionIndex].findIndex(result => RUN_CODE_RESPONSES[result.statusId] !== RunCodeStatuses.ACCEPTED);
+
+                if (firstWrongTestCaseIndex !== -1) {
+                    setActiveTestCaseIndex(firstWrongTestCaseIndex);
+                    const failedReason = newResults[activeQuestionIndex][firstWrongTestCaseIndex].message;
+                    return { status: 200, message: `Test case ${firstWrongTestCaseIndex + 1} failed. Reason: ${failedReason}` };
+                } else {
+                    return { status: 200, message: "All public test cases passed successfully." };
+                }
+            }
+        },
         runTestCases: async () => {
             const { 
                 codeContent, 
@@ -217,6 +284,47 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
                 } else {
                     return { status: 200, message: "All public test cases passed successfully." };
                 }
+            }
+        },
+        submitCodeGettingStarted: async () => {
+            const {
+                codeContent, 
+                activeQuestionIndex, 
+                setInformationMode,
+                setCodeOutput
+            } = get();
+
+            const sourceCode = codeContent[activeQuestionIndex];
+
+            if (!sourceCode) {
+                return undefined;
+            }
+
+            const language = useUserPreferenceStore.getState().userPreference.language;
+            const output = await lock.call(() => tryApiCallWithAuth(() => runCode(sourceCode, language)));
+
+            setInformationMode("output");
+
+            if (!output) {
+                return { status: 409, message: "Another code execution is in progress." };
+            } else if (output.status !== 200) {
+                setCodeOutput([{ type: "error", content: "Failed to submit code" }]);
+                return { status: output.status, message: "Failed to submit code" };
+            } else {
+                const actual = output.output[0].content.trim();
+                const expected = "Hello, World!";
+
+                setCodeOutput([
+                    { type: "log", content: `Actual: ${actual}` },
+                    { type: "log", content: `Expected: ${expected}` },
+                    { type: actual === expected ? "log" : "error", content: `Status: ${actual === expected ? "Accepted" : "Wrong Answer"}` }
+                ]);
+
+                const message = actual === expected
+                    ? "pass"
+                    : `You passed 0/2 test cases. Reason: ${output.output[0].content}`;
+
+                return { status: 200, message };
             }
         },
         submitCode: async () => {

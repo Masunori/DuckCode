@@ -19,12 +19,15 @@ import GameplayNavbar from "../../components/GameplayNavbar";
 import QuestionTab from "../../components/QuestionTab";
 import WinPopup from "../../components/WinPopup";
 import styles from "./page.module.css";
+import { useGettingStartedInstruction } from '@/contexts/GettingStartedInstructionContext';
 
 export function DefaultLayout({ questions }: { questions: Question[] }) {
     // for code editor
     const userPreference = useUserPreferenceStore(state => state.userPreference);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
+
+    const ctx = useGettingStartedInstruction();
 
     // Use refs to maintain stable references for keyboard handler
     const callbacksRef = useRef<{
@@ -49,13 +52,17 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
     const [
         runCode,
         runTestCases,
-        submitCode
+        runTestCasesGettingStarted,
+        submitCode,
+        submitCodeGettingStarted,
     ] = useBaseGameplayStore(
         useShallow(
             state => [
                 state.runCode,
                 state.runTestCases,
-                state.submitCode
+                state.runTestCasesGettingStarted,
+                state.submitCode,
+                state.submitCodeGettingStarted,
             ]
         )
     );
@@ -86,7 +93,7 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
     }, [runCode, openPopupWith]);
 
     const submitCodeClientSide = useCallback(async () => {
-        const response = await submitCode();
+        const response = ctx ? await submitCodeGettingStarted() : await submitCode();
 
         if (!response) {
             return;
@@ -110,7 +117,7 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
     }, [submitCode, openPopupWith, setIsShowingWinPopup, pauseTimer]);
 
     const runTestCasesClientSide = useCallback(async () => {
-        const response = await runTestCases();
+        const response = ctx ? await runTestCasesGettingStarted() : await runTestCases();
 
         if (!response) {
             return;

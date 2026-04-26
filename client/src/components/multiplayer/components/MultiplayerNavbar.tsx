@@ -1,6 +1,6 @@
 "use client";
 
-import { GENERAL_KEY_BINDINGS, MULTIPLAYER_KEY_BINDINGS, translateCombo } from "@/components/settings/settingsUtils";
+import { GENERAL_KEY_BINDINGS, MULTIPLAYER_KEY_BINDINGS, translateCombo } from "@/lib/utils/keyBindings";
 import CountdownTimer from "@/components/timer/CountdownTimer";
 import { usePopup } from "@/contexts/PopupContext";
 import { useSettings } from "@/contexts/SettingsContext";
