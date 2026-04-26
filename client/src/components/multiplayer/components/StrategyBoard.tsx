@@ -1,6 +1,6 @@
 "use client";
 
-import { isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from "@/components/settings/settingsUtils";
+import { isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from "@/lib/utils/keyBindings";
 import { keyboardManager } from "@/lib/utils/keyboardManager";
 import "@excalidraw/excalidraw/index.css";
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types";
