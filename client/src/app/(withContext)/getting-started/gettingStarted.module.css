@@ -1,0 +1,141 @@
+.instructionOverlay {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: var(--instruction-overlay-z-index);
+    cursor: not-allowed;
+}
+
+@keyframes glowing {
+    0% {
+        box-shadow: 0 0 0.5rem 0.1rem var(--significant-button-color);
+    }
+    50% {
+        box-shadow: 0 0 1rem 0.2rem var(--significant-button-color);
+    }
+    100% {
+        box-shadow: 0 0 0.5rem 0.1rem var(--significant-button-color);
+    }
+}
+
+.highlightedElement {
+    position: fixed;
+    animation: glowing 2s infinite;
+    pointer-events: none;
+    cursor: pointer;
+    z-index: var(--instruction-overlay-z-index);
+}
+
+.instruction {
+    position: fixed;
+    top: 75vh;
+    width: 100vw;
+    height: 25vh;
+    /* border: 0.15rem solid var(--fourth-layer-background-color); */
+    padding: 0.5rem 1.5rem;
+    font-size: 1.3rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: var(--instruction-z-index);
+}
+
+.instructionText code {
+    background-color: var(--terminal-like-background-color);
+    font-size: 1rem;
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 0 0.5rem 0.1rem var(--significant-button-color);
+}
+
+.instructionText p {
+    margin-bottom: 0.7rem;
+}
+
+.instructionText ul {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+    margin-bottom: 0.7rem;
+}
+
+.instructionText kbd {
+    background-color: var(--terminal-like-background-color);
+    padding: 0 0.5rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 0 0.5rem 0.1rem var(--significant-button-color);
+}
+
+.instructionButtons {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.instructionButton {
+    padding: 0.5rem 1rem;
+    background-color: var(--insignificant-button-color);
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    font-size: 1rem;
+    transition-duration: 0.25s;
+}
+
+.instructionButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.instructionButton:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.skipPopup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    border: 0.1rem solid var(--fourth-layer-background-color);
+    z-index: var(--instruction-z-index);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.skipPopup p {
+    margin-bottom: 1rem;
+}
+
+.skipPopupButtons {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.skipPopupButton {
+    padding: 0.5rem 1rem;
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    font-size: 1rem;
+    transition-duration: 0.25s;
+}
+
+.skipPopupButton.cancel {
+    background-color: var(--insignificant-button-color);
+}
+
+.skipPopupButton.cancel:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+.skipPopupButton.skip {
+    background-color: var(--significant-button-color);
+}
+
+.skipPopupButton.skip:hover {
+    background-color: var(--significant-button-hover-color);
+}

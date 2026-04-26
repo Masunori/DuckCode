@@ -1,15 +1,14 @@
 "use client";
 
-import { GENERAL_KEY_BINDINGS, MULTIPLAYER_KEY_BINDINGS, translateCombo } from "@/components/settings/settingsUtils";
-import CountdownTimer from "@/components/countdownTimer/CountdownTimer";
+import { GENERAL_KEY_BINDINGS, MULTIPLAYER_KEY_BINDINGS, translateCombo } from "@/lib/utils/keyBindings";
+import CountdownTimer from "@/components/timer/CountdownTimer";
+import { usePopup } from "@/contexts/PopupContext";
 import { useSettings } from "@/contexts/SettingsContext";
-import { useUserStore } from "@/contexts/UserContext";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import { useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styles from "../page.module.css";
-import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
-import { usePopup } from "@/contexts/PopupContext";
 
 type MultiplayerNavbarProps = {
     initialTime: number;

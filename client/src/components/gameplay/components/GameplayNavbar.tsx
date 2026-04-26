@@ -1,25 +1,26 @@
 "use client";
 
 import DropdownInput from "@/components/inputs/DropdownInput";
-import { GENERAL_KEY_BINDINGS, PLKeys, PROGRAMMING_LANGUAGES, translateCombo } from "@/components/settings/settingsUtils";
-import CountdownTimer from "@/components/countdownTimer/CountdownTimer";
+import { GENERAL_KEY_BINDINGS, translateCombo } from '@/lib/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
 import { useSettings } from "@/contexts/SettingsContext";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styles from "../page.module.css";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
-import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import CountupTimer, { CountupTimerRef } from "@/components/timer/CountupTimer";
+import { useTimerStore } from "@/hooks/useTimerStore";
+import { PLKeys, PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 
-type GameplayNavbarProps = {
-    initialTime: number;
-    forceSubmitOnCountdownEnds?: () => void;
-}
-
-export default function GameplayNavbar({ initialTime, forceSubmitOnCountdownEnds = () => { } }: GameplayNavbarProps) {
+export default function GameplayNavbar() {    
     const { openSettings } = useSettings();
     const { openPopupWith } = usePopup();
-    const reset = useBaseGameplayStore(state => state.reset);
+    const resetGameplay = useBaseGameplayStore(state => state.reset);
+    const isPaused = useTimerStore(state => state.isPaused);
+    const resetTimer = useTimerStore(state => state.reset);
+
+    const setTimeElapsed = useTimerStore(state => state.setTimeElapsed);
 
     const router = useRouter();
 
@@ -28,6 +29,7 @@ export default function GameplayNavbar({ initialTime, forceSubmitOnCountdownEnds
     const userPreference = useUserPreferenceStore(state => state.userPreference);
     const setUserPreference = useUserPreferenceStore(state => state.setUserPreference);
 
+    
     const settingsKeyHint = userPreference.displayKeyBindingOnButtons
         ? <kbd>[{translateCombo(GENERAL_KEY_BINDINGS["OPEN_SETTINGS"].combo)}]</kbd>
         : "";
@@ -53,7 +55,8 @@ export default function GameplayNavbar({ initialTime, forceSubmitOnCountdownEnds
             "Exit",
             "Stay",
             () => {
-                reset();
+                resetGameplay();
+                resetTimer();
                 router.push("/home");
             },
             () => { }
@@ -71,9 +74,10 @@ export default function GameplayNavbar({ initialTime, forceSubmitOnCountdownEnds
                 />
                 {settingsKeyHint}
             </button>
-            <CountdownTimer
-                initialTime={initialTime}
-                onCountdownEnds={forceSubmitOnCountdownEnds}
+            <CountupTimer 
+                initialTime={useTimerStore.getState().timeElapsed}
+                isPaused={isPaused}
+                onTimeElapsedChange={setTimeElapsed}
             />
             <DropdownInput
                 options={options}

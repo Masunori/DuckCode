@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import ArcadeModeTab from "./gameMenu/ArcadeModeTab";
 import { GameMenuTab } from "../homeUtils";
 import { motion, AnimatePresence } from "motion/react";
+import MultiplayerModeTab from "./gameMenu/MultiplayerModeTab";
 
 type StylizedGameMenuButtonProps = {
     buttonName: string;
@@ -40,7 +41,7 @@ export default function GameMenu() {
         <div className={styles.gameMenu}>
             <StylizedGameMenuButton 
                 buttonName="Multiplayer" 
-                onClick={() => router.push("/multiplayer")} 
+                onClick={() => setTab("Multiplayer")} 
                 buttonDescription="Code with or against other players, either casually or competitive." 
             />
             <StylizedGameMenuButton 
@@ -70,6 +71,11 @@ export default function GameMenu() {
                 {tab === "Arcade" && (
                     <motion.div>
                         <ArcadeModeTab setTab={setTab} />
+                    </motion.div>
+                )}
+                {tab === "Multiplayer" && (
+                    <motion.div>
+                        <MultiplayerModeTab setTab={setTab} />
                     </motion.div>
                 )}
             </AnimatePresence>

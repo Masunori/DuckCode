@@ -16,7 +16,7 @@ import CodeEditorSettings from "./options/CodeEditorSettings";
 import GeneralSettings from "./options/GeneralSettings";
 import KeyboardShortcutSettings from "./options/KeyboardShortcutSettings";
 import styles from './settings.module.css';
-import { GENERAL_KEY_BINDINGS, isKeyCombo } from "./settingsUtils";
+import { GENERAL_KEY_BINDINGS, isKeyCombo } from '@/lib/utils/keyBindings';
 
 type SettingsOptionNames = "General" | "Code Editor" | "Keyboard Shortcut Configuration" | "Account";
 export type TempAccountInfo = Pick<User, 'name' | 'email' | 'bio' | 'isTwoFactored'>;
@@ -183,7 +183,23 @@ export default function Settings() {
                 event.preventDefault();
                 handleExit();
                 return true;
-            } else if (isKeyCombo(event, GENERAL_KEY_BINDINGS["OPEN_SETTINGS"].combo)) {
+            } 
+
+            return false;
+        }
+
+        if (isSettingsOpen) {
+            keyboardManager.register("settingsExit", "SETTINGS_KEY_PRIORITY", handleEscape);
+        }
+
+        return () => {
+            keyboardManager.unregister("settingsExit");
+        }
+    }, [isSettingsOpen]);
+
+    useEffect(() => {
+        function handleOpenSettings(event: KeyboardEvent) {
+            if (isKeyCombo(event, GENERAL_KEY_BINDINGS["OPEN_SETTINGS"].combo)) {
                 event.preventDefault();
                 openSettings();
                 return true;
@@ -192,11 +208,12 @@ export default function Settings() {
             return false;
         }
 
-        keyboardManager.register("settingsExit", "SETTINGS_KEY_PRIORITY", handleEscape);
+        keyboardManager.register("settingsOpen", "GENERAL_KEY_PRIORITY", handleOpenSettings);
+
         return () => {
-            keyboardManager.unregister("settingsExit");
+            keyboardManager.unregister("settingsOpen");
         }
-    });
+    }, []);
 
     // handle hovering of settings option buttons
     function handleOnMouseEnter(event: React.MouseEvent<HTMLLIElement, MouseEvent>) {

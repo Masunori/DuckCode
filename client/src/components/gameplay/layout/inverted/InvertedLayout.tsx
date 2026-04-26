@@ -1,6 +1,6 @@
 "use client";
 
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from "@/components/settings/settingsUtils";
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/lib/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
 import { instantiateEditorOnMount, Question } from "@/lib/gameplay/utils";
 import { keyboardManager } from "@/lib/utils/keyboardManager";

@@ -2,10 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./timer.module.css";
 
 type CountdownTimerProps = {
+    /** The initial time for the countdown timer in seconds */
     initialTime: number;
+    /** The function to be called when the countdown timer reaches 0. This is optional. */
     onCountdownEnds?: () => void;
 }
 
+/**
+ * A countdown timer that counts down from the initial time to 0. When the timer reaches 0, the onCountdownEnds function is called.
+ * @param param0 The props for the CountdownTimer component.
+ * - `initialTime`: The initial time for the countdown timer in seconds.
+ * - `onCountdownEnds`: The function to be called when the countdown timer reaches 0. This is optional.
+ * @returns 
+ */
 export default function CountdownTimer({ initialTime, onCountdownEnds }: CountdownTimerProps) {
     const [timeLeft, setTimeLeft] = useState(initialTime);
     const hasEndedRef = useRef(false);

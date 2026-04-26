@@ -8,6 +8,7 @@ import styles from '@/components/settings/settings.module.css';
 import rankStyles from '@/components/styles/ranks.module.css';
 import { usePopup } from "@/contexts/PopupContext";
 import { useUserStore } from "@/contexts/UserContext";
+import { updateProfile } from '@/lib/apiClient/user';
 import { FieldState, PASSWORD_CONDITIONS } from "@/lib/utils/fieldConditions";
 import { AnimatePresence, motion } from 'motion/react';
 import { s } from 'motion/react-client';
@@ -124,8 +125,8 @@ const UserProfileSection = ({ user, onSave }: UserProfileSectionProps) => {
                                 <button 
                                     className={styles.saveButton} 
                                     onClick={() => {
-                                        setIsEditingBio(false);
                                         onSave(textareaRef.current?.value || "");
+                                        setIsEditingBio(false);
                                     }}
                                 >
                                     Save
@@ -150,14 +151,57 @@ type TempAccountInfo = Pick<User, 'name' | 'email' | 'bio' | 'isTwoFactored'>;
 export default function AccountSettings({ nextUserInfo, handleAccountChange }: AccountSettingsProps) {
     const user = useUserStore(state => state.user);
 
+    const cumulativeExpForCurrentLevel = 100 * (Math.pow(1.1, user.level) - 1);
+    const expForNextLevel = 10 * (Math.pow(1.1, user.level));
+    const currentLevelExp = user.exp - cumulativeExpForCurrentLevel;
+    const expProgressPercent = (currentLevelExp / expForNextLevel) * 100;
+
     const [isHoveringProfilePic, setIsHoveringProfilePic] = useState(false);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
 
-    const handleSaveBio = (newBio: string) => {
-        handleAccountChange("bio", newBio);
-    };
-
     const { openPopupWith } = usePopup();
+
+    const handleSaveBio = (newBio: string) => {
+        const bioSavedSuccessfullyPopup = () => {
+            openPopupWith(
+                "Bio updated successfully!",
+                "Great!",
+                null,
+                () => { },
+                () => { }
+            )
+        };
+
+        const bioUpdateFailedPopup = (message: string) => {
+            openPopupWith(
+                `Failed to update bio: ${message}`,
+                "Okay",
+                null,
+                () => { },
+                () => { }
+            )
+        };
+
+        openPopupWith(
+            "Save changes to bio?",
+            "Save",
+            "Cancel",
+            async () => {
+                const response = await updateProfile(
+                    user.name,
+                    newBio
+                );
+
+                if (response.status === 200) {
+                    handleAccountChange("bio", newBio);
+                    bioSavedSuccessfullyPopup();
+                } else {
+                    bioUpdateFailedPopup(response.data.message || "Unknown error");
+                }
+            },
+            () => { }
+        );
+    };
 
     const handleLogout = async () => {
         openPopupWith(
@@ -216,44 +260,50 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
                     {/* First row - Email and Account Created side by side */}
                     <div className={styles.topRow}>
                         <div className={styles.infoItem}>
-                            <span className={styles.infoLabel}>Email:</span>
+                            <span className={styles.infoLabel}>Email</span>
                             <span className={styles.infoValue}>{nextUserInfo.email}</span>
                         </div>
                         {user.createdAt && (
                             <div className={styles.infoItem}>
-                                <span className={styles.infoLabel}>Account Created:</span>
+                                <span className={styles.infoLabel}>Account Created</span>
                                 <span className={styles.infoValue}>
                                     {new Date(user.createdAt).toLocaleDateString()}
                                 </span>
                             </div>
                         )}
-                    </div>
-
-                    {/* Second row - Level, Rank, and Experience */}
-                    <div className={styles.bottomRow}>
-                        <div className={styles.levelRankContainer}>
-                            <div className={styles.levelContainer}>
-                                <span className={styles.levelLabel}>Level</span>
-                                <span className={styles.levelValue}>{user.level}</span>
+                        <div className={styles.infoItem}>
+                            <span className={styles.infoLabel}>Level</span>
+                            <div className={styles.expBarWithLevel}>
+                                <span>{user.level}</span>
+                                <div 
+                                    className={styles.expBarTotal}
+                                >
+                                    <div
+                                        className={styles.expBarAcquired}
+                                        style={{
+                                            width: `${expProgressPercent}%`
+                                        }}>
+                                            
+                                        <div className={styles.expBarRunner}></div>
+                                    </div>
+                                    <span style={{ cursor: "default" }}>{`${Math.round(currentLevelExp)} / ${Math.round(expForNextLevel)}`}</span>
+                                </div>
+                                <span>{user.level + 1}</span>
                             </div>
+                        </div>
+                        <div className={styles.infoItem}>
+                            <span className={styles.infoLabel}>Cumulated EXP</span>
+                            <span className={styles.infoValue}>{user.exp}</span>
+                        </div>
+                        <div className={styles.infoItem}>
+                            <span className={styles.infoLabel}>Rank</span>
                             <div className={`${styles.rank} ${rankStyles[user.rank.toLowerCase()]}`}>
                                 {user.rank}
                             </div>
                         </div>
-                        <div className={styles.expContainer}>
-                            <div className={styles.expBarWithLevel}>
-                                <span className={styles.levelMin}>{user.level}</span>
-                                <div className={styles.expBarTotal}>
-                                    <div
-                                        className={styles.expBarAcquired}
-                                        style={{ width: `${user.exp}%` }}
-                                    >
-                                        <div className={styles.expBarRunner}></div>
-                                    </div>
-                                </div>
-                                <span className={styles.levelMax}>{user.level + 1}</span>
-                            </div>
-
+                        <div className={styles.infoItem}>
+                            <span className={styles.infoLabel}>Rank Points</span>
+                            <span className={styles.infoValue}>{user.rankPoint}</span>
                         </div>
                     </div>
                 </div>
@@ -313,6 +363,7 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
                                     */}
             </div>
             <div className={styles.settingsContentChunk}>
+                <h2>Logout</h2>
                 <button
                     onClick={handleLogout}
                     className={styles.logoutButton}

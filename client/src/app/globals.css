@@ -70,6 +70,9 @@
   --settings-z-index: 20;
   --popup-overlay-z-index: 30;
   --popup-z-index: 31;
+
+  --instruction-overlay-z-index: 25;
+  --instruction-z-index: 26;
 }
 
 /* global reset or common styles */

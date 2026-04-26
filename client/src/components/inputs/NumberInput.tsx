@@ -3,7 +3,7 @@
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import styles from "./input.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { isKeyCombo } from "../settings/settingsUtils";
+import { isKeyCombo } from '@/lib/utils/keyBindings';
 import { keyboardManager } from "@/lib/utils/keyboardManager";
 
 type NumberInputProps = {
@@ -84,7 +84,7 @@ export default function NumberInput({ inputId, defaultValue, min, max, increment
             return false;
         }
 
-        keyboardManager.register(`numberInput-${inputId}`, "INPUT_KEY_PRIORITY", handleKeyDown);
+        keyboardManager.register(`numberInput-${inputId}`, "SETTINGS_INPUT_KEY_PRIORITY", handleKeyDown);
 
         return () => {
             keyboardManager.unregister(`numberInput-${inputId}`);
