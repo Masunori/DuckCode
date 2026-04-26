@@ -30,6 +30,9 @@ export async function GET(request: Request) {
         }
 
         const res = await response.json();
+
+        printd("@app/api/question/get_question_by_id/route.ts", "Received response:", res);
+
         return NextResponse.json(
             { ok: true, data: res },
             { status: 200, headers: { 'Cache-Control': 'no-store' } },

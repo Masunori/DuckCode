@@ -8,12 +8,13 @@ import { combine } from "zustand/middleware";
 
 type UserStore = {
     user: User;
+    isUserInitialized: boolean;
     setUserField: (path: Paths<User>, value: unknown) => void;
     setUser: (user: User) => void;
 }
 
 export const useUserStore = create<UserStore>(
-    combine({ user: structuredClone(PRISTINE_USER) }, (set) => {
+    combine({ user: structuredClone(PRISTINE_USER), isUserInitialized: false }, (set) => {
         return {
             setUserField: (path: Paths<User>, value: unknown) => {
                 set((state) => {
@@ -40,7 +41,7 @@ export const useUserStore = create<UserStore>(
                     return { user: newUser };
                 })
             },
-            setUser: (user: User) => set(() => ({ user })),
+            setUser: (user: User) => set(() => ({ user, isUserInitialized: true })),
         }
     })
 )

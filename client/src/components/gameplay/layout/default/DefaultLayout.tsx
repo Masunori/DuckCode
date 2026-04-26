@@ -27,6 +27,8 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
 
+    printd("@/components/gameplay/layout/default/DefaultLayout", "Rendering DefaultLayout with questions:", questions);
+
     const ctx = useGettingStartedInstruction();
 
     // Use refs to maintain stable references for keyboard handler
@@ -52,17 +54,13 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
     const [
         runCode,
         runTestCases,
-        runTestCasesGettingStarted,
         submitCode,
-        submitCodeGettingStarted,
     ] = useBaseGameplayStore(
         useShallow(
             state => [
                 state.runCode,
                 state.runTestCases,
-                state.runTestCasesGettingStarted,
                 state.submitCode,
-                state.submitCodeGettingStarted,
             ]
         )
     );
@@ -93,7 +91,7 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
     }, [runCode, openPopupWith]);
 
     const submitCodeClientSide = useCallback(async () => {
-        const response = ctx ? await submitCodeGettingStarted() : await submitCode();
+        const response = await submitCode();
 
         if (!response) {
             return;
@@ -117,7 +115,7 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
     }, [submitCode, openPopupWith, setIsShowingWinPopup, pauseTimer]);
 
     const runTestCasesClientSide = useCallback(async () => {
-        const response = ctx ? await runTestCasesGettingStarted() : await runTestCases();
+        const response = await runTestCases();
 
         if (!response) {
             return;
@@ -222,11 +220,12 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
                 isShowingWinPopup && (
                     <WinPopup
                         timeElapsed={winTimeElapsedSeconds ?? 0}
-                        exit={() => {
+                        exit={async () => {
                             resetGameState();
                             resetTimer();
                             setWinTimeElapsedSeconds(null);
                             setIsShowingWinPopup(false);
+                            await new Promise(resolve => setTimeout(resolve, 300)); // wait for popup to close before navigating
                             router.push("/home");
                             router.refresh();
                         }}
