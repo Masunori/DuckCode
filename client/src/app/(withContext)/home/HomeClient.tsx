@@ -9,12 +9,18 @@ import GameMenu from "./components/GameMenu";
 import HomeNavbar from "./components/HomeNavbar";
 import NewsCarousel from "./components/NewsCarousel";
 import styles from "./page.module.css";
+import { useShallow } from "zustand/shallow";
 
 export default function HomeClient() {
     const router = useRouter();
     const user = useUserStore(state => state.user);
-    const userExp = useUserStore(state => state.user.exp);
-    const isUserInitialized = useUserStore(state => state.isUserInitialized);
+
+    const { userExp, isUserInitialized } = useUserStore(
+        useShallow(state => ({
+            userExp: state.user.exp,
+            isUserInitialized: state.isUserInitialized,
+        }))
+    );
 
     useEffect(() => {
         if (!isUserInitialized) {

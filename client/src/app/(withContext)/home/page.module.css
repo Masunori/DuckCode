@@ -654,6 +654,13 @@
     background-color: var(--significant-button-hover-heavier-color);
 }
 
+.questionId {
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .questionTitle {
     text-align: left;
     padding-left: 1rem;

@@ -19,7 +19,7 @@ type ArcadeModeTabProps = {
 
 function QuestionItem({ qid, title, difficulty }: { qid: string; title: string; difficulty: number }) {
     return <button className={styles.questionItem}>
-        <p className={styles.questionId}>{qid}</p>
+        <p title={qid} className={styles.questionId}>{qid}</p>
         <p className={styles.questionTitle}><b>{title}</b></p>
         <p className={styles.questionDifficulty}>{difficulty}</p>
     </button>
