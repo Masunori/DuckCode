@@ -193,3 +193,38 @@ export async function updateProfile(
         throw error;
     }
 }
+
+export async function changePassword(
+    currentPassword: string,
+    newPassword: string,
+    newConfirmedPassword: string
+) {
+    try {
+        const body = {
+            currentPassword,
+            newPassword,
+            newConfirmedPassword,
+        };
+
+        printd("@/lib/apiClient/user", "Changing password with data:", body);
+
+        const response = await fetch("/api/auth/change-password", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                credentials: "include",
+            },
+            body: JSON.stringify(body),
+        });
+
+        const data = await response.json();
+
+        return {
+            status: response.status,
+            data
+        };
+    } catch (error) {
+        console.error('Error in changePassword:', error);
+        throw error;
+    }
+}

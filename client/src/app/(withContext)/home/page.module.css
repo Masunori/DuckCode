@@ -15,9 +15,14 @@
 .homeNavbar {
     display: grid;
     grid-area: nav;
-    grid-template-columns: 7fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     height: 100%;
     background-color: var(--first-layer-background-color);
+}
+
+.homeNavbarButtons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 }
 
 .userInfo {
@@ -471,7 +476,7 @@
 .arcadeModeTab header span {
     height: 3px;
     width: 100%;
-    background-color: var(--font-colour);
+    background-color: #888;
 }
 
 .arcadeModeOption {
@@ -630,7 +635,7 @@
     display: grid;
     width: 100%;
     padding: 0.5rem;
-    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-columns: 5fr 1fr;
     border-radius: 0;
     border: 0;
     transition-duration: 0.25s;
@@ -654,7 +659,165 @@
     background-color: var(--significant-button-hover-heavier-color);
 }
 
+.questionId {
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .questionTitle {
     text-align: left;
     padding-left: 1rem;
+}
+
+.matchmakingTab {
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    background-color: var(--first-layer-background-color);
+    z-index: var(--game-menu-tab-z-index);
+    color: var(--font-colour-hover);
+    padding: 0.3rem;
+    box-shadow: 0 0 0.5rem 0.1rem var(--significant-button-color);
+}
+
+.queueView {
+    background-color: var(--first-layer-background-color);
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cancelQueueButton {
+    background-color: var(--insignificant-button-color);
+    border: none;
+    padding: 1rem;
+    font-size: 1.2rem;
+    transition-duration: 0.25s;
+}
+
+.cancelQueueButton:hover {
+    background-color: var(--insignificant-button-hover-color);
+}
+
+/* Tutorial Tab Styles*/
+.tutorialModeTab {
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    background-color: var(--first-layer-background-color);
+    z-index: var(--game-menu-tab-z-index);
+    color: var(--font-colour-hover);
+
+    display: grid;
+    grid-template-columns: 1.5rem 2fr 1fr;
+    row-gap: 1rem;
+    column-gap: 2rem;
+    padding: 1rem;
+    grid-template-areas:
+        "bar options play"
+}
+
+.tutorialModeTab .verticalBar {
+    grid-area: bar;
+    width: 0.5rem;
+    border: none;
+    border-radius: 1000px;
+    background-color: #888;
+}
+.tutorialModeOptions {
+    grid-area: options;
+    height: fit-content;
+    display: grid;
+    grid-template-rows: 2rem 1fr;
+    gap: 1rem;
+    overflow-y: auto;
+}
+
+.tutorialModeOptions header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    column-gap: 1rem;
+    align-items: center;
+}
+
+.tutorialModeOptions header h1 {
+    justify-self: center;
+}
+
+.tutorialModeOptions header span {
+    height: 3px;
+    width: 100%;
+    background-color: #888;
+}
+
+.tutorialTopic {
+    color: var(--font-colour);
+    /* margin-bottom: 1rem; */
+}
+
+.tutorialTopic h3 {
+    /* border: 0.1rem solid var(--settings-option-border-color); */
+    background-color: var(--second-layer-background-color);
+    transition-duration: 0.25s;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+}
+
+.tutorialTopic h3:hover {
+    background-color: var(--fourth-layer-background-color);
+}
+
+.tutorialTopic h3.selected {
+    border: 0.1rem solid var(--significant-button-color);
+}
+
+.tutorialTopic li {
+    display: grid;
+    width: 100%;
+    padding: 0.5rem;
+    grid-template-columns: 4fr 1fr;
+    border-radius: 0;
+    border: 0;
+    transition-duration: 0.25s;
+    font-size: 1rem;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.tutorialTopic li:nth-child(odd) {
+    background-color: var(--insignificant-button-color);
+}
+
+.tutorialTopic li:nth-child(even) {
+    background-color: transparent;
+}
+
+.tutorialTopic li .title {
+    text-align: left;
+    padding-left: 1rem;
+}
+
+.tutorialTopic li .exp {
+    text-align: right;
+    padding-right: 1rem;
+}
+
+.tutorialTopic li.selected {
+    /* border: 0.1rem solid var(--significant-button-color); */
+    background-color: var(--significant-button-hover-color);
+    color: white;
+}
+
+.tutorialTopic li:hover {
+    border: 0.1rem solid var(--significant-button-color);
 }

@@ -5,6 +5,7 @@ import { getVerificationCode, verifyCode, verifyNewPassword } from "@/lib/apiCli
 import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
 import { FieldState, PASSWORD_CONDITIONS } from "../../../lib/utils/fieldConditions";
 import styles from '../page.module.css';
+import animationStyles from "@/components/styles/animations.module.css";
 import PopupOverlay from "./PopupOverlay";
 import OTPInput from "@/components/inputs/OTPInput";
 import NewPasswordInput from "@/components/authInputs/NewPasswordInput";
@@ -319,7 +320,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
 
     const children = (
         <div
-            className={styles.popupBorder}
+            className={`${styles.popupBorder} ${animationStyles.illuminatingBorder}`}
             style={{ display: portalMode === PortalMode.ResetPassword ? 'block' : 'none' }}
         >
             <div className={`${styles.popup} ${styles.resetPasswordPopup}`}>

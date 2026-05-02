@@ -3,6 +3,7 @@
 import PopupOverlay from "@/app/portal/components/PopupOverlay";
 import { PortalMode } from "@/app/portal/PortalMode"; 
 import styles from '../page.module.css';
+import animationStyles from "@/components/styles/animations.module.css";
 import { Dispatch, SetStateAction, useState } from "react";
 import { login } from "../../../lib/apiClient/user";
 import CurrentEmailInput from "@/components/authInputs/CurrentEmailInput";
@@ -62,7 +63,7 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
     }
     
     const children = 
-        <div className={styles.popupBorder}>
+        <div className={`${styles.popupBorder} ${animationStyles.illuminatingBorder}`}>
             <div className={`${styles.popup} ${styles.loginPopup}`}>
                 <button className={styles.closePopup} onClick={() => setPortalMode(PortalMode.None)}>×</button>
 

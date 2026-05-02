@@ -86,7 +86,7 @@ const instructions: Instruction[] = [
                 <li>Click on the editor, or press <kbd>I</kbd>, to start editing your code. While editing, other keyboard shortcuts are disabled until you stop editing.</li>
                 <li>Click outside the editor, or press <kbd>Esc</kbd>, to stop editing.</li>
             </ul>
-            <p>For this "Getting Started" challenge, copy <code>console.log("Hello, World!");</code> and paste it into the editor!</p>
+            <p>For this "Getting Started" challenge, copy <code>console.log("Hello, world!");</code> and paste it into the editor!</p>
         </>, 
         target: "code-editor",
     },
@@ -129,7 +129,7 @@ const instructions: Instruction[] = [
         messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
     },
     { 
-        message: <p>If you have filled in the code, this part would show "Hello, World!", which is the result of the code.</p>, 
+        message: <p>If you have filled in the code, this part would show "Hello, world!", which is the result of the code.</p>, 
         target: "code-results",
         messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
     },
@@ -207,6 +207,7 @@ const instructions: Instruction[] = [
             <p>Once you feel confident, you can submit your solution! Click on this button, or press <kbd>S</kbd>.</p>
             <p>When submitted, your code will be run against both the given public test cases and a second set of test cases called <b>private test cases</b>, whose inputs and expected outputs are not shown to you.</p>
             <p>To pass the challenge, you need to pass all test cases, including both public and private ones.</p>
+            <p>In the given code, the "w" should be "W". Now, fix the code and complete the challenge!</p>
         </>, 
         target: "submit-button",
         messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },

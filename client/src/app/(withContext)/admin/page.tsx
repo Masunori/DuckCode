@@ -12,7 +12,7 @@ const emptyFullQuestion: FullQuestion = {
     input_type: "",
     output_type: "",
     ques_constraint: "",
-    examples: [],
+    example: { input: "", output: "", explanation: "" },
     testcases: [],
 }
 
@@ -134,22 +134,31 @@ export default function AdminPage() {
                 </label>
                 <label>
                     Examples:
-                    {question.examples.map((example, index) => (
+                    {/* {question.example.map((example, index) => (
                         <div className={styles.exampleWithRemove} key={index}>
                             <div className={styles.index}>{index}</div>
                             <ExampleComponent onSave={updatedExample => {
-                                const newExamples = [...question.examples];
+                                const newExamples = [...question.example];
                                 newExamples[index] = updatedExample;
-                                setQuestion({ ...question, examples: newExamples });
+                                setQuestion({ ...question, example: newExamples });
                             }} />
                             <button className={styles.remove} type="button" onClick={() => {
-                                const newExamples = [...question.examples];
+                                const newExamples = [...question.example];
                                 newExamples.splice(index, 1);
-                                setQuestion({ ...question, examples: newExamples });
+                                setQuestion({ ...question, example: newExamples });
                             }}>Remove</button>
                         </div>
                     ))}
-                    <button className={styles.add} type="button" onClick={() => setQuestion({ ...question, examples: [...question.examples, { input: "", output: "", explanation: "" }] })}>Add Example</button>
+                    <button className={styles.add} type="button" onClick={() => setQuestion({ ...question, example: [...question.example, { input: "", output: "", explanation: "" }] })}>Add Example</button> */}
+                    <div className={styles.exampleWithRemove}>
+                        <div className={styles.index}>{0}</div>
+                        <ExampleComponent onSave={updatedExample => {
+                            setQuestion({ ...question, example: updatedExample });
+                        }} />
+                        <button className={styles.remove} type="button" onClick={() => {
+                            setQuestion({ ...question, example: { input: "", output: "", explanation: "" } });
+                        }}>Remove</button>
+                    </div>
                 </label>
                 <label>
                     Test Cases:

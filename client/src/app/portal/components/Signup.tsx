@@ -2,8 +2,9 @@ import { PortalMode } from "@/app/portal/PortalMode";
 import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/components/progressBar/LinearProgressBar";
 import { SignupStatuses } from "@/lib/apiClient/portalStatuses";
 import { getVerificationCode, signUp, verifyCode } from "@/lib/apiClient/user";
-import React, { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from '../page.module.css';
+import animationStyles from "@/components/styles/animations.module.css";
 import PopupOverlay from "./PopupOverlay";
 import NewUsernameInput from "@/components/authInputs/NewUsernameInput";
 import NewEmailInput from "@/components/authInputs/NewEmailInput";
@@ -231,7 +232,7 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
     }
 
     const children = (
-        <div className={`${styles.popupBorder} ${styles.registerPopupBorder}`}>
+        <div className={`${styles.popupBorder} ${animationStyles.illuminatingBorder} ${styles.registerPopupBorder}`}>
             <div className={`${styles.popup} ${styles.registerPopup}`}>
                 <button className={styles.closePopup} onClick={() => setPortalMode(PortalMode.None)}>×</button>
                 <div className={styles.progressBarContainer}>

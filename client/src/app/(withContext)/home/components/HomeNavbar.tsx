@@ -71,6 +71,12 @@ function UserInfo({ user, imageDimension }: UserInfoProps) {
     </div>    
 }
 
+function MultiplayerInformation() {
+    return <div>
+
+    </div>
+}
+
 export default function HomeNavbar({ user }: { user: User }) {
     const { openSettings } = useSettings();
     const userPreference = useUserPreferenceStore(state => state.userPreference);
@@ -80,16 +86,19 @@ export default function HomeNavbar({ user }: { user: User }) {
             className={styles.homeNavbar}
         >
             <UserInfo user={user} imageDimension={userPreference.fontSize * 3} />
-            <button className={styles.inventory} disabled>Inventory</button>
-            <button className={styles.clan} disabled>Clan</button>
-            <button className={styles.toSettings} onClick={openSettings}>
-                <Image
-                    src={'/icons/settings.png'}
-                    alt="settings"
-                    width={userPreference.fontSize * 1.25}
-                    height={userPreference.fontSize * 1.25}
-                />
-            </button>
+            <MultiplayerInformation />
+            <div className={styles.homeNavbarButtons}>
+                <button className={styles.inventory} disabled>Inventory</button>
+                <button className={styles.clan} disabled>Clan</button>
+                <button className={styles.toSettings} onClick={openSettings}>
+                    <Image
+                        src={'/icons/settings.png'}
+                        alt="settings"
+                        width={userPreference.fontSize * 1.25}
+                        height={userPreference.fontSize * 1.25}
+                    />
+                </button>
+            </div>
         </div>
     )
 }

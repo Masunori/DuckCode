@@ -64,48 +64,15 @@
     margin: 1rem auto;
 }
 
-@keyframes illuminating-border {
-    to {
-      --border-angle: 360deg;
-      --border-angle-2: 540deg;
-    }
-}
-
-@property --border-angle {
-    syntax: "<angle>";
-    inherits: true;
-    initial-value: 0deg;
-}
-
-@property --border-angle-2 {
-    syntax: "<angle>";
-    inherits: true;
-    initial-value: 180deg;
-}
-
 .landingWelcomePlayDuckcodeButtonWrapper {
     width: fit-content;
     padding: 0.5rem;
     justify-self: center;
     margin: 3rem auto;
-
-    --border-angle: 0deg;
-    --border-angle-2: 180deg;
     border-radius: 0.75rem;
     color: var(--foreground);
     display: flex;
     background-color: var(--significant-button-hover-heavier-color);
-    background-image: conic-gradient(from var(--border-angle) at 50% 50%, 
-                                    transparent, 
-                                    var(--significant-button-color) 10%, 
-                                    transparent 30%, 
-                                    transparent),
-                      conic-gradient(from var(--border-angle-2) at 50% 50%, 
-                                    transparent, 
-                                    var(--significant-button-color) 10%, 
-                                    transparent 30%, 
-                                    transparent);
-    animation: illuminating-border 4s linear infinite;
 }
 
 .landingWelcomePlayDuckcodeButton {
@@ -151,85 +118,4 @@
 
 .landing footer p {
     text-align: center;
-}
-
-/* News */
-.landingLatestNews {
-    text-align: center;
-    padding-top: 75px;
-    font-size: 3rem;
-}
-
-.newsContainer {
-    width: 60vw;
-    height: fit-content;
-    margin: auto;
-    display: grid;
-    grid-template-columns: 5fr 2fr;
-    border: 4px solid; /* Define the border width */
-    border-image: linear-gradient(to bottom left, 
-                                    var(--first-layer-background-color), 
-                                    var(--fourth-layer-background-color)) 1;
-}
-
-.newsDisplayWrapper {
-    background-color: var(--second-layer-background-color);
-    height: 65vh;
-    padding: 2rem 3rem;
-}
-
-.newsDisplayer {
-    height: calc(65vh - 4em);
-    grid-column: 1;
-    overflow-y: auto;
-    padding: 1rem 0 2rem;
-
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 1) 80%, rgba(0, 0, 0, 0) 100%);
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 20%, rgba(0, 0, 0, 1) 80%, rgba(0, 0, 0, 0) 100%);
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
-}
-
-.newsDisplayer::-webkit-scrollbar {
-    width: 5px;
-}
-
-.newsDisplayer::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-}
-
-.newsList {
-    grid-column: 2;
-    padding: 0;
-    margin: 0;
-    background-color: var(--first-layer-background-color);
-}
-
-.newsDisplayer time {
-    opacity: 0.7;
-}
-
-.newsDisplayer h3 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
-
-.newsList li {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    transition-duration: 0.25s;
-}
-
-.newsList span {
-    pointer-events: none;
-}
-
-.newsListDate {
-    margin-top: 5px;
-    opacity: 0.5;
-    font-size: 0.8rem;
 }

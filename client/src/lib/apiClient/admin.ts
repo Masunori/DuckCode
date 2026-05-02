@@ -17,12 +17,15 @@ export type FullQuestion = {
     description: string;
     input_type: string;
     output_type: string;
-    examples: Example[];
+    example: Example;
     ques_constraint: string;
     testcases: FullTestCase[];
 }
 
 export async function addQuestion(questionData: FullQuestion) {
+    const questionPayload = questionData as any;
+    questionPayload.example = JSON.stringify(questionPayload.example);
+    
     return fetch("/api/admin/addQuestion", {
         method: "POST",
         headers: {
