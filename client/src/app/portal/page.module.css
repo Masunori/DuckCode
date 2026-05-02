@@ -87,26 +87,6 @@
     z-index: var(--login-signup-overlay-z-index);
 }
 
-/* login, signup and reset password */
-@keyframes illuminating-border {
-    to {
-      --border-angle: 360deg;
-      --border-angle-2: 540deg;
-    }
-}
-
-@property --border-angle {
-    syntax: "<angle>";
-    inherits: true;
-    initial-value: 0deg;
-}
-
-@property --border-angle-2 {
-    syntax: "<angle>";
-    inherits: true;
-    initial-value: 180deg;
-}
-
 .popupBorder {
     position: fixed;
     top: 50%;
@@ -114,27 +94,12 @@
     transform: translate(-50%, -50%);
     width: calc(min(max(30vw, 400px), 600px));
     height: 60vh;
-    padding: 1px;
+    padding: 0.1rem;
     z-index: var(--login-signup-z-index);
-    --border-angle: 0deg;
-    --border-angle-2: 180deg;
-    color: var(--foreground);
-    border: 1px solid var(--third-layer-background-color);
-    padding: 2px;
+    border: 0.1rem solid var(--third-layer-background-color);
     display: grid;
     border-radius: 0.75rem;
     background-color: transparent;
-    background-image: conic-gradient(from var(--border-angle) at 50% 50%, 
-                                    transparent, 
-                                    var(--significant-button-color) 10%, 
-                                    transparent 30%, 
-                                    transparent),
-                      conic-gradient(from var(--border-angle-2) at 50% 50%, 
-                                    transparent, 
-                                    var(--significant-button-color) 10%, 
-                                    transparent 30%, 
-                                    transparent);
-    animation: illuminating-border 4s linear infinite;
     transition-duration: 0.25s;
     overflow: hidden;
 }

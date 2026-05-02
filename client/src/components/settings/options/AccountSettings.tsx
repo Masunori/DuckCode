@@ -8,7 +8,7 @@ import styles from '@/components/settings/settings.module.css';
 import rankStyles from '@/components/styles/ranks.module.css';
 import { usePopup } from "@/contexts/PopupContext";
 import { useUserStore } from "@/contexts/UserContext";
-import { updateProfile } from '@/lib/apiClient/user';
+import { changePassword, updateProfile } from '@/lib/apiClient/user';
 import { FieldState, PASSWORD_CONDITIONS } from "@/lib/utils/fieldConditions";
 import { AnimatePresence, motion } from 'motion/react';
 import { s } from 'motion/react-client';
@@ -322,11 +322,38 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
                             transition={{ duration: 0.25, ease: "easeInOut" }}
                         >
                             <PasswordChangeForm
-                                onSave={(currentPassword, newPassword, confirmPassword) => {
+                                onSave={async (currentPassword, newPassword, confirmPassword) => {
                                     // Validation can be added here before calling handleAccountChange
                                     if (newPassword !== confirmPassword) {
-                                        alert("New password and confirm password do not match.");
+                                        openPopupWith(
+                                            "New password and confirmation do not match.",
+                                            "Okay",
+                                            null,
+                                            () => { },
+                                            () => { }
+                                        )
                                         return;
+                                    }
+
+                                    const response = await changePassword(currentPassword, newPassword, confirmPassword);
+
+                                    if (response.status === 200) {
+                                        openPopupWith(
+                                            "Password changed successfully!",
+                                            "Great!",
+                                            null,
+                                            () => { },
+                                            () => { }
+                                        );
+                                        setIsChangingPassword(false);
+                                    } else {
+                                        openPopupWith(
+                                            `Failed to change password: ${response.data.message || "Unknown error"}`,
+                                            "Okay",
+                                            null,
+                                            () => { },
+                                            () => { }
+                                        );
                                     }
                                 }}
                                 onCancel={() => setIsChangingPassword(false)}

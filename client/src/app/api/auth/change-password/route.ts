@@ -26,19 +26,28 @@ export async function POST(request: Request) {
         });
         
         if (!response.ok) {
-            const err = await response.json().catch(() => ({}));
+            const res = await response.json();
+            const err = res.error || 'Change password failed';
 
             printd("@app/api/auth/change-password/route.ts", "Change password failed:", err);
 
             return NextResponse.json(
-                { ok: false, message: err.message || 'Change password failed' },
+                { ok: false, message: err },
                 { status: response.status }
             );
         }
 
-        const loginData = await response.json();
-        const newAccessToken = loginData.data.accessToken;
-        const newRefreshToken = loginData.data.refreshToken;
+        const passwordChangeData = await response.json();
+
+        printd("@app/api/auth/change-password/route.ts", "Change password successful, response data:", passwordChangeData);
+
+        const newAccessToken = passwordChangeData.token.accessToken;
+        const newRefreshToken = passwordChangeData.token.refreshToken;
+
+        printd("@app/api/auth/change-password/route.ts", "Password changed successfully, new tokens received.");
+        printd("@app/api/auth/change-password/route.ts", "New Access Token:", newAccessToken);
+        printd("@app/api/auth/change-password/route.ts", "New Refresh Token:", newRefreshToken);
+
         const res = NextResponse.json(
             { ok: true }
         );

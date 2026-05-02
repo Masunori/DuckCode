@@ -7,6 +7,7 @@ import ArcadeModeTab from "./gameMenu/ArcadeModeTab";
 import { GameMenuTab } from "../homeUtils";
 import { motion, AnimatePresence } from "motion/react";
 import MultiplayerModeTab from "./gameMenu/MultiplayerModeTab";
+import TutorialTab from "./gameMenu/TutorialTab";
 
 type StylizedGameMenuButtonProps = {
     buttonName: string;
@@ -56,8 +57,7 @@ export default function GameMenu() {
             />
             <StylizedGameMenuButton 
                 buttonName="Tutorial" 
-                onClick={undefined} 
-                disabled={true}
+                onClick={() => setTab("Tutorial")} 
                 buttonDescription="Beginners or seasoned programmers, there is something for you here..." 
             />
             <StylizedGameMenuButton 
@@ -76,6 +76,11 @@ export default function GameMenu() {
                 {tab === "Multiplayer" && (
                     <motion.div>
                         <MultiplayerModeTab setTab={setTab} />
+                    </motion.div>
+                )}
+                {tab === "Tutorial" && (
+                    <motion.div>
+                        <TutorialTab setTab={setTab} />
                     </motion.div>
                 )}
             </AnimatePresence>

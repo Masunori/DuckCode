@@ -17,9 +17,8 @@ type ArcadeModeTabProps = {
     setTab: Dispatch<SetStateAction<GameMenuTab>>;
 }
 
-function QuestionItem({ qid, title, difficulty }: { qid: string; title: string; difficulty: number }) {
+function QuestionItem({ title, difficulty }: { title: string; difficulty: number }) {
     return <button className={styles.questionItem}>
-        <p title={qid} className={styles.questionId}>{qid}</p>
         <p className={styles.questionTitle}><b>{title}</b></p>
         <p className={styles.questionDifficulty}>{difficulty}</p>
     </button>
@@ -162,8 +161,12 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
             </motion.div>
             <motion.div className={styles.arcadeModeDescriptionAndAction}>
                 <div className={styles.arcadeModeDescription}>
-                    <p>SELECTED MODE: {GAME_MODES[mode].name}</p>
-                    <br></br>
+                    <p><b>SELECTED MODE:</b></p>
+                    <br />
+                    <p>{GAME_MODES[mode].name}</p>
+                    <br /><br />
+                    <p><b>DESCRIPTION:</b></p>
+                    <br />
                     <p>{GAME_MODES[mode].description}</p>
                 </div>
                 <div className={styles.arcadeModeActions}>
@@ -229,7 +232,7 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
                                     className={qn.qid === selectedQuestion?.qid ? styles.selected : ""}
                                     onClick={() => { setSelectedQuestion(slice.find(currQn => currQn.qid === qn.qid) ?? null) }}
                                 >
-                                    <QuestionItem qid={qn.qid} title={qn.title} difficulty={qn.difficulty} />
+                                    <QuestionItem title={qn.title} difficulty={qn.difficulty} />
                                 </li>
                             ))}
                         </ul>
@@ -243,9 +246,13 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
         </motion.div>
         <motion.div className={styles.arcadeModeDescriptionAndAction}>
             <div className={styles.arcadeModeDescription}>
-                <p>SELECTED QUESTION: {selectedQuestion?.title ?? "None"}</p>
-                <br></br>
-                <p>DIFFICULTY: {selectedQuestion?.difficulty ?? "None"}</p>
+                <p><b>SELECTED QUESTION:</b></p>
+                <br />
+                <p>{selectedQuestion?.title ?? "None"}</p>
+                <br /><br />
+                <p><b>DIFFICULTY:</b> </p>
+                <br />
+                <p>{selectedQuestion?.difficulty ?? "None"}</p>
             </div>
             <div className={styles.arcadeModeActions}>
                 <button

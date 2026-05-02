@@ -1,0 +1,39 @@
+/* Illuminating Border Animation */
+@keyframes illuminating-border {
+    to {
+      --border-angle: 360deg;
+      --border-angle-2: 540deg;
+    }
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --border-angle-2 {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 180deg;
+}
+
+.illuminatingBorder {
+    --border-angle: 0deg;
+    --border-angle-2: 180deg;
+    background-image: conic-gradient(from var(--border-angle) at 50% 50%, 
+                                    transparent, 
+                                    var(--significant-button-color) 10%, 
+                                    transparent 30%, 
+                                    transparent),
+                      conic-gradient(from var(--border-angle-2) at 50% 50%, 
+                                    transparent, 
+                                    var(--significant-button-color) 10%, 
+                                    transparent 30%, 
+                                    transparent);
+    animation: illuminating-border 4s linear infinite;
+}
+
+.illuminatingBorder:hover {
+    animation: illuminating-border 2s linear infinite;
+}
