@@ -3,20 +3,35 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
     try {
-        const tokens = request.headers.get('Cookie');
+        // const tokens = request.headers.get('Cookie');
         
-        if (!tokens) {
+        // if (!tokens) {
+        //     return NextResponse.json(
+        //         { ok: false, message: "Not authenticated" },
+        //         { status: 401 }
+        //     );
+        // }
+        const tokens = request.headers.get('cookie');
+        const accessToken = tokens?.split('; ').filter(cookie => cookie.startsWith('accessToken='))[0]?.split('=')[1];
+        const refreshToken = tokens?.split('; ').filter(cookie => cookie.startsWith('refreshToken='))[0]?.split('=')[1];
+        
+        if (!accessToken || !refreshToken) {
             return NextResponse.json(
                 { ok: false, message: "Not authenticated" },
                 { status: 401 }
             );
         }
 
+        const cookieHeader = {
+            'accessToken': accessToken,
+            'refreshToken': refreshToken
+        };
+
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}auth/me`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                'Cookie': tokens,
+                'Cookie': JSON.stringify(cookieHeader),
             }
         });
 

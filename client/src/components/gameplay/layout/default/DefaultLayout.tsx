@@ -20,6 +20,8 @@ import QuestionTab from "../../components/QuestionTab";
 import WinPopup from "../../components/WinPopup";
 import styles from "./page.module.css";
 import { useGettingStartedInstruction } from '@/contexts/GettingStartedInstructionContext';
+import { getProfile } from '@/lib/apiClient/user';
+import { useUserStore } from '@/contexts/UserContext';
 
 export function DefaultLayout({ questions }: { questions: Question[] }) {
     // for code editor
@@ -30,6 +32,7 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
     printd("@/components/gameplay/layout/default/DefaultLayout", "Rendering DefaultLayout with questions:", questions);
 
     const ctx = useGettingStartedInstruction();
+    const setUser = useUserStore(state => state.setUser);
 
     // Use refs to maintain stable references for keyboard handler
     const callbacksRef = useRef<{
@@ -136,6 +139,26 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
         );
     }, [runTestCases, openPopupWith, submitCodeClientSide]);
 
+    const exitGameplayOnWin = useCallback(async () => {
+        if (ctx) {
+            const res = await getProfile();
+
+            alert(JSON.stringify(res));
+            if (res.status === 200 && res.data?.exp && res.data.exp > 0) {
+                setUser(res.data);
+                router.push("/home");
+            }
+        } else {
+            router.push("/home");
+            router.refresh();
+        }
+
+        resetGameState();
+        resetTimer();
+        setWinTimeElapsedSeconds(null);
+        setIsShowingWinPopup(false);
+    }, []);
+
     // Keep keybinding callbacks fresh while allowing one-time registration effect.
     useEffect(() => {
         callbacksRef.current = {
@@ -220,15 +243,7 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
                 isShowingWinPopup && (
                     <WinPopup
                         timeElapsed={winTimeElapsedSeconds ?? 0}
-                        exit={async () => {
-                            resetGameState();
-                            resetTimer();
-                            setWinTimeElapsedSeconds(null);
-                            setIsShowingWinPopup(false);
-                            await new Promise(resolve => setTimeout(resolve, 300)); // wait for popup to close before navigating
-                            router.push("/home");
-                            router.refresh();
-                        }}
+                        exit={exitGameplayOnWin}
                     />
                 )
             }

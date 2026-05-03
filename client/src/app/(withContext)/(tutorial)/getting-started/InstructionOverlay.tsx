@@ -19,7 +19,7 @@ export default function InstructionOverlay({ message, target, messagePosition, o
     const SkipPopup = () => {
         return (
             <div className={styles.skipPopup}>
-                <p>To clear this tutorial, solve the question.</p>
+                <p>"Getting Started" is a <b>compulsory</b> tutorial. To clear this tutorial, solve the question.</p>
                 <p>Are you sure you want to skip the instructions?</p>
                 <div className={styles.skipPopupButtons}>
                     <button className={`${styles.skipPopupButton} ${styles.cancel}`} onClick={() => {

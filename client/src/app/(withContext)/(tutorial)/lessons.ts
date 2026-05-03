@@ -22,7 +22,7 @@ export const tutorialTopics: TopicInfo[] = [
             {
                 id: "getting-started",
                 title: "Getting Started",
-                description: "Learn how to navigate the DuckCode platform, understand the different game modes, and start your coding journey.",
+                description: "Learn how to navigate the DuckCode platform, and start your coding journey.",
                 route: "/getting-started",
                 exp: 100,
                 solved: false,

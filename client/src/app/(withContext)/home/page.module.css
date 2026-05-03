@@ -736,11 +736,26 @@
 }
 .tutorialModeOptions {
     grid-area: options;
-    height: fit-content;
+    height: 100%;
     display: grid;
     grid-template-rows: 2rem 1fr;
     gap: 1rem;
     overflow-y: auto;
+}
+
+.tutorialModeOptions .container {
+    height: 100%;
+    padding: 0.5rem;
+    overflow-y: auto;
+}
+
+.tutorialModeOptions .container::-webkit-scrollbar {
+    width: 0.25rem;
+}
+
+.tutorialModeOptions .container::-webkit-scrollbar-thumb {
+    background-color: var(--second-layer-background-color);
+    border-radius: 10px;
 }
 
 .tutorialModeOptions header {
@@ -762,15 +777,20 @@
 
 .tutorialTopic {
     color: var(--font-colour);
-    /* margin-bottom: 1rem; */
+    margin-bottom: 1rem;
 }
 
 .tutorialTopic h3 {
-    /* border: 0.1rem solid var(--settings-option-border-color); */
-    background-color: var(--second-layer-background-color);
+    border: 0.1rem solid var(--settings-option-border-color);
+    background-color: var(--first-layer-background-color);
+    border-radius: 0.5rem;
     transition-duration: 0.25s;
     padding: 0.5rem 0.75rem;
     cursor: pointer;
+}
+
+.tutorialTopic h3.active {
+    border-radius: 0.5rem 0.5rem 0 0;
 }
 
 .tutorialTopic h3:hover {
@@ -779,6 +799,7 @@
 
 .tutorialTopic h3.selected {
     border: 0.1rem solid var(--significant-button-color);
+    background-color: var(--significant-button-hover-heavier-color);
 }
 
 .tutorialTopic li {

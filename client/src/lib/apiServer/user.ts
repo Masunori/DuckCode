@@ -5,20 +5,25 @@ import { printd } from "../utils/debugUtils";
 export async function getProfile() {
     try {
         // printd("@/lib/apiServer/user.ts", "Attempting to fetch user profile...");
-        const accessToken = (await cookies()).get('accessToken')?.value;
-        const refreshToken = (await cookies()).get('refreshToken')?.value;
+        // const accessToken = (await cookies()).get('accessToken')?.value;
+        // const refreshToken = (await cookies()).get('refreshToken')?.value;
+
+        const cookieStore = await cookies();
+        const cookieString = cookieStore.getAll()
+            .map(c => `${c.name}=${c.value}`)
+            .join("; ");
 
 
-        const cookieHeader = JSON.stringify({
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-        });
+        // const cookieHeader = JSON.stringify({
+        //     accessToken: accessToken,
+        //     refreshToken: refreshToken,
+        // });
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_CLIENT_URL}/api/auth/me`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                'Cookie': cookieHeader,
+                'Cookie': cookieString,
             },
             cache: 'no-store',
         });

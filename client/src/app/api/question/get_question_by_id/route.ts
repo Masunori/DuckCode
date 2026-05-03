@@ -9,7 +9,7 @@ export async function GET(request: Request) {
 
         const qid = searchParams.get('qid');
 
-        printd("@app/api/question/get_question_by_id/route.ts", `Fetching question with QID: ${qid}`);
+        // printd("@app/api/question/get_question_by_id/route.ts", `Fetching question with QID: ${qid}`);
 
         const url = `${process.env.NEXT_PUBLIC_API_URL}question/get_question?question_id=${qid}`;
 
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
 
         const res = await response.json();
 
-        printd("@app/api/question/get_question_by_id/route.ts", "Received response:", res);
+        // printd("@app/api/question/get_question_by_id/route.ts", "Received response:", res);
 
         return NextResponse.json(
             { ok: true, data: res },

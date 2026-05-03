@@ -4,12 +4,11 @@ import DoubleThumbRangeInput from "@/components/inputs/DoubleThumbRangeInput";
 import PaginationController from "@/components/inputs/PaginationController";
 import { useUserStore } from "@/contexts/UserContext";
 import { tryApiCallWithAuth } from "@/lib/apiClient/apiCallWithAuth";
-import { getQuestionsInRange as getQnAPI } from "@/lib/apiClient/gameplay";
 import { printd } from "@/lib/utils/debugUtils";
 import { AnimatePresence, motion } from 'motion/react';
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
-import { GAME_MODES, GameMenuTab } from "../../homeUtils";
+import { GameMenuTab } from "../../homeUtils";
 import styles from "../../page.module.css";
 import Spinner from "@/components/loading/Spinner";
 import { LessonInfo, TopicInfo, tutorialTopics } from "@/app/(withContext)/(tutorial)/lessons";
@@ -19,34 +18,48 @@ type TutorialTabProps = {
 }
 
 type TopicProps = {
+    isActive: boolean;
     topicInfo: TopicInfo;
     selectedLessonId?: string;
+    onClickTopic: () => void;
     onClickLesson: (lessonInfo: LessonInfo) => void;
 }
 
-function Topic({ topicInfo, selectedLessonId, onClickLesson }: TopicProps) {
-    const [isOpenDropdown, setIsOpenDropdown] = useState<boolean>(false);
+function Topic({ topicInfo, selectedLessonId, onClickLesson, isActive, onClickTopic }: TopicProps) {
+    const isLessonSelected = selectedLessonId ? topicInfo.lessons.some(lesson => lesson.id === selectedLessonId) : false;
+
+    const selectedLessonStyle = isLessonSelected ? styles.selected : undefined;
+    const activeTopicStyle = isActive ? styles.active : undefined;
 
     return (
         <div className={styles.tutorialTopic}>
-            <h3 onClick={() => setIsOpenDropdown(prev => !prev)} className={selectedLessonId && topicInfo.lessons.some(l => l.id === selectedLessonId) ? styles.selected : undefined}>
+            <h3 
+                onClick={() => {
+                    onClickTopic();
+                }} 
+                className={`${selectedLessonStyle} ${activeTopicStyle}`}
+            >
                 {topicInfo.title}
             </h3>
             <AnimatePresence>
-                {isOpenDropdown && <motion.ul
+                {isActive && <motion.ul
                     initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1, transition: { duration: 0.25 } }}
+                    exit={{ height: 0, opacity: 0}}
+                    transition={{ duration: 0.25 }}
                 >
-                    {topicInfo.lessons.map(lesson => (
-                        <li
+                    {topicInfo.lessons.map((lesson, i) => (
+                        <motion.li
                             key={lesson.id}
                             onClick={() => onClickLesson(lesson)}
                             className={selectedLessonId === lesson.id ? styles.selected : undefined}
+                            initial={{ paddingLeft: 0 }}
+                            animate={{ paddingLeft: "1rem", transition: { duration: 0.05 + i * 0.05 } }}
+                            exit={{ paddingLeft: 0 }}
                         >
                             <p className={styles.title}>{lesson.title}</p>
                             <p className={styles.exp}>{lesson.exp}</p>
-                        </li>
+                        </motion.li>
                     ))}
                 </motion.ul>}
             </AnimatePresence>
@@ -56,17 +69,12 @@ function Topic({ topicInfo, selectedLessonId, onClickLesson }: TopicProps) {
 
 export default function TutorialTab({ setTab }: TutorialTabProps) {
     const router = useRouter();
-    const user = useUserStore(state => state.user);
-
-    const [view, setView] = useState<"gameMode" | "questions">("gameMode");
+    // const user = useUserStore(state => state.user);
+    const [activeTopicIndex, setActiveTopicIndex] = useState<number>(-1);
 
     // Handle closing the tab when clicking outside of it.
     const overlayRef = useRef<HTMLDivElement>(null);
     const arcadeModeTabRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        printd("@/home/components/gameMenu/ArcadeModeTab", "View:", view);
-    }, [view]);
 
 
     useEffect(() => {
@@ -86,7 +94,6 @@ export default function TutorialTab({ setTab }: TutorialTabProps) {
         };
     });
 
-    const [mode, setMode] = useState<string>("classic");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [lesson, setLesson] = useState<LessonInfo | null>(null);
 
@@ -107,7 +114,16 @@ export default function TutorialTab({ setTab }: TutorialTabProps) {
                     <span></span>
                 </header>
                 <div className={styles.container}>
-                    {tutorialTopics.map(topic => <Topic key={topic.id} topicInfo={topic} selectedLessonId={lesson?.id} onClickLesson={setLesson} />)}
+                    {tutorialTopics.map((topic, idx) => <Topic 
+                        key={topic.id} 
+                        topicInfo={topic} 
+                        selectedLessonId={lesson?.id} 
+                        onClickLesson={setLesson} 
+                        isActive={activeTopicIndex === idx}
+                        onClickTopic={() => {
+                            setActiveTopicIndex(prev => prev === idx ? -1 : idx);
+                        }}
+                    />)}
                 </div>
             </motion.div>
             <motion.div className={styles.arcadeModeDescriptionAndAction}>

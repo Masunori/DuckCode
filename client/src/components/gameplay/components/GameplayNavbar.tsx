@@ -12,6 +12,7 @@ import styles from "../page.module.css";
 import CountupTimer, { CountupTimerRef } from "@/components/timer/CountupTimer";
 import { useTimerStore } from "@/hooks/useTimerStore";
 import { PLKeys, PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { useGettingStartedInstruction } from "@/contexts/GettingStartedInstructionContext";
 
 export default function GameplayNavbar() {    
     const { openSettings } = useSettings();
@@ -23,6 +24,7 @@ export default function GameplayNavbar() {
     const setTimeElapsed = useTimerStore(state => state.setTimeElapsed);
 
     const router = useRouter();
+    const ctx = useGettingStartedInstruction();
 
     const options = Object.entries(PROGRAMMING_LANGUAGES).map(([plkey, value]) => `${plkey} (${value.version})`);
     const extractPLKey = (str: string) => str.split(" ")[0];
@@ -86,7 +88,7 @@ export default function GameplayNavbar() {
                 dropdownName="Programming Language"
                 handleOptionChange={handleOptionChange}
             />
-            <button className={styles.toHome} onClick={exit}>
+            <button className={`${styles.toHome} ${ctx ? styles.withInstruction : ''}`} onClick={exit}>
                 Exit
             </button>
         </nav>

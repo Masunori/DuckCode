@@ -1,3 +1,4 @@
+import { User } from "@/app/userPrefs/userPrefsTypes";
 import { printd } from "../utils/debugUtils";
 
 export async function login(email: string, password: string) {
@@ -225,6 +226,57 @@ export async function changePassword(
         };
     } catch (error) {
         console.error('Error in changePassword:', error);
+        throw error;
+    }
+}
+
+export async function getProfile() {
+    try {
+        // printd("@/lib/apiServer/user.ts", "Attempting to fetch user profile...");
+        const response = await fetch(`/api/auth/me`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                credentials: "include",
+            },
+            cache: 'no-store',
+        });
+
+        if (!response.ok) {
+            return {
+                status: response.status,
+                data: null,
+            }
+        }
+
+        const data = await response.json();
+
+        printd("@/lib/apiClient/user", "Fetched user profile data:", data);
+
+        const user = data.user;
+
+        // user.level = Math.ceil((user.exp / 100));
+        user.level = Math.floor(Math.log10((user.exp / 100) + 1) / Math.log10(1.1));
+        user.rank = user.rankPoints >= 3000
+            ? "Phoenix"
+            : user.rankPoints >= 2500
+                ? "Loon"
+                : user.rankPoints >= 2000
+                    ? "Grebe"
+                    : user.rankPoints >= 1500
+                        ? "Swan"
+                        : user.rankPoints >= 1000
+                            ? "Teal"
+                            : user.rankPoints >= 500
+                                ? "Mallard"
+                                : "Duckling";
+
+        return {
+            status: response.status,
+            data: user as User,
+        }
+    } catch (error) {
+        console.error('Error in getProfile:', error);
         throw error;
     }
 }
