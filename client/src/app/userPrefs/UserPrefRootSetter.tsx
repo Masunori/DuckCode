@@ -3,7 +3,6 @@
 import { COLOR_ACCESSIBILITY_PALETTES } from "@/components/themes/colorAccessibilityPalettes";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { toGrayscale } from "@/utils/colors";
-import { palette } from "@excalidraw/excalidraw/components/icons";
 import { useEffect } from "react";
 
 export default function UserPrefRootSetter() {
