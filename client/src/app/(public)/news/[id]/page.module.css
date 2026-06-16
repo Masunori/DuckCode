@@ -1,7 +1,7 @@
 .articleHeader {
     position: relative;
     height: 65vh;
-    width: min(60vw, 40rem);
+    width: min(80vw, 60rem);
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -30,6 +30,14 @@
 }
 
 .articleContent {
-    width: min(60vw, 40rem);
+    width: min(80vw, 60rem);
     margin: 0 auto;
+}
+
+.articleContent a {
+    color: var(--significant-button-color);
+}
+
+.articleContent a:hover {
+    text-decoration: underline;
 }
