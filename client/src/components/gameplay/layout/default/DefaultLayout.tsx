@@ -1,13 +1,12 @@
 "use client";
 
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/lib/utils/keyBindings';
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
-import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useTimerStore } from "@/hooks/useTimerStore";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
-import { instantiateEditorOnMount, Question } from "@/lib/gameplay/utils";
-import { printd } from "@/lib/utils/debugUtils";
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
+import { Question } from "@/utils/gameplay";
+import { printd } from "@/utils/debugUtils";
+import { keyboardManager } from "@/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -23,7 +22,6 @@ import { useGettingStartedInstruction } from '@/contexts/GettingStartedInstructi
 
 export function DefaultLayout({ questions }: { questions: Question[] }) {
     // for code editor
-    const userPreference = useUserPreferenceStore(state => state.userPreference);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
 
@@ -145,10 +143,6 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
         };
     }, [runCodeClientSide, runTestCasesClientSide, submitCodeClientSide]);
 
-    const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
-        instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
-    }
-
     useEffect(() => {
         const editor = editorRef.current;
 
@@ -239,7 +233,7 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
                 <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
                 <Panel defaultSize={60} minSize={2} className={styles.codePanel}>
                     <CodeEditor
-                        onMount={handleEditorDidMount}
+                        editorRef={editorRef}
                     />
                     <DefaultTestCases
                         testCases={question.publicTestCases}

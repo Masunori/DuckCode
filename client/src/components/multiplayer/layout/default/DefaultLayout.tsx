@@ -1,15 +1,15 @@
 "use client";
 
 import DefaultTestCases from "@/components/multiplayer/components/DefaultTestCases";
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from '@/lib/utils/keyBindings';
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from '@/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
 import { useUserStore } from "@/contexts/UserContext";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { OutputEntry } from "@/lib/apiClient/runCodeStatuses";
-import { instantiateEditorOnMount, Question, TestCaseResult } from "@/lib/gameplay/utils";
-import { selectCodeByUser, selectCodeOutputSetterForUser, selectExecutionStatusSetterForUser, selectTestCaseResultsSetterForUser, useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
-import { printd } from "@/lib/utils/debugUtils";
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { OutputEntry } from "@/services/apiClient/runCodeStatuses";
+import { instantiateEditorOnMount, Question, TestCaseResult } from "@/utils/gameplay";
+import { selectCodeByUser, selectCodeOutputSetterForUser, selectExecutionStatusSetterForUser, selectTestCaseResultsSetterForUser, useMultiplayerGameplayStore } from "@/hooks/useMultiplayerGameplayStore";
+import { printd } from "@/utils/debugUtils";
+import { keyboardManager } from "@/utils/keyboardManager";
 import type * as monacoType from 'monaco-editor';
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -38,7 +38,6 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
     const editorRef = useRef<monacoType.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
 
-    const activeTestCaseIndex = useMultiplayerGameplayStore(state => state.activeTestCaseIndex);
     const activeCodeView = useMultiplayerGameplayStore(state => state.activeCodeView);
     const activeTab = activeCodeView.kind === "shared"
         ? "Team"

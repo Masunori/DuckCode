@@ -1,11 +1,11 @@
 "use client";
 
-import { GENERAL_KEY_BINDINGS, MULTIPLAYER_KEY_BINDINGS, translateCombo } from "@/lib/utils/keyBindings";
+import { GENERAL_KEY_BINDINGS, MULTIPLAYER_KEY_BINDINGS, translateCombo } from "@/utils/keyBindings";
 import CountdownTimer from "@/components/timer/CountdownTimer";
 import { usePopup } from "@/contexts/PopupContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
+import { useMultiplayerGameplayStore } from "@/hooks/useMultiplayerGameplayStore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styles from "../page.module.css";

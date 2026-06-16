@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { keyboardManager } from "../../lib/utils/keyboardManager";
+import { keyboardManager } from "@/utils/keyboardManager";
 
 type KeyBindingProviderProps = {
     children: React.ReactNode;

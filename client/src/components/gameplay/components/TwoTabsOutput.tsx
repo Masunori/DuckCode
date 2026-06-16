@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./twoTabs.module.css";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 
 const CODE_FAIL_COLOR = 'var(--wrong-indicator-color)';
 const CODE_WARNING_COLOR = 'var(--warn-code-text-border-color)';

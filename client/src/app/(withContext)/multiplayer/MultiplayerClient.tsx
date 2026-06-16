@@ -2,14 +2,14 @@
 
 import { PLKeys, PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 import { useRef } from "react";
-import { Question, TestCaseResult } from "@/lib/gameplay/utils";
+import { Question, TestCaseResult } from "@/utils/gameplay";
 import Chatbox from "@/components/multiplayer/components/Chatbox";
 import MultiplayerNavbar from "@/components/multiplayer/components/MultiplayerNavbar";
 import StrategyBoard from "@/components/multiplayer/components/StrategyBoard";
 import { LAYOUTS } from "@/components/multiplayer/layout/layoutUtils";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { selectCodeOutputSetterForUser, selectExecutionStatusSetterForUser, selectTestCaseResultsSetterForUser, useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
-import { printd } from "@/lib/utils/debugUtils";
+import { selectCodeOutputSetterForUser, selectExecutionStatusSetterForUser, selectTestCaseResultsSetterForUser, useMultiplayerGameplayStore } from "@/hooks/useMultiplayerGameplayStore";
+import { printd } from "@/utils/debugUtils";
 
 type MultiplayerClientProps = {
     initialServerData: {

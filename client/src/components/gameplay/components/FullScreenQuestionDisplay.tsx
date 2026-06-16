@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 import styles from "./fullscreenEditor.module.css";
 import { motion, AnimatePresence } from "motion/react";
-import { Question } from "@/lib/gameplay/utils";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import { Question } from "@/utils/gameplay";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 
 export default function FulLScreenQuestionDisplay({ questions }: { questions: Question[] }) {
     const overlayRef = useRef<HTMLDivElement>(null);

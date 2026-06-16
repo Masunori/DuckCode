@@ -1,4 +1,4 @@
-import { printd } from "../utils/debugUtils";
+import { printd } from "@/utils/debugUtils";
 
 export async function login(email: string, password: string) {
     const response = await fetch("/api/auth/login", {
@@ -170,7 +170,7 @@ export async function updateProfile(
             profilePicture: profilePicture,
         }
 
-        printd("@/lib/apiClient/user", "Updating profile with data:", body);
+        printd("@/services/apiClient/user", "Updating profile with data:", body);
 
         const response = await fetch("/api/user/update-profile", {
             method: 'POST',
@@ -206,7 +206,7 @@ export async function changePassword(
             newConfirmedPassword,
         };
 
-        printd("@/lib/apiClient/user", "Changing password with data:", body);
+        printd("@/services/apiClient/user", "Changing password with data:", body);
 
         const response = await fetch("/api/auth/change-password", {
             method: 'POST',

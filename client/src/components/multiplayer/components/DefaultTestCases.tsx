@@ -1,11 +1,11 @@
 "use client";
 
-import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
-import { TestCase } from "@/lib/gameplay/utils";
+import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/services/apiClient/runCodeStatuses";
+import { TestCase } from "@/utils/gameplay";
 import { CSSProperties, useCallback, useRef } from "react";
 import styles from "../../gameplay/components/default.module.css";
-import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/lib/utils/keyBindings';
-import { useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
+import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/utils/keyBindings';
+import { useMultiplayerGameplayStore } from "@/hooks/useMultiplayerGameplayStore";
 
 type TestCaseProps = {
     testCases: TestCase[];

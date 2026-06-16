@@ -1,5 +1,5 @@
-import { getQuestionById } from "@/lib/apiServer/gameplay"
-import { Question } from "@/lib/gameplay/utils";
+import { getQuestionById } from "@/services/apiServer/gameplay"
+import { Question } from "@/utils/gameplay";
 import GettingStartedClient from "./GettingStartedClient";
 import { redirect } from "next/navigation";
 

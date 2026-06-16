@@ -1,18 +1,17 @@
 "use client";
 
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, translateCombo } from "@/lib/utils/keyBindings";
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, translateCombo } from "@/utils/keyBindings";
 import { usePopup } from "@/contexts/PopupContext";
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { keyboardManager } from "@/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { instantiateEditorOnMount } from "@/lib/gameplay/utils";
 import CodeEditor from "./components/CodeEditor";
 import GameplayNavbar from "./components/GameplayNavbar";
 import Output from "./components/Output";
 import styles from "./page.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 
 export default function Page() {
@@ -22,10 +21,6 @@ export default function Page() {
     const gameplayRef = useRef<HTMLDivElement | null>(null);
 
     const languageRef = useRef(userPreference.language);
-
-    const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
-        instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
-    }
 
     const setCodeContentAtIndex = useBaseGameplayStore(state => state.setCodeContentAtIndex);
     const setCodeContent = (code: string) => setCodeContentAtIndex(0, code);
@@ -131,7 +126,7 @@ export default function Page() {
                 <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
                 <Panel defaultSize={50} minSize={2}>
                     <CodeEditor
-                        onMount={handleEditorDidMount}
+                        editorRef={editorRef}
                     />
                 </Panel>
             </PanelGroup>

@@ -4,9 +4,9 @@ type CodeHandlerButtonsProps = {
     onSubmitCode: () => void;
 }
 
-import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/lib/utils/keyBindings';
+import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/utils/keyBindings';
 import styles from '../page.module.css';
-import { useMultiplayerGameplayStore } from '@/lib/multiplayer/hooks/useMultiplayerGameplayStore';
+import { useMultiplayerGameplayStore } from '@/hooks/useMultiplayerGameplayStore';
 
 export default function CodeHandlerButtons({ onRunCode, onRunTestCases, onSubmitCode }: CodeHandlerButtonsProps) {
     const isLocked = useMultiplayerGameplayStore(state => state.isLocked);

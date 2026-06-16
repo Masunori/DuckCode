@@ -2,26 +2,29 @@
 
 import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 import { PRESET_THEMES } from "@/components/themes/themes";
-import { Editor, loader } from '@monaco-editor/react';
+import { loader } from '@monaco-editor/react';
 import * as monaco from "monaco-editor";
-import { useEffect, useRef } from "react";
+import { RefObject, useRef } from "react";
 import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "../../../userPrefs/userPrefsUtils";
 import styles from "../page.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 import { useDebouncedSave } from "@/hooks/useDebounce";
+import useEditor from "@/hooks/useEditor";
 
 loader.config({
 	paths: {
-		vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs',
+		vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.55.1/min/vs',
 	},
 });
 
 type CodeEditorProps = {
-    onMount: (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => void;
+    editorRef: RefObject<monaco.editor.IStandaloneCodeEditor | null>;
 }
 
-export default function CodeEditor({ onMount }: CodeEditorProps) {
+export default function CodeEditor({ editorRef }: CodeEditorProps) {
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    
     const language = useUserPreferenceStore(state => state.userPreference.language);
     const fontSize = useUserPreferenceStore(state => state.userPreference.fontSize);
     const editorOptionsStore = useUserPreferenceStore(state => state.userPreference.editorOptions);
@@ -43,6 +46,10 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
     }
 
     const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
+        theme: PRESET_THEMES[editorOptionsStore.theme].monacoEditorAlias,
+        language: PROGRAMMING_LANGUAGES[language].monacoEditorAlias,
+        value: codeContent,
+
         detectIndentation: false,
         fontSize: fontSize,
         lineNumbers: LINE_NUMBERS_OPTIONS[editorOptionsStore.lineNumbers],
@@ -55,17 +62,9 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
         wordWrapColumn: editorOptionsStore.wordWrapColumn,
     }
 
+    useEditor({ containerRef, editorRef, editorOptions, onChange: handleEditorChange });
+
     return (
-        <div className={styles.codeEditor}>
-            <Editor
-                theme={PRESET_THEMES[editorOptionsStore.theme].monacoEditorAlias}
-                language={PROGRAMMING_LANGUAGES[language].monacoEditorAlias}
-                onMount={onMount}
-                defaultValue={codeContent}
-                onChange={handleEditorChange}
-                height={"100%"}
-                options={editorOptions}
-            />
-        </div>
+        <div ref={containerRef} className={styles.codeEditor} />
     );
 }

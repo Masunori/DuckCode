@@ -1,8 +1,8 @@
 "use client";
 
-import { Question } from "@/lib/gameplay/utils"
+import { Question } from "@/utils/gameplay"
 import styles from "../page.module.css";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 import QuestionSwitcher from "./QuestionSwitcher";
 import QuestionDisplay from "./QuestionDisplay";
 

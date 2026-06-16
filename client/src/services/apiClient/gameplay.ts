@@ -1,8 +1,8 @@
-import { TestCaseResult } from '@/lib/gameplay/utils';
+import { TestCaseResult } from '@/utils/gameplay';
 import { PLKeys } from '@/components/settings/settingsUtils';
-import { OutputEntry } from '@/lib/apiClient/runCodeStatuses';
-import { printd } from '@/lib/utils/debugUtils';
-import { Question } from '@/lib/gameplay/utils';
+import { OutputEntry } from '@/services/apiClient/runCodeStatuses';
+import { printd } from '@/utils/debugUtils';
+import { Question } from '@/utils/gameplay';
 
 export async function getQuestionsInRange(minDifficulty: number, maxDifficulty: number) {
     const response = await fetch(`/api/question/get_questions_in_range?min_difficulty=${minDifficulty}&max_difficulty=${maxDifficulty}`, {

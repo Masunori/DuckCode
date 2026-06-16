@@ -1,4 +1,4 @@
-import { printd } from "../utils/debugUtils";
+import { printd } from "@/utils/debugUtils";
 import { refresh } from "./user";
 
 const MAX_RETRY_COUNT = 1;
@@ -11,7 +11,7 @@ export async function tryApiCallWithAuth<T>(apiCall: () => Promise<T>, retryCoun
     const status = (response as any)?.status;
     
     if (status === 401 && retryCount > 0) {
-        printd("@/lib/apiClient/apiCallWithAuth", `Got 401, attempting token refresh`);
+        printd("@/services/apiClient/apiCallWithAuth", `Got 401, attempting token refresh`);
         
         if (!refreshPromise) {
             refreshPromise = refresh().finally(() => {

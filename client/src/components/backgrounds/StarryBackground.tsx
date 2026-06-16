@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./layout.module.css";
-import debounce from "../../lib/utils/debounce";
+import debounce from "@/utils/debounce";
 
 type Star = {
     size: number;

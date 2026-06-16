@@ -1,4 +1,4 @@
-import { Question } from "@/lib/gameplay/utils";
+import { Question } from "@/utils/gameplay";
 import styles from "../page.module.css";
 
 export default function QuestionDisplay({ question }: { question: Question }) {

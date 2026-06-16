@@ -7,8 +7,8 @@ import RadioInput from "@/components/inputs/RadioInput";
 import styles from "@/components/settings/settings.module.css";
 import { COLOR_ACCESSIBILITY_PALETTES, ColorAccessibilityKeyword } from "@/components/themes/colorAccessibilityPalettes";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { toGrayscale } from "@/lib/utils/colors";
-import { printd } from "@/lib/utils/debugUtils";
+import { toGrayscale } from "@/utils/colors";
+import { printd } from "@/utils/debugUtils";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 type GeneralSettingsPrompt = {

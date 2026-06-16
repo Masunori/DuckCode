@@ -1,4 +1,4 @@
-import { formatArticleDatetimeString } from "@/lib/utils/datetime";
+import { formatArticleDatetimeString } from "@/utils/datetime";
 import { notFound } from "next/navigation";
 import { ARTICLES } from "../articles/articles";
 import TagBox from "../TagBox";

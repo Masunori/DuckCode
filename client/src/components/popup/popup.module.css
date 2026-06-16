@@ -71,3 +71,78 @@
 .popupConfirmButton:hover {
     background-color: var(--significant-button-hover-color);
 }
+
+.toast {
+    position: fixed;
+    bottom: 0.25rem;
+    right: 0;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    min-width: 15rem;
+    width: 35vw;
+    max-width: 30rem;
+    z-index: var(--popup-z-index);
+    align-items: center;
+
+    display: grid;
+    grid-template-rows: 1fr 0.25rem;
+}
+
+.toastContent {
+    display: grid;
+    padding: 1rem;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "icon message close";
+    column-gap: 0.5rem;
+}
+
+.toastIcon {
+    grid-area: icon;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 0.1rem solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.toastMessage {
+    grid-area: message;
+    width: 100%;
+    justify-self: left;
+    font-size: 1rem;
+    align-self: end;
+    padding-left: 0.5rem;
+
+    border-right: 0.1rem solid rgba(85, 85, 85, 0.5);
+}
+
+.toastCloseButton {
+    grid-area: close;
+    width: 1.5rem;
+    height: 1rem;
+    background: none;
+    border: none;
+    font-size: 0.8rem;
+    text-align: center;
+    cursor: pointer;
+    align-self: center;
+    transition-duration: 0.25s;
+}
+
+.toastCloseButton:hover {
+    color: var(--insignificant-button-hover-color);
+}
+
+.toastProgress {
+    height: 0.1rem;
+    width: 100%;
+}
+
+.toastProgressBar {
+    height: 100%;
+}

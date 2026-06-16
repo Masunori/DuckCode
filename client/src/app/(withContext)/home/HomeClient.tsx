@@ -32,6 +32,8 @@ export default function HomeClient() {
         }
     }, [isUserInitialized, userExp, router]);
 
+    // alert("Homepage initialized!");
+
     return (
         <div className={styles.home}>
             <HomeNavbar user={user} />

@@ -1,16 +1,16 @@
 "use client";
 
-import { SetState } from "@/lib/utils/types";
-import { InformationMode, Question, TestCaseResult } from "../utils"
-import { LockV2 } from "@/lib/utils/lock";
+import { SetState } from "@/utils/types";
+import { InformationMode, Question, TestCaseResult } from "@/utils/gameplay";
+import { LockV2 } from "@/utils/lock";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { runAllTestCases, runCode, submitCode } from "@/lib/apiClient/gameplay";
-import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
-import { printd } from "@/lib/utils/debugUtils";
-import { ExecutionStatus } from "@/lib/multiplayer/utils";
+import { runAllTestCases, runCode, submitCode } from "@/services/apiClient/gameplay";
+import { OutputEntry, RUN_CODE_RESPONSES, RunCodeStatuses } from "@/services/apiClient/runCodeStatuses";
+import { printd } from "@/utils/debugUtils";
+import { ExecutionStatus } from "@/utils/multiplayer";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { tryApiCallWithAuth } from "@/lib/apiClient/apiCallWithAuth";
+import { tryApiCallWithAuth } from "@/services/apiClient/apiCallWithAuth";
 import { time } from "console";
 
 /** Type of code editor view, where `shared` represents the shared code editor and `private` represents any player's private code editor identified by userId */
@@ -140,7 +140,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
                     : codeContents
             })),
         setCodeContentAtIndex: (index, content) => {
-            printd("@/src/lib/gameplay/hooks/useBaseGameplayStore.ts", `Setting code content at index ${index}: ${content}.`);
+            printd("@/src/hooks/useBaseGameplayStore.ts", `Setting code content at index ${index}: ${content}.`);
             set((state) => {
                 const newContents = [...state.codeContent];
                 newContents[index] = content;
@@ -149,7 +149,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
         },
         emitCodePatch: (questionId, newContent) => {
             // Placeholder for emitting code patches to server or other clients
-            printd("@/src/lib/gameplay/hooks/useBaseGameplayStore.ts", `Emitting code patch for question ${questionId}: ${newContent.slice(0, 10)}...`);
+            printd("@/src/hooks/useBaseGameplayStore.ts", `Emitting code patch for question ${questionId}: ${newContent.slice(0, 10)}...`);
         },
 
         // Execution Slice

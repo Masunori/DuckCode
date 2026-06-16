@@ -1,7 +1,7 @@
 import { PortalMode } from "@/app/portal/PortalMode";
 import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/components/progressBar/LinearProgressBar";
-import { SignupStatuses } from "@/lib/apiClient/portalStatuses";
-import { getVerificationCode, signUp, verifyCode } from "@/lib/apiClient/user";
+import { SignupStatuses } from "@/services/apiClient/portalStatuses";
+import { getVerificationCode, signUp, verifyCode } from "@/services/apiClient/user";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from '../page.module.css';
 import animationStyles from "@/components/styles/animations.module.css";
@@ -11,7 +11,7 @@ import NewEmailInput from "@/components/authInputs/NewEmailInput";
 import NewPasswordInput from "@/components/authInputs/NewPasswordInput";
 import Spinner from "@/components/loading/Spinner";
 import OTPInput from "@/components/inputs/OTPInput";
-import { FieldState } from "@/lib/utils/fieldConditions";
+import { FieldState } from "@/utils/fieldConditions";
 
 type SignupProps = {
     portalMode: PortalMode;

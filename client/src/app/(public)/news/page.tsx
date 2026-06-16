@@ -1,7 +1,7 @@
 "use client";
 
-import { ARTICLE_TAGS, Tag } from "@/lib/publicRoutes/news/utils";
-import { formatArticleDatetimeString } from "@/lib/utils/datetime";
+import { ARTICLE_TAGS, Tag } from "@/utils/news";
+import { formatArticleDatetimeString } from "@/utils/datetime";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";

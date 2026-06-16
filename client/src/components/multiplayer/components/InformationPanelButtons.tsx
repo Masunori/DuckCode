@@ -2,8 +2,8 @@
 
 import { useShallow } from 'zustand/shallow';
 import styles from '../page.module.css';
-import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/lib/utils/keyBindings';
-import { useMultiplayerGameplayStore } from '@/lib/multiplayer/hooks/useMultiplayerGameplayStore';
+import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/utils/keyBindings';
+import { useMultiplayerGameplayStore } from '@/hooks/useMultiplayerGameplayStore';
 
 export default function InformationPanelButtons() {
     const [informationMode, setInformationMode] = useMultiplayerGameplayStore(

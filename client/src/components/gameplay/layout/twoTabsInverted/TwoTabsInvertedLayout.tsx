@@ -1,9 +1,9 @@
 "use client";
 
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/lib/utils/keyBindings';
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
-import { instantiateEditorOnMount, Question } from "@/lib/gameplay/utils";
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { Question } from "@/utils/gameplay";
+import { keyboardManager } from "@/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
 import { useCallback, useEffect, useRef } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
@@ -12,16 +12,14 @@ import CodeEditor from "../../components/CodeEditor";
 import CodeHandlerButtons from "../../components/CodeHandlerButtons";
 import InformationPanelButtons from "../../components/InformationPanelButtons";
 import styles from "./page.module.css";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
-import { printd } from "@/lib/utils/debugUtils";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
+import { printd } from "@/utils/debugUtils";
 import QuestionTab from "../../components/QuestionTab";
-import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import TwoTabsOutput from "../../components/TwoTabsOutput";
 import TwoTabsTestCases from "../../components/TwoTabsTestCases";
 
 export function TwoTabsInvertedLayout({ questions }: { questions: Question[] }) {
     // for code editor
-    const userPreference = useUserPreferenceStore(state => state.userPreference);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
 
@@ -99,12 +97,6 @@ export function TwoTabsInvertedLayout({ questions }: { questions: Question[] }) 
         );
     }, [runTestCases, openPopupWith, submitCodeClientSide]);
 
-    
-
-    const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
-        instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
-    }
-
     useEffect(() => {
         const editor = editorRef.current;
 
@@ -176,7 +168,7 @@ export function TwoTabsInvertedLayout({ questions }: { questions: Question[] }) 
             <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
                 <Panel defaultSize={50} minSize={2}>
                     <CodeEditor
-                        onMount={handleEditorDidMount}
+                        editorRef={editorRef}
                     />
                 </Panel>
                 <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />

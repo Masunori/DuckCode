@@ -3,7 +3,7 @@
 import { clearUserPreference, loadUserPreference, saveUserPreference } from "@/app/userPrefs/userPrefStorage";
 import { UserPreference } from "@/app/userPrefs/userPrefsTypes";
 import { getDefaultUserPreference, PRISTINE_USER_PREFERENCE } from "@/app/userPrefs/userPrefsUtils";
-import { Paths } from "@/lib/utils/types";
+import { Paths } from "@/utils/types";
 import { create } from "zustand";
 import { StorageValue } from "zustand/middleware";
 import { PersistStorage } from "zustand/middleware";

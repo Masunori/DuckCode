@@ -4,9 +4,9 @@ import { LAYOUTS } from "@/components/gameplay/layout/layoutUtils";
 import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useTimerStore } from "@/hooks/useTimerStore";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
-import { Question, TestCaseResult } from "@/lib/gameplay/utils";
-import { printd } from "@/lib/utils/debugUtils";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
+import { Question, TestCaseResult } from "@/utils/gameplay";
+import { printd } from "@/utils/debugUtils";
 import { useEffect, useRef } from "react";
 
 type GameplayClientProps = {

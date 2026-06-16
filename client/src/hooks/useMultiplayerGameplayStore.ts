@@ -1,10 +1,10 @@
 import { PLKeys } from "@/components/settings/settingsUtils";
 import { useUserStore } from "@/contexts/UserContext";
-import { OutputEntry } from "@/lib/apiClient/runCodeStatuses";
-import { BaseGameplayController, useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
-import { TestCaseResult } from "@/lib/gameplay/utils";
+import { OutputEntry } from "@/services/apiClient/runCodeStatuses";
+import { BaseGameplayController, useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
+import { TestCaseResult } from "@/utils/gameplay";
 import { create } from "zustand";
-import { ChatboxMessage, ExecutionStatus } from "../utils";
+import { ChatboxMessage, ExecutionStatus } from "@/utils/multiplayer";
 
 /** The multiplayer editor slice of the gameplay store. */
 type MultiplayerEditorSlice = {

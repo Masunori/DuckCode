@@ -1,11 +1,11 @@
 "use client";
 
-import { isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from "@/lib/utils/keyBindings";
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from "@/utils/keyBindings";
+import { keyboardManager } from "@/utils/keyboardManager";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "../page.module.css";
-import { useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
+import { useMultiplayerGameplayStore } from "@/hooks/useMultiplayerGameplayStore";
 
 export default function Chatbox() {
     const isChatboxOpen = useMultiplayerGameplayStore(state => state.isChatboxOpen);

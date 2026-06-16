@@ -1,6 +1,6 @@
 "use client";
 
-import { Question } from '@/lib/gameplay/utils';
+import { Question } from '@/utils/gameplay';
 import { DefaultLayout } from './default/DefaultLayout';
 // import { FullscreenEditorLayout } from './fullscreenEditor/FullscreenEditorLayout';
 import styles from './gameplay.layout.module.css';

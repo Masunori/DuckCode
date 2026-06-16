@@ -6,11 +6,13 @@ import { PRISTINE_USER } from "../userPrefs/userPrefsUtils";
 import KeyBindingsProvider from "./KeyBindingsProvider";
 import UserSetter from "../userPrefs/UserSetter";
 import RefreshClient from "./RefreshClient";
-import { getProfile } from "@/lib/apiServer/user";
+import { getProfile } from "@/services/apiServer/user";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { printd } from "@/lib/utils/debugUtils";
+import { printd } from "@/utils/debugUtils";
 import UserPrefRootSetter from "../userPrefs/UserPrefRootSetter";
+import { ToastProvider } from "@/contexts/ToastContext";
+import Toast from "@/components/popup/Toast";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
     const accessToken = (await cookies()).get("accessToken")?.value;
@@ -34,10 +36,13 @@ export default async function Layout({ children }: { children: React.ReactNode }
                     <KeyBindingsProvider>
                         <PopupProvider>
                             <Popup />
-                            <SettingsProvider>
-                                <Settings />
-                                {children}
-                            </SettingsProvider>
+                            <ToastProvider>
+                                <Toast />
+                                <SettingsProvider>
+                                    <Settings />
+                                    {children}
+                                </SettingsProvider>
+                            </ToastProvider>
                         </PopupProvider>
                     </KeyBindingsProvider>
                 </>

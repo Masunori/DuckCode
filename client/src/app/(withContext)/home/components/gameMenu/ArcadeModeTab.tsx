@@ -3,9 +3,9 @@
 import DoubleThumbRangeInput from "@/components/inputs/DoubleThumbRangeInput";
 import PaginationController from "@/components/inputs/PaginationController";
 import { useUserStore } from "@/contexts/UserContext";
-import { tryApiCallWithAuth } from "@/lib/apiClient/apiCallWithAuth";
-import { getQuestionsInRange as getQnAPI } from "@/lib/apiClient/gameplay";
-import { printd } from "@/lib/utils/debugUtils";
+import { tryApiCallWithAuth } from "@/services/apiClient/apiCallWithAuth";
+import { getQuestionsInRange as getQnAPI } from "@/services/apiClient/gameplay";
+import { printd } from "@/utils/debugUtils";
 import { motion } from 'motion/react';
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";

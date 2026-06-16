@@ -1,9 +1,9 @@
 "use client";
 
-import { useBaseGameplayStore } from '@/lib/gameplay/hooks/useBaseGameplayStore';
+import { useBaseGameplayStore } from '@/hooks/useBaseGameplayStore';
 import { useShallow } from 'zustand/shallow';
 import styles from '../page.module.css';
-import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/lib/utils/keyBindings';
+import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/utils/keyBindings';
 import { useUserPreferenceStore } from '@/contexts/UserPreferenceContext';
 
 export default function InformationPanelButtons() {

@@ -1,4 +1,4 @@
-import { FieldState, USERNAME_CONDITIONS } from "@/lib/utils/fieldConditions";
+import { FieldState, USERNAME_CONDITIONS } from "@/utils/fieldConditions";
 import { CSSProperties, useRef, useState } from "react";
 import { fieldBorderColors } from "../themes/authColors";
 import styles from './authInputs.module.css';
