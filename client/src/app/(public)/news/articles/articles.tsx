@@ -3,8 +3,26 @@ import { DuckCodeGlobalInvitational } from "./announcements/DuckCodeGlobalInvita
 import { WelcomeToDuckCode } from "./introduction/WelcomeToDuckCode";
 import { Version_1_0 } from "./updates/Version_1_0";
 import { Version_0_1_1_beta } from "./updates/Version_0_1_1_beta";
+import { Version_0_1_3_beta_speculation } from "./updates/Version_0_1_3_beta_speculation";
+import { Version_0_1_2_beta } from "./updates/Version_0_1_2_beta";
 
 export const ARTICLES: Article[] = [
+    {
+        id: 5,
+        title: "DuckCode v0.1.3 Beta Speculation",
+        date: "2026-06-04",
+        summary: "Get a sneak peek at what's coming in the next beta release!",
+        tags: ["Updates", "Dev Notes"],
+        content: <Version_0_1_3_beta_speculation />,
+    },
+    {
+        id: 4,
+        title: "DuckCode v0.1.2 Beta is here!",
+        date: "2026-04-18",
+        summary: "Check out the latest beta features and improvements!",
+        tags: ["Updates", "Dev Notes"],
+        content: <Version_0_1_2_beta />,
+    },
     {
         id: 3,
         title: "DuckCode v0.1.1 Beta is here!",
