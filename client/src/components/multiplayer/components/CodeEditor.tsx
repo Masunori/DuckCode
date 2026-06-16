@@ -70,6 +70,7 @@ export default function CodeEditor({ onMount }: CodeEditorProps) {
     const readOnly = activeCodeView.kind === "private" && activeCodeView.userId != user.id;
 
     const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
+        
         detectIndentation: false,
         fontSize: userPreference.fontSize,
         lineNumbers: LINE_NUMBERS_OPTIONS[userPreference.editorOptions.lineNumbers],

@@ -2,7 +2,7 @@
 
 import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
-import { instantiateEditorOnMount, Question } from "@/utils/gameplay";
+import { Question } from "@/utils/gameplay";
 import { keyboardManager } from "@/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
 import { useRouter } from "next/navigation";
@@ -13,12 +13,10 @@ import CodeEditor from "../../components/CodeEditor";
 import styles from "./page.module.css";
 import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 import QuestionTab from "../../components/QuestionTab";
-import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import DefaultTestCases from "../../components/DefaultTestCases";
 
 export function InvertedLayout({ questions }: { questions: Question[] }) {
     // for code editor
-    const userPreference = useUserPreferenceStore(state => state.userPreference);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
 
@@ -96,12 +94,6 @@ export function InvertedLayout({ questions }: { questions: Question[] }) {
             () => {}
         );
     }, [runTestCases, openPopupWith, submitCodeClientSide]);
-
-    
-
-    const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
-        instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
-    }
     
     useEffect(() => {
         const editor = editorRef.current;
@@ -168,7 +160,7 @@ export function InvertedLayout({ questions }: { questions: Question[] }) {
             <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
                 <Panel defaultSize={60} minSize={2} className={styles.codePanel}>
                     <CodeEditor
-                        onMount={handleEditorDidMount}
+                        editorRef={editorRef}
                     />
                     <DefaultTestCases
                         testCases={question.publicTestCases}

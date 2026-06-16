@@ -38,7 +38,6 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
     const editorRef = useRef<monacoType.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
 
-    const activeTestCaseIndex = useMultiplayerGameplayStore(state => state.activeTestCaseIndex);
     const activeCodeView = useMultiplayerGameplayStore(state => state.activeCodeView);
     const activeTab = activeCodeView.kind === "shared"
         ? "Team"

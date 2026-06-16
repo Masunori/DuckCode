@@ -2,7 +2,7 @@
 
 import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
-import { instantiateEditorOnMount, Question } from "@/utils/gameplay";
+import { Question } from "@/utils/gameplay";
 import { keyboardManager } from "@/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
 import { useCallback, useEffect, useRef } from "react";
@@ -11,7 +11,6 @@ import styles from "./page.module.css";
 import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 import { printd } from "@/utils/debugUtils";
 import QuestionSwitcher from "../../components/QuestionSwitcher";
-import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import FulLScreenQuestionDisplay from "../../components/FullScreenQuestionDisplay";
 import FullScreenTestCases from "../../components/FullScreenTestCases";
 import FullScreenOutput from "../../components/FullScreenOutput";
@@ -19,7 +18,6 @@ import FullScreenCodeEditor from "../../components/FullScreenCodeEditor";
 
 export function FullscreenEditorLayout({ questions }: { questions: Question[] }) {
     // for code editor
-    const userPreference = useUserPreferenceStore(state => state.userPreference);
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
 
@@ -96,12 +94,6 @@ export function FullscreenEditorLayout({ questions }: { questions: Question[] })
             () => {}
         );
     }, [runTestCases, openPopupWith, submitCodeClientSide]);
-
-    
-
-    const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
-        instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
-    }
 
     useEffect(() => {
         const editor = editorRef.current;
@@ -228,7 +220,7 @@ export function FullscreenEditorLayout({ questions }: { questions: Question[] })
         <div ref={gameplayRef} tabIndex={0} className={styles.fullscreenEditorLayout}>
             <div className={styles.editorAndSwitcher}>
                 <QuestionSwitcher numQuestions={questions.length} />
-                <FullScreenCodeEditor onMount={handleEditorDidMount} />
+                <FullScreenCodeEditor editorRef={editorRef} />
             </div>
             <FulLScreenQuestionDisplay questions={questions} />
             <FullScreenTestCases testCases={question.publicTestCases} />

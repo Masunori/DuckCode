@@ -2,9 +2,9 @@
 
 import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 import { PRESET_THEMES } from "@/components/themes/themes";
-import { Editor, loader } from '@monaco-editor/react';
+import { loader } from '@monaco-editor/react';
 import * as monaco from "monaco-editor";
-import { RefObject, useEffect, useRef } from "react";
+import { RefObject, useRef } from "react";
 import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "../../../userPrefs/userPrefsUtils";
 import styles from "../page.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";

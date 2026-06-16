@@ -4,19 +4,29 @@ import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } fr
 import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 import { PRESET_THEMES } from "@/components/themes/themes";
 import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
-import { Editor } from '@monaco-editor/react';
+import { loader } from '@monaco-editor/react';
 import * as monaco from "monaco-editor";
-import { useEffect, useRef } from "react";
+import { RefObject, useEffect, useRef } from "react";
 import styles from "./fullscreenEditor.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useDebouncedSave } from "@/hooks/useDebounce";
+import useEditor from "@/hooks/useEditor";
+
+loader.config({
+    paths: {
+        vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.55.1/min/vs',
+    },
+});
+
 
 type CodeEditorProps = {
-    onMount: (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => void;
+    editorRef: RefObject<monaco.editor.IStandaloneCodeEditor | null>;
 }
 
-export default function FullScreenCodeEditor({ onMount }: CodeEditorProps) {
+export default function FullScreenCodeEditor({ editorRef }: CodeEditorProps) {
     const userPreference = useUserPreferenceStore(state => state.userPreference);
+    const editorOptionsStore = useUserPreferenceStore(state => state.userPreference.editorOptions);
+    const containerRef = useRef<HTMLDivElement | null>(null);
 
     // this makes sure we only update code content when language actually changes, not on every render
     const languageRef = useRef(userPreference.language);
@@ -48,6 +58,10 @@ export default function FullScreenCodeEditor({ onMount }: CodeEditorProps) {
     }, [userPreference.language, setCodeContent, codeContent.length]);
 
     const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
+        theme: PRESET_THEMES[editorOptionsStore.theme].monacoEditorAlias,
+        language: PROGRAMMING_LANGUAGES[userPreference.language].monacoEditorAlias,
+        value: code,
+
         detectIndentation: false,
         fontSize: userPreference.fontSize,
         lineNumbers: LINE_NUMBERS_OPTIONS[userPreference.editorOptions.lineNumbers],
@@ -60,18 +74,9 @@ export default function FullScreenCodeEditor({ onMount }: CodeEditorProps) {
         wordWrapColumn: userPreference.editorOptions.wordWrapColumn,
     }
 
+    useEditor({ containerRef, editorRef, editorOptions, onChange: handleEditorChange });
+
     return (
-        <div className={styles.codeEditor}>
-            <Editor
-                key={userPreference.language}
-                theme={PRESET_THEMES[userPreference.editorOptions.theme].monacoEditorAlias}
-                language={PROGRAMMING_LANGUAGES[userPreference.language].monacoEditorAlias}
-                onMount={onMount}
-                defaultValue={code}
-                onChange={handleEditorChange}
-                height={"100%"}
-                options={editorOptions}
-            />
-        </div>
+        <div className={styles.codeEditor} ref={containerRef} />
     );
 }
