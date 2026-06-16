@@ -32,6 +32,7 @@
 
   /* Correct-wrong indicator */
   --correct-indicator-color: #42BE65;
+  --warn-indicator-color: #F8B82D;
   --wrong-indicator-color: #F82D37;
   --correct-on-hover-indicator-color: #086222;
   --wrong-on-hover-indicator-color: #92080F;
