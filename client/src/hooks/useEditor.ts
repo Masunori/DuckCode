@@ -31,6 +31,7 @@ export default function useEditor({ containerRef, editorRef, editorOptions, onCh
     // mount the code editor once
     useEffect(() => {
         if (!containerRef.current || isInitializedRef.current) return;
+        isInitializedRef.current = true;
 
         const container = containerRef.current;
 
@@ -127,8 +128,8 @@ export default function useEditor({ containerRef, editorRef, editorOptions, onCh
                     true
                 );
 
+                await pyrightProviderRef.current.init(monaco);
                 if (cancelled) return;
-                
                 await pyrightProviderRef.current.setupDiagnostics(editor);
 
                 openPopup(

@@ -6,7 +6,6 @@ import { keyboardManager } from "@/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { instantiateEditorOnMount } from "@/utils/gameplay";
 import CodeEditor from "./components/CodeEditor";
 import GameplayNavbar from "./components/GameplayNavbar";
 import Output from "./components/Output";
@@ -22,10 +21,6 @@ export default function Page() {
     const gameplayRef = useRef<HTMLDivElement | null>(null);
 
     const languageRef = useRef(userPreference.language);
-
-    const handleEditorDidMount = (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => {
-        instantiateEditorOnMount(editorRef, editor, monacoInstance, userPreference);
-    }
 
     const setCodeContentAtIndex = useBaseGameplayStore(state => state.setCodeContentAtIndex);
     const setCodeContent = (code: string) => setCodeContentAtIndex(0, code);
@@ -131,7 +126,7 @@ export default function Page() {
                 <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
                 <Panel defaultSize={50} minSize={2}>
                     <CodeEditor
-                        onMount={handleEditorDidMount}
+                        editorRef={editorRef}
                     />
                 </Panel>
             </PanelGroup>
