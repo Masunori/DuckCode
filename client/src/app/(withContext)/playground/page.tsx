@@ -1,18 +1,18 @@
 "use client";
 
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, translateCombo } from "@/lib/utils/keyBindings";
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, translateCombo } from "@/utils/keyBindings";
 import { usePopup } from "@/contexts/PopupContext";
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { keyboardManager } from "@/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { instantiateEditorOnMount } from "@/lib/gameplay/utils";
+import { instantiateEditorOnMount } from "@/utils/gameplay";
 import CodeEditor from "./components/CodeEditor";
 import GameplayNavbar from "./components/GameplayNavbar";
 import Output from "./components/Output";
 import styles from "./page.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 
 export default function Page() {

@@ -3,8 +3,8 @@
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import styles from "./input.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { isKeyCombo } from '@/lib/utils/keyBindings';
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { isKeyCombo } from '@/utils/keyBindings';
+import { keyboardManager } from "@/utils/keyboardManager";
 
 type NumberInputProps = {
     inputId: string;

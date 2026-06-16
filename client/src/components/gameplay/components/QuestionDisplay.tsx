@@ -1,6 +1,6 @@
 "use client";
 
-import { Question } from "@/lib/gameplay/utils";
+import { Question } from "@/utils/gameplay";
 import styles from "../page.module.css";
 import { useEffect, useRef } from "react";
 import { useGettingStartedInstruction } from "@/contexts/GettingStartedInstructionContext";

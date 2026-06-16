@@ -1,6 +1,6 @@
 "use client";
 
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { keyboardManager } from "@/utils/keyboardManager";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect } from "react";
 import { usePopup } from "@/contexts/PopupContext";

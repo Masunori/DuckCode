@@ -5,7 +5,7 @@ import { PortalMode } from "@/app/portal/PortalMode";
 import styles from '../page.module.css';
 import animationStyles from "@/components/styles/animations.module.css";
 import { Dispatch, SetStateAction, useState } from "react";
-import { login } from "../../../lib/apiClient/user";
+import { login } from "../../../services/apiClient/user";
 import CurrentEmailInput from "@/components/authInputs/CurrentEmailInput";
 import CurrentPasswordInput from "@/components/authInputs/CurrentPasswordInput";
 import Spinner from "@/components/loading/Spinner";

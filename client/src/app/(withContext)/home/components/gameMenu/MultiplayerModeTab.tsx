@@ -1,8 +1,8 @@
 "use client";
 
 import { useUserStore } from "@/contexts/UserContext";
-import { tryApiCallWithAuth } from "@/lib/apiClient/apiCallWithAuth";
-import { printd } from "@/lib/utils/debugUtils";
+import { tryApiCallWithAuth } from "@/services/apiClient/apiCallWithAuth";
+import { printd } from "@/utils/debugUtils";
 import { motion } from 'motion/react';
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";

@@ -1,9 +1,9 @@
 "use client";
 
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/lib/utils/keyBindings';
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
-import { instantiateEditorOnMount, Question } from "@/lib/gameplay/utils";
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { instantiateEditorOnMount, Question } from "@/utils/gameplay";
+import { keyboardManager } from "@/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
 import { useCallback, useEffect, useRef } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
@@ -12,8 +12,8 @@ import CodeEditor from "../../components/CodeEditor";
 import CodeHandlerButtons from "../../components/CodeHandlerButtons";
 import InformationPanelButtons from "../../components/InformationPanelButtons";
 import styles from "./page.module.css";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
-import { printd } from "@/lib/utils/debugUtils";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
+import { printd } from "@/utils/debugUtils";
 import QuestionTab from "../../components/QuestionTab";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import TwoTabsOutput from "../../components/TwoTabsOutput";

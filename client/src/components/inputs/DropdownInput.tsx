@@ -1,8 +1,8 @@
 "use client";
 
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { keyboardManager } from "@/utils/keyboardManager";
 import { useEffect, useRef, useState } from "react";
-import { isKeyCombo } from '@/lib/utils/keyBindings';
+import { isKeyCombo } from '@/utils/keyBindings';
 import styles from "./input.module.css";
 
 type DropdownInputProps = {

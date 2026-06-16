@@ -1,8 +1,8 @@
 "use client";
 
 import { LAYOUTS } from "@/components/gameplay/layout/layoutUtils";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
-import { Question, TestCaseResult } from "@/lib/gameplay/utils";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
+import { Question, TestCaseResult } from "@/utils/gameplay";
 import { useEffect } from "react";
 import InstructionOverlay from "./InstructionOverlay";
 import { useGettingStartedInstruction } from "@/contexts/GettingStartedInstructionContext";

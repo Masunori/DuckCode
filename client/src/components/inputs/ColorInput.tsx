@@ -1,7 +1,7 @@
 "use client";
 
 import { useDebouncedSave } from "@/hooks/useDebounce";
-import { toGrayscale } from "@/lib/utils/colors";
+import { toGrayscale } from "@/utils/colors";
 import { ChangeEvent, useEffect, useState } from "react";
 import styles from "./input.module.css";
 

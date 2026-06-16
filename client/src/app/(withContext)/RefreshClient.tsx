@@ -1,6 +1,6 @@
 "use client";
 
-import { refresh } from "@/lib/apiClient/user";
+import { refresh } from "@/services/apiClient/user";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 

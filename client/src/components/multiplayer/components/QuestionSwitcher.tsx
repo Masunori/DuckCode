@@ -2,7 +2,7 @@
 
 import styles from "../../gameplay/page.module.css";
 import { useShallow } from "zustand/shallow";
-import { useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
+import { useMultiplayerGameplayStore } from "@/hooks/useMultiplayerGameplayStore";
 
 export default function QuestionSwitcher({ numQuestions }: { numQuestions: number }) {
     const [activeQuestionIndex, setActiveQuestionIndex] = useMultiplayerGameplayStore(

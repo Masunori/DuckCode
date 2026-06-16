@@ -1,4 +1,4 @@
-import { FieldState } from "@/lib/utils/fieldConditions"
+import { FieldState } from "@/utils/fieldConditions"
 
 /**
  * Indicator colors for input fields. Used to indicate the state of (primarily text) input fields,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 import styles from "../page.module.css";
 
 const CODE_FAIL_COLOR = 'var(--wrong-indicator-color)';

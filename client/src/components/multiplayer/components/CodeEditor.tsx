@@ -5,13 +5,13 @@ import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
 import { PRESET_THEMES } from "@/components/themes/themes";
 import { useUserStore } from "@/contexts/UserContext";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { selectCodeByUser, selectCodeSetterForUserAtQuestionIdx, selectExecutionStatusForUser, selectExecutionStatusSetterForUser, useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
-import { EXECUTION_STATUS_INFORMATION } from "@/lib/multiplayer/utils";
+import { selectCodeByUser, selectCodeSetterForUserAtQuestionIdx, selectExecutionStatusForUser, selectExecutionStatusSetterForUser, useMultiplayerGameplayStore } from "@/hooks/useMultiplayerGameplayStore";
+import { EXECUTION_STATUS_INFORMATION } from "@/utils/multiplayer";
 import { Editor } from '@monaco-editor/react';
 import type * as monaco from "monaco-editor";
 import { useShallow } from "zustand/shallow";
 import styles from "../page.module.css";
-import { printd } from "@/lib/utils/debugUtils";
+import { printd } from "@/utils/debugUtils";
 
 type CodeEditorProps = {
     onMount: (editor: monaco.editor.IStandaloneCodeEditor, monacoInstance: typeof monaco) => void;

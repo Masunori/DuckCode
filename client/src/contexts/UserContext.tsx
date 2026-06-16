@@ -2,7 +2,7 @@
 
 import { User } from "@/app/userPrefs/userPrefsTypes";
 import { PRISTINE_USER } from "@/app/userPrefs/userPrefsUtils";
-import { Paths } from "@/lib/utils/types";
+import { Paths } from "@/utils/types";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 

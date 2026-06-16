@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState } from "react";
-import { GENERAL_KEY_BINDINGS, isKeyCombo } from '@/lib/utils/keyBindings';
+import { GENERAL_KEY_BINDINGS, isKeyCombo } from '@/utils/keyBindings';
 
 type PopupContextType = {
     isPopupOpen: boolean;

@@ -195,7 +195,7 @@ export const PRIORITY_INFO: Record<PriorityName, PriorityInfo> = {
 #### 2. Component
 ```tsx
 // Popup.tsx
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { keyboardManager } from "@/utils/keyboardManager";
 import { useEffect } from "react";
 
 export default function Popup({ setIsPopupOpen }: { setIsPopupOpen: (open: boolean) => void }) {
@@ -225,7 +225,7 @@ export default function Popup({ setIsPopupOpen }: { setIsPopupOpen: (open: boole
 
 ```tsx
 // LevelThree.tsx
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { keyboardManager } from "@/utils/keyboardManager";
 import { useEffect } from "react";
 
 export default function LevelThree({ setColor }: { setColor: (color: string) => void }) {
@@ -263,7 +263,7 @@ export default function Box({ color }: { color: string }) {
 
 ```tsx
 // Page.tsx
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { keyboardManager } from "@/utils/keyboardManager";
 import { useEffect, useState } from "react";
 
 export default function Page() {

@@ -6,10 +6,10 @@ import { PRISTINE_USER } from "../userPrefs/userPrefsUtils";
 import KeyBindingsProvider from "./KeyBindingsProvider";
 import UserSetter from "../userPrefs/UserSetter";
 import RefreshClient from "./RefreshClient";
-import { getProfile } from "@/lib/apiServer/user";
+import { getProfile } from "@/services/apiServer/user";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { printd } from "@/lib/utils/debugUtils";
+import { printd } from "@/utils/debugUtils";
 import UserPrefRootSetter from "../userPrefs/UserPrefRootSetter";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {

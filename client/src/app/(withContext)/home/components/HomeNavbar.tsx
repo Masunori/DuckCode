@@ -29,6 +29,7 @@ function UserInfo({ user, imageDimension }: UserInfoProps) {
                 alt="user-profile-pic" 
                 width={imageDimension} 
                 height={imageDimension} 
+                loading="eager"
             />
         </div>
         <div className={styles.usernameLevelExp}>

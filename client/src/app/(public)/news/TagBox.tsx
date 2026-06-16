@@ -1,6 +1,6 @@
 "use client";
 
-import { Tag } from '@/lib/publicRoutes/news/utils';
+import { Tag } from '@/utils/news';
 import Link from 'next/link';
 import styles from './page.module.css';
 

@@ -1,15 +1,15 @@
 "use client";
 
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/lib/utils/keyBindings';
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
-import { instantiateEditorOnMount, Question } from "@/lib/gameplay/utils";
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { instantiateEditorOnMount, Question } from "@/utils/gameplay";
+import { keyboardManager } from "@/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
 import { useCallback, useEffect, useRef } from "react";
 import { useShallow } from "zustand/shallow";
 import styles from "./page.module.css";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
-import { printd } from "@/lib/utils/debugUtils";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
+import { printd } from "@/utils/debugUtils";
 import QuestionSwitcher from "../../components/QuestionSwitcher";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import FulLScreenQuestionDisplay from "../../components/FullScreenQuestionDisplay";

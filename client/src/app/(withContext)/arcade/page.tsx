@@ -1,8 +1,8 @@
 import ArcadeClient from "./ArcadeClient";
 import styles from "./page.module.css";
-import { dummyQuestion, Example, placeholderQuestion, Question } from "@/lib/gameplay/utils";
-import { printd } from "@/lib/utils/debugUtils";
-import { getQuestionById } from "@/lib/apiServer/gameplay";
+import { dummyQuestion, Example, placeholderQuestion, Question } from "@/utils/gameplay";
+import { printd } from "@/utils/debugUtils";
+import { getQuestionById } from "@/services/apiServer/gameplay";
 import { redirect } from "next/navigation";
 
 export default async function Page({

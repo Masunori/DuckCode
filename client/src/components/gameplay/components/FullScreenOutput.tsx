@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import styles from "./fullscreenEditor.module.css";
 import { motion, AnimatePresence } from "motion/react";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 
 const CODE_FAIL_BORDER_COLOR = 'var(--wrong-on-hover-indicator-color)';
 const CODE_WARNING_COLOR = 'var(--warn-code-text-border-color)';

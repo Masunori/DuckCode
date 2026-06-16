@@ -1,11 +1,11 @@
 "use client";
 
 import DropdownInput from "@/components/inputs/DropdownInput";
-import { GENERAL_KEY_BINDINGS, translateCombo } from '@/lib/utils/keyBindings';
+import { GENERAL_KEY_BINDINGS, translateCombo } from '@/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styles from "../page.module.css";

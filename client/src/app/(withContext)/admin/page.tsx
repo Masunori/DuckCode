@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import styles from "./page.module.css";
-import { addQuestion, Example, FullQuestion, FullTestCase } from "@/lib/apiClient/admin";
+import { addQuestion, Example, FullQuestion, FullTestCase } from "@/services/apiClient/admin";
 
 const emptyFullQuestion: FullQuestion = {
     questionid: -1,

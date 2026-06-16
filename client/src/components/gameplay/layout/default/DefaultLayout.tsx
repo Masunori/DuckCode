@@ -1,13 +1,13 @@
 "use client";
 
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/lib/utils/keyBindings';
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useTimerStore } from "@/hooks/useTimerStore";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
-import { instantiateEditorOnMount, Question } from "@/lib/gameplay/utils";
-import { printd } from "@/lib/utils/debugUtils";
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
+import { instantiateEditorOnMount, Question } from "@/utils/gameplay";
+import { printd } from "@/utils/debugUtils";
+import { keyboardManager } from "@/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";

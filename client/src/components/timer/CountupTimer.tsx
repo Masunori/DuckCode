@@ -1,6 +1,6 @@
 import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import styles from "./timer.module.css";
-import { printd } from "@/lib/utils/debugUtils";
+import { printd } from "@/utils/debugUtils";
 
 export type CountupTimerRef = {
     /** Resets the timer */

@@ -1,6 +1,6 @@
 "use client";
 
-import debounce from "@/lib/utils/debounce";
+import debounce from "@/utils/debounce";
 import { useCallback, useEffect, useState } from "react";
 import styles from "../page.module.css";
 

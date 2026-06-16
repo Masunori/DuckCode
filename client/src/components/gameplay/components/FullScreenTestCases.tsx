@@ -1,11 +1,11 @@
 "use client";
 
-import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/lib/apiClient/runCodeStatuses";
-import { TestCase } from "@/lib/gameplay/utils";
+import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/services/apiClient/runCodeStatuses";
+import { TestCase } from "@/utils/gameplay";
 import { AnimatePresence, motion } from "motion/react";
 import { CSSProperties, useEffect, useRef } from "react";
 import styles from "./fullscreenEditor.module.css";
-import { useBaseGameplayStore } from "@/lib/gameplay/hooks/useBaseGameplayStore";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 
 const CODE_FAIL_BORDER_COLOR = 'var(--wrong-on-hover-indicator-color)';
 const CODE_SUCCEED_BORDER_COLOR = 'var(--correct-indicator-color)';

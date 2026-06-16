@@ -12,9 +12,9 @@ import * as monaco from 'monaco-editor';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { CODE_EDITOR_LIVE_PREVIEW_TEXT, PLKeys, PROGRAMMING_LANGUAGES } from "../settingsUtils";
-import { keyboardManager } from "@/lib/utils/keyboardManager";
-import { printd } from "@/lib/utils/debugUtils";
-import { isKeyCombo } from "@/lib/utils/keyBindings";
+import { keyboardManager } from "@/utils/keyboardManager";
+import { printd } from "@/utils/debugUtils";
+import { isKeyCombo } from "@/utils/keyBindings";
 
 loader.config({
 	paths: {

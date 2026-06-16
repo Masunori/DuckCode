@@ -1,7 +1,7 @@
 "use client";
 
-import { isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from "@/lib/utils/keyBindings";
-import { keyboardManager } from "@/lib/utils/keyboardManager";
+import { isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from "@/utils/keyBindings";
+import { keyboardManager } from "@/utils/keyboardManager";
 import "@excalidraw/excalidraw/index.css";
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types";
 import dynamic from "next/dynamic";
@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { Rnd } from "react-rnd";
 import { useShallow } from "zustand/shallow";
 import styles from "../page.module.css";
-import { useMultiplayerGameplayStore } from "@/lib/multiplayer/hooks/useMultiplayerGameplayStore";
+import { useMultiplayerGameplayStore } from "@/hooks/useMultiplayerGameplayStore";
 
 const Excalidraw = dynamic(
     async () => (await import("@excalidraw/excalidraw")).Excalidraw,

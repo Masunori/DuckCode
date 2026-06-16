@@ -125,7 +125,7 @@ export class LockV2 {
      * @returns The result of the function if the lock was acquired, or null if the lock was not acquired
      */
     public async call<T>(func: () => Promise<T>): Promise<T | null> {
-        printd("@lib/utils/lock.ts", "LockV2.call invoked. Current locked state:", this.locked);
+        printd("@/utils/lock.ts", "LockV2.call invoked. Current locked state:", this.locked);
         const release = this.tryAcquire();
 
         if (!release) {

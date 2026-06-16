@@ -1,4 +1,4 @@
-import { Article } from "@/lib/publicRoutes/news/utils";
+import { Article } from "@/utils/news";
 import { DuckCodeGlobalInvitational } from "./announcements/DuckCodeGlobalInvitational";
 import { WelcomeToDuckCode } from "./introduction/WelcomeToDuckCode";
 import { Version_1_0 } from "./updates/Version_1_0";
