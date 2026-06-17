@@ -29,6 +29,7 @@
     border: 2px solid var(--third-layer-background-color);
     border-radius: 0.5rem;
     font-size: 1rem;
+    cursor: pointer;
 }
 
 .dropdownInput label {
@@ -42,6 +43,7 @@
     right: 0;
     transition-duration: 0.3s;
     z-index: 1;
+    cursor: pointer;
 }
 
 .dropdownInput ul::-webkit-scrollbar {

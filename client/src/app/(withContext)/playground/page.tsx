@@ -123,7 +123,9 @@ export default function Page() {
                     </div>
                     <Output />
                 </Panel>
+                
                 <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
+                
                 <Panel defaultSize={50} minSize={2}>
                     <CodeEditor
                         editorRef={editorRef}
