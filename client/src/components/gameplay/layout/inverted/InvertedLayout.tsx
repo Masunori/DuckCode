@@ -14,6 +14,7 @@ import styles from "./page.module.css";
 import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 import QuestionTab from "../../components/QuestionTab";
 import DefaultTestCases from "../../components/DefaultTestCases";
+import GameplayNavbar from '../../components/GameplayNavbar';
 
 export function InvertedLayout({ questions }: { questions: Question[] }) {
     // for code editor
@@ -157,6 +158,7 @@ export function InvertedLayout({ questions }: { questions: Question[] }) {
 
     return (
         <div ref={gameplayRef} tabIndex={0}>
+            <GameplayNavbar />
             <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
                 <Panel defaultSize={60} minSize={2} className={styles.codePanel}>
                     <CodeEditor
