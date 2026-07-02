@@ -26,8 +26,6 @@ export default function Settings() {
 
     const user = useUserStore(state => state.user);
 
-    // printd("@components/settings/Settings.tsx", `Current user in Settings: ${JSON.stringify(user)}`);
-
     const setUserField = useUserStore(state => state.setUserField);
 
     const userPreference = useUserPreferenceStore(state => state.userPreference);
@@ -178,8 +176,10 @@ export default function Settings() {
 
     // key binding to exit settings
     useEffect(() => {
+        if (!isSettingsOpen) return;
+
         function handleEscape(event: KeyboardEvent) {
-            if (isKeyCombo(event, GENERAL_KEY_BINDINGS["CLOSE_SETTINGS"].combo) && isSettingsOpen) {
+            if (isKeyCombo(event, GENERAL_KEY_BINDINGS["CLOSE_SETTINGS"].combo)) {
                 event.preventDefault();
                 handleExit();
                 return true;
@@ -188,9 +188,7 @@ export default function Settings() {
             return false;
         }
 
-        if (isSettingsOpen) {
-            keyboardManager.register("settingsExit", "SETTINGS_KEY_PRIORITY", handleEscape);
-        }
+        keyboardManager.register("settingsExit", "SETTINGS_KEY_PRIORITY", handleEscape);
 
         return () => {
             keyboardManager.unregister("settingsExit");
@@ -215,47 +213,29 @@ export default function Settings() {
         }
     }, []);
 
-    // handle hovering of settings option buttons
-    function handleOnMouseEnter(event: React.MouseEvent<HTMLLIElement, MouseEvent>) {
-        (event.target as HTMLLIElement).style.backgroundColor = "var(--settings-bg-color)";
-    }
-
-    function handleOnMouseLeave(event: React.MouseEvent<HTMLLIElement, MouseEvent>) {
-        const element = event.target as HTMLLIElement;
-        if (element.innerText === activeSettingsOption) {
-            return;
-        }
-
-        element.style.backgroundColor = "var(--settings-option-bg-color)";
-    }
-
     return (
         <div>
             {isSettingsOpen && (
                 <div className={styles.settingsOverlay}>
-                    <ul className={styles.settingsOptions}>
-                        {Object.keys(SETTINGS_OPTIONS).map((key) => (
-                            <li
-                                key={key}
-                                onClick={() => setActiveSettingsOption(key as SettingsOptionNames)}
-                                style={{
-                                    backgroundColor: key === activeSettingsOption
-                                        ? "var(--settings-bg-color) !important"
-                                        : "var(--settings-option-bg-color) !important"
-                                }}
-                                onMouseEnter={handleOnMouseEnter}
-                                onMouseLeave={handleOnMouseLeave}
-                            >
-                                {key}
-                            </li>
-                        ))}
-                    </ul>
-                    {SETTINGS_OPTIONS[activeSettingsOption].component}
-                    <div className={styles.settingsFunctionalButtons}>
-                        <button className={styles.exitButton} onClick={handleExit}>Exit</button>
-                        <button className={''} onClick={handleRevert}>Discard changes</button>
-                        <button className={''} onClick={handleReset}>Reset to Default</button>
-                        <button className={styles.saveButton} onClick={handleSave}>Save</button>
+                    <div className={styles.settingsContainer}>
+                        <ul className={styles.settingsOptions}>
+                            {Object.keys(SETTINGS_OPTIONS).map((key) => (
+                                <li
+                                    key={key}
+                                    onClick={() => setActiveSettingsOption(key as SettingsOptionNames)}
+                                    className={key === activeSettingsOption ? styles.active : ""}
+                                >
+                                    {key}
+                                </li>
+                            ))}
+                        </ul>
+                        {SETTINGS_OPTIONS[activeSettingsOption].component}
+                        <div className={styles.settingsFunctionalButtons}>
+                            <button className={styles.exitButton} onClick={handleExit}>Exit</button>
+                            <button className={''} onClick={handleRevert}>Discard changes</button>
+                            <button className={''} onClick={handleReset}>Reset to Default</button>
+                            <button className={styles.saveButton} onClick={handleSave}>Save</button>
+                        </div>
                     </div>
                 </div>
             )}

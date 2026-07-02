@@ -1,6 +1,7 @@
 import { EncodeSchema, UserPreference, Version } from "./userPrefsTypes";
 import * as v0_1_0 from "./versions/v0_1_0";
 import * as v0_1_1 from "./versions/v0_1_1";
+import * as v0_1_3 from "./versions/v0_1_3";
 
 /**
  * Schema defining how to encode user preferences for different versions.
@@ -19,6 +20,12 @@ export const USER_PREF_SCHEMA = [
         encode: v0_1_1.encode,
         decode: v0_1_1.decode,
         default: v0_1_1.PRISTINE,
+    },
+    {
+        version: "0.1.3",
+        encode: v0_1_3.encode,
+        decode: v0_1_3.decode,
+        default: v0_1_3.PRISTINE,
     }
 ] as const satisfies EncodeSchema<UserPreference>;
 

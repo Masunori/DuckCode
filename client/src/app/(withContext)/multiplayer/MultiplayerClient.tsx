@@ -1,6 +1,6 @@
 "use client";
 
-import { PLKeys, PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { PLKeys, PROGRAMMING_LANGUAGES } from "@/utils/settings";
 import { useRef } from "react";
 import { Question, TestCaseResult } from "@/utils/gameplay";
 import Chatbox from "@/components/multiplayer/components/Chatbox";

@@ -194,6 +194,7 @@
     transition-duration: 0.5s;
     background-color: var(--second-layer-background-color);
     padding: 0.5rem;
+    overflow: hidden;
 }
 
 .codeOutput {
@@ -202,6 +203,7 @@
     padding: 0.5rem;
     font-family: var(--code-fragment-font);
     height: 100%;
+    overflow: auto;
 }
 
 .codeOutput code {
@@ -209,9 +211,11 @@
 }
 
 .codeOutput::-webkit-scrollbar {
-    width: 3px;
+    width: 0.4rem;
 }
 
 .codeOutput::-webkit-scrollbar-thumb {
-    background-color: var(--second-layer-background-color);
+    background-color: var(--fourth-layer-background-color);
+    border: 0.1rem solid var(--first-layer-background-color);
+    border-radius: 1rem;
 }

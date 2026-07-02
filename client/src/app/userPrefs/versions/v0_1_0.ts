@@ -1,4 +1,4 @@
-import { PLKeys } from "@/components/settings/settingsUtils";
+import { PLKeys } from "@/utils/settings";
 import { UserPreference } from "../userPrefsTypes";
 
 export type Fragment = {

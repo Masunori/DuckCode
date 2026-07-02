@@ -1,13 +1,13 @@
 "use client";
 
 import { LAYOUTS } from "@/components/gameplay/layout/layoutUtils";
-import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { PROGRAMMING_LANGUAGES } from "@/utils/settings";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useTimerStore } from "@/hooks/useTimerStore";
 import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 import { Question, TestCaseResult } from "@/utils/gameplay";
 import { printd } from "@/utils/debugUtils";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 type GameplayClientProps = {
     initialServerData: {

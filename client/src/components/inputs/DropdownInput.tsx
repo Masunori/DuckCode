@@ -6,11 +6,18 @@ import { isKeyCombo } from '@/utils/keyBindings';
 import styles from "./input.module.css";
 
 type DropdownInputProps = {
+    /** The text to describe the dropdown */
     dropdownName: string;
+    /** The list of options to choose from the dropdown */
     options: string[];
+    /** The ID for the input element */
     inputId: string;
+    /** The default option for the dropdown */
     defaultOption: string;
+    /** The function to call when the option changes */
     handleOptionChange: (option: string) => void;
+    /** An optional key binding to toggle the dropdown */
+    keyBinding?: { ctrl: boolean, shift: boolean, key: string };
 }
 
 /**
@@ -24,7 +31,7 @@ type DropdownInputProps = {
  * - `handleOptionChange (string => void)`: the function that is applied on the new selected option
  * @returns 
  */
-export default function DropdownInput({ options, inputId, defaultOption, dropdownName, handleOptionChange }: DropdownInputProps) {
+export default function DropdownInput({ options, inputId, defaultOption, dropdownName, handleOptionChange, keyBinding }: DropdownInputProps) {
     const [previewOption, setPreviewOption] = useState(defaultOption);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -56,6 +63,34 @@ export default function DropdownInput({ options, inputId, defaultOption, dropdow
             setPreviewOption(defaultOption);
         }
     }, [defaultOption, options]);
+
+    // attach the key binding to toggle the dropdown if exists
+    useEffect(() => {
+        if (!keyBinding) return;
+
+        const handleToggleDropdown = (e: KeyboardEvent) => {
+            if (isKeyCombo(e, keyBinding)) {
+                e.preventDefault();
+
+                if (!isDropdownVisible) {
+                    setIsDropdownVisible(true);
+                    inputRef.current?.focus();
+                } else {
+                    setIsDropdownVisible(false);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        keyboardManager.register(`handleToggleDropdown-${inputId}`, "GAMEPLAY_KEY_PRIORITY", handleToggleDropdown);
+
+        return () => {
+            keyboardManager.unregister(`handleToggleDropdown-${inputId}`);
+        }
+    });
 
     useEffect(() => {
         function closeDropdown(e: MouseEvent) {
@@ -189,7 +224,7 @@ export default function DropdownInput({ options, inputId, defaultOption, dropdow
 
     return (
         <div
-            className={`${styles.dropdownInput}${isDropdownVisible ? ` ${styles.dropdownInputOpen}` : ""}`}
+            className={`${styles.dropdownInput} ${isDropdownVisible ? ` ${styles.dropdownInputOpen}` : ""}`}
             ref={dropdownRef}
         >
             <p>{dropdownName}</p>

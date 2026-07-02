@@ -15,6 +15,7 @@ import FulLScreenQuestionDisplay from "../../components/FullScreenQuestionDispla
 import FullScreenTestCases from "../../components/FullScreenTestCases";
 import FullScreenOutput from "../../components/FullScreenOutput";
 import FullScreenCodeEditor from "../../components/FullScreenCodeEditor";
+import GameplayNavbar from '../../components/GameplayNavbar';
 
 export function FullscreenEditorLayout({ questions }: { questions: Question[] }) {
     // for code editor
@@ -218,6 +219,7 @@ export function FullscreenEditorLayout({ questions }: { questions: Question[] })
 
     return (
         <div ref={gameplayRef} tabIndex={0} className={styles.fullscreenEditorLayout}>
+            <GameplayNavbar />
             <div className={styles.editorAndSwitcher}>
                 <QuestionSwitcher numQuestions={questions.length} />
                 <FullScreenCodeEditor editorRef={editorRef} />

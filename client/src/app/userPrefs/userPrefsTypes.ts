@@ -1,5 +1,6 @@
-import type { Fragment as V1_0_0Fragment } from "./versions/v0_1_0";
-import type { Fragment as V1_1_0Fragment } from "./versions/v0_1_1";
+import type { Fragment as V0_1_0Fragment } from "./versions/v0_1_0";
+import type { Fragment as V0_1_1Fragment } from "./versions/v0_1_1";
+import type { Fragment as V0_1_3Fragment } from "./versions/v0_1_3";
 
 export type Version = `${number}.${number}.${number}`;
 
@@ -14,8 +15,9 @@ export type EditorOptions = {
 }
 
 export type UserPreference =
-    V1_0_0Fragment &
-    V1_1_0Fragment;
+    V0_1_0Fragment &
+    V0_1_1Fragment &
+    V0_1_3Fragment;
 
 export type UserPreferenceAddOn = {
     version?: Version;

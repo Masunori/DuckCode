@@ -1,7 +1,7 @@
 "use client";
 
 import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "@/app/userPrefs/userPrefsUtils";
-import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { PROGRAMMING_LANGUAGES } from "@/utils/settings";
 import { PRESET_THEMES } from "@/components/themes/themes";
 import { useUserStore } from "@/contexts/UserContext";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";

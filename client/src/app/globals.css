@@ -6,6 +6,7 @@
 
   /* General game theme color */
   --background-color: #121212;
+  --transparent-background-color: rgba(18, 18, 18, 0.8);
   --first-layer-background-color: #242424;
   --second-layer-background-color: #363636;
   --third-layer-background-color: #424242;

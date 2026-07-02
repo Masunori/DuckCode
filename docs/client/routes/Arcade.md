@@ -42,7 +42,7 @@ export default async function Page({
 ```
 
 Then, the flow is as follows:
-- The `page.tsx` file is a server-side component and will directly fetch data from the endpoint `question/get_questions_by_id` ([here](../../../client/src/app/api/question/get_question_by_id/route.ts)), using the wrapper `getQuestionById` ([here](../../../client/src/lib/apiServer/gameplay.ts)).
+- The `page.tsx` file is a server-side component and will directly fetch data from the endpoint `question/get_questions_by_id` ([here](../../../client/src/app/api/question/get_question_by_id/route.ts)), using the wrapper `getQuestionById` ([here](../../../client/src/apiServer/gameplay.ts)).
 - The endpoint only returns 200 or 401 under normal server conditions. If HTTP status 401 is received, the user will be redirected to `/portal` route. Other response statuses other than 200 will simply be thrown and rendered with `error.tsx`. 
 - Otherwise, the response (a question of type `Question`), alongside `initialTime` (the time allowed to solve the question), forms the initial server data object. The question is passed onto an `ArcadeClient` component and the time is passed onto a `GameplayNavbar` as props.
 - The `ArcadeClient` is a client component and will initialise the data using `useBaseGameplayStore` hook ([read below](#usebasegameplaystore)). Then, based on user preference, it will choose one of the [layouts](../../../client/src/components/gameplay/layout/).
@@ -192,7 +192,7 @@ The test cases component shows the results from running the code against test ca
 
 ## Logic
 
-### [`useBaseGameplayStore`](../../../client/src/lib/gameplay/hooks/useBaseGameplayStore.ts)
+### [`useBaseGameplayStore`](../../../client/src/gameplay/hooks/useBaseGameplayStore.ts)
 
 This is a centralised Zustand store that is the single source of truth for all single-player gameplay logic. It provides a set of data (states) for rendering, and defines a set of actions that is sufficiently expressive to deal with all aspects of single-player gameplay logic.
 
@@ -230,7 +230,7 @@ At the same time, code execution functions pass the appropriate Zustand states f
 - `runTestCases` invokes `/execute/run-all-test-cases` via the wrapper `runAllTestCases`.
 - `submitCode` invokes `/execute/submit-code` via the wrapper `submtCode`.
 
-All wrappers are from [here](../../../../client/src/lib/apiClient/gameplay.ts).
+All wrappers are from [here](../../../../client/src/apiClient/gameplay.ts).
 
 ```ts
 type ExecutionSlice = {

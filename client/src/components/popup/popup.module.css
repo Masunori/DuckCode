@@ -28,6 +28,7 @@
     grid-template-areas: 
         "message message"
         "cancel confirm";
+    gap: 1rem;
     border-radius: 0 0 1rem 1rem;
 }
 
@@ -41,15 +42,14 @@
 }
 
 .popup button {
-    width: fit-content;
-    height: fit-content;
     font-size: 1rem;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     justify-self: center;
     align-self: center;
     transition-duration: 0.25s;
-    margin: 0.5rem 0;
+    width: max(70%, 10rem);
+    height: 4rem;
 }
 
 .popupCancelButton {

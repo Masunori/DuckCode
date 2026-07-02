@@ -1,10 +1,10 @@
 # Keyboard Shortcuts
 
-**All keyboard events should not be handled using the default way.** Instead, use the provided [keyboard manager](../../../client/src/lib/utils/keyboardManager.ts).
+**All keyboard events should not be handled using the default way.** Instead, use the provided [keyboard manager](../../../client/src/utils/keyboardManager.ts).
 
 ## Defining a keyboard shortcut
 
-All keyboard shortcuts are defined in the [key binding](../../../client/src/lib/utils/keyBindings.ts) utility in the format
+All keyboard shortcuts are defined in the [key binding](../../../client/src/utils/keyBindings.ts) utility in the format
 
 ```ts
 export type KeyBinding = {
@@ -61,7 +61,7 @@ export const GAMEPLAY_KEY_BINDINGS: Record<GameplayKeyBindingNames, KeyBinding> 
 
 Keyboard shortcuts may overlap, and there must have a way to resolve that. Additionally, when some components are mounted (e.g. popup) and should block keyboard events, active key bindings may still propagate to components behind and cause unintended effects (e.g. while popup is open, users expect no key bindings to pass through, but somehow settings can still be opened by "F1").
 
-Thus, priorities should be defined. The `priority` attribute acts as a tie-breaker for conflicting keyboard shortcuts. A higher priority keyboard shortcut would be chosen first to resolve conflict, blocking propagation to all keyboard shortcuts of the same combo but lower priorities. Declare the priority in the [keyboard manager](../../../client/src/lib/utils/keyboardManager.ts) file.
+Thus, priorities should be defined. The `priority` attribute acts as a tie-breaker for conflicting keyboard shortcuts. A higher priority keyboard shortcut would be chosen first to resolve conflict, blocking propagation to all keyboard shortcuts of the same combo but lower priorities. Declare the priority in the [keyboard manager](../../../client/src/utils/keyboardManager.ts) file.
 
 ```ts
 type PriorityInfo = {
@@ -90,7 +90,7 @@ export const PRIORITY_INFO: Record<PriorityName, PriorityInfo> = {
 ## Use within a component
 
 ### Parsing a keyboard event
-To parse a keyboard event, use the provided [`isKeyCombo`](../../../client/src/lib/utils/keyBindings.ts). The function takes in a `KeyboardEvent` and a `KeyBinding`, and return a boolean whether the keyboard event matches the combo of the key binding. For example,
+To parse a keyboard event, use the provided [`isKeyCombo`](../../../client/src/utils/keyBindings.ts). The function takes in a `KeyboardEvent` and a `KeyBinding`, and return a boolean whether the keyboard event matches the combo of the key binding. For example,
 ```ts
 function handleKeyPressed(e: KeyboardEvent) {
     if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["FOCUS_EDITOR"].combo)) {
@@ -119,13 +119,13 @@ function handleKeyPressed(e: KeyboardEvent) {
 
 ### Using within a component
 
-For a keyboard shortcut to be active, the component must be mounted. That is, one of the followinf must be satisfied.
+For a keyboard shortcut to be active, the component must be mounted. That is, one of the following must be satisfied.
 **(1)** If the component is not conditionally rendered, the parent must conditionally render the component.
 **(2)** If the component is conditionally rendered, all of the following must be satisfied:
   - The value that controls the rendering state must come from outside (passed down as a prop from parent, global context, Zustand hook, etc.)
   - When registering the keyboard shortcut, the same control value must dictate whether the keyboard shortcut is registered into the system.
 
-The [keyboard manager](../../../client/src/lib/utils/keyboardManager.ts) handles keyboard logic. It exposes a keyboard manager singleton that exposes two methods, `register` and `unregister`.
+The [keyboard manager](../../../client/src/utils/keyboardManager.ts) handles keyboard logic. It exposes a keyboard manager singleton that exposes two methods, `register` and `unregister`.
 
 The `register` method takes in an ID, a priority (declared in `PriorityName` and registered in `PRIORITY_INFO`) and the keyboard event handling function. It then registers the keyboard shortcut handler function into its internal list.
 ```ts

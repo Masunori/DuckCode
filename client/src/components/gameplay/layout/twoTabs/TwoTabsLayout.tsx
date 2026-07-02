@@ -17,6 +17,7 @@ import { printd } from "@/utils/debugUtils";
 import QuestionTab from "../../components/QuestionTab";
 import TwoTabsOutput from "../../components/TwoTabsOutput";
 import TwoTabsTestCases from "../../components/TwoTabsTestCases";
+import GameplayNavbar from '../../components/GameplayNavbar';
 
 export function TwoTabsLayout({ questions }: { questions: Question[] }) {
     // for code editor
@@ -181,6 +182,7 @@ export function TwoTabsLayout({ questions }: { questions: Question[] }) {
 
     return (
         <div ref={gameplayRef} tabIndex={0}>
+            <GameplayNavbar />
             <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
                 <Panel defaultSize={50} minSize={2} className={styles.informationPanel}>
                     <InformationPanelButtons />

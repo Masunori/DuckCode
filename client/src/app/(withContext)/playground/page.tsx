@@ -12,7 +12,7 @@ import Output from "./components/Output";
 import styles from "./page.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
-import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { PROGRAMMING_LANGUAGES } from "@/utils/settings";
 
 export default function Page() {
     // for code editor
@@ -74,7 +74,9 @@ export default function Page() {
 
             if (isFocusOnEditor) {
                 if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["DEFOCUS_EDITOR"].combo)) {
-                    gameplayRef.current?.focus();
+                    // gameplayRef.current?.focus();
+                    // return true;
+                    (active as HTMLElement).blur();
                     return true;
                 }
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)) {
@@ -123,7 +125,9 @@ export default function Page() {
                     </div>
                     <Output />
                 </Panel>
+                
                 <PanelResizeHandle className={styles.verticalGameplayPanelResizeHandler} />
+                
                 <Panel defaultSize={50} minSize={2}>
                     <CodeEditor
                         editorRef={editorRef}

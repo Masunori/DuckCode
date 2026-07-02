@@ -1,136 +1,298 @@
-"use client";
+// "use client";
 
-import { RefObject, useEffect, useRef, useState } from "react";
-import * as monaco from "monaco-editor";
+import { RefObject, useCallback, useEffect, useRef, useState } from "react";
+import type * as Monaco from "monaco-editor";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { PRESET_THEMES } from "@/components/themes/themes";
-import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { PROGRAMMING_LANGUAGES } from "@/utils/settings";
 import { useToast } from "@/contexts/ToastContext";
+
+// import { RefObject, use, useCallback, useEffect, useRef, useState } from "react";
+// import * as monaco from "monaco-editor";
+// import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+// import { PRESET_THEMES } from "@/components/themes/themes";
+// import { PROGRAMMING_LANGUAGES } from "@/utils/settings";
+// import { useToast } from "@/contexts/ToastContext";
+
+// type EditorHookParams = {
+//     /** A reference to the container element for the editor */
+//     containerRef: RefObject<HTMLDivElement | null>
+//     /** The reference to the editor instance */
+//     editorRef: RefObject<monaco.editor.IStandaloneCodeEditor | null>;
+//     /** The options for configuring the editor */
+//     editorOptions: monaco.editor.IStandaloneDiffEditorConstructionOptions;
+//     /** Fires when the editor content changes */
+//     onChange: (code: string) => void;
+// }
+
+// export default function useEditor({ containerRef, editorRef, editorOptions, onChange }: EditorHookParams) {
+//     const userPreference = useUserPreferenceStore(state => state.userPreference);
+//     const [isEditorReady, setIsEditorReady] = useState(false);
+//     const isInitializedRef = useRef(false);
+
+//     const { openPopup } = useToast(); 
+
+//     type PatchedPyrightProvider = InstanceType<typeof import("@/utils/lsp")["PatchedPyrightProvider"]>;
+//     const pyrightProviderRef = useRef<PatchedPyrightProvider | null>(null);
+
+//     const stopAllProviders = useCallback(async () => {
+//         const pyrightProvider = pyrightProviderRef.current;
+//         if (pyrightProvider) {
+//             await pyrightProvider.stopDiagnostics();
+//             pyrightProviderRef.current = null;
+//         }
+//     }, []);
+
+//     // mount the code editor once
+//     useEffect(() => {
+//         if (!containerRef.current) return;
+
+//         const container = containerRef.current;
+//         let resizeObserver: ResizeObserver | null = null;
+//         let cancelled = false;
+
+//         const init = async () => {
+//             if (!isInitializedRef.current) {
+//                 const editor = monaco.editor.create(
+//                     container,
+//                     editorOptions
+//                 );
+
+//                 editorRef.current = editor;
+
+//                 resizeObserver = new ResizeObserver(() => {
+//                     editor!.layout();
+//                 });
+
+//                 resizeObserver.observe(container);
+
+//                 monaco.editor.defineTheme(
+//                     PRESET_THEMES[userPreference.editorOptions.theme].monacoEditorAlias,
+//                     PRESET_THEMES[userPreference.editorOptions.theme].theme
+//                 );
+
+//                 editor.onKeyDown((e: monaco.IKeyboardEvent) => {
+//                     if (e.keyCode === monaco.KeyCode.Escape) {
+//                         const domNode = editor!.getDomNode();
+//                         if (domNode && domNode.contains(document.activeElement)) {
+//                             (document.activeElement as HTMLElement).blur();
+//                         }
+//                     }
+//                 });
+
+//                 editor.onDidChangeModelContent(() => {
+//                     const code = editor!.getValue();
+//                     onChange(code);
+//                 });
+
+//                 if (cancelled) {
+//                     editor.dispose();
+//                     editorRef.current = null;
+//                     return;
+//                 }
+
+//                 setIsEditorReady(true);
+//                 isInitializedRef.current = true;
+//             }
+//         }
+
+//         init();
+
+//         return () => {
+//             cancelled = true;
+//             isInitializedRef.current = false;
+//             resizeObserver?.disconnect();
+
+//             try {
+//                 editorRef.current?.dispose();
+//             } catch (err: unknown) {
+//                 // ignore
+//             }
+//             editorRef.current = null;
+//             setIsEditorReady(false);
+//         }
+//     }, []);
+
+//     // re-run language-specific setip when the language changes
+//     useEffect(() => {
+//         // alert(isEditorReady);
+
+//         if (
+//             !containerRef.current 
+//             || !editorRef.current
+//             || !isEditorReady
+//         ) return;
+
+//         const editor = editorRef.current;
+//         const model = editor.getModel();
+//         if (!model) return;
+
+//         let cancelled = false;
+
+//         const switchLanguage = async () => {
+//             // stop existing provider
+//             await stopAllProviders();
+
+//             // update the model language
+//             monaco.editor.setModelLanguage(
+//                 model,
+//                 PROGRAMMING_LANGUAGES[userPreference.language].monacoEditorAlias
+//             );
+
+//             if (!userPreference.enableEnhancedLanguageSupport) {
+//                 return;
+//             }
+
+//             if (userPreference.language === "Python") {
+//                 if (!pyrightProviderRef.current) {
+//                     const { PatchedPyrightProvider } = await import("@/utils/lsp");
+//                     const provider = new PatchedPyrightProvider();
+//                     pyrightProviderRef.current = provider;
+
+//                     openPopup(
+//                         "Initializing Python language server",
+//                         "info",
+//                         -1,
+//                         true
+//                     );
+
+//                     await provider.init(monaco);
+//                     if (cancelled) return;
+//                 }
+
+//                 const provider = pyrightProviderRef.current;
+
+//                 await provider.setupDiagnostics(editor);
+//                 if (cancelled) {
+//                     await provider.stopDiagnostics();
+//                     return;
+//  ``               };
+
+//                 openPopup(
+//                     "Enhanced Python language support is ready",
+//                     "success",
+//                     3
+//                 );
+//             } else if (userPreference.language === "JavaScript") {
+//                 openPopup(
+//                     "Enhanced JavaScript language support is ready",
+//                     "success",
+//                     3
+//                 );
+//             } else {
+//                 // Setup for other languages if needed
+//                 openPopup(
+//                     "This language does not have enhanced support, but you can still code in it.",
+//                     "warning",
+//                     5
+//                 );
+//             }
+//         }
+
+//         switchLanguage();
+
+//         return () => {
+//             cancelled = true;
+//             stopAllProviders();
+//         }
+//     }, [userPreference.language, isEditorReady]);
+// }
 
 type EditorHookParams = {
     /** A reference to the container element for the editor */
-    containerRef: RefObject<HTMLDivElement | null>
+    monacoRef: RefObject<typeof Monaco | null>;
     /** The reference to the editor instance */
-    editorRef: RefObject<monaco.editor.IStandaloneCodeEditor | null>;
-    /** The options for configuring the editor */
-    editorOptions: monaco.editor.IStandaloneDiffEditorConstructionOptions;
-    /** Fires when the editor content changes */
-    onChange: (code: string) => void;
+    editorRef: RefObject<Monaco.editor.IStandaloneCodeEditor | null>;
 }
 
-export default function useEditor({ containerRef, editorRef, editorOptions, onChange }: EditorHookParams) {
+export default function useEditor({ monacoRef, editorRef }: EditorHookParams) {
     const userPreference = useUserPreferenceStore(state => state.userPreference);
-    const isInitializedRef = useRef(false);
     const [isEditorReady, setIsEditorReady] = useState(false);
 
     const { openPopup } = useToast(); 
 
-    type MonacoPyrightProvider = InstanceType<typeof import("monaco-pyright-lsp")["MonacoPyrightProvider"]>;
-    const pyrightProviderRef = useRef<MonacoPyrightProvider | null>(null);
+    type PatchedPyrightProvider = InstanceType<typeof import("@/utils/lsp")["PatchedPyrightProvider"]>;
 
-    // mount the code editor once
+    const pyrightProviderRef = useRef<PatchedPyrightProvider | null>(null);
+
+    const init = useCallback(() => {
+        if (!monacoRef.current || !editorRef.current) return;
+
+        const monaco = monacoRef.current;
+        // const editor = editorRef.current;
+
+        // set theme
+        monaco.editor.defineTheme(
+            PRESET_THEMES[userPreference.editorOptions.theme].monacoEditorAlias,
+            PRESET_THEMES[userPreference.editorOptions.theme].theme
+        );
+    }, []);
+
     useEffect(() => {
-        if (!containerRef.current || isInitializedRef.current) return;
-        isInitializedRef.current = true;
-
-        const container = containerRef.current;
-
-        let cancelled = false;
-        let resizeObserver: ResizeObserver | null = null;
-
-        const init = async () => {
-            pyrightProviderRef.current = await import("monaco-pyright-lsp")
-                .then(module => new module.MonacoPyrightProvider());
-
-            const editor = monaco.editor.create(
-                container,
-                editorOptions
-            );
-
-            editorRef.current = editor;
-
-            resizeObserver = new ResizeObserver(() => {
-                editor!.layout();
-            });
-
-            resizeObserver.observe(container);
-
-            monaco.editor.defineTheme(
-                PRESET_THEMES[userPreference.editorOptions.theme].monacoEditorAlias,
-                PRESET_THEMES[userPreference.editorOptions.theme].theme
-            );
-
-            editor.onKeyDown((e: monaco.IKeyboardEvent) => {
-                if (e.keyCode === monaco.KeyCode.Escape) {
-                    const domNode = editor!.getDomNode();
-                    if (domNode && domNode.contains(document.activeElement)) {
-                        (document.activeElement as HTMLElement).blur();
-                    }
-                }
-            });
-
-            editor.onDidChangeModelContent(() => {
-                const code = editor!.getValue();
-                onChange(code);
-            });
-
-            setIsEditorReady(true);
-        }
-
         init();
+        setIsEditorReady(true);
+    }, []);
 
-        return () => {
-            cancelled = true;
-            pyrightProviderRef.current?.stopDiagnostics();
-            resizeObserver?.disconnect();
-
-            const editor = editorRef.current;
-
-            if (editor) {
-                editor.dispose();
-                editorRef.current = null;
-            }
+    const stopAllProviders = useCallback(async () => {
+        const pyrightProvider = pyrightProviderRef.current;
+        if (pyrightProvider) {
+            await pyrightProvider.stopDiagnostics();
+            pyrightProviderRef.current = null;
         }
     }, []);
 
-    // re-run language-specific setip when the language changes
     useEffect(() => {
         if (
-            !containerRef.current 
+            !monacoRef.current
             || !editorRef.current
             || !isEditorReady
         ) return;
 
+        const monaco = monacoRef.current;
         const editor = editorRef.current;
         const model = editor.getModel();
-
         if (!model) return;
 
         let cancelled = false;
 
         const switchLanguage = async () => {
-            await pyrightProviderRef.current?.stopDiagnostics();
-            pyrightProviderRef.current = null;
+            // stop existing provider
+            await stopAllProviders();
 
+            // update the model language
             monaco.editor.setModelLanguage(
                 model,
                 PROGRAMMING_LANGUAGES[userPreference.language].monacoEditorAlias
             );
 
+            if (!userPreference.enableEnhancedLanguageSupport) {
+                return;
+            }
+
             if (userPreference.language === "Python") {
-                const { MonacoPyrightProvider } = await import("monaco-pyright-lsp");
-                pyrightProviderRef.current = new MonacoPyrightProvider();
+                if (!pyrightProviderRef.current) {
+                    const { PatchedPyrightProvider } = await import("@/utils/lsp");
+                    const provider = new PatchedPyrightProvider();
+                    pyrightProviderRef.current = provider;
 
-                openPopup(
-                    "Initializing Python language server",
-                    "info",
-                    -1,
-                    true
-                );
+                    openPopup(
+                        "Initializing Python language server",
+                        "info",
+                        -1,
+                        true
+                    );
 
-                await pyrightProviderRef.current.init(monaco);
-                if (cancelled) return;
-                await pyrightProviderRef.current.setupDiagnostics(editor);
+                    await provider.init(monaco);
+                    if (cancelled) return;
+                }
+
+                const provider = pyrightProviderRef.current;
+
+                await provider.setupDiagnostics(editor);
+                if (cancelled) {
+                    await provider.stopDiagnostics();
+                    return;
+ ``               };
 
                 openPopup(
                     "Enhanced Python language support is ready",
@@ -157,8 +319,7 @@ export default function useEditor({ containerRef, editorRef, editorOptions, onCh
 
         return () => {
             cancelled = true;
-            pyrightProviderRef.current?.stopDiagnostics();
-            pyrightProviderRef.current = null;
+            stopAllProviders();
         }
     }, [userPreference.language, isEditorReady]);
 }

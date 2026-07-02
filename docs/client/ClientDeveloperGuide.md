@@ -39,6 +39,9 @@
 | Version | Date | Content |
 | --- | --- | --- |
 | 0.1.0 | 28 June, 2025 | UI skeleton for `arcade`, `multiplayer`, `landing`, `portal`, `home`, and `playground` |
+| 0.1.1 | 04 March, 2026 | Fully functional `arcade` and `playground`. Functional keyboard shortcuts,  |
+| 0.1.2 | 18 April, 2026 | Added `tutorial`, reworked settings, added Autosave feature |
+| 0.1.3 | 17 June, 2026 | Language support for Python |
 ---
 
 ## Setting Up and Getting Started
@@ -516,7 +519,7 @@ export class Lock {
 ```
 
 The lock only accepts a function that takes in no argument and returns a promise. 
-This makes sense, because multiple functions can only run in parallel of they are asynchronous. When you want such a function to run under the lock's control, you will invoke the `call` method.
+This makes sense, because multiple functions can only run in parallel if they are asynchronous. When you want such a function to run under the lock's control, you will invoke the `call` method.
 
 - `async call<T>: (func: () => Promise<T>) => T`: Invoke a function that will attempt to acquire the lock, execute itself, and release the lock. This will throw an error if the lock is already acquired by another function.
 
