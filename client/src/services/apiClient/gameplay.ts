@@ -1,5 +1,5 @@
 import { TestCaseResult } from '@/utils/gameplay';
-import { PLKeys } from '@/components/settings/settingsUtils';
+import { PLKeys } from '@/utils/settings';
 import { OutputEntry } from '@/services/apiClient/runCodeStatuses';
 import { printd } from '@/utils/debugUtils';
 import { Question } from '@/utils/gameplay';

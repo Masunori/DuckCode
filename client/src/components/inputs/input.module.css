@@ -19,6 +19,8 @@
 .dropdownInput p {
     display: block;
     align-self: center;
+    font-weight: 600;
+    margin-right: 1rem;
 }
 
 .dropdownInput input {
@@ -80,6 +82,8 @@
 
 .numberInput p {
     display: block;
+    font-weight: 600;
+    margin-right: 1rem;
 }
 
 .numberInput label {

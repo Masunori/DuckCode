@@ -19,7 +19,8 @@ export type GameplayKeyBindingNames =
     | "TOGGLE_OUTPUT_TAB"
     | "TOGGLE_TEST_CASES_TAB"
     | "PREVIOUS_QUESTION"
-    | "NEXT_QUESTION";
+    | "NEXT_QUESTION"
+    | "PROGRAMMING_LANGUAGE_TOGGLE";
 
 export const GAMEPLAY_KEY_BINDINGS: Record<GameplayKeyBindingNames, KeyBinding> = {
     FOCUS_EDITOR: {
@@ -69,10 +70,19 @@ export const GAMEPLAY_KEY_BINDINGS: Record<GameplayKeyBindingNames, KeyBinding> 
     NEXT_QUESTION: {
         action: "Go to next question",
         combo: { ctrl: false, shift: false, key: 'ArrowRight' }
+    },
+    PROGRAMMING_LANGUAGE_TOGGLE: {
+        action: "Toggle programming language",
+        combo: { ctrl: false, shift: false, key: 'L' }
     }
 }
 
-export type GeneralKeyBindingNames = "OPEN_SETTINGS" | "CLOSE_SETTINGS" | "CONFIRM_POPUP" | "CANCEL_POPUP";
+export type GeneralKeyBindingNames = 
+    "OPEN_SETTINGS" 
+    | "CLOSE_SETTINGS" 
+    | "CONFIRM_POPUP" 
+    | "CANCEL_POPUP"
+;
 
 export const GENERAL_KEY_BINDINGS: Record<GeneralKeyBindingNames, KeyBinding> = {
     OPEN_SETTINGS: {

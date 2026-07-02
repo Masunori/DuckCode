@@ -6,10 +6,9 @@ import NumberInput from "@/components/inputs/NumberInput";
 import RadioInput from "@/components/inputs/RadioInput";
 import styles from "@/components/settings/settings.module.css";
 import { COLOR_ACCESSIBILITY_PALETTES, ColorAccessibilityKeyword } from "@/components/themes/colorAccessibilityPalettes";
-import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { toGrayscale } from "@/utils/colors";
 import { printd } from "@/utils/debugUtils";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type GeneralSettingsPrompt = {
     nextuserPreference: UserPreference;
@@ -18,38 +17,9 @@ type GeneralSettingsPrompt = {
 
 export default function GeneralSettings({ nextuserPreference: nextUserPreference, setNextuserPreference }: GeneralSettingsPrompt) {
     // manage the color of the demo button in significant action button color controls
-    const userPreference = useUserPreferenceStore(state => state.userPreference);
     const palette = COLOR_ACCESSIBILITY_PALETTES[nextUserPreference.colorAccessibilityMode];
 
-    const demoButtonRef = useRef<HTMLButtonElement | null>(null);
-    function handleDemoButtonMouseEnter() {
-        if (!demoButtonRef.current) {
-            return;
-        }
-
-        demoButtonRef.current.style.backgroundColor = nextUserPreference.significantButtonHoverColor;
-        demoButtonRef.current.style.borderColor = toGrayscale(nextUserPreference.significantButtonHoverColor) < 128 ? "white" : "black";
-        demoButtonRef.current.style.color = toGrayscale(nextUserPreference.significantButtonHoverColor) < 128 ? "white" : "black";
-    }
-
-    function handleDemoButtonMouseLeave() {
-        if (!demoButtonRef.current) {
-            return;
-        }
-
-        demoButtonRef.current.style.backgroundColor = nextUserPreference.significantButtonColor;
-        demoButtonRef.current.style.borderColor = toGrayscale(nextUserPreference.significantButtonColor) < 128 ? "white" : "black";
-        demoButtonRef.current.style.color = toGrayscale(nextUserPreference.significantButtonColor) < 128 ? "white" : "black";
-    }
-
     printd("@/components/settings/options/GeneralSettings", "Rendering GeneralSettings with nextUserPreference:", nextUserPreference);
-
-    // handles the automatic selection of hover colours based on original colours
-    const [isAutoHoverColorSelection, setIsAutoHoverColorSelection] = useState(false);
-
-    function toggleAutoHover(newChecked: boolean) {
-        setIsAutoHoverColorSelection(newChecked);
-    }
 
     // handles layout
     const [layoutIndex, setLayoutIndex] = useState(Object.keys(LAYOUTS).indexOf(nextUserPreference.gameplayLayout));
@@ -95,6 +65,11 @@ export default function GeneralSettings({ nextuserPreference: nextUserPreference
                         }));
                     }}
                 />
+                <div style={{ margin: "1rem" }}>
+                    <p style={{ fontSize: nextUserPreference.fontSize }}>
+                        This is a sentence in {nextUserPreference.fontSize}px.
+                    </p>
+                </div>
             </section>
 
             <section className={styles.settingsContentChunk}>
@@ -110,6 +85,37 @@ export default function GeneralSettings({ nextuserPreference: nextUserPreference
                         }));
                     }}
                 />
+            </section>
+
+            <section className={styles.settingsContentChunk}>
+                <DropdownInput
+                    options={["On", "Off"]}
+                    inputId="enableEnhancedLanguageSupport"
+                    defaultOption={nextUserPreference.enableEnhancedLanguageSupport ? "On" : "Off"}
+                    dropdownName="Enable Enhanced Language Support"
+                    handleOptionChange={(option) => {
+                        setNextuserPreference(prev => ({
+                            ...prev,
+                            enableEnhancedLanguageSupport: option === "On" ? true : false,
+                        }));
+                    }}
+                />
+
+                <div 
+                    className={styles.enhancedLanguageSupportWarning}
+                >
+                    <p><b>Note</b>: This feature consumes a significant amount of your memory.</p>
+                    <p>(This will be dealt with in the future)</p>
+                    <br></br>
+                    <ul>
+                        Currently supported languages:
+                        <li>JavaScript</li>
+                        <li>Python</li>
+                    </ul>
+                    <br></br>
+                    <p>If you enable or disable this feature, <span>RELOAD THE PAGE</span> for the changes to take effect.</p>
+                    
+                </div>
             </section>
 
             <section className={styles.settingsContentChunk}>

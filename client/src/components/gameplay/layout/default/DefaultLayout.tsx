@@ -219,6 +219,7 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
                             resetTimer();
                             setWinTimeElapsedSeconds(null);
                             setIsShowingWinPopup(false);
+                            
                             await new Promise(resolve => setTimeout(resolve, 300)); // wait for popup to close before navigating
                             router.push("/home");
                             router.refresh();

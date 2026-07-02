@@ -1,19 +1,17 @@
 import DropdownInput from "@/components/inputs/DropdownInput";
-import { PLKeys, PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { PLKeys, PROGRAMMING_LANGUAGES } from "@/utils/settings";
 import { usePopup } from "@/contexts/PopupContext";
 import { useSettings } from "@/contexts/SettingsContext";
-import { useUserStore } from "@/contexts/UserContext";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styles from "../page.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import { GAMEPLAY_KEY_BINDINGS } from "@/utils/keyBindings";
 
 export default function GameplayNavbar() {
     const { openSettings } = useSettings();
     const userPreference = useUserPreferenceStore(state => state.userPreference);
-    // const setUserPreference = useUserPreferenceStore(state => state.setUserPreference);
     const setUserPreferenceField = useUserPreferenceStore(state => state.setUserPreferenceField);
-    const setUserField = useUserStore(state => state.setUserField);
     const { openPopupWith } = usePopup();
 
     const router = useRouter();
@@ -27,10 +25,6 @@ export default function GameplayNavbar() {
             "Change language",
             "Keep the current language",
             () => {
-                // setUserPreference({
-                //     ...userPreference,
-                //     language: extractPLKey(option) as PLKeys
-                // })
                 setUserPreferenceField("language", extractPLKey(option) as PLKeys);
             },
             () => { }
@@ -54,6 +48,7 @@ export default function GameplayNavbar() {
                     inputId="quick-programming-language-options"
                     dropdownName="Programming Language"
                     handleOptionChange={handleOptionChange}
+                    keyBinding={GAMEPLAY_KEY_BINDINGS["PROGRAMMING_LANGUAGE_TOGGLE"].combo}
                 />
             </div>
             <button className={styles.toHome} onClick={() => router.push("/home")}>

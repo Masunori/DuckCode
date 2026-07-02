@@ -1,8 +1,8 @@
 "use client";
 
-import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { PROGRAMMING_LANGUAGES } from "@/utils/settings";
 import { PRESET_THEMES } from "@/components/themes/themes";
-import { loader } from '@monaco-editor/react';
+import { Editor, loader } from '@monaco-editor/react';
 import * as monaco from "monaco-editor";
 import { RefObject, useRef } from "react";
 import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "../../../userPrefs/userPrefsUtils";
@@ -23,7 +23,7 @@ type CodeEditorProps = {
 }
 
 export default function CodeEditor({ editorRef }: CodeEditorProps) {
-    const containerRef = useRef<HTMLDivElement | null>(null);
+    const monacoRef = useRef<typeof monaco | null>(null);
     
     const language = useUserPreferenceStore(state => state.userPreference.language);
     const fontSize = useUserPreferenceStore(state => state.userPreference.fontSize);
@@ -46,9 +46,9 @@ export default function CodeEditor({ editorRef }: CodeEditorProps) {
     }
 
     const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
-        theme: PRESET_THEMES[editorOptionsStore.theme].monacoEditorAlias,
-        language: PROGRAMMING_LANGUAGES[language].monacoEditorAlias,
-        value: codeContent,
+        // theme: PRESET_THEMES[editorOptionsStore.theme].monacoEditorAlias,
+        // language: PROGRAMMING_LANGUAGES[language].monacoEditorAlias,
+        // value: codeContent,
 
         detectIndentation: false,
         fontSize: fontSize,
@@ -62,9 +62,21 @@ export default function CodeEditor({ editorRef }: CodeEditorProps) {
         wordWrapColumn: editorOptionsStore.wordWrapColumn,
     }
 
-    useEditor({ containerRef, editorRef, editorOptions, onChange: handleEditorChange });
+    useEditor({ monacoRef, editorRef });
 
     return (
-        <div ref={containerRef} className={styles.codeEditor} />
+        <div className={styles.codeEditor}>
+            <Editor
+                theme={PRESET_THEMES[editorOptionsStore.theme].monacoEditorAlias}
+                language={PROGRAMMING_LANGUAGES[language].monacoEditorAlias}
+                defaultValue={codeContent}
+                options={editorOptions}
+                onMount={(editor, monaco) => {
+                    editorRef.current = editor;
+                    monacoRef.current = monaco;
+                }}
+                onChange={handleEditorChange}
+            />
+        </div>
     );
 }

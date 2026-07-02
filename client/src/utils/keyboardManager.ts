@@ -58,15 +58,15 @@ class KeyboardManager {
             throw new Error(`Layer with ID ${id} is already registered.`);
         }
         
-        printd('@/src/utils/keyboardManager.ts', `Registering layer ${id} with priority ${priority}`);
-        printd('@/src/utils/keyboardManager.ts', `Priority information: `, PRIORITY_INFO[priority]);
-        printd('@/src/utils/keyboardManager.ts', `Handler function: `, handler.toString());
+        // printd('@/src/utils/keyboardManager.ts', `Registering layer ${id} with priority ${priority}`);
+        // printd('@/src/utils/keyboardManager.ts', `Priority information: `, PRIORITY_INFO[priority]);
+        // printd('@/src/utils/keyboardManager.ts', `Handler function: `, handler.toString());
 
         this.layers.push({ id, priority, handler });
         this.layers.sort((a, b) => PRIORITY_INFO[b.priority].priority - PRIORITY_INFO[a.priority].priority);
 
-        const layerInfoStrings = this.layers.map(layer => `- ${layer.id} (${PRIORITY_INFO[layer.priority].priority})`).join("\n");
-        printd('@/src/utils/keyboardManager.ts', `Current layer order:\n${layerInfoStrings}`);
+        // const layerInfoStrings = this.layers.map(layer => `- ${layer.id} (${PRIORITY_INFO[layer.priority].priority})`).join("\n");
+        // printd('@/src/utils/keyboardManager.ts', `Current layer order:\n${layerInfoStrings}`);
     }
 
     /**
@@ -74,7 +74,7 @@ class KeyboardManager {
      * @param id The unique ID for the layer to unregister.
      */
     unregister(id: string): void {
-        printd('@/src/utils/keyboardManager.ts', `Unregistering layer ${id}`);
+        // printd('@/src/utils/keyboardManager.ts', `Unregistering layer ${id}`);
         this.layers = this.layers.filter(layer => layer.id !== id);
     }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import DropdownInput from "@/components/inputs/DropdownInput";
-import { GENERAL_KEY_BINDINGS, translateCombo } from '@/utils/keyBindings';
+import { GAMEPLAY_KEY_BINDINGS, GENERAL_KEY_BINDINGS, translateCombo } from '@/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import styles from "../page.module.css";
 import CountupTimer, { CountupTimerRef } from "@/components/timer/CountupTimer";
 import { useTimerStore } from "@/hooks/useTimerStore";
-import { PLKeys, PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { PLKeys, PROGRAMMING_LANGUAGES } from "@/utils/settings";
 
 export default function GameplayNavbar() {    
     const { openSettings } = useSettings();
@@ -85,6 +85,8 @@ export default function GameplayNavbar() {
                 inputId="quick-programming-language-options"
                 dropdownName="Programming Language"
                 handleOptionChange={handleOptionChange}
+                keyBinding={GAMEPLAY_KEY_BINDINGS["PROGRAMMING_LANGUAGE_TOGGLE"].combo}
+                                
             />
             <button className={styles.toHome} onClick={exit}>
                 Exit

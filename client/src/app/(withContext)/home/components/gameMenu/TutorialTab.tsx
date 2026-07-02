@@ -13,6 +13,7 @@ import { GAME_MODES, GameMenuTab } from "../../homeUtils";
 import styles from "../../page.module.css";
 import Spinner from "@/components/loading/Spinner";
 import { LessonInfo, TopicInfo, tutorialTopics } from "@/app/(withContext)/(tutorial)/lessons";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 
 type TutorialTabProps = {
     setTab: Dispatch<SetStateAction<GameMenuTab>>;
@@ -58,6 +59,9 @@ export default function TutorialTab({ setTab }: TutorialTabProps) {
     const router = useRouter();
     const user = useUserStore(state => state.user);
 
+    const userPreference = useUserPreferenceStore(state => state.userPreference);
+    const setUserPreference = useUserPreferenceStore(state => state.setUserPreference);
+
     const [view, setView] = useState<"gameMode" | "questions">("gameMode");
 
     // Handle closing the tab when clicking outside of it.
@@ -86,7 +90,6 @@ export default function TutorialTab({ setTab }: TutorialTabProps) {
         };
     });
 
-    const [mode, setMode] = useState<string>("classic");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [lesson, setLesson] = useState<LessonInfo | null>(null);
 
@@ -131,6 +134,14 @@ export default function TutorialTab({ setTab }: TutorialTabProps) {
                         onClick={() => {
                             if (lesson) {
                                 setIsLoading(true);
+
+                                if (lesson.id === "getting-started") {
+                                    setUserPreference({
+                                        ...userPreference,
+                                        language: "JavaScript",
+                                    });
+                                }
+
                                 router.push(lesson.route);
                                 setIsLoading(false);
                             }

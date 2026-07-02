@@ -1,13 +1,13 @@
 "use client";
 
 import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "@/app/userPrefs/userPrefsUtils";
-import { PROGRAMMING_LANGUAGES } from "@/components/settings/settingsUtils";
+import { PROGRAMMING_LANGUAGES } from "@/utils/settings";
 import { PRESET_THEMES } from "@/components/themes/themes";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useDebouncedSave } from "@/hooks/useDebounce";
 import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 import { printd } from "@/utils/debugUtils";
-import { loader } from "@monaco-editor/react";
+import { Editor, loader } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { RefObject, useEffect, useRef } from "react";
 import styles from "../page.module.css";
@@ -28,6 +28,7 @@ export default function CodeEditor({ editorRef }: CodeEditorProps) {
     const userPreference = useUserPreferenceStore(state => state.userPreference);
     const editorOptionsStore = useUserPreferenceStore(state => state.userPreference.editorOptions);
     const containerRef = useRef<HTMLDivElement | null>(null);
+    const monacoRef = useRef<typeof monaco | null>(null);
 
     const ctx = useGettingStartedInstruction();
 
@@ -79,9 +80,9 @@ export default function CodeEditor({ editorRef }: CodeEditorProps) {
     }, [userPreference.language, setCodeContent, codeContent.length]);
 
     const editorOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
-        theme: PRESET_THEMES[editorOptionsStore.theme].monacoEditorAlias,
-        language: PROGRAMMING_LANGUAGES[userPreference.language].monacoEditorAlias,
-        value: code,
+        // theme: PRESET_THEMES[editorOptionsStore.theme].monacoEditorAlias,
+        // language: PROGRAMMING_LANGUAGES[userPreference.language].monacoEditorAlias,
+        // value: code,
 
         detectIndentation: false,
         fontSize: userPreference.fontSize,
@@ -95,9 +96,21 @@ export default function CodeEditor({ editorRef }: CodeEditorProps) {
         wordWrapColumn: userPreference.editorOptions.wordWrapColumn,
     }
 
-    useEditor({ containerRef, editorRef, editorOptions, onChange: handleEditorChange });
+    useEditor({ monacoRef, editorRef });
 
     return (
-        <div className={styles.codeEditor} ref={containerRef} />
+        <div className={styles.codeEditor} ref={containerRef}>
+            <Editor
+                theme={PRESET_THEMES[editorOptionsStore.theme].monacoEditorAlias}
+                language={PROGRAMMING_LANGUAGES[userPreference.language].monacoEditorAlias}
+                defaultValue={code}
+                options={editorOptions}
+                onMount={(editor, monaco) => {
+                    editorRef.current = editor;
+                    monacoRef.current = monaco;
+                }}
+                onChange={handleEditorChange}
+            />
+        </div>
     );
 }

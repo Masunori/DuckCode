@@ -1,4 +1,4 @@
-import { PLKeys } from "@/components/settings/settingsUtils";
+import { PLKeys } from "@/utils/settings";
 import MultiplayerClient from "./MultiplayerClient";
 import styles from './page.module.css';
 import { dummyQuestion, placeholderQuestion } from "@/utils/gameplay";
