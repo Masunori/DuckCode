@@ -34,6 +34,7 @@ type Instruction = {
 const instructions: Instruction[] = [
     { 
         message: <p>Welcome to DuckCode! Let's get you started with a quick tutorial.</p>,
+        // messagePosition: { top: 0.6, left: 0, width: 1, height: 0.4 },
     },
     { 
         message: (
@@ -42,42 +43,42 @@ const instructions: Instruction[] = [
             </p>
         ), 
         target: "question-display",
-        messagePosition: { top: 0.5, left: 0.45, width: 0.5, height: 0.3 },
+        messagePosition: { top: 0.4, left: 0.45, width: 0.5, height: 0.3 },
     },
     { 
         message: <p>This is the title of the question.</p>, 
         target: "question-title",
-        messagePosition: { top: 0.5, left: 0.45, width: 0.5, height: 0.3 },
+        messagePosition: { top: 0.4, left: 0.45, width: 0.5, height: 0.3 },
     },
     { 
         message: <p>Each question has a difficulty level, estimated by how players of different skill levels perform on it.</p>, 
         target: "question-difficulty",
-        messagePosition: { top: 0.5, left: 0.45, width: 0.5, height: 0.3 },
+        messagePosition: { top: 0.4, left: 0.45, width: 0.5, height: 0.3 },
     },
     { 
         message: <p>The description provides a detailed explanation of the problem and its requirements.</p>, 
         target: "question-description",
-        messagePosition: { top: 0.5, left: 0.45, width: 0.5, height: 0.3 },
+        messagePosition: { top: 0.4, left: 0.45, width: 0.5, height: 0.3 },
     },
     { 
         message: <p>Inputs to the question will follow a format described in this section.</p>, 
         target: "question-input",
-        messagePosition: { top: 0.5, left: 0.45, width: 0.5, height: 0.3 },
+        messagePosition: { top: 0.4, left: 0.45, width: 0.5, height: 0.3 },
     },
     { 
         message: <p>Your program should read the aforementioned inputs and produce outputs in the format described in this section.</p>, 
         target: "question-output",
-        messagePosition: { top: 0.5, left: 0.45, width: 0.5, height: 0.3 },
+        messagePosition: { top: 0.4, left: 0.45, width: 0.5, height: 0.3 },
     },
     { 
         message: <p>This section shows you how a sample input and expected output look, with some explanations if any.</p>, 
         target: "question-examples",
-        messagePosition: { top: 0.5, left: 0.45, width: 0.5, height: 0.3 },
+        messagePosition: { top: 0.4, left: 0.45, width: 0.5, height: 0.3 },
     },
     { 
         message: <p>The constraints section outlines any limitations or special conditions you need to consider while solving the problem.</p>, 
         target: "question-constraints",
-        messagePosition: { top: 0.5, left: 0.45, width: 0.5, height: 0.3 },
+        messagePosition: { top: 0.4, left: 0.45, width: 0.5, height: 0.3 },
     },
     { 
         message: <>
@@ -93,12 +94,12 @@ const instructions: Instruction[] = [
     { 
         message: <p>This is the area that you can see how your code will behave.</p>, 
         target: "test-cases",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <p>These buttons are how you interact with the code.</p>, 
         target: "code-handler-buttons",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <>
@@ -108,12 +109,12 @@ const instructions: Instruction[] = [
             </ul>
         </>, 
         target: "toggle-button",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <p>This dark area shows the output of your code when you run it.</p>, 
         target: "code-results",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <>
@@ -126,12 +127,12 @@ const instructions: Instruction[] = [
             </ul>
         </>, 
         target: "run-button",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <p>If you have filled in the code, this part would show "Hello, world!", which is the result of the code.</p>, 
         target: "code-results",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: 
@@ -140,7 +141,7 @@ const instructions: Instruction[] = [
                 <li>If the button says "Switch to Output Mode", leave it there.</li>
             </ul>, 
         target: "toggle-button",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <>
@@ -149,27 +150,27 @@ const instructions: Instruction[] = [
             <p>What you see here are called <b>public test cases</b>, whose inputs and expected outputs are known to you.</p>
         </>,
         target: "code-results",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <p>You can select which test case you want to view by clicking on the respective option.</p>,
         target: "test-case-selector",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <p>After selection, the test case information will be displayed here.</p>,
         target: "test-case-results",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <p>As mentioned, each test case contains an input,</p>,
         target: "test-case-input",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <p>and an expected output.</p>,
         target: "test-case-expected",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <>
@@ -182,7 +183,7 @@ const instructions: Instruction[] = [
             </ul>
         </>, 
         target: "run-button",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <>
@@ -190,17 +191,17 @@ const instructions: Instruction[] = [
             <p>Public test cases that you <b>fail</b> will be highlighted in red and with a cross.</p>
         </>,
         target: "test-case-selector",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <p>If you fail a test case, this area will show what your code actually returns by running that test case's input.</p>,
         target: "test-case-actual",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <p>And this section will show you additional information from the test case execution. It might be your code fails to run, or it runs but returns a wrong result, or any other reason.</p>,
         target: "test-case-message",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <>
@@ -210,10 +211,12 @@ const instructions: Instruction[] = [
             <p>In the given code, the "w" should be "W". Now, fix the code and complete the challenge!</p>
         </>, 
         target: "submit-button",
-        messagePosition: { top: 0.2, left: 0.0, width: 1, height: 0.5 },
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     },
     { 
         message: <p>Good luck, and have fun coding!</p>,
+        target: "end-message",
+        messagePosition: { top: 0.3, left: 0.4, width: 0.6, height: 0.4 },
     }
 ];
 
@@ -245,10 +248,7 @@ export function GettingStartedInstructionProvider({ children }: { children: Reac
 
     const getMessagePosition = () => {
         const instruction = instructions[currentInstructionIndex];
-        if (instruction.messagePosition) {
-            return instruction.messagePosition;
-        }
-        return { top: 0.75, left: 0, width: 1, height: 0.25 };
+        return instruction.messagePosition ?? { top: 0.6, left: 0, width: 1, height: 0.4 };
     }
 
     const advanceInstruction = () => {

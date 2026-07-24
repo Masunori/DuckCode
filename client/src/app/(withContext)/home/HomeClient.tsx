@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/contexts/UserContext";
 import ChatPanel from "./components/ChatPanel";
@@ -14,6 +14,8 @@ import { useShallow } from "zustand/shallow";
 export default function HomeClient() {
     const router = useRouter();
     const user = useUserStore(state => state.user);
+
+    const [showPanel, setShowPanel] = useState<boolean>(false);
 
     const { userExp, isUserInitialized } = useUserStore(
         useShallow(state => ({
@@ -37,10 +39,12 @@ export default function HomeClient() {
     return (
         <div className={styles.home}>
             <HomeNavbar user={user} />
-            <EventMenu />
-            <NewsCarousel />
-            <GameMenu />
-            <ChatPanel />
+            {/* <EventMenu /> */}
+            <div style={{ position: "relative" }}>
+                <NewsCarousel expanded={!showPanel} />
+                <GameMenu />
+                <ChatPanel isPanelExpanded={showPanel} onExpandedChange={setShowPanel} />
+            </div>
         </div>
     )
 }

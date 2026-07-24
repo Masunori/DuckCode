@@ -17,6 +17,7 @@ import GeneralSettings from "./options/GeneralSettings";
 import KeyboardShortcutSettings from "./options/KeyboardShortcutSettings";
 import styles from './settings.module.css';
 import { GENERAL_KEY_BINDINGS, isKeyCombo } from '@/utils/keyBindings';
+import { AnimatePresence, motion } from "motion/react";
 
 type SettingsOptionNames = "General" | "Code Editor" | "Keyboard Shortcut Configuration" | "Account";
 export type TempAccountInfo = Pick<User, 'name' | 'email' | 'bio' | 'isTwoFactored'>;
@@ -214,10 +215,22 @@ export default function Settings() {
     }, []);
 
     return (
-        <div>
+        <AnimatePresence>
             {isSettingsOpen && (
-                <div className={styles.settingsOverlay}>
-                    <div className={styles.settingsContainer}>
+                <motion.div 
+                    className={styles.settingsOverlay}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <motion.div 
+                        className={styles.settingsContainer}
+                        initial={{ y: "-100%" }}
+                        animate={{ y: 0 }}
+                        exit={{ y: "-100%" }}
+                        transition={{ duration: 1, type: "spring", stiffness: 175, damping: 20 }}
+                    >
                         <ul className={styles.settingsOptions}>
                             {Object.keys(SETTINGS_OPTIONS).map((key) => (
                                 <li
@@ -236,9 +249,9 @@ export default function Settings() {
                             <button className={''} onClick={handleReset}>Reset to Default</button>
                             <button className={styles.saveButton} onClick={handleSave}>Save</button>
                         </div>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             )}
-        </div>
+        </AnimatePresence>
     )
 }

@@ -15,6 +15,19 @@ export default function InstructionOverlay({ message, target, messagePosition, o
     const [nextBtnMessage, setNextBtnMessage] = useState<string>("Next (1s)");
     const [isNextDisabled, setIsNextDisabled] = useState(true);
     const [showSkip, setShowSkip] = useState(false);
+    const [messageIdx, setMessageIdx] = useState(0);
+
+    function handlePrevClick() {
+        if (messageIdx > 0) {
+            setMessageIdx(prev => prev - 1);
+            onRegress();
+        }
+    };
+
+    function handleNextClick() {
+        setMessageIdx(prev => prev + 1);
+        onAdvance();
+    }
 
     const SkipPopup = () => {
         return (
@@ -63,6 +76,11 @@ export default function InstructionOverlay({ message, target, messagePosition, o
 
         return () => clearInterval(interval);
     }, [isNextDisabled, allowNextCountdown]);
+
+    const msgTop = messagePosition.top * 100;
+    const msgLeft = messagePosition.left * 100;
+    const msgWidth = messagePosition.width * 100;
+    const msgHeight = messagePosition.height * 100;
     
     if (!target) {
         return <div 
@@ -74,12 +92,27 @@ export default function InstructionOverlay({ message, target, messagePosition, o
                 height: "100vh"
             }}
         >
-            <div className={styles.instruction}>
+            <div 
+                className={styles.instruction}
+                style={{
+                    top: `${msgTop}%`,
+                    left: `${msgLeft}%`,
+                    width: `${msgWidth}%`,
+                    height: `${msgHeight}%`
+                }}
+            >
                 <div className={styles.instructionButtons}>
-                    <button className={styles.instructionButton} onClick={onRegress}>
+                    <button 
+                        className={styles.instructionButton} 
+                        onClick={handlePrevClick}
+                        style={{
+                            opacity: messageIdx == 0 ? 0.5 : 1,
+                        }}
+                        disabled={messageIdx == 0}
+                    >
                         Previous
                     </button>
-                    <button className={styles.instructionButton} onClick={onAdvance} disabled={isNextDisabled}>
+                    <button className={styles.instructionButton} onClick={handleNextClick} disabled={isNextDisabled}>
                         {nextBtnMessage}
                     </button>
                     <button className={styles.instructionButton} onClick={() => setShowSkip(true)}>
@@ -103,36 +136,27 @@ export default function InstructionOverlay({ message, target, messagePosition, o
     const width = right - left;
     const height = bottom - top;
 
-    const msgTop = messagePosition.top * 100;
-    const msgLeft = messagePosition.left * 100;
-    const msgWidth = messagePosition.width * 100;
-    const msgHeight = messagePosition.height * 100;
-
     return (
         <>
            {/* Top overlay */}
             <div 
                 className={styles.instructionOverlay} 
                 style={{ top: 0, left: 0, right: 0, height: top }}
-                // onClick={onAdvance}
             />
             {/* Bottom overlay */}
             <div 
                 className={styles.instructionOverlay} 
                 style={{ top: bottom, left: 0, right: 0, bottom: 0 }}
-                // onClick={onAdvance}
             />
             {/* Left overlay */}
             <div 
                 className={styles.instructionOverlay} 
                 style={{ top: top, left: 0, height: height, width: left }}
-                // onClick={onAdvance}
             />
             {/* Right overlay */}
             <div 
                 className={styles.instructionOverlay} 
                 style={{ top: top, left: right, height: height, right: 0 }}
-                // onClick={onAdvance}
             />
             {/* Highlighted element */}
             <div 
@@ -150,10 +174,17 @@ export default function InstructionOverlay({ message, target, messagePosition, o
                 }}
             >
                 <div className={styles.instructionButtons}>
-                    <button className={styles.instructionButton} onClick={onRegress}>
+                    <button 
+                        className={styles.instructionButton} 
+                        onClick={handlePrevClick}
+                        style={{
+                            opacity: messageIdx == 0 ? 0.5 : 1
+                        }}
+                        disabled={messageIdx == 0}
+                    >
                         Previous
                     </button>
-                    <button className={styles.instructionButton} onClick={onAdvance} disabled={isNextDisabled}>
+                    <button className={styles.instructionButton} onClick={handleNextClick} disabled={isNextDisabled}>
                         {nextBtnMessage}
                     </button>
                     <button className={styles.instructionButton} onClick={() => setShowSkip(true)}>

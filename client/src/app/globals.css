@@ -6,6 +6,7 @@
 
   /* General game theme color */
   --background-color: #121212;
+  --more-transparent-background-color: rgba(18, 18, 18, 0.6);
   --transparent-background-color: rgba(18, 18, 18, 0.8);
   --first-layer-background-color: #242424;
   --second-layer-background-color: #363636;
@@ -108,6 +109,10 @@ body {
   color: var(--font-colour) !important;
 }
 
+button {
+  color: var(--font-colour);
+}
+
 body,
 h1,
 h2,
@@ -137,11 +142,11 @@ button {
   cursor: pointer;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
-}
+} */
 
 @media (max-width: 767px) {
   body {

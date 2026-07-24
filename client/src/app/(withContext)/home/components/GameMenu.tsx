@@ -66,6 +66,18 @@ export default function GameMenu() {
                 disabled={true}
                 buttonDescription="Create custom games and play with friends." 
             />
+            <StylizedGameMenuButton 
+                buttonName="Daily Challenge" 
+                onClick={undefined} 
+                disabled={true}
+                buttonDescription="An easy problem to start your day." 
+            />
+            <StylizedGameMenuButton 
+                buttonName="Events" 
+                onClick={undefined} 
+                disabled={true}
+                buttonDescription="Access time-limited events here!" 
+            />
 
             <AnimatePresence>
                 {tab === "Arcade" && (
