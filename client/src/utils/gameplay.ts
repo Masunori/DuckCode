@@ -174,6 +174,12 @@ export type CodeSubmissionResponse = {
     statusId: number;
 }
 
+export type OutputType = "log" | "error" | "warn";
+export type OutputEntry = {
+    type: OutputType;
+    content: string;
+};
+
 export type InformationMode = "question" | "testCases" | "output" | "-";
 
 /**

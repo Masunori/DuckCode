@@ -106,7 +106,15 @@ html::-webkit-scrollbar {
 
 body {
   background-color: var(--background-color);
-  color: var(--font-colour) !important;
+  color: var(--font-colour);
+}
+
+input,
+textarea,
+select,
+button {
+  color: inherit;
+  font: inherit;
 }
 
 button {

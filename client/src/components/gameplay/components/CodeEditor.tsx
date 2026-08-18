@@ -13,6 +13,7 @@ import { RefObject, useEffect, useRef } from "react";
 import styles from "../page.module.css";
 import { useGettingStartedInstruction } from "@/contexts/GettingStartedInstructionContext";
 import useEditor from "@/hooks/useEditor";
+import { SetState } from "@/utils/types";
 
 loader.config({
     paths: {
@@ -22,9 +23,10 @@ loader.config({
 
 type CodeEditorProps = {
     editorRef: RefObject<monaco.editor.IStandaloneCodeEditor | null>;
+    setIsFocusedOnEditor: SetState<boolean>;
 }
 
-export default function CodeEditor({ editorRef }: CodeEditorProps) {
+export default function CodeEditor({ editorRef, setIsFocusedOnEditor }: CodeEditorProps) {
     const userPreference = useUserPreferenceStore(state => state.userPreference);
     const editorOptionsStore = useUserPreferenceStore(state => state.userPreference.editorOptions);
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -108,6 +110,15 @@ export default function CodeEditor({ editorRef }: CodeEditorProps) {
                 onMount={(editor, monaco) => {
                     editorRef.current = editor;
                     monacoRef.current = monaco;
+
+                    editor.onDidFocusEditorWidget(() => {
+                        // editorRef.current = editor;
+                        setIsFocusedOnEditor(true);
+                    });
+
+                    editor.onDidBlurEditorWidget(() => {
+                        setIsFocusedOnEditor(false);
+                    });
                 }}
                 onChange={handleEditorChange}
             />

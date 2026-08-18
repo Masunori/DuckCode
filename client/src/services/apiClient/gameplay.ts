@@ -1,8 +1,7 @@
+import { OutputEntry } from '@/utils/gameplay';
+import { printd } from '@/utils/debugUtils';
 import { TestCaseResult } from '@/utils/gameplay';
 import { PLKeys } from '@/utils/settings';
-import { OutputEntry } from '@/services/apiClient/runCodeStatuses';
-import { printd } from '@/utils/debugUtils';
-import { Question } from '@/utils/gameplay';
 
 export async function getQuestionsInRange(minDifficulty: number, maxDifficulty: number) {
     const response = await fetch(`/api/question/get_questions_in_range?min_difficulty=${minDifficulty}&max_difficulty=${maxDifficulty}`, {
@@ -48,8 +47,8 @@ export async function runCode(sourceCode: string, language: string): Promise<{ s
     if (response.status === 200) {
         return {
             status: response.status,
-            codeStatus: data.data.status,
-            output: (data.data.output as string).split('\n').map((line) => ({ type: data.data.status === 'success' ? 'log' : 'error', content: line })),
+            codeStatus: data.status,
+            output: (data.output as string).split('\n').map((line) => ({ type: data.status === 'success' ? 'log' : 'error', content: line })),
         }
     } else {
         return {

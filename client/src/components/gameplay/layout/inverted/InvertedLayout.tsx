@@ -6,7 +6,7 @@ import { Question } from "@/utils/gameplay";
 import { keyboardManager } from "@/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useShallow } from "zustand/shallow";
 import CodeEditor from "../../components/CodeEditor";
@@ -15,36 +15,54 @@ import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 import QuestionTab from "../../components/QuestionTab";
 import DefaultTestCases from "../../components/DefaultTestCases";
 import GameplayNavbar from '../../components/GameplayNavbar';
+import { useTimerStore } from '@/hooks/useTimerStore';
 
 export function InvertedLayout({ questions }: { questions: Question[] }) {
     // for code editor
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
+    const [isFocusedOnEditor, setIsFocusedOnEditor] = useState(false);
+
+    // Use refs to maintain stable references for keyboard handler
+    const callbacksRef = useRef<{
+        runCodeClientSide: () => Promise<void>;
+        runTestCasesClientSide: () => Promise<void>;
+        submitCodeClientSide: () => Promise<void>;
+    }>({
+        runCodeClientSide: async () => { },
+        runTestCasesClientSide: async () => { },
+        submitCodeClientSide: async () => { },
+    });
 
     const setInformationMode = useBaseGameplayStore(state => state.setInformationMode);
     const activeQuestionIndex = useBaseGameplayStore(state => state.activeQuestionIndex);
     const setActiveQuestionIndex = useBaseGameplayStore(state => state.setActiveQuestionIndex);
 
     const question = questions[activeQuestionIndex];
-
     const { openPopupWith } = usePopup();
 
     const [
         runCode,
         runTestCases,
-        submitCode
-        ] = useBaseGameplayStore(
+        submitCode,
+    ] = useBaseGameplayStore(
         useShallow(
             state => [
                 state.runCode,
                 state.runTestCases,
-                state.submitCode
+                state.submitCode,
             ]
         )
     );
 
-    const reset = useBaseGameplayStore(state => state.reset);
+    const resetGameState = useBaseGameplayStore(state => state.reset);
     const router = useRouter();
+
+    const resetTimer = useTimerStore(state => state.reset);
+    const pauseTimer = useTimerStore(state => state.pause);
+
+    const [isShowingWinPopup, setIsShowingWinPopup] = useState(false);
+    const [winTimeElapsedSeconds, setWinTimeElapsedSeconds] = useState<number | null>(null);
 
     const runCodeClientSide = useCallback(async () => {
         const response = await runCode();
@@ -68,15 +86,23 @@ export function InvertedLayout({ questions }: { questions: Question[] }) {
         if (!response) {
             return;
         }
-        
-        openPopupWith(
-            response.message,
-            "Understood",
-            null,
-            () => { },
-            () => { }
-        );
-    }, [submitCode, openPopupWith]);
+
+        const submissionSuccessful = response.message === "pass";
+
+        if (submissionSuccessful) {
+            setWinTimeElapsedSeconds(Math.floor(useTimerStore.getState().timeElapsed / 1000));
+            setIsShowingWinPopup(true);
+            pauseTimer();
+        } else {
+            openPopupWith(
+                response.message,
+                "Understood",
+                null,
+                () => { },
+                () => { }
+            );
+        }
+    }, [submitCode, openPopupWith, setIsShowingWinPopup, pauseTimer]);
 
     const runTestCasesClientSide = useCallback(async () => {
         const response = await runTestCases();
@@ -91,11 +117,24 @@ export function InvertedLayout({ questions }: { questions: Question[] }) {
             response.message,
             passed ? "Submit Code" : "Understood",
             passed ? "Go back to code" : null,
-            () => passed ? submitCodeClientSide() : {},
-            () => {}
+            () => {
+                if (passed) {
+                    submitCodeClientSide();
+                }
+            },
+            () => { }
         );
     }, [runTestCases, openPopupWith, submitCodeClientSide]);
-    
+
+    // Keep keybinding callbacks fresh while allowing one-time registration effect.
+    useEffect(() => {
+        callbacksRef.current = {
+            runCodeClientSide,
+            runTestCasesClientSide,
+            submitCodeClientSide,
+        };
+    }, [runCodeClientSide, runTestCasesClientSide, submitCodeClientSide]);
+
     useEffect(() => {
         const editor = editorRef.current;
 
@@ -109,25 +148,23 @@ export function InvertedLayout({ questions }: { questions: Question[] }) {
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             const editor = editorRef.current;
-            const active = document.activeElement;
-            const isFocusOnEditor = editor && editor.getDomNode()?.contains(active);
-
-            if (isFocusOnEditor) {
+            
+            if (isFocusedOnEditor) {
                 if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["DEFOCUS_EDITOR"].combo)) {
-                    gameplayRef.current?.focus();
+                    (document.activeElement as HTMLElement).blur();
                     return true;
                 }
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)) {
                 e.preventDefault();
-                runCodeClientSide();
+                callbacksRef.current.runCodeClientSide();
                 return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["RUN_TEST_CASES"].combo)) {
                 e.preventDefault();
-                runTestCasesClientSide();
+                callbacksRef.current.runTestCasesClientSide();
                 return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["SUBMIT_CODE"].combo)) {
                 e.preventDefault();
-                submitCodeClientSide();
+                callbacksRef.current.submitCodeClientSide();
                 return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["FOCUS_EDITOR"].combo) && editor) {
                 e.preventDefault(); // stop "i" from inserting text somewhere random
@@ -154,15 +191,16 @@ export function InvertedLayout({ questions }: { questions: Question[] }) {
         return () => {
             keyboardManager.unregister("gameplay");
         }
-    }, [runCodeClientSide, runTestCasesClientSide, submitCodeClientSide, setInformationMode]);
+    }, [isFocusedOnEditor]);
 
     return (
         <div ref={gameplayRef} tabIndex={0}>
-            <GameplayNavbar />
+            <GameplayNavbar isKeyBindingEnabled={!isFocusedOnEditor} />
             <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
                 <Panel defaultSize={60} minSize={2} className={styles.codePanel}>
                     <CodeEditor
                         editorRef={editorRef}
+                        setIsFocusedOnEditor={setIsFocusedOnEditor}
                     />
                     <DefaultTestCases
                         testCases={question.publicTestCases}

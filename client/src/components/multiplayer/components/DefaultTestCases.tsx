@@ -1,11 +1,11 @@
 "use client";
 
-import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/services/apiClient/runCodeStatuses";
-import { TestCase } from "@/utils/gameplay";
-import { CSSProperties, useCallback, useRef } from "react";
-import styles from "../../gameplay/components/default.module.css";
-import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/utils/keyBindings';
 import { useMultiplayerGameplayStore } from "@/hooks/useMultiplayerGameplayStore";
+import { RUN_CODE_STATUSES, RunCodeStatuses } from "@/services/apiClient/types";
+import { TestCase } from "@/utils/gameplay";
+import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/utils/keyBindings';
+import { CSSProperties, useRef } from "react";
+import styles from "../../gameplay/components/default.module.css";
 
 type TestCaseProps = {
     testCases: TestCase[];
@@ -48,7 +48,7 @@ export default function DefaultTestCases({
     function selectTestCaseIndicator(idx: number) {
         return !testCaseResultsForActiveQuestion[idx]
             ? ""
-            : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[idx].statusId] === RunCodeStatuses.ACCEPTED
+            : RUN_CODE_STATUSES[testCaseResultsForActiveQuestion[idx].statusId] === RunCodeStatuses.ACCEPTED
                 ? "[✔]"
                 : "[✖]";
     }
@@ -61,7 +61,7 @@ export default function DefaultTestCases({
         backgroundColor: "var(--terminal-like-background-color)",
         borderColor: !testCaseResultsForActiveQuestion[activeTestCaseIndex]
             ? "var(--second-layer-background-color)"
-            : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[activeTestCaseIndex].statusId] === RunCodeStatuses.ACCEPTED
+            : RUN_CODE_STATUSES[testCaseResultsForActiveQuestion[activeTestCaseIndex].statusId] === RunCodeStatuses.ACCEPTED
                 ? CODE_SUCCEED_BORDER_COLOR
                 : CODE_FAIL_BORDER_COLOR,
     }
@@ -74,7 +74,7 @@ export default function DefaultTestCases({
 
         testCaseSelectorsRef.current[index].style.backgroundColor = !testCaseResultsForActiveQuestion[index]
             ? "var(--first-layer-background-color)"
-            : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
+            : RUN_CODE_STATUSES[testCaseResultsForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
                 ? CODE_SUCCEED_BG_COLOR_HOVER
                 : CODE_FAIL_BG_COLOR_HOVER
     }
@@ -86,7 +86,7 @@ export default function DefaultTestCases({
 
         testCaseSelectorsRef.current[index].style.backgroundColor = !testCaseResultsForActiveQuestion[index]
             ? "var(--second-layer-background-color)"
-            : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
+            : RUN_CODE_STATUSES[testCaseResultsForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
                 ? CODE_SUCCEED_BG_COLOR
                 : CODE_FAIL_BG_COLOR
     }
@@ -136,7 +136,7 @@ export default function DefaultTestCases({
                                 style={{
                                     backgroundColor: !testCaseResultsForActiveQuestion[index]
                                         ? (index === activeTestCaseIndex ? "var(--first-layer-background-color" : "var(--second-layer-background-color)")
-                                        : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
+                                        : RUN_CODE_STATUSES[testCaseResultsForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
                                             ? (index === activeTestCaseIndex ? CODE_SUCCEED_BG_COLOR_HOVER : CODE_SUCCEED_BG_COLOR)
                                             : (index === activeTestCaseIndex ? CODE_FAIL_BG_COLOR_HOVER : CODE_FAIL_BG_COLOR),
 

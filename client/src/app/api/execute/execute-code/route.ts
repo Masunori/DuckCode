@@ -34,7 +34,7 @@ export async function POST(request: Request) {
         if (!response.ok) {
             const err = await response.json().catch(() => ({}));
             return NextResponse.json(
-                { ok: false, message: err.message || 'Failed to run code' },
+                { message: err.message || 'Failed to run code' },
                 { status: response.status }
             );
         }
@@ -42,12 +42,12 @@ export async function POST(request: Request) {
         const data = await response.json();
 
         return NextResponse.json(
-            { ok: true, data: data },
+            data,
             { status: 200, headers: { 'Cache-Control': 'no-store' } },
         );
     } catch (err) {
         return NextResponse.json(
-            { ok: false, message: `Internal server error: ${err}` }, 
+            { message: `Internal server error: ${err}` }, 
             { status: 500 }
         );
     }

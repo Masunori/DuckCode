@@ -1,13 +1,13 @@
 "use client";
 
-import { RUN_CODE_RESPONSES, RunCodeStatuses } from "@/services/apiClient/runCodeStatuses";
-import { TestCase } from "@/utils/gameplay";
-import { CSSProperties, useCallback, useEffect, useRef } from "react";
-import styles from "./default.module.css";
-import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
-import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/utils/keyBindings';
-import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useGettingStartedInstruction } from "@/contexts/GettingStartedInstructionContext";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
+import { RUN_CODE_STATUSES, RunCodeStatuses } from "@/services/apiClient/types";
+import { TestCase } from "@/utils/gameplay";
+import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/utils/keyBindings';
+import { useEffect, useRef } from "react";
+import styles from "./default.module.css";
 
 type TestCaseProps = {
     testCases: TestCase[];
@@ -16,15 +16,8 @@ type TestCaseProps = {
     submitCode: () => void;
 }
 
-const CODE_FAIL_BORDER_COLOR = 'var(--wrong-on-hover-indicator-color)';
-const CODE_SUCCEED_BORDER_COLOR = 'var(--correct-indicator-color)';
 const CODE_WARNING_COLOR = 'var(--warn-code-text-border-color)';
-
-const CODE_FAIL_BG_COLOR = 'var(--wrong-indicator-color)';
-const CODE_FAIL_BG_COLOR_HOVER = 'var(--wrong-on-hover-indicator-color)';
-
-const CODE_SUCCEED_BG_COLOR = 'var(--correct-indicator-color)';
-const CODE_SUCCEED_BG_COLOR_HOVER = 'var(--correct-on-hover-indicator-color)';
+const CODE_ERROR_COLOR = 'var(--wrong-indicator-color)';
 
 export default function DefaultTestCases({
     testCases,
@@ -32,6 +25,7 @@ export default function DefaultTestCases({
     runTestCases,
     submitCode,
 }: TestCaseProps) {
+    const codeContent = useBaseGameplayStore(s => s.codeContent[0]);
     const codeOutput = useBaseGameplayStore(s => s.codeOutput);
     const testCaseResults = useBaseGameplayStore(s => s.testCaseResults);
 
@@ -125,63 +119,31 @@ export default function DefaultTestCases({
     function selectTestCaseIndicator(idx: number) {
         return !testCaseResultsForActiveQuestion[idx]
             ? ""
-            : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[idx].statusId] === RunCodeStatuses.ACCEPTED
+            : RUN_CODE_STATUSES[testCaseResultsForActiveQuestion[idx].statusId] === RunCodeStatuses.ACCEPTED
                 ? "[✔]"
                 : "[✖]";
     }
 
-    // printd("@/components/gameplay/layout/default/components/TestCases", "Rendering TestCases with testCases:", testCases, "and testCaseResults:", testCaseResults);
+    const tdClassName = !testCaseResultsForActiveQuestion[activeTestCaseIndex]
+        ? ""
+        : RUN_CODE_STATUSES[testCaseResultsForActiveQuestion[activeTestCaseIndex].statusId] === RunCodeStatuses.ACCEPTED
+            ? styles.pass
+            : styles.fail;
 
-    const testCaseSelectorsRef = useRef<HTMLLIElement[] | null[]>([]);
-
-    const tdStyle: CSSProperties = {
-        backgroundColor: "var(--terminal-like-background-color)",
-        borderColor: !testCaseResultsForActiveQuestion[activeTestCaseIndex]
-            ? "var(--second-layer-background-color)"
-            : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[activeTestCaseIndex].statusId] === RunCodeStatuses.ACCEPTED
-                ? CODE_SUCCEED_BORDER_COLOR
-                : CODE_FAIL_BORDER_COLOR,
-    }
-
-    // handle test case selector hovering
-    function handleOnMouseEnter(index: number) {
-        if (!testCaseSelectorsRef.current[index]) {
-            return;
-        }
-
-        testCaseSelectorsRef.current[index].style.backgroundColor = !testCaseResultsForActiveQuestion[index]
-            ? "var(--first-layer-background-color)"
-            : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
-                ? CODE_SUCCEED_BG_COLOR_HOVER
-                : CODE_FAIL_BG_COLOR_HOVER
-    }
-
-    function handleOnMouseLeave(index: number) {
-        if (!testCaseSelectorsRef.current[index] || index === activeTestCaseIndex) {
-            return;
-        }
-
-        testCaseSelectorsRef.current[index].style.backgroundColor = !testCaseResultsForActiveQuestion[index]
-            ? "var(--second-layer-background-color)"
-            : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
-                ? CODE_SUCCEED_BG_COLOR
-                : CODE_FAIL_BG_COLOR
-    }
-
-    const userPreference = useUserPreferenceStore(state => state.userPreference);
-    const switchModeKeyHint = userPreference.displayKeyBindingOnButtons
+    const showKeyBindings = useUserPreferenceStore(state => state.userPreference.displayKeyBindingOnButtons);
+    const switchModeKeyHint = showKeyBindings
         ? <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TEST_CASE_MODE"].combo)}]</kbd>
         : "";
 
-    const runCodeKeyHint = userPreference.displayKeyBindingOnButtons
+    const runCodeKeyHint = showKeyBindings
         ? <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)}]</kbd>
         : "";
 
-    const runTestCasesKeyHint = userPreference.displayKeyBindingOnButtons
+    const runTestCasesKeyHint = showKeyBindings
         ? <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["RUN_TEST_CASES"].combo)}]</kbd>
         : "";
 
-    const submitCodeKeyHint = userPreference.displayKeyBindingOnButtons
+    const submitCodeKeyHint = showKeyBindings
         ? <kbd>[{translateCombo(GAMEPLAY_KEY_BINDINGS["SUBMIT_CODE"].combo)}]</kbd>
         : "";
 
@@ -200,9 +162,7 @@ export default function DefaultTestCases({
                     className={styles.runAllTestCasesButton}
                     ref={runButtonRef}
                     onClick={informationMode === "output" ? runCode : runTestCases}
-                    disabled={isLocked} style={{
-                        pointerEvents: isLocked ? "none" : "auto",
-                    }}
+                    disabled={isLocked || codeContent.trim() === ""}
                 >
                     {informationMode === "output" ? <b>Run Code</b> : <b>Run all Test Cases</b>}
                     {informationMode === "output" ? runCodeKeyHint : runTestCasesKeyHint}
@@ -211,9 +171,7 @@ export default function DefaultTestCases({
                     className={styles.submitCodeButton}
                     ref={submitButtonRef}
                     onClick={submitCode}
-                    disabled={isLocked} style={{
-                        pointerEvents: isLocked ? "none" : "auto",
-                    }}
+                    disabled={isLocked || codeContent.trim() === ""}
                 ><b>Submit</b> {submitCodeKeyHint}</button>
             </div>
             <div className={styles.codeResults} ref={codeResultsRef}>
@@ -228,21 +186,15 @@ export default function DefaultTestCases({
                         {testCases.map((_, index) => (
                             <li
                                 key={index}
-                                ref={el => { testCaseSelectorsRef.current[index] = el; }}
                                 onClick={() => setActiveTestCaseIndex(index)}
-                                style={{
-                                    backgroundColor: !testCaseResultsForActiveQuestion[index]
-                                        ? (index === activeTestCaseIndex ? "var(--first-layer-background-color" : "var(--second-layer-background-color)")
-                                        : RUN_CODE_RESPONSES[testCaseResultsForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED
-                                            ? (index === activeTestCaseIndex ? CODE_SUCCEED_BG_COLOR_HOVER : CODE_SUCCEED_BG_COLOR)
-                                            : (index === activeTestCaseIndex ? CODE_FAIL_BG_COLOR_HOVER : CODE_FAIL_BG_COLOR),
-
-                                    fontWeight: index === activeTestCaseIndex
-                                        ? 600
-                                        : 400,
-                                }}
-                                onMouseEnter={() => handleOnMouseEnter(index)}
-                                onMouseLeave={() => handleOnMouseLeave(index)}
+                                className={`
+                                    ${index === activeTestCaseIndex ? styles.active : ""} 
+                                    ${testCaseResultsForActiveQuestion[index] 
+                                        ? (RUN_CODE_STATUSES[testCaseResultsForActiveQuestion[index].statusId] === RunCodeStatuses.ACCEPTED 
+                                            ? styles.pass 
+                                            : styles.fail) 
+                                        : ""}
+                                `}
                             >
                                 Test Case {index + 1} {selectTestCaseIndicator(index)}
                             </li>
@@ -253,7 +205,7 @@ export default function DefaultTestCases({
                             <tbody>
                                 <tr ref={testCaseInputRef}>
                                     <th scope="row">Input</th>
-                                    <td style={tdStyle}>
+                                    <td className={tdClassName}>
                                         <pre>
                                             {testCases[activeTestCaseIndex] ? testCases[activeTestCaseIndex].input.split('\n').map((input, idx) => (
                                                 <code key={idx}>{input}</code>
@@ -263,7 +215,7 @@ export default function DefaultTestCases({
                                 </tr>
                                 <tr ref={testCaseExpectedRef}>
                                     <th scope="row">Expected</th>
-                                    <td style={tdStyle}>
+                                    <td className={tdClassName}>
                                         <pre>
                                             {testCases[activeTestCaseIndex] ? testCases[activeTestCaseIndex].expectedOutput.split('\n').map((input, idx) => (
                                                 <code key={idx}>{input}</code>
@@ -273,7 +225,7 @@ export default function DefaultTestCases({
                                 </tr>
                                 <tr ref={testCaseActualRef}>
                                     <th scope="row">Actual</th>
-                                    <td style={tdStyle}>
+                                    <td className={tdClassName}>
                                         <pre>
                                             <code>{testCaseResultsForActiveQuestion[activeTestCaseIndex]?.actualOutput ?? "Nothing yet"}</code>
                                         </pre>
@@ -281,7 +233,7 @@ export default function DefaultTestCases({
                                 </tr>
                                 <tr ref={testCaseMessageRef}>
                                     <th scope="row">Message</th>
-                                    <td style={tdStyle}>
+                                    <td className={tdClassName}>
                                         <pre>
                                             <code>{testCaseResultsForActiveQuestion[activeTestCaseIndex]?.message ?? "Nothing yet"}</code>
                                         </pre>
@@ -301,7 +253,7 @@ export default function DefaultTestCases({
                     {codeOutput.map((line, index) => (
                         <code key={index} style={{
                             color: line.type === "error"
-                                ? CODE_FAIL_BG_COLOR
+                                ? CODE_ERROR_COLOR
                                 : line.type === "warn"
                                     ? CODE_WARNING_COLOR
                                     : "var(--font-colour)"

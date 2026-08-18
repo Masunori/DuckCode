@@ -1,14 +1,14 @@
 "use client";
 
 import DefaultTestCases from "@/components/multiplayer/components/DefaultTestCases";
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from '@/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
 import { useUserStore } from "@/contexts/UserContext";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { OutputEntry } from "@/services/apiClient/runCodeStatuses";
-import { instantiateEditorOnMount, Question, TestCaseResult } from "@/utils/gameplay";
 import { selectCodeByUser, selectCodeOutputSetterForUser, selectExecutionStatusSetterForUser, selectTestCaseResultsSetterForUser, useMultiplayerGameplayStore } from "@/hooks/useMultiplayerGameplayStore";
+import { OutputEntry } from "@/utils/gameplay";
 import { printd } from "@/utils/debugUtils";
+import { instantiateEditorOnMount, Question, TestCaseResult } from "@/utils/gameplay";
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo, MULTIPLAYER_KEY_BINDINGS } from '@/utils/keyBindings';
 import { keyboardManager } from "@/utils/keyboardManager";
 import type * as monacoType from 'monaco-editor';
 import { useRouter } from "next/navigation";

@@ -1,28 +1,29 @@
 "use client";
 
-import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/utils/keyBindings';
 import { usePopup } from "@/contexts/PopupContext";
+import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
+import { printd } from "@/utils/debugUtils";
 import { Question } from "@/utils/gameplay";
+import { GAMEPLAY_KEY_BINDINGS, isKeyCombo } from '@/utils/keyBindings';
 import { keyboardManager } from "@/utils/keyboardManager";
 import * as monaco from 'monaco-editor';
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useShallow } from "zustand/shallow";
 import CodeEditor from "../../components/CodeEditor";
 import CodeHandlerButtons from "../../components/CodeHandlerButtons";
+import GameplayNavbar from '../../components/GameplayNavbar';
 import InformationPanelButtons from "../../components/InformationPanelButtons";
-import styles from "./page.module.css";
-import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
-import { printd } from "@/utils/debugUtils";
 import QuestionTab from "../../components/QuestionTab";
 import TwoTabsOutput from "../../components/TwoTabsOutput";
 import TwoTabsTestCases from "../../components/TwoTabsTestCases";
-import GameplayNavbar from '../../components/GameplayNavbar';
+import styles from "./page.module.css";
 
 export function TwoTabsLayout({ questions }: { questions: Question[] }) {
     // for code editor
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
+    const [isFocusedOnEditor, setIsFocusedOnEditor] = useState(false);
 
     const informationMode = useBaseGameplayStore(state => state.informationMode);
     const setInformationMode = useBaseGameplayStore(state => state.setInformationMode);
@@ -38,7 +39,7 @@ export function TwoTabsLayout({ questions }: { questions: Question[] }) {
         runCode,
         runTestCases,
         submitCode
-        ] = useBaseGameplayStore(
+    ] = useBaseGameplayStore(
         useShallow(
             state => [
                 state.runCode,
@@ -111,10 +112,8 @@ export function TwoTabsLayout({ questions }: { questions: Question[] }) {
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             const editor = editorRef.current;
-            const active = document.activeElement;
-            const isFocusOnEditor = editor && editor.getDomNode()?.contains(active);
 
-            if (isFocusOnEditor) {
+            if (isFocusedOnEditor) {
                 if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["DEFOCUS_EDITOR"].combo)) {
                     gameplayRef.current?.focus();
                     return true;
@@ -132,7 +131,7 @@ export function TwoTabsLayout({ questions }: { questions: Question[] }) {
                 submitCodeClientSide();
                 return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["FOCUS_EDITOR"].combo) && editor) {
-                e.preventDefault(); // stop "i" from inserting text somewhere random
+                e.preventDefault();
                 editor.focus();
                 return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_OUTPUT_TEST_CASE_MODE"].combo)) {
@@ -156,10 +155,6 @@ export function TwoTabsLayout({ questions }: { questions: Question[] }) {
                 e.preventDefault();
                 setInformationMode("output");
                 return true;
-            } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["TOGGLE_QUESTION_TAB"].combo)) {
-                e.preventDefault();
-                setInformationMode("question");
-                return true;
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["PREVIOUS_QUESTION"].combo)) {
                 e.preventDefault();
                 setActiveQuestionIndex(i => Math.max(i - 1, 0));
@@ -177,12 +172,12 @@ export function TwoTabsLayout({ questions }: { questions: Question[] }) {
         return () => {
             keyboardManager.unregister("gameplay");
         }
-    }, [runCodeClientSide, runTestCasesClientSide, setInformationMode, submitCodeClientSide]);
+    }, [isFocusedOnEditor, runCodeClientSide, runTestCasesClientSide, setInformationMode, submitCodeClientSide, questions.length, setActiveQuestionIndex]);
 
 
     return (
         <div ref={gameplayRef} tabIndex={0}>
-            <GameplayNavbar />
+            <GameplayNavbar isKeyBindingEnabled={!isFocusedOnEditor} />
             <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
                 <Panel defaultSize={50} minSize={2} className={styles.informationPanel}>
                     <InformationPanelButtons />
@@ -206,6 +201,7 @@ export function TwoTabsLayout({ questions }: { questions: Question[] }) {
                 <Panel defaultSize={50} minSize={2}>
                     <CodeEditor
                         editorRef={editorRef}
+                        setIsFocusedOnEditor={setIsFocusedOnEditor}
                     />
                 </Panel>
             </PanelGroup>

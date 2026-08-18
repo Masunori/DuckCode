@@ -237,12 +237,24 @@
     background-color: var(--insignificant-button-hover-color);
 }
 
+.runCodeButton:disabled, .runAllTestCasesButton:disabled {
+    background-color: var(--insignificant-button-color);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
 .submitCodeButton {
     background-color: var(--significant-button-color);
 }
 
 .submitCodeButton:hover {
     background-color: var(--significant-button-hover-color);
+}
+
+.submitCodeButton:disabled {
+    background-color: var(--significant-button-color);
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 .codeHandlerButtons button * {
