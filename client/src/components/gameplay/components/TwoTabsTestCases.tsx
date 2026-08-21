@@ -1,7 +1,7 @@
 "use client";
 
 import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
-import { RUN_CODE_STATUSES, RunCodeStatuses } from "@/services/apiClient/types";
+import { RUN_CODE_STATUSES, RunCodeStatuses } from "@/services/types";
 import { TestCase } from "@/utils/gameplay";
 import styles from "./twoTabs.module.css";
 

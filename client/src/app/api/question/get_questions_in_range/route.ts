@@ -1,23 +1,17 @@
-import { printd } from "@/utils/debugUtils";
+import { extractAuthTokens } from "@/services/authCookies";
+import type { GetQuestionsInRangeResponse } from "@/services/types";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<NextResponse<GetQuestionsInRangeResponse>> {
     try {
-        const tokens = request.headers.get('cookie');
-        const accessToken = tokens?.split('; ').filter(cookie => cookie.startsWith('accessToken='))[0]?.split('=')[1];
-        const refreshToken = tokens?.split('; ').filter(cookie => cookie.startsWith('refreshToken='))[0]?.split('=')[1];
+        const tokens = extractAuthTokens(request.headers.get('cookie'));
         
-        if (!accessToken || !refreshToken) {
+        if (!tokens) {
             return NextResponse.json(
-                { ok: false, message: "Not authenticated" },
+                { status: 401, data: [], message: "Not authenticated" },
                 { status: 401 }
             );
         }
-
-        const cookieHeader = {
-            'accessToken': accessToken,
-            'refreshToken': refreshToken
-        };
 
         const { searchParams } = new URL(request.url);
 
@@ -30,14 +24,18 @@ export async function GET(request: Request) {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Cookie": JSON.stringify(cookieHeader),
+                "Cookie": JSON.stringify(tokens),
             }
         });
 
         if (!response.ok) {
-            const err = await response.json().catch(() => {});
+            const err = await response.json().catch(() => ({}));
             return NextResponse.json(
-                { ok: false, message: err.message || 'Failed to fetch questions' },
+                {
+                    status: response.status,
+                    data: [],
+                    message: err.message || err.error || 'Failed to fetch questions',
+                },
                 { status: response.status }
             );
         }
@@ -46,12 +44,16 @@ export async function GET(request: Request) {
         // printd("@/app/api/question/get_questions_in_range/route.ts", `Fetched questions in range ${minDifficulty}-${maxDifficulty}:`, res);
         
         return NextResponse.json(
-            { ok: true, res },
+            {
+                status: response.status,
+                data: Array.isArray(res) ? res : [],
+                message: "Questions fetched successfully",
+            },
             { status: 200, headers: { 'Cache-Control': 'no-store' } },
         );
     } catch (err) {
         return NextResponse.json(
-            { ok: false, message: `Internal server error: ${err}` },
+            { status: 500, data: [], message: `Internal server error: ${err}` },
             { status: 500 }
         );
     }

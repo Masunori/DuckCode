@@ -1,6 +1,6 @@
 "use client";
 
-import { refresh } from "@/services/apiClient/user";
+import { browserClient } from "@/services/apiClient/browserClient";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -15,7 +15,7 @@ export default function RefreshClient() {
 
     useEffect(() => {
         async function run() {
-            await refresh();
+            await browserClient.auth.refreshToken();
 
             router.refresh();
         }

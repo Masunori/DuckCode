@@ -1,24 +1,22 @@
+import { extractAuthTokens } from "@/services/authCookies";
+import { RunCodeResponse } from "@/services/types";
+import { printd } from "@/utils/debugUtils";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse<RunCodeResponse>> {
     try {
-        const tokens = request.headers.get('cookie');
-        const accessToken =
-            tokens
-                ?.split('; ')
-                .find(c => c.startsWith('accessToken='))
-                ?.split('=')[1] ?? null;
+        const cookieHeader = extractAuthTokens(request.headers.get('cookie'));
 
-        const refreshToken =
-            tokens
-                ?.split('; ')
-                .find(c => c.startsWith('refreshToken='))
-                ?.split('=')[1] ?? null;
-
-        const cookieHeader = {
-            'accessToken': accessToken,
-            'refreshToken': refreshToken
-        };
+        if (!cookieHeader) {
+            return NextResponse.json(
+                {
+                    status: 401,
+                    codeStatus: 'error',
+                    output: [{ type: 'error', content: 'Not authenticated' }],
+                },
+                { status: 401 }
+            );
+        }
 
         const body = await request.json();
 
@@ -34,20 +32,37 @@ export async function POST(request: Request) {
         if (!response.ok) {
             const err = await response.json().catch(() => ({}));
             return NextResponse.json(
-                { message: err.message || 'Failed to run code' },
+                { 
+                    status: response.status,
+                    codeStatus: 'error',
+                    output: [{ type: 'error', content: err.message || 'An error occurred while executing the code.' }],
+                },
                 { status: response.status }
             );
         }
 
         const data = await response.json();
 
+        printd("@apiClient/execution.ts", "Execute code response:", data);
+
         return NextResponse.json(
-            data,
+            {
+                status: response.status,
+                codeStatus: data.status,
+                output: (data.output as string).split('\n').map((line) => ({
+                    type: data.status === 'success' ? 'log' : 'error', content: line 
+                })),
+            },
+            
             { status: 200, headers: { 'Cache-Control': 'no-store' } },
         );
     } catch (err) {
         return NextResponse.json(
-            { message: `Internal server error: ${err}` }, 
+            { 
+                status: 500,
+                codeStatus: 'error',
+                output: [{ type: 'error', content: `Internal server error: ${err}`  }],
+            }, 
             { status: 500 }
         );
     }

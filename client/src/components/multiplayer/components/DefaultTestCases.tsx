@@ -1,7 +1,7 @@
 "use client";
 
 import { useMultiplayerGameplayStore } from "@/hooks/useMultiplayerGameplayStore";
-import { RUN_CODE_STATUSES, RunCodeStatuses } from "@/services/apiClient/types";
+import { RUN_CODE_STATUSES, RunCodeStatuses } from "@/services/types";
 import { TestCase } from "@/utils/gameplay";
 import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/utils/keyBindings';
 import { CSSProperties, useRef } from "react";

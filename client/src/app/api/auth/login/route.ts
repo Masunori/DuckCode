@@ -1,7 +1,7 @@
-import { printd } from "@/utils/debugUtils";
+import { LoginResponse } from "@/services/types";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<NextResponse<LoginResponse>> {
     try {
         const body = await req.json();
         const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "auth/login", {
@@ -15,10 +15,11 @@ export async function POST(req: Request) {
         if (!response.ok) {
             const err = await response.json().catch(() => ({}));
 
-            printd("@app/api/auth/login/route.ts", "Login failed:", err);
-
             return NextResponse.json(
-                { ok: false, message: err.message || 'Login failed' },
+                { 
+                    status: response.status,
+                    message: err.message || err.error || 'Login failed' 
+                },
                 { status: response.status }
             );
         }
@@ -27,7 +28,11 @@ export async function POST(req: Request) {
         const accessToken = loginData.data.accessToken;
         const refreshToken = loginData.data.refreshToken;
         const res = NextResponse.json(
-            { ok: true }
+            { 
+                status: response.status,
+                message: loginData.message || 'Login successful' 
+            },
+            { status: response.status }
         );
 
         res.cookies.set('accessToken', accessToken, {
@@ -52,7 +57,10 @@ export async function POST(req: Request) {
         console.log(err);
 
         return NextResponse.json(
-            { ok: false, message: `Internal server error: ${err}` },
+            { 
+                status: 500,
+                message: `Internal server error: ${err}` 
+            },
             { status: 500 }
         )
     }

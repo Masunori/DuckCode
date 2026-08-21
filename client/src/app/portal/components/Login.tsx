@@ -5,10 +5,10 @@ import { PortalMode } from "@/app/portal/PortalMode";
 import styles from '../page.module.css';
 import animationStyles from "@/components/styles/animations.module.css";
 import { Dispatch, SetStateAction, useState } from "react";
-import { login } from "../../../services/apiClient/user";
 import CurrentEmailInput from "@/components/authInputs/CurrentEmailInput";
 import CurrentPasswordInput from "@/components/authInputs/CurrentPasswordInput";
 import Spinner from "@/components/loading/Spinner";
+import { browserClient } from "@/services/apiClient/browserClient";
 
 type LoginProps = {
     portalMode: PortalMode;
@@ -34,10 +34,8 @@ export default function Login({ portalMode, setPortalMode }: LoginProps) {
         setLoginError(LoginStatus.NONE);
         setIsLoading(true);
 
-        await login(email, password)
+        await browserClient.auth.login(email, password)
         .then(response => {
-            console.log(response);
-
             switch (response.status) {
                 case 200:
                 case 302:

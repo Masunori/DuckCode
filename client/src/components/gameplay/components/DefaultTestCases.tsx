@@ -3,7 +3,7 @@
 import { useGettingStartedInstruction } from "@/contexts/GettingStartedInstructionContext";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
-import { RUN_CODE_STATUSES, RunCodeStatuses } from "@/services/apiClient/types";
+import { RUN_CODE_STATUSES, RunCodeStatuses } from "@/services/types";
 import { TestCase } from "@/utils/gameplay";
 import { GAMEPLAY_KEY_BINDINGS, translateCombo } from '@/utils/keyBindings';
 import { useEffect, useRef } from "react";
@@ -162,7 +162,7 @@ export default function DefaultTestCases({
                     className={styles.runAllTestCasesButton}
                     ref={runButtonRef}
                     onClick={informationMode === "output" ? runCode : runTestCases}
-                    disabled={isLocked || codeContent.trim() === ""}
+                    disabled={isLocked || (!!codeContent && codeContent.trim() === "")}
                 >
                     {informationMode === "output" ? <b>Run Code</b> : <b>Run all Test Cases</b>}
                     {informationMode === "output" ? runCodeKeyHint : runTestCasesKeyHint}
@@ -171,7 +171,7 @@ export default function DefaultTestCases({
                     className={styles.submitCodeButton}
                     ref={submitButtonRef}
                     onClick={submitCode}
-                    disabled={isLocked || codeContent.trim() === ""}
+                    disabled={isLocked || (!!codeContent && codeContent.trim() === "")}
                 ><b>Submit</b> {submitCodeKeyHint}</button>
             </div>
             <div className={styles.codeResults} ref={codeResultsRef}>

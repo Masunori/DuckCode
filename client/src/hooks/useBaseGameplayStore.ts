@@ -1,11 +1,9 @@
 "use client";
 
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { tryApiCallWithAuth } from "@/services/apiClient/apiCallWithAuth";
-import { runAllTestCases, runCode, submitCode } from "@/services/apiClient/gameplay";
-import { RUN_CODE_STATUSES, RunCodeStatuses } from "@/services/apiClient/types";
-import { printd } from "@/utils/debugUtils";
-import { InformationMode, Question, TestCaseResult, OutputEntry } from "@/utils/gameplay";
+import { browserClient } from "@/services/apiClient/browserClient";
+import { RUN_CODE_STATUSES, RunCodeStatuses } from "@/services/types";
+import { InformationMode, OutputEntry, Question, TestCaseResult } from "@/utils/gameplay";
 import { LockV2 } from "@/utils/lock";
 import { ExecutionStatus } from "@/utils/multiplayer";
 import { SetState } from "@/utils/types";
@@ -106,9 +104,10 @@ type ResetSlice = {
 /** The base gameplay store that contains common functionalities for different gameplay modes. */
 export type BaseGameplayController = ProblemSlice & EditorSlice & ExecutionSlice & UIStateSlice & ResetSlice & GettingStartedSlice;
 
-const lock = new LockV2();
 
 export const useBaseGameplayStore = create<BaseGameplayController>()(persist((set, get) => {
+    const lock = new LockV2();
+    
     lock.subscribe((v) => {
         set({ isLocked: v });
     });
@@ -172,7 +171,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
             setExecutionStatus("running");
 
             const language = useUserPreferenceStore.getState().userPreference.language;
-            const output = await lock.call(() => tryApiCallWithAuth(() => runCode(sourceCode, language)));
+            const output = await lock.call(() => browserClient.execution.runCode(sourceCode, language));
 
             setInformationMode("output");
 
@@ -193,7 +192,6 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
             const {
                 codeContent, 
                 activeQuestionIndex, 
-                testCaseResults,
                 setInformationMode,
                 setTestCaseResults, 
                 setActiveTestCaseIndex, 
@@ -208,7 +206,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
             setExecutionStatus("running");
 
             const language = useUserPreferenceStore.getState().userPreference.language;
-            const output = await lock.call(() => tryApiCallWithAuth(() => runCode(sourceCode, language)));
+            const output = await lock.call(() => browserClient.execution.runCode(sourceCode, language));
             
             setInformationMode("testCases");
 
@@ -275,7 +273,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
 
             const language = useUserPreferenceStore.getState().userPreference.language;
             const questionId = questions[activeQuestionIndex].qid;
-            const output = await lock.call(() => tryApiCallWithAuth(() => runAllTestCases(questionId, sourceCode, language)));
+            const output = await lock.call(() => browserClient.execution.runAllTestCases(questionId, sourceCode, language));
 
             setInformationMode("testCases");
 
@@ -323,7 +321,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
             setExecutionStatus("running");
 
             const language = useUserPreferenceStore.getState().userPreference.language;
-            const output = await lock.call(() => tryApiCallWithAuth(() => runCode(sourceCode, language)));
+            const output = await lock.call(() => browserClient.execution.runCode(sourceCode, language));
 
             setInformationMode("output");
 
@@ -372,7 +370,7 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
 
             const language = useUserPreferenceStore.getState().userPreference.language;
             const questionId = questions[activeQuestionIndex].qid;
-            const output = await lock.call(() => tryApiCallWithAuth(() => submitCode(questionId, sourceCode, language)));
+            const output = await lock.call(() => browserClient.execution.submitCode(questionId, sourceCode, language));
 
             setInformationMode("output");
 
@@ -381,23 +379,23 @@ export const useBaseGameplayStore = create<BaseGameplayController>()(persist((se
                 return { status: 409, message: "Another code execution is in progress." };
             } else if (output.status !== 200) {
                 setExecutionStatus("idle");
-                setCodeOutput([{ type: "error", content: "Failed to submit code" }]);
-                return { status: output.status, message: "Failed to submit code" };
+                setCodeOutput([{ type: "error", content: output?.message || "Failed to submit code" }]);
+                return { status: output.status, message: output?.message || "Failed to submit code" };
             } else {
-                const correctCount = output.result.correct;
-                const totalCount = output.result.total;
+                const correctCount = output.correct;
+                const totalCount = output.total;
 
                 setCodeOutput([
                     { type: "log", content: `Correct: ${correctCount}` },
                     { type: "log", content: `Total: ${totalCount}` },
-                    { type: output.result.statusId === 1 ? "log" : "error", content: `Status: ${RUN_CODE_STATUSES[output.result.statusId]}` }
+                    { type: output.statusId === 1 ? "log" : "error", content: `Status: ${RUN_CODE_STATUSES[output.statusId]}` }
                 ]);
 
-                const message = output.result.statusId === 1
+                const message = output.statusId === 1
                     ? "pass"
-                    : `You passed ${correctCount}/${totalCount} test cases. Reason: ${output.result.message}`;
+                    : `You passed ${correctCount}/${totalCount} test cases. Reason: ${RUN_CODE_STATUSES[output.statusId]}`;
 
-                setExecutionStatus(output.result.statusId === 1 ? "testCasesPassed" : "testCasesFailed");
+                setExecutionStatus(output.statusId === 1 ? "testCasesPassed" : "testCasesFailed");
                 return { status: 200, message };
             }
         },

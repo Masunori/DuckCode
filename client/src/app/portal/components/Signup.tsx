@@ -12,6 +12,7 @@ import NewPasswordInput from "@/components/authInputs/NewPasswordInput";
 import Spinner from "@/components/loading/Spinner";
 import OTPInput from "@/components/inputs/OTPInput";
 import { FieldState } from "@/utils/fieldConditions";
+import { browserClient } from "@/services/apiClient/browserClient";
 
 type SignupProps = {
     portalMode: PortalMode;
@@ -32,7 +33,7 @@ function ResendOTPButton({ email }: { email: string }) {
     }, [seconds]);
 
     const handleResend = async () => {
-        getVerificationCode(email);
+        await browserClient.auth.getVerificationCode(email);
         setSeconds(60);
     }
 
@@ -120,15 +121,15 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
         setSignupStatus(null);
         setIsLoading(true);
 
-        await signUp(
+        await browserClient.auth.signUp(
             username, email, password, confirmPassword
         )
             .then(response => {
                 switch (response.status) {
                     case 400:
-                        const data = response.data;
-
-                        const errors: string[] = data.error;
+                        const errors = Array.isArray(response.message)
+                            ? response.message
+                            : [response.message];
 
                         const tempSignupStatus: SignupStatuses[] = [];
 
@@ -191,7 +192,7 @@ export default function Signup({ portalMode, setPortalMode }: SignupProps) {
 
         setIsLoading(true);
 
-        await verifyCode(email, otp)
+        await browserClient.auth.verifyCode(email, otp)
             .then(response => {
                 switch (response.status) {
                     case 200:

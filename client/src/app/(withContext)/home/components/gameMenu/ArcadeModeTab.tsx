@@ -4,7 +4,7 @@ import DoubleThumbRangeInput from "@/components/inputs/DoubleThumbRangeInput";
 import PaginationController from "@/components/inputs/PaginationController";
 import { useUserStore } from "@/contexts/UserContext";
 import { tryApiCallWithAuth } from "@/services/apiClient/apiCallWithAuth";
-import { getQuestionsInRange as getQnAPI } from "@/services/apiClient/gameplay";
+import { browserClient } from "@/services/apiClient/browserClient";
 import { printd } from "@/utils/debugUtils";
 import { motion } from 'motion/react';
 import { useRouter } from "next/navigation";
@@ -57,7 +57,11 @@ export default function ArcadeModeTab({ setTab }: ArcadeModeTabProps) {
     }, [selectedQuestion]);
 
     async function getQuestionsInRange(minDifficulty: number, maxDifficulty: number): Promise<void> {
-        await tryApiCallWithAuth(() => getQnAPI(minDifficulty, maxDifficulty))
+        await tryApiCallWithAuth(
+            () => browserClient.question.getQuestionsInRange(minDifficulty, maxDifficulty),
+            () => browserClient.auth.refreshToken(),
+            () => { window.location.href = "/portal"; }
+        )
             .then(response => {
                 printd("@/home/components/gameMenu/ArcadeModeTab", `Fetched ${response.data.length} questions in range ${minDifficulty}-${maxDifficulty}: ${JSON.stringify(response)}`);
 

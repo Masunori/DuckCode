@@ -1,6 +1,7 @@
+import { SignUpResponse } from "@/services/types";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<NextResponse<SignUpResponse>> {
     try {
         const body = await req.json();
 
@@ -12,18 +13,19 @@ export async function POST(req: Request) {
             body: JSON.stringify(body),
         });
 
-        const data = await response.json();
-        return NextResponse.json(
-            data, {
+        const data = await response.json().catch(() => ({}));
+        return NextResponse.json({
+            status: response.status,
+            message: data.message || data.error || (response.ok ? "Registration successful" : "Registration failed"),
+        }, {
                 status: response.status, 
                 headers: response.headers
-            }
-        );
+        });
     } catch (err) {
         console.log(err)
 
         return NextResponse.json(
-            { ok: false, message: `Internal server error: ${err}` },
+            { status: 500, message: [`Internal server error: ${err}`] },
             { status: 500 }
         )
     }
