@@ -24,25 +24,27 @@ export default function Page() {
 
     const [isFocusedOnEditor, setIsFocusedOnEditor] = useState(false);
 
-    const codeContent = useBaseGameplayStore(state => state.codeContent[0]);
+    const codeContent = useBaseGameplayStore(state => state.codeContent[0] ?? PROGRAMMING_LANGUAGES[userPreference.language].codeSnippet);
     const setCodeContentAtIndex = useBaseGameplayStore(state => state.setCodeContentAtIndex);
     const setCodeContent = (code: string) => setCodeContentAtIndex(0, code);
 
     useEffect(() => {
-        if (languageRef.current === userPreference.language) {
-            const currentCode = useBaseGameplayStore.getState().codeContent[0];
+        const language = userPreference.language;
+        const snippet = PROGRAMMING_LANGUAGES[language].codeSnippet;
+        const currentCode = useBaseGameplayStore.getState().codeContent[0];
 
-            if (currentCode) {
-                editorRef.current?.setValue(currentCode);
-                return;
-            }
+        if (currentCode === undefined) {
+            setCodeContent(snippet);
+            editorRef.current?.setValue(snippet);
+            languageRef.current = language;
             return;
         }
 
-        languageRef.current = userPreference.language;        
-
-        setCodeContent(PROGRAMMING_LANGUAGES[userPreference.language].codeSnippet);
-        editorRef.current?.setValue(PROGRAMMING_LANGUAGES[userPreference.language].codeSnippet);
+        if (languageRef.current !== language) {
+            languageRef.current = language;
+            setCodeContent(snippet);
+            editorRef.current?.setValue(snippet);
+        }
     }, [userPreference.language]);
 
     const isLocked = useBaseGameplayStore(state => state.isLocked);
