@@ -1,7 +1,6 @@
 import { PortalMode } from "@/app/portal/PortalMode";
 import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/components/progressBar/LinearProgressBar";
 import { ResetPasswordStatuses } from "@/services/apiClient/portalStatuses";
-import { getVerificationCode, verifyCode, verifyNewPassword } from "@/services/apiClient/user";
 import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
 import { FieldState, PASSWORD_CONDITIONS } from "@/utils/fieldConditions";
 import styles from '../page.module.css';

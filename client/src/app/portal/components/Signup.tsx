@@ -1,7 +1,6 @@
 import { PortalMode } from "@/app/portal/PortalMode";
 import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/components/progressBar/LinearProgressBar";
 import { SignupStatuses } from "@/services/apiClient/portalStatuses";
-import { getVerificationCode, signUp, verifyCode } from "@/services/apiClient/user";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from '../page.module.css';
 import animationStyles from "@/components/styles/animations.module.css";
