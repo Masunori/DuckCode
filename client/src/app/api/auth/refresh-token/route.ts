@@ -1,13 +1,15 @@
+import { getCookieValue } from "@/services/authCookies";
+import { RefreshTokenResponse } from "@/services/types";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse<RefreshTokenResponse>> {
     try {
-        const tokens = request.headers.get('cookie')?.split('; ').filter(cookie => cookie.startsWith('refreshToken='))[0].split('=')[1];
+        const refreshTokenCookie = getCookieValue(request.headers.get('cookie'), 'refreshToken');
 
-        if (!tokens) {
+        if (!refreshTokenCookie) {
             console.log("No refresh token found in cookies");
             return NextResponse.json(
-                { ok: false, message: "Not authenticated" },
+                { status: 401, message: "Not authenticated" },
                 { status: 401 }
             );
         }
@@ -16,14 +18,14 @@ export async function POST(request: Request) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Cookie": JSON.stringify({ refreshToken: tokens }),
+                "Cookie": JSON.stringify({ refreshToken: refreshTokenCookie }),
             },
         });
 
         if (!response.ok) {
             const err = await response.json().catch(() => ({}));
             return NextResponse.json(
-                { ok: false, message: err.message || 'Failed to refresh token' },
+                { status: response.status, message: err.message || err.error || 'Failed to refresh token' },
                 { status: response.status }
             );
         }
@@ -33,7 +35,7 @@ export async function POST(request: Request) {
         const refreshToken = refreshData.data.refreshToken;
 
         const res = NextResponse.json(
-            { ok: true, data: { accessToken, refreshToken } }
+            { status: 200, message: refreshData.message || "Token refreshed successfully" }
         );
 
         res.cookies.set('accessToken', accessToken, {
@@ -56,7 +58,7 @@ export async function POST(request: Request) {
     } catch (error) {
         console.error("Error in refresh-token route:", error);
         return NextResponse.json(
-            { ok: false, message: "Internal server error" },
+            { status: 500, message: "Internal server error" },
             { status: 500 }
         );
     }

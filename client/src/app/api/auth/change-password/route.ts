@@ -1,15 +1,14 @@
+import { extractAuthTokens } from "@/services/authCookies";
 import { printd } from "@/utils/debugUtils";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     try {
-        const tokens = request.headers.get('Cookie');
-        const accessToken = tokens?.split(';').find(token => token.trim().startsWith('accessToken='))?.split('=')[1];
-        const refreshToken = tokens?.split(';').find(token => token.trim().startsWith('refreshToken='))?.split('=')[1];
+        const tokens = extractAuthTokens(request.headers.get('Cookie'));
 
-        if (!accessToken || !refreshToken) {
+        if (!tokens) {
             return NextResponse.json(
-                { ok: false, message: "Not authenticated" },
+                { status: 401, message: "Not authenticated" },
                 { status: 401 }
             );
         }
@@ -20,19 +19,19 @@ export async function POST(request: Request) {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'Cookie': JSON.stringify({ accessToken, refreshToken }),
+                'Cookie': JSON.stringify(tokens),
             },
             body: JSON.stringify(payload),
         });
         
         if (!response.ok) {
             const res = await response.json();
-            const err = res.error || 'Change password failed';
+            const err = res.message || res.error || 'Change password failed';
 
             printd("@app/api/auth/change-password/route.ts", "Change password failed:", err);
 
             return NextResponse.json(
-                { ok: false, message: err },
+                { status: response.status, message: err },
                 { status: response.status }
             );
         }
@@ -49,7 +48,8 @@ export async function POST(request: Request) {
         printd("@app/api/auth/change-password/route.ts", "New Refresh Token:", newRefreshToken);
 
         const res = NextResponse.json(
-            { ok: true }
+            { status: 200, message: "Password changed successfully" },
+            { status: 200 }
         );
 
         res.cookies.set('accessToken', newAccessToken, {
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
 
     } catch (err) {
         return NextResponse.json(
-            { ok: false, message: `Internal server error: ${err}` },
+            { status: 500, message: `Internal server error: ${err}` },
             { status: 500 }
         )
     }

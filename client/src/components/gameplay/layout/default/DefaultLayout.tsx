@@ -18,16 +18,14 @@ import GameplayNavbar from "../../components/GameplayNavbar";
 import QuestionTab from "../../components/QuestionTab";
 import WinPopup from "../../components/WinPopup";
 import styles from "./page.module.css";
-import { useGettingStartedInstruction } from '@/contexts/GettingStartedInstructionContext';
 
 export function DefaultLayout({ questions }: { questions: Question[] }) {
     // for code editor
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     const gameplayRef = useRef<HTMLDivElement | null>(null);
+    const [isFocusedOnEditor, setIsFocusedOnEditor] = useState(false);
 
     printd("@/components/gameplay/layout/default/DefaultLayout", "Rendering DefaultLayout with questions:", questions);
-
-    const ctx = useGettingStartedInstruction();
 
     // Use refs to maintain stable references for keyboard handler
     const callbacksRef = useRef<{
@@ -152,20 +150,14 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
         }
     }, [activeQuestionIndex]);
 
-    // useEffect(() => {
-
-    // }, [userPreference.language]);
-
     // this useEffect encapsulates all key bindings
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             const editor = editorRef.current;
-            const active = document.activeElement;
-            const isFocusOnEditor = editor && editor.getDomNode()?.contains(active);
-
-            if (isFocusOnEditor) {
+            
+            if (isFocusedOnEditor) {
                 if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["DEFOCUS_EDITOR"].combo)) {
-                    gameplayRef.current?.focus();
+                    (document.activeElement as HTMLElement).blur();
                     return true;
                 }
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)) {
@@ -205,11 +197,11 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
         return () => {
             keyboardManager.unregister("gameplay");
         }
-    }, []);
+    }, [isFocusedOnEditor]);
 
     return (
         <div ref={gameplayRef} tabIndex={0}>
-            <GameplayNavbar />
+            <GameplayNavbar isKeyBindingEnabled={!isFocusedOnEditor} />
             {
                 isShowingWinPopup && (
                     <WinPopup
@@ -235,6 +227,7 @@ export function DefaultLayout({ questions }: { questions: Question[] }) {
                 <Panel defaultSize={60} minSize={2} className={styles.codePanel}>
                     <CodeEditor
                         editorRef={editorRef}
+                        setIsFocusedOnEditor={setIsFocusedOnEditor}
                     />
                     <DefaultTestCases
                         testCases={question.publicTestCases}

@@ -29,6 +29,7 @@ type DropdownInputProps = {
  * - `defaultOption (string)`: the default option, note that the user has to ensure this value is within options
  * - `dropdownName (string)`: the text to describe the dropdown
  * - `handleOptionChange (string => void)`: the function that is applied on the new selected option
+ * - `keyBinding ({ ctrl: boolean, shift: boolean, key: string })`: an optional key binding to toggle the dropdown
  * @returns 
  */
 export default function DropdownInput({ options, inputId, defaultOption, dropdownName, handleOptionChange, keyBinding }: DropdownInputProps) {

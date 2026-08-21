@@ -6,13 +6,13 @@ import { PRISTINE_USER } from "../userPrefs/userPrefsUtils";
 import KeyBindingsProvider from "./KeyBindingsProvider";
 import UserSetter from "../userPrefs/UserSetter";
 import RefreshClient from "./RefreshClient";
-import { getProfile } from "@/services/apiServer/user";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { printd } from "@/utils/debugUtils";
 import UserPrefRootSetter from "../userPrefs/UserPrefRootSetter";
 import { ToastProvider } from "@/contexts/ToastContext";
 import Toast from "@/components/popup/Toast";
+import { createServerClient } from "@/services/apiServer/serverClient";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
     const accessToken = (await cookies()).get("accessToken")?.value;
@@ -24,10 +24,11 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
     if (accessToken) {
         // printd("@app/(withContext)/layout.tsx", "Fetching user profile...");
-        const response = await getProfile();
+        const serverClient = createServerClient();
+        const response = await (await serverClient).auth.getProfile();
 
-        if (response.status === 200 && response.data) {
-            const user = response.data;
+        if (response.status === 200 && response.user) {
+            const user = response.user;
 
             return (
                 <>

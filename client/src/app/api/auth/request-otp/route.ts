@@ -1,6 +1,7 @@
+import { GetVerificationCodeResponse } from "@/services/types";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<NextResponse<GetVerificationCodeResponse>> {
     try {
         const body = await req.json();
         const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "auth/request-otp", {
@@ -11,16 +12,12 @@ export async function POST(req: Request) {
             body: JSON.stringify(body),
         });
 
-        // const contentType = response.headers.get("content-type") || "";
-        // const data = contentType.includes("application/json")
-        //     ? await response.json()
-        //     : await response.text();
+        const data = await response.json().catch(() => ({}));
 
-        // console.log(data)
-
-        const data = await response.json();
-
-        return NextResponse.json(data, {
+        return NextResponse.json({
+            status: response.status,
+            message: data.message || data.error || (response.ok ? "Verification code sent" : "Failed to send verification code"),
+        }, {
             status: response.status,
             headers: response.headers
         });
@@ -28,7 +25,7 @@ export async function POST(req: Request) {
         console.log(err);
 
         return NextResponse.json(
-            { ok: false, message: `Internal server error: ${err}` }, 
+            { status: 500, message: `Internal server error: ${err}` }, 
             { status: 500 }
         );
     }

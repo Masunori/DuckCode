@@ -1,25 +1,22 @@
+import { extractAuthTokens } from "@/services/authCookies";
+import { RunAllTestCasesResponse } from "@/services/types";
 import { printd } from "@/utils/debugUtils";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse<RunAllTestCasesResponse>> {
     try {
-        const tokens = request.headers.get('cookie');
-        const accessToken =
-            tokens
-                ?.split('; ')
-                .find(c => c.startsWith('accessToken='))
-                ?.split('=')[1] ?? null;
+        const cookieHeader = extractAuthTokens(request.headers.get('cookie'));
 
-        const refreshToken =
-            tokens
-                ?.split('; ')
-                .find(c => c.startsWith('refreshToken='))
-                ?.split('=')[1] ?? null;
-                
-        const cookieHeader = {
-            'accessToken': accessToken,
-            'refreshToken': refreshToken
-        };
+        if (!cookieHeader) {
+            return NextResponse.json(
+                {
+                    status: 401,
+                    results: [],
+                    message: 'Not authenticated',
+                },
+                { status: 401 }
+            );
+        }
 
         const body = await request.json();
 
@@ -35,7 +32,11 @@ export async function POST(request: Request) {
         if (!response.ok) {
             const err = await response.json().catch(() => ({}));
             return NextResponse.json(
-                { ok: false, message: err.message || 'Failed to run test cases' },
+                { 
+                    status: response.status,
+                    results: [],
+                    message: err.message || 'Failed to run test cases' 
+                },
                 { status: response.status }
             );
         }
@@ -63,14 +64,22 @@ export async function POST(request: Request) {
         ));
 
         return NextResponse.json(
-            { ok: true, data: testCaseResults },
+            { 
+                status: response.status,
+                results: testCaseResults,
+                message: 'Test cases run successfully.'
+            },
             { status: 200, headers: { 'Cache-Control': 'no-store' } },
         );
     } catch (err) {
         printd("@api/execute/run-all-test-cases/route.ts", "Error in POST:", err);
 
         return NextResponse.json(
-            { ok: false, message: `Internal server error: ${err}` },
+            { 
+                status: 500,
+                results: [],
+                message: `Internal server error: ${err}` 
+            },
             { status: 500 }
         );
     }

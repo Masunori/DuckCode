@@ -11,6 +11,7 @@ import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
 import { useDebouncedSave } from "@/hooks/useDebounce";
 import useEditor from "@/hooks/useEditor";
+import { SetState } from "@/utils/types";
 
 loader.config({
 	paths: {
@@ -20,9 +21,10 @@ loader.config({
 
 type CodeEditorProps = {
     editorRef: RefObject<monaco.editor.IStandaloneCodeEditor | null>;
+    setIsFocusedOnEditor: SetState<boolean>;
 }
 
-export default function CodeEditor({ editorRef }: CodeEditorProps) {
+export default function CodeEditor({ editorRef, setIsFocusedOnEditor }: CodeEditorProps) {
     const monacoRef = useRef<typeof monaco | null>(null);
     
     const language = useUserPreferenceStore(state => state.userPreference.language);
@@ -74,6 +76,14 @@ export default function CodeEditor({ editorRef }: CodeEditorProps) {
                 onMount={(editor, monaco) => {
                     editorRef.current = editor;
                     monacoRef.current = monaco;
+
+                    editor.onDidFocusEditorWidget(() => {
+                        setIsFocusedOnEditor(true);
+                    });
+
+                    editor.onDidBlurEditorWidget(() => {
+                        setIsFocusedOnEditor(false);
+                    });
                 }}
                 onChange={handleEditorChange}
             />

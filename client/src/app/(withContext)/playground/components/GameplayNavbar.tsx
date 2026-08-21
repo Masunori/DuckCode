@@ -8,7 +8,7 @@ import styles from "../page.module.css";
 import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { GAMEPLAY_KEY_BINDINGS } from "@/utils/keyBindings";
 
-export default function GameplayNavbar() {
+export default function GameplayNavbar({ isKeyBindingEnabled }: { isKeyBindingEnabled: boolean }) {    
     const { openSettings } = useSettings();
     const userPreference = useUserPreferenceStore(state => state.userPreference);
     const setUserPreferenceField = useUserPreferenceStore(state => state.setUserPreferenceField);
@@ -48,7 +48,7 @@ export default function GameplayNavbar() {
                     inputId="quick-programming-language-options"
                     dropdownName="Programming Language"
                     handleOptionChange={handleOptionChange}
-                    keyBinding={GAMEPLAY_KEY_BINDINGS["PROGRAMMING_LANGUAGE_TOGGLE"].combo}
+                    keyBinding={isKeyBindingEnabled ? GAMEPLAY_KEY_BINDINGS["PROGRAMMING_LANGUAGE_TOGGLE"].combo : undefined}
                 />
             </div>
             <button className={styles.toHome} onClick={() => router.push("/home")}>

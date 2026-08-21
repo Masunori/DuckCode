@@ -13,7 +13,7 @@ import CountupTimer, { CountupTimerRef } from "@/components/timer/CountupTimer";
 import { useTimerStore } from "@/hooks/useTimerStore";
 import { PLKeys, PROGRAMMING_LANGUAGES } from "@/utils/settings";
 
-export default function GameplayNavbar() {    
+export default function GameplayNavbar({ isKeyBindingEnabled }: { isKeyBindingEnabled: boolean }) {    
     const { openSettings } = useSettings();
     const { openPopupWith } = usePopup();
     const resetGameplay = useBaseGameplayStore(state => state.reset);
@@ -85,8 +85,7 @@ export default function GameplayNavbar() {
                 inputId="quick-programming-language-options"
                 dropdownName="Programming Language"
                 handleOptionChange={handleOptionChange}
-                keyBinding={GAMEPLAY_KEY_BINDINGS["PROGRAMMING_LANGUAGE_TOGGLE"].combo}
-                                
+                keyBinding={isKeyBindingEnabled ? GAMEPLAY_KEY_BINDINGS["PROGRAMMING_LANGUAGE_TOGGLE"].combo : undefined}
             />
             <button className={styles.toHome} onClick={exit}>
                 Exit

@@ -4,24 +4,46 @@ import debounce from "@/utils/debounce";
 import { useCallback, useEffect, useState } from "react";
 import styles from "../page.module.css";
 
-export default function NewsCarousel() {
+type MonitorProps = {
+    children: React.ReactNode;
+    expanded: boolean;
+}
+
+function Monitor({ children, expanded }: { children: React.ReactNode; expanded: boolean }) {
+    return <div className={`${styles.scene} ${expanded ? styles.expanded : styles.minimized}`}>
+        <div className={styles.monitor}>
+            <div className={`${styles.face} ${styles.front}`}>{children}</div>
+            <div className={`${styles.face} ${styles.back}`}></div>
+            <div className={`${styles.face} ${styles.left}`}></div>
+            <div className={`${styles.face} ${styles.right}`}></div>
+            <div className={`${styles.face} ${styles.top}`}></div>
+            <div className={`${styles.face} ${styles.bottom}`}></div>
+
+            {/* <div className={`${styles.table} ${styles.top}`} />
+            <div className={`${styles.table} ${styles.front}`} />
+            <div className={`${styles.table} ${styles.right}`} /> */}
+        </div>
+    </div>
+}
+
+// the last data piece is duplicated and put to the start of the data list
+// the first data piece is duplicated and put to the end of the data list
+// this facilitates the smooth carousel transition later
+// Slides: 1, 2, 3, 4, 5 => slides: 5, 1, 2, 3, 4, 5, 1
+function augmentData<T>(data: T[]) {
+    const augmentedData = [...data];
+    augmentedData.unshift(data[data.length - 1]);
+    augmentedData.push(data[0]);
+
+    return augmentedData;
+}
+
+export default function NewsCarousel({ expanded }: { expanded: boolean }) {
     const [activeNewsTab, setActiveNewsTab] = useState(1);
     const [isAnimating, setIsAnimating] = useState(true);
 
     const data = ["1", "2", "3", "4", "5"];
     const transitionDuration = 0.5;
-
-    // the last data piece is duplicated and put to the start of the data list
-    // the first data piece is duplicated and put to the end of the data list
-    // this facilitates the smooth carousel transition later
-    // Slides: 1, 2, 3, 4, 5 => slides: 5, 1, 2, 3, 4, 5, 1
-    function augmentData<T>(data: T[]) {
-        const augmentedData = [...data];
-        augmentedData.unshift(data[data.length - 1]);
-        augmentedData.push(data[0]);
-
-        return augmentedData;
-    }
 
     const handleLeftShift = useCallback(() => {
         if (isAnimating) {
@@ -41,8 +63,18 @@ export default function NewsCarousel() {
         setActiveNewsTab(prev => prev + 1);
     }, [isAnimating]);
 
+    const handleImmediateShift = useCallback((index: number) => {
+        if (isAnimating) {
+            return;
+        }
+        
+        setIsAnimating(true);
+        setActiveNewsTab(index + 1);
+    }, [isAnimating]);
+
     const debounceHandleLeftShift = debounce(handleLeftShift, 250);
     const debounceHandleRightShift = debounce(handleRightShift, 250);
+    const debounceHandleImmediateShift = debounce(handleImmediateShift, 250);
 
     // When the user is at slide 5 and click right, the 5 transits to the last 1 smoothly
     // 5, 1, 2, 3, 4, 5, 1 => 5, 1, 2, 3, 4, 5, 1
@@ -73,35 +105,38 @@ export default function NewsCarousel() {
     }, [handleRightShift]);
 
     return (
-        <div className={styles.newsCarousel}>
-            <button className={styles.leftButton} onClick={debounceHandleLeftShift}>{"<"}</button>
-            <div className={styles.allNewsTabs}>
-                {augmentData(data).map((info, index) => (
-                    <div
-                        key={index}
-                        style={{
-                            width: `${(data.length + 2) * 100}%`,
-                            transform: `translateX(${-(activeNewsTab) * 100}%)`,
-                            transition: isAnimating ? `transform ${transitionDuration}s ease` : "none",
-                        }}
-                        className={styles.newsTab}
-                    >
-                        {info}
-                    </div>
-                ))}
+        <Monitor expanded={expanded}>
+            <div className={styles.newsCarousel}>
+                <button className={styles.leftButton} onClick={debounceHandleLeftShift}>{"⮜"}</button>
+                <div className={styles.allNewsTabs}>
+                    {augmentData(data).map((info, index) => (
+                        <div
+                            key={index}
+                            style={{
+                                width: `${(data.length + 2) * 100}%`,
+                                transform: `translateX(${-(activeNewsTab) * 100}%)`,
+                                transition: isAnimating ? `transform ${transitionDuration}s ease` : "none",
+                            }}
+                            className={styles.newsTab}
+                        >
+                            {info}
+                        </div>
+                    ))}
+                </div>
+                <button className={styles.rightButton} onClick={debounceHandleRightShift}>{"⮞"}</button>
+                <div className={styles.indicators}>
+                    {data.map((_, index) => (
+                        <div
+                            className={styles.indicator}
+                            key={index}
+                            style={{
+                                width: (activeNewsTab + data.length - 1) % data.length === index ? "1.6rem" : "1rem",
+                            }}
+                            onClick={() => debounceHandleImmediateShift(index)}
+                        ></div>
+                    ))}
+                </div>
             </div>
-            <button className={styles.rightButton} onClick={debounceHandleRightShift}>{">"}</button>
-            <div className={styles.indicators}>
-                {data.map((_, index) => (
-                    <div
-                        className={styles.indicator}
-                        key={index}
-                        style={{
-                            width: (activeNewsTab + data.length - 1) % data.length === index ? "1.6rem" : "1rem",
-                        }}
-                    ></div>
-                ))}
-            </div>
-        </div>
+        </Monitor>
     )
 }

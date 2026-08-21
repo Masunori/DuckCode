@@ -1,6 +1,7 @@
+import { ResetPasswordResponse } from "@/services/types";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<NextResponse<ResetPasswordResponse>> {
     try {
         const body = await req.json();
         const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "auth/reset-password", {
@@ -11,9 +12,12 @@ export async function POST(req: Request) {
             body: JSON.stringify(body),
         });
 
-        const data = await response.json();
+        const data = await response.json().catch(() => ({}));
 
-        return NextResponse.json(data, {
+        return NextResponse.json({
+            status: response.status,
+            message: data.message || data.error || (response.ok ? "Password reset successfully" : "Password reset failed"),
+        }, {
             status: response.status,
             headers: response.headers
         });
@@ -21,7 +25,7 @@ export async function POST(req: Request) {
         console.log(err);
 
         return NextResponse.json(
-            { ok: false, message: `Internal server error: ${err}` }, 
+            { status: 500, message: `Internal server error: ${err}` }, 
             { status: 500 }
         );
     }

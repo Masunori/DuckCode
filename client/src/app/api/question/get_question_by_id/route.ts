@@ -1,9 +1,19 @@
+import { extractAuthTokens } from "@/services/authCookies";
+import type { GetQuestionByIdResponse } from "@/services/types";
+import type { Example, Question } from "@/utils/gameplay";
 import { printd } from "@/utils/debugUtils";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<NextResponse<GetQuestionByIdResponse>> {
     try {
-        const tokens = request.headers.get('cookie');
+        const tokens = extractAuthTokens(request.headers.get('cookie'));
+
+        if (!tokens) {
+            return NextResponse.json(
+                { status: 401, data: null, message: "Not authenticated" },
+                { status: 401 }
+            );
+        }
 
         const { searchParams } = new URL(request.url);
 
@@ -17,29 +27,41 @@ export async function GET(request: Request) {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Cookie": tokens || "",
+                "Cookie": JSON.stringify(tokens),
             }
         });
 
         if (!response.ok) {
             const err = await response.json().catch(() => ({}));
             return NextResponse.json(
-                { ok: false, message: err.message || 'Failed to fetch question' },
+                {
+                    status: response.status,
+                    data: null,
+                    message: err.message || err.error || 'Failed to fetch question',
+                },
                 { status: response.status }
             );
         }
 
         const res = await response.json();
+        const question: Question = {
+            ...res,
+            examples: (res.examples ?? []).map((example: Example | { input: string; output: string; explanation: string }) => ({
+                ...example,
+                input: Array.isArray(example.input) ? example.input : example.input.split('\n'),
+                output: Array.isArray(example.output) ? example.output : example.output.split('\n'),
+            })),
+        };
 
-        printd("@app/api/question/get_question_by_id/route.ts", "Received response:", res);
+        printd("@app/api/question/get_question_by_id/route.ts", "Received response:", question);
 
         return NextResponse.json(
-            { ok: true, data: res },
+            { status: response.status, data: question, message: "Question fetched successfully" },
             { status: 200, headers: { 'Cache-Control': 'no-store' } },
         );
     } catch (error) {
         return NextResponse.json(
-            { ok: false, message: "Internal server error" },
+            { status: 500, data: null, message: "Internal server error" },
             { status: 500 }
         );
     }

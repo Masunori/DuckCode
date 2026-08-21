@@ -1,8 +1,7 @@
 import ArcadeClient from "./ArcadeClient";
 import styles from "./page.module.css";
-import { dummyQuestion, Example, placeholderQuestion, Question } from "@/utils/gameplay";
 import { printd } from "@/utils/debugUtils";
-import { getQuestionById } from "@/services/apiServer/gameplay";
+import { createServerClient } from "@/services/apiServer/serverClient";
 import { redirect } from "next/navigation";
 
 export default async function Page({
@@ -14,23 +13,16 @@ export default async function Page({
 
 	printd("@app/(withContext)/arcade/page.tsx", `Loading question with QID: ${qid}`);
 
-	const response = await getQuestionById(qid);
+	const serverClient = await createServerClient();
+	const response = await serverClient.question.getQuestionById(qid);
 
-	if (response.status === 200) {
-		const q = response.data; 
+	if (response.status === 200 && response.data) {
+		const question = response.data;
 
-		q.examples = q.examples.map((ex: any) => {
-			ex.input = (ex.input as string).split('\n');
-			ex.output = (ex.output as string).split('\n');
-			return ex;
-		});
-
-		const qq = q as Question;
-
-		printd("@app/(withContext)/arcade/page.tsx", `Fetched question data:`, response.data.title);
+		printd("@app/(withContext)/arcade/page.tsx", `Fetched question data:`, question.title);
 
 		const initialServerData = {
-			questions: [qq]
+			questions: [question]
 		}
 
 		return (

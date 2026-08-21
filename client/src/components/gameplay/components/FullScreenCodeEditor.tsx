@@ -1,16 +1,17 @@
 "use client";
 
 import { LINE_NUMBERS_OPTIONS, RENDER_WHITESPACE_OPTIONS, WORD_WRAP_OPTIONS } from "@/app/userPrefs/userPrefsUtils";
-import { PROGRAMMING_LANGUAGES } from "@/utils/settings";
 import { PRESET_THEMES } from "@/components/themes/themes";
+import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
 import { useBaseGameplayStore } from "@/hooks/useBaseGameplayStore";
+import { useDebouncedSave } from "@/hooks/useDebounce";
+import useEditor from "@/hooks/useEditor";
+import { PROGRAMMING_LANGUAGES } from "@/utils/settings";
+import { SetState } from "@/utils/types";
 import { Editor, loader } from '@monaco-editor/react';
 import * as monaco from "monaco-editor";
 import { RefObject, useEffect, useRef } from "react";
 import styles from "./fullscreenEditor.module.css";
-import { useUserPreferenceStore } from "@/contexts/UserPreferenceContext";
-import { useDebouncedSave } from "@/hooks/useDebounce";
-import useEditor from "@/hooks/useEditor";
 
 loader.config({
     paths: {
@@ -21,9 +22,10 @@ loader.config({
 
 type CodeEditorProps = {
     editorRef: RefObject<monaco.editor.IStandaloneCodeEditor | null>;
+    setIsFocusedOnEditor: SetState<boolean>;
 }
 
-export default function FullScreenCodeEditor({ editorRef }: CodeEditorProps) {
+export default function FullScreenCodeEditor({ editorRef, setIsFocusedOnEditor }: CodeEditorProps) {
     const userPreference = useUserPreferenceStore(state => state.userPreference);
     const editorOptionsStore = useUserPreferenceStore(state => state.userPreference.editorOptions);
     const monacoRef = useRef<typeof monaco | null>(null);
@@ -86,6 +88,14 @@ export default function FullScreenCodeEditor({ editorRef }: CodeEditorProps) {
                 onMount={(editor, monaco) => {
                     editorRef.current = editor;
                     monacoRef.current = monaco;
+
+                    editor.onDidFocusEditorWidget(() => {
+                        setIsFocusedOnEditor(true);
+                    });
+
+                    editor.onDidBlurEditorWidget(() => {
+                        setIsFocusedOnEditor(false);
+                    });
                 }}
                 onChange={handleEditorChange}
             />

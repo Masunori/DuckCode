@@ -1,15 +1,10 @@
 "use client";
 
-import DoubleThumbRangeInput from "@/components/inputs/DoubleThumbRangeInput";
-import PaginationController from "@/components/inputs/PaginationController";
-import { useUserStore } from "@/contexts/UserContext";
-import { tryApiCallWithAuth } from "@/services/apiClient/apiCallWithAuth";
-import { getQuestionsInRange as getQnAPI } from "@/services/apiClient/gameplay";
 import { printd } from "@/utils/debugUtils";
 import { AnimatePresence, motion } from 'motion/react';
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef, useState } from "react";
-import { GAME_MODES, GameMenuTab } from "../../homeUtils";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { GameMenuTab } from "../../homeUtils";
 import styles from "../../page.module.css";
 import Spinner from "@/components/loading/Spinner";
 import { LessonInfo, TopicInfo, tutorialTopics } from "@/app/(withContext)/(tutorial)/lessons";
@@ -57,7 +52,6 @@ function Topic({ topicInfo, selectedLessonId, onClickLesson }: TopicProps) {
 
 export default function TutorialTab({ setTab }: TutorialTabProps) {
     const router = useRouter();
-    const user = useUserStore(state => state.user);
 
     const userPreference = useUserPreferenceStore(state => state.userPreference);
     const setUserPreference = useUserPreferenceStore(state => state.setUserPreference);

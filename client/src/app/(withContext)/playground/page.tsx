@@ -22,6 +22,9 @@ export default function Page() {
 
     const languageRef = useRef(userPreference.language);
 
+    const [isFocusedOnEditor, setIsFocusedOnEditor] = useState(false);
+
+    const codeContent = useBaseGameplayStore(state => state.codeContent[0]);
     const setCodeContentAtIndex = useBaseGameplayStore(state => state.setCodeContentAtIndex);
     const setCodeContent = (code: string) => setCodeContentAtIndex(0, code);
 
@@ -65,18 +68,15 @@ export default function Page() {
         );
     }, [runCode, openPopupWith]);
 
+
     // this useEffect encapsulates all key bindings
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             const editor = editorRef.current;
-            const active = document.activeElement;
-            const isFocusOnEditor = editor && editor.getDomNode()?.contains(active);
 
-            if (isFocusOnEditor) {
+            if (isFocusedOnEditor) {
                 if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["DEFOCUS_EDITOR"].combo)) {
-                    // gameplayRef.current?.focus();
-                    // return true;
-                    (active as HTMLElement).blur();
+                    (document.activeElement as HTMLElement).blur();
                     return true;
                 }
             } else if (isKeyCombo(e, GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)) {
@@ -99,7 +99,7 @@ export default function Page() {
         return () => {
             keyboardManager.unregister("gameplay");
         }
-    }, [runCodeOutputMode]);
+    }, [runCodeOutputMode, isFocusedOnEditor]);
 
     const runCodeKeyHint = userPreference.displayKeyBindingOnButtons
         ? ` [${translateCombo(GAMEPLAY_KEY_BINDINGS["RUN_CODE_OUTPUT_MODE"].combo)}]`
@@ -107,7 +107,7 @@ export default function Page() {
 
     return (
         <div ref={gameplayRef} tabIndex={0}>
-            <GameplayNavbar />
+            <GameplayNavbar isKeyBindingEnabled={!isFocusedOnEditor} />
             <PanelGroup direction="horizontal" className={styles.gameplayPanels} style={{ height: "100vh" }}>
                 <Panel defaultSize={50} minSize={2} className={styles.informationPanel}>
                     <div className={styles.outputTab}>
@@ -117,10 +117,7 @@ export default function Page() {
                         <button
                             className={styles.runCodeButton}
                             onClick={runCodeOutputMode}
-                            disabled={isLocked}
-                            style={{
-                                pointerEvents: isLocked ? "none" : "auto"
-                            }}
+                            disabled={isLocked || codeContent.trim() === ""}
                         ><b>Run Code</b> <kbd>{runCodeKeyHint}</kbd></button>
                     </div>
                     <Output />
@@ -131,6 +128,7 @@ export default function Page() {
                 <Panel defaultSize={50} minSize={2}>
                     <CodeEditor
                         editorRef={editorRef}
+                        setIsFocusedOnEditor={setIsFocusedOnEditor}
                     />
                 </Panel>
             </PanelGroup>

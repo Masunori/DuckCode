@@ -8,12 +8,12 @@ import styles from '@/components/settings/settings.module.css';
 import rankStyles from '@/components/styles/ranks.module.css';
 import { usePopup } from "@/contexts/PopupContext";
 import { useUserStore } from "@/contexts/UserContext";
-import { changePassword, updateProfile } from '@/services/apiClient/user';
+import { browserClient } from '@/services/apiClient/browserClient';
+import { updateProfile } from '@/services/apiClient/user';
 import { FieldState, PASSWORD_CONDITIONS } from "@/utils/fieldConditions";
 import { AnimatePresence, motion } from 'motion/react';
-import { s } from 'motion/react-client';
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 type AccountSettingsProps = {
     nextUserInfo: TempAccountInfo;
@@ -209,7 +209,7 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
             "Logout",
             "Cancel",
             async () => {
-                await fetch('/api/auth/logout', { method: 'POST' });
+                await browserClient.auth.logout();
                 window.location.href = "/portal";
             },
             () => { }
@@ -335,7 +335,7 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
                                         return;
                                     }
 
-                                    const response = await changePassword(currentPassword, newPassword, confirmPassword);
+                                    const response = await browserClient.auth.changePassword(currentPassword, newPassword, confirmPassword);
 
                                     if (response.status === 200) {
                                         openPopupWith(
@@ -348,7 +348,7 @@ export default function AccountSettings({ nextUserInfo, handleAccountChange }: A
                                         setIsChangingPassword(false);
                                     } else {
                                         openPopupWith(
-                                            `Failed to change password: ${response.data.message || "Unknown error"}`,
+                                            `Failed to change password: ${response.message || "Unknown error"}`,
                                             "Okay",
                                             null,
                                             () => { },

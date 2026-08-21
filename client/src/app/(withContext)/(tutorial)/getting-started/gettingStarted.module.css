@@ -1,6 +1,6 @@
 .instructionOverlay {
     position: fixed;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.8);
     z-index: var(--instruction-overlay-z-index);
     cursor: not-allowed;
 }

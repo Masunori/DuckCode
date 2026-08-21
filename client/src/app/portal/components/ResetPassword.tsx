@@ -1,7 +1,6 @@
 import { PortalMode } from "@/app/portal/PortalMode";
 import LinearProgressBar, { cascadePostRequisites, ProgressStep } from "@/components/progressBar/LinearProgressBar";
 import { ResetPasswordStatuses } from "@/services/apiClient/portalStatuses";
-import { getVerificationCode, verifyCode, verifyNewPassword } from "@/services/apiClient/user";
 import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
 import { FieldState, PASSWORD_CONDITIONS } from "@/utils/fieldConditions";
 import styles from '../page.module.css';
@@ -11,6 +10,7 @@ import OTPInput from "@/components/inputs/OTPInput";
 import NewPasswordInput from "@/components/authInputs/NewPasswordInput";
 import Spinner from "@/components/loading/Spinner";
 import CurrentEmailInput from "@/components/authInputs/CurrentEmailInput";
+import { browserClient } from "@/services/apiClient/browserClient";
 
 type ResetPasswordProps = {
     portalMode: PortalMode;
@@ -94,8 +94,6 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const passwordConditionsRef: RefObject<HTMLLIElement[] | null[]> = useRef([]);
-
     function handleEmailChange(newEmail: string): void {
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})*$/;
 
@@ -161,7 +159,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
 
         setIsLoading(true);
 
-        await getVerificationCode(email)
+        await browserClient.auth.getVerificationCode(email)
             .then(response => {
                 switch (response.status) {
                     case 200:
@@ -191,7 +189,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
         }
 
         setIsLoading(true);
-        await verifyCode(email, otp)
+        await browserClient.auth.verifyCode(email, otp)
             .then(response => {
                 switch (response.status) {
                     case 200:
@@ -230,11 +228,10 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
 
         setIsLoading(true);
 
-        await verifyNewPassword(email, password, confirmPassword)
+        await browserClient.auth.verifyNewPassword(email, password, confirmPassword)
             .then(response => {
                 switch (response.status) {
                     case 200:
-                        console.log("Reset password successful!");
                         setResetPasswordProgressSteps(prevSteps => {
                             const newSteps = [...prevSteps];
                             newSteps[2].status = 'completed';

@@ -1,7 +1,8 @@
+import { LogoutResponse } from "@/services/types";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
-    const res = NextResponse.json({ ok: true }, { status: 200 });
+export async function POST(request: Request): Promise<NextResponse<LogoutResponse>> {
+    const res = NextResponse.json({ status: 200, message: "Successfully logged out" }, { status: 200 });
 
     res.cookies.set('accessToken', '', {
         httpOnly: true,
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
         
     if (!tokens) {
         return NextResponse.json(
-            { ok: false, message: "Not authenticated" },
+            { status: 401, message: "Not authenticated" },
             { status: 401 }
         );
     }

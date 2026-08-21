@@ -106,9 +106,37 @@
 }
 
 .testCaseSelector li {
-    padding: 10px;
+    background-color: var(--first-layer-background-color);
+    padding: 0.6rem;
     transition-duration: 0.25s;
     cursor: pointer;
+}
+
+.testCaseSelector li.active {
+    background-color: var(--second-layer-background-color);
+    font-weight: 600;
+}
+
+.testCaseSelector li:hover {
+    background-color: var(--second-layer-background-color);
+}
+
+.testCaseSelector li.fail {
+    background-color: var(--wrong-indicator-color);
+}
+
+.testCaseSelector li.fail.active,
+.testCaseSelector li.fail:hover {
+    background-color: var(--wrong-on-hover-indicator-color);
+}
+
+.testCaseSelector li.pass {
+    background-color: var(--correct-indicator-color);
+}
+
+.testCaseSelector li.pass.active,
+.testCaseSelector li.pass:hover {
+    background-color: var(--correct-on-hover-indicator-color);
 }
 
 .testCaseResults {
@@ -116,7 +144,7 @@
     grid-area: results;
     height: var(--test-case-panel-height);
     overflow: auto;
-    padding: 0 10px;
+    padding: 0 0.6rem;
 }
 
 .testCaseResults * {
@@ -146,7 +174,7 @@
 }
 
 .testCaseResults pre {
-    max-height: 15rem;
+    max-height: 5rem;
     overflow: auto;
 }
 
@@ -165,14 +193,22 @@
 }
 
 .testCaseResults td {
-    padding: 2px 0 2px 5px;
+    padding: 0.1rem 0 0.1rem 0.3rem;
     background-color: var(--terminal-like-background-color);
-    border: 1px solid var(--second-layer-background-color);
-    border-radius: 3px;
+    border: 0.1rem solid var(--second-layer-background-color);
+    border-radius: 0.25rem;
     height: 3rem;
     box-sizing: border-box;
     overflow: auto;
     justify-self: stretch;
+}
+
+.testCaseResults td.pass {
+    border-color: var(--correct-indicator-color);
+}
+
+.testCaseResults td.fail {
+    border-color: var(--wrong-indicator-color);
 }
 
 .testCaseResults td::-webkit-scrollbar {

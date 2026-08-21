@@ -1,25 +1,24 @@
-import { printd } from "@/utils/debugUtils";
+import { extractAuthTokens } from "@/services/authCookies";
+import { SubmitCodeResponse } from "@/services/types";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse<SubmitCodeResponse>> {
     try {
-        const tokens = request.headers.get('cookie');
-        const accessToken =
-            tokens
-                ?.split('; ')
-                .find(c => c.startsWith('accessToken='))
-                ?.split('=')[1] ?? null;
+        const cookieHeader = extractAuthTokens(request.headers.get('cookie'));
 
-        const refreshToken =
-            tokens
-                ?.split('; ')
-                .find(c => c.startsWith('refreshToken='))
-                ?.split('=')[1] ?? null;
-                
-        const cookieHeader = {
-            'accessToken': accessToken,
-            'refreshToken': refreshToken
-        };
+        if (!cookieHeader) {
+            return NextResponse.json(
+                {
+                    status: 401,
+                    correct: 0,
+                    exp: 0,
+                    total: 0,
+                    statusId: 0,
+                    message: 'Not authenticated',
+                },
+                { status: 401 }
+            );
+        }
 
         const body = await request.json();
 
@@ -35,22 +34,37 @@ export async function POST(request: Request) {
         if (!response.ok) {
             const err = await response.json().catch(() => ({}));
             return NextResponse.json(
-                { ok: false, message: err.message || 'Failed to submit code' },
+                { 
+                    
+                    correct: 0,
+                    exp: 0,
+                    total: 0,
+                    statusId: 0,
+                    status: response.status,
+                    message: err.message || 'Failed to submit code' 
+                },
                 { status: response.status }
             );
         }
 
         const data = await response.json();
 
-        printd("@api/execute/submit-code/route.ts", "Submit code response:", data);
+        // printd("@api/execute/submit-code/route.ts", "Submit code response:", data);
 
         return NextResponse.json(
-            { ok: true, data: data },
+            { ...data, message: 'Code submitted successfully' },
             { status: 200, headers: { 'Cache-Control': 'no-store' } },
         );
     } catch (err) {
         return NextResponse.json(
-            { ok: false, message: `Internal server error: ${err}` },
+            { 
+                status: 500,
+                message: `Internal server error: ${err}`,
+                correct: 0,
+                exp: 0,
+                total: 0,
+                statusId: 0
+            },
             { status: 500 }
         );
     }
