@@ -19,7 +19,6 @@ export async function POST(req: Request): Promise<NextResponse<ResetPasswordResp
             message: data.message || data.error || (response.ok ? "Password reset successfully" : "Password reset failed"),
         }, {
             status: response.status,
-            headers: response.headers
         });
     } catch (err) {
         console.log(err);

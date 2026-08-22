@@ -19,7 +19,6 @@ export async function POST(req: Request): Promise<NextResponse<VerifyOtpResponse
             message: data.message || data.error || (response.ok ? "OTP verified" : "OTP verification failed"),
         }, {
             status: response.status,
-            headers: response.headers
         });
     } catch (err) {
         console.log(err);
