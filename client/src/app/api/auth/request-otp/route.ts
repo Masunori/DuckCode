@@ -19,7 +19,6 @@ export async function POST(req: Request): Promise<NextResponse<GetVerificationCo
             message: data.message || data.error || (response.ok ? "Verification code sent" : "Failed to send verification code"),
         }, {
             status: response.status,
-            headers: response.headers
         });
     } catch (err) {
         console.log(err);

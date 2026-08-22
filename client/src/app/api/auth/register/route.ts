@@ -18,8 +18,7 @@ export async function POST(req: Request): Promise<NextResponse<SignUpResponse>> 
             status: response.status,
             message: data.message || data.error || (response.ok ? "Registration successful" : "Registration failed"),
         }, {
-                status: response.status, 
-                headers: response.headers
+            status: response.status,
         });
     } catch (err) {
         console.log(err)
