@@ -1,4 +1,5 @@
 import { SignUpResponse } from "@/services/types";
+import { printd } from "@/utils/debugUtils";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request): Promise<NextResponse<SignUpResponse>> {
@@ -21,7 +22,7 @@ export async function POST(req: Request): Promise<NextResponse<SignUpResponse>> 
             status: response.status,
         });
     } catch (err) {
-        console.log(err)
+        printd("@/api/auth/register", err)
 
         return NextResponse.json(
             { status: 500, message: [`Internal server error: ${err}`] },

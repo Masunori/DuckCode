@@ -1,4 +1,5 @@
 import { GetVerificationCodeResponse } from "@/services/types";
+import { printd } from "@/utils/debugUtils";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request): Promise<NextResponse<GetVerificationCodeResponse>> {
@@ -14,6 +15,8 @@ export async function POST(req: Request): Promise<NextResponse<GetVerificationCo
 
         const data = await response.json().catch(() => ({}));
 
+        printd("@/api/auth/request-otp", `Request OTP response:`, data);
+
         return NextResponse.json({
             status: response.status,
             message: data.message || data.error || (response.ok ? "Verification code sent" : "Failed to send verification code"),
@@ -21,7 +24,7 @@ export async function POST(req: Request): Promise<NextResponse<GetVerificationCo
             status: response.status,
         });
     } catch (err) {
-        console.log(err);
+        printd("@/api/auth/request-otp", err)
 
         return NextResponse.json(
             { status: 500, message: `Internal server error: ${err}` }, 
