@@ -175,6 +175,7 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                         setEmailInputState(FieldState.SERVER_SIDE_INVALID);
                         break;
                     default:
+                        setResetPasswordStatus(ResetPasswordStatuses.INTERNAL_SERVER_ERROR);
                         console.error(`Internal server error: ${response.status}`);
                 }
 
@@ -350,6 +351,16 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                                     Please make sure that your email follows the conventional email format.
                                 </p>
                             }
+                            {resetPasswordStatus === ResetPasswordStatuses.INTERNAL_SERVER_ERROR
+                                &&
+                                <p style={{
+                                    color: SERVER_SIDE_ERROR_BORDER_COLOR,
+                                    fontWeight: 'bold',
+                                    margin: '0 0 1rem 0'
+                                }}>
+                                    Internal server error. Please try again later.
+                                </p>
+                            }
                             <button
                                 onClick={getOTP}
                                 disabled={emailInputState !== FieldState.VALID || isLoading}
@@ -427,6 +438,16 @@ export default function ResetPassword({ portalMode, setPortalMode }: ResetPasswo
                                         margin: '0 0 1rem 0'
                                     }}>
                                         Someone is trying to bypass client-side validation... Request blocked!
+                                    </li>
+                                }
+                                {resetPasswordStatus === ResetPasswordStatuses.INTERNAL_SERVER_ERROR
+                                    &&
+                                    <li style={{
+                                        color: SERVER_SIDE_ERROR_BORDER_COLOR,
+                                        fontWeight: 'bold',
+                                        margin: '0 0 1rem 0'
+                                    }}>
+                                        Internal server error. Please try again later.
                                     </li>
                                 }
                             </ul>

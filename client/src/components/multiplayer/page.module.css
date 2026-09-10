@@ -563,7 +563,7 @@
     border: 1px solid var(--fourth-layer-background-color);
     background-color: var(--terminal-like-background-color);
     font-size: 1rem;
-    font-family: 'PF Din Text Pro', Helvetica, sans-serif;
+    font-family: Helvetica, sans-serif;
 }
 
 .chatboxInput input:focus {
